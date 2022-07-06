@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    {% assets "scss" %}
+    <link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
+    {% endassets %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script defer src="/static/js/main.js"></script>
+</head>
+
+<body>
+    <!-- <h1>{{ random_card|safe }}</h1> -->
+    <h2>You are:{{ user["nick"] }}</h2>
+    <h2>Other users:</h2>
+    <ul class="users">
+        {% for player in players %}
+        {% if player.id != user["id"] %}
+        <li>
+            {{ player["nick"] }}
+        </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</body>
+
+</html>
