@@ -9,45 +9,66 @@ const userId = getCookie("id")
 const socket = io()
 
 socket.on("connect", () => {
-    console.log("connected")
+    console.log("connected as", socket.id)
     socket.emit("join_game", userId)
 })
 
 const users = document.querySelector(".users")
-socket.on("new_user", (data) => {
-    console.log("new user", data)
-    users.appendChild(createUser(data))
+socket.on("players", (players) => {
+    users.innerHTML = ""
+    players.forEach(p => {
+        users.appendChild(createUser(p.nick, p.crown, p.check, p.points))
+    })
 })
 
-socket.on("start", (data) => {
+const startButton = document.getElementById("start-btn")
 
+const hand = document.querySelector(".hand")
+socket.on("new_round", (data) => {
+    console.log(data)
+    startButton.remove()
+    const cards = data.cards
+    hand.innerHTML = ""
+    cards.forEach(c => {
+        let wrapper = document.createElement("div")
+        wrapper.classList.add("hand__card-wrapper")
+        wrapper.appendChild(createCard(c.text, c.pack, "white"))
+        hand.appendChild(wrapper)
+    })
 })
 
-function createCard(text, color = "white") {
+startButton.onclick = () => fetch("/start").catch(e => {
+    startButton.innerText = e
+    startButton.style.background = "red"
+})
+
+function createCard(text, pack, color = "white") {
     let card = document.createElement("div")
     card.classList.add("card")
     card.classList.add("card--" + color)
 
     card.innerHTML = text
 
-    let pack = document.createElement("div")
-    pack.classList.add("card__pack")
+    let packEl = document.createElement("div")
+    packEl.classList.add("card__pack")
 
     let img = document.createElement("img")
-    pack.appendChild(img)
+    packEl.appendChild(img)
 
     let packName = document.createElement("span")
-    packName.innerText = "Cards Against Humanity"
-    pack.appendChild(packName)
+    packName.innerText = pack
+    packEl.appendChild(packName)
 
-    card.appendChild(pack)
+    card.appendChild(packEl)
 
     return card
 }
 
-function createUser(nick, points = 0) {
+function createUser(nick, crown = false, check = false, points = 0) {
     let li = document.createElement("li")
     li.classList.add("users__user")
+    li.classList.toggle("crown", crown)
+    li.classList.toggle("check", check)
     li.innerHTML = "<i class='fa-solid fa-crown'></i><i class='fa-solid fa-circle-check'></i><span class='material-symbols-outlined'>account_circle</span>"
 
     let nickEl = document.createElement("user__nick")

@@ -38,7 +38,10 @@
     "WEED": "Weed Pack",
     "RTPRD": "Retail Product Pack",
     "TBLTP": "Tabletop Pack",
-    "WWW": "World Wide Web Pack"
+    "WWW": "World Wide Web Pack",
+    "HIDDN": "Hidden Compartment Pack",
+    "BOX": "Box Expansion Pack",
+    "14PAX": "PAX East 2014 Pack"
   },
   "black": [
     {

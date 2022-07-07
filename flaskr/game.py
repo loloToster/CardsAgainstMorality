@@ -15,6 +15,7 @@ class Player:
         self.metadata = metadata
         self.cards = cards
         self.points = points
+        self.is_tsar = False
 
     def remove_cards(self, card_ids: List[int]):
         self.cards = [c for c in self.cards if not c["id"] in card_ids]
@@ -32,13 +33,16 @@ class Game:
         self.previous_tsars = []
         self.card_tsar = None
 
-    def new_player(self, id: str, metadata, force = False):
-        if force or not id in self.players:
+    def new_player(self, id: str, metadata) -> bool:
+        if id in self.players:
             if self.started:
                 self.players[id] = Player(id, [], metadata)
                 self.fill_players_cards()
             else:
                 self.players[id] = Player(id, [], metadata)
+            return False
+        self.players[id] = Player(id, [], metadata)
+        return True
 
     def get_players(self) -> List[Player]:
         return list(self.players.values())
@@ -64,8 +68,14 @@ class Game:
         if len(self.previous_tsars) >= len(players):
             self.previous_tsars = []
 
-        possible_tsars = [p for p in players if not p.id in self.previous_tsars]
+        possible_tsars = []
+        for p in players:
+            if not p.id in self.previous_tsars:
+                possible_tsars.append(p)
+            p.is_tsar = False
+            
         self.card_tsar = random.choice(possible_tsars)
+        self.card_tsar.is_tsar = True
         self.previous_tsars.append(self.card_tsar.id)
 
         return {

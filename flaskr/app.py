@@ -30,8 +30,16 @@ game = Game(dirname + "/cards.json")
 
 ### - Socket io - ###
 @io.on("connect")
-def on_connect(auth):
+def on_connect():
     print("new connection", req.sid)
+
+def update_users(): 
+    io.emit("players", list(map(lambda p: {
+        "nick": p.metadata["nick"], 
+        "points": p.points,
+        "crown": p.is_tsar,
+        "check": False
+    }, game.get_players())))
 
 @io.on("join_game")
 def join_game(data):
@@ -43,8 +51,8 @@ def join_game(data):
     user = query_result[0] 
     game.new_player(data, user)
     socketio.join_room(data)
-    
-    io.emit("new_user", user["nick"], include_self=False)
+
+    update_users()
 
 @io.on("disconnect")
 def on_connect():
@@ -60,12 +68,11 @@ def logged_in():
 
 @app.route("/")
 def root():
-    players = game.get_players()
     if "id" in req.cookies:
         query_result = users.search(User.id == req.cookies["id"])
         if len(query_result) > 0:
             user = query_result[0]
-            return render_template("index.html", user=user, players=players)
+            return render_template("index.html")
 
     new_user = {
         "nick": f"user{len(users) + 1}",
@@ -73,7 +80,7 @@ def root():
     }
     print("New user:", new_user)
     users.insert(new_user)
-    res = make_response(render_template("index.html", user=new_user, players=players))
+    res = make_response(render_template("index.html"))
     res.set_cookie("id", new_user["id"])
 
     return res
@@ -88,7 +95,12 @@ def start():
         return "Not enough players", 405
 
     round_data = game.new_round()
-    # TODO: send data to users ad begin the game
+    for p in game.get_players():
+        for c in p.cards:
+            c["pack"] = game.CARDS["packs"][c["watermark"]]
+        io.emit("new_round", {"tsar": p.is_tsar, "cards": p.cards}, room=p.id)
+    update_users()
+
     return ""
 
 @app.route("/change_nick")
