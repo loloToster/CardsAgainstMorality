@@ -56,7 +56,9 @@ class Game:
                 player.cards.append(self.white_cards.pop())
 
     def get_black_card(self):
-        return self.black_cards.pop()
+        card = self.black_cards.pop()
+        card["pack"] = self.CARDS["packs"][card["watermark"]]
+        return card
 
     def new_round(self):
         if not self.started:

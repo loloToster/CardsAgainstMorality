@@ -98,7 +98,11 @@ def start():
     for p in game.get_players():
         for c in p.cards:
             c["pack"] = game.CARDS["packs"][c["watermark"]]
-        io.emit("new_round", {"tsar": p.is_tsar, "cards": p.cards}, room=p.id)
+        io.emit("new_round", {
+            "tsar": p.is_tsar, 
+            "cards": p.cards, 
+            "black_card": round_data["black_card"]
+        }, room=p.id)
     update_users()
 
     return ""

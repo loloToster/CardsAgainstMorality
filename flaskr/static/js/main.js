@@ -1,3 +1,8 @@
+const socket = io()
+
+/**
+ * User related
+ */
 function getCookie(name) {
     const value = `; ${document.cookie}`
     const parts = value.split(`; ${name}=`)
@@ -5,8 +10,6 @@ function getCookie(name) {
 }
 
 const userId = getCookie("id")
-
-const socket = io()
 
 socket.on("connect", () => {
     console.log("connected as", socket.id)
@@ -21,33 +24,90 @@ socket.on("players", (players) => {
     })
 })
 
-const startButton = document.getElementById("start-btn")
+/**
+ * Game related
+ */
+let imTsar = false
+let curBlackCard = {
+    pick: 0
+}
 
-const hand = document.querySelector(".hand")
-socket.on("new_round", (data) => {
-    console.log(data)
-    startButton.remove()
-    const cards = data.cards
-    hand.innerHTML = ""
-    cards.forEach(c => {
-        let wrapper = document.createElement("div")
-        wrapper.classList.add("hand__card-wrapper")
-        wrapper.appendChild(createCard(c.text, c.pack, "white"))
-        hand.appendChild(wrapper)
-    })
-})
+const startButton = document.getElementById("start-btn")
 
 startButton.onclick = () => fetch("/start").catch(e => {
     startButton.innerText = e
     startButton.style.background = "red"
 })
 
-function createCard(text, pack, color = "white") {
-    let card = document.createElement("div")
-    card.classList.add("card")
-    card.classList.add("card--" + color)
+const topCards = document.querySelector(".top-cards")
+const submitButton = document.getElementById("submit-btn")
+const hand = document.querySelector(".hand")
 
-    card.innerHTML = text
+function onTopCardBtnClick(card, cardEl) {
+    cardEl.remove()
+    submitButton.classList.remove("active")
+
+    const [wrapper, newCardEl] = createCardWithWrapper(card, "white")
+    newCardEl.addEventListener("click", () => onHandCardClick(card, wrapper))
+    hand.appendChild(wrapper)
+}
+
+function onHandCardClick(card, wrapper) {
+    // check if there are available picks
+    const numOfPicks = topCards.getElementsByClassName("card--white").length
+    console.log(numOfPicks)
+
+    if (numOfPicks >= curBlackCard.pick)
+        return
+
+    submitButton.classList.toggle("active", numOfPicks + 1 == curBlackCard.pick)
+
+    wrapper.remove()
+    let cardEl = createCard(card, "white")
+    let xBtn = document.createElement("button")
+    xBtn.innerHTML = "X"
+    xBtn.addEventListener("click", () => onTopCardBtnClick(card, cardEl))
+    cardEl.appendChild(xBtn)
+    topCards.appendChild(cardEl)
+}
+
+socket.on("new_round", (data) => {
+    console.log(data)
+    startButton.remove()
+
+    imTsar = data.tsar
+
+    curBlackCard = data.black_card
+    topCards.innerHTML = ""
+    topCards.appendChild(createCard(curBlackCard, "black"))
+
+    const cards = data.cards
+    hand.innerHTML = ""
+    cards.forEach(c => {
+        const [wrapper, cardEl] = createCardWithWrapper(c, "white")
+        cardEl.addEventListener("click", () => onHandCardClick(c, wrapper))
+        hand.appendChild(wrapper)
+    })
+})
+
+/**
+ * Element creation
+ */
+function createCardWithWrapper(card) {
+    let wrapper = document.createElement("div")
+    wrapper.classList.add("hand__card-wrapper")
+    const cardEl = createCard(card, "white")
+    wrapper.appendChild(cardEl)
+    return [wrapper, cardEl]
+}
+
+function createCard(card, color) {
+    let cardEl = document.createElement("div")
+    cardEl.dataset.id = card.id
+    cardEl.classList.add("card")
+    cardEl.classList.add("card--" + color)
+
+    cardEl.innerHTML = card.text
 
     let packEl = document.createElement("div")
     packEl.classList.add("card__pack")
@@ -56,12 +116,12 @@ function createCard(text, pack, color = "white") {
     packEl.appendChild(img)
 
     let packName = document.createElement("span")
-    packName.innerText = pack
+    packName.innerText = card.pack
     packEl.appendChild(packName)
 
-    card.appendChild(packEl)
+    cardEl.appendChild(packEl)
 
-    return card
+    return cardEl
 }
 
 function createUser(nick, crown = false, check = false, points = 0) {
