@@ -28,7 +28,7 @@ socket.on("players", players => {
  * Game related
  */
 let imTsar = false
-let curBlackCard = {
+let curBlackCardData = {
     pick: 0
 }
 
@@ -39,13 +39,14 @@ startButton.onclick = () => fetch("/start").catch(e => {
     startButton.style.background = "red"
 })
 
+const blackCard = document.getElementById("black-card")
 const topCards = document.querySelector(".top-cards")
 const submitButton = document.getElementById("submit-btn")
 const hand = document.querySelector(".hand")
 
 submitButton.onclick = () => {
     const whiteCards = Array.from(topCards.getElementsByClassName("card--white"))
-    if (whiteCards.length < curBlackCard.pick) return
+    if (whiteCards.length < curBlackCardData.pick) return
 
     let submition = whiteCards.map(c => parseInt(c.dataset.id))
 
@@ -72,10 +73,10 @@ function onHandCardClick(card, wrapper) {
     const numOfPicks = topCards.getElementsByClassName("card--white").length
     console.log(numOfPicks)
 
-    if (numOfPicks >= curBlackCard.pick)
+    if (numOfPicks >= curBlackCardData.pick)
         return
 
-    submitButton.classList.toggle("active", numOfPicks + 1 == curBlackCard.pick)
+    submitButton.classList.toggle("active", numOfPicks + 1 == curBlackCardData.pick)
 
     wrapper.remove()
     let cardEl = createCard(card, "white")
@@ -92,9 +93,10 @@ socket.on("new_round", data => {
 
     imTsar = data.tsar
 
-    curBlackCard = data.black_card
+    curBlackCardData = data.black_card
     topCards.innerHTML = ""
-    topCards.appendChild(createCard(curBlackCard, "black"))
+    blackCard.querySelector(".card__text").innerHTML = curBlackCardData.text
+    blackCard.querySelector(".card__pack span").innerText = curBlackCardData.pack
 
     const cards = data.cards
     hand.innerHTML = ""
