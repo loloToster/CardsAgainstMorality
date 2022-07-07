@@ -6,26 +6,126 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,1,0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <!-- <link rel=stylesheet type=text/css href="../static/style.css"> -->
     {% assets "scss" %}
     <link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
     {% endassets %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script defer src="/static/js/main.js"></script>
 </head>
 
 <body>
-    <!-- <h1>{{ random_card|safe }}</h1> -->
-    <h2>You are:{{ user["nick"] }}</h2>
-    <h2>Other users:</h2>
-    <ul class="users">
-        {% for player in players %}
-        {% if player.id != user["id"] %}
-        <li>
-            {{ player["nick"] }}
-        </li>
-        {% endif %}
-        {% endfor %}
-    </ul>
+    <section>
+        <div class="top-cards">
+            <div class="card card--black">
+                This is the way the world ends This is the way the world ends Not
+                with a bang but with <span class='pick'>____</span>.
+                <div class="card__pack">
+                    <img><span>Cards Against Humanity</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <ul class="users">
+            {%for p in players%}
+            <li class="users__user">
+                <i class="fa-solid fa-crown"></i><i class="fa-solid fa-circle-check"></i>
+                <span class="material-symbols-outlined">
+                    account_circle
+                </span>
+                <div class="user__nick">{{p.metadata.nick}} (<span class="users__points">{{p.points}}</span>)</div>
+            </li>
+            {%endfor%}
+        </ul>
+    </section>
+    <section>
+        <div class="hand">
+            <div class="hand__card-wrapper">
+                <div class="card card--white">
+                    Your mum.
+                    <div class="card__pack">
+                        <img><span>Cards Against Humanity</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hand__card-wrapper">
+                <div class="card card--white">
+                    Your mum.
+                    <div class="card__pack">
+                        <img><span>Cards Against Humanity</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hand__card-wrapper">
+                <div class="card card--white">
+                    Your mum.
+                    <div class="card__pack">
+                        <img><span>Cards Against Humanity</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hand__card-wrapper">
+                <div class="card card--white">
+                    Your mum.
+                    <div class="card__pack">
+                        <img><span>Cards Against Humanity</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hand__card-wrapper">
+                <div class="card card--white">
+                    Your mum.
+                    <div class="card__pack">
+                        <img><span>Cards Against Humanity</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hand__card-wrapper">
+                <div class="card card--white">
+                    Your mum.
+                    <div class="card__pack">
+                        <img><span>Cards Against Humanity</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hand__card-wrapper">
+                <div class="card card--white">
+                    Your mum.
+                    <div class="card__pack">
+                        <img><span>Cards Against Humanity</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hand__card-wrapper">
+                <div class="card card--white">
+                    Your mum.
+                    <div class="card__pack">
+                        <img><span>Cards Against Humanity</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hand__card-wrapper">
+                <div class="card card--white">
+                    Your mum.
+                    <div class="card__pack">
+                        <img><span>Cards Against Humanity</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hand__card-wrapper">
+                <div class="card card--white">
+                    Your mum.
+                    <div class="card__pack">
+                        <img><span>Cards Against Humanity</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </body>
 
 </html>

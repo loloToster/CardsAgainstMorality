@@ -1,7 +1,161 @@
-body {
-    background-color: grey;
+@use "sass:math";
 
-    h1 {
-        color: red;
+body {
+    margin: 0;
+    background-color: #3f3f3f;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+//card ratio: 17:12
+.card {
+    $height: 320px;
+    box-sizing: border-box;
+    position: relative;
+
+    padding: $height * 0.058;
+    height: $height;
+    width: math.div($height, 17) * 12;
+
+    border-radius: $height * 0.035;
+    font-size: $height * 0.05;
+    line-height: 140%;
+    font-weight: bold;
+
+    img {
+        display: inline-block;
+        width: $height * 0.07;
+        height: $height * 0.07;
+    }
+
+    &--white {
+        color: black;
+        background-color: white;
+
+        img {
+            content: url("../static/assets/black-card-icon.svg");
+        }
+    }
+
+    &--black {
+        color: white;
+        background-color: black;
+
+        img {
+            content: url("../static/assets/white-card-icon.svg");
+        }
+    }
+
+    &__pack {
+        position: absolute;
+        display: flex;
+        align-items: center;
+
+        gap: $height * 0.01;
+        left: $height * 0.058;
+        bottom: $height * 0.058;
+
+        font-size: $height * 0.03;
+    }
+}
+
+.top-cards {
+    margin: 32px auto;
+    width: fit-content;
+}
+
+.users {
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+
+    margin: 38px auto;
+    gap: 16px;
+    padding: 0;
+
+    text-align: center;
+    font-weight: bold;
+
+    &__user {
+        position: relative;
+        box-sizing: border-box;
+        width: 100px;
+        padding: 8px;
+        background-color: #c8c8c8;
+        border-radius: 8px;
+
+        i {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            font-size: 22px;
+            transform: translateY(-60%);
+            text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+
+            &.fa-crown {
+                opacity: 0;
+                color: yellow;
+            }
+
+            &.fa-circle-check {
+                opacity: 0;
+                color: lime;
+            }
+        }
+
+        &.check .fa-circle-check {
+            opacity: 1;
+        }
+
+        &.crown .fa-crown {
+            opacity: 1;
+        }
+    }
+
+    .material-symbols-outlined {
+        font-size: 3rem;
+    }
+}
+
+.hand {
+    display: flex;
+    margin: auto;
+    max-width: 1000px;
+
+    &__card-wrapper {
+        flex: 1 1 0;
+        min-width: 0;
+
+        &:last-child {
+            flex: unset;
+        }
+    }
+
+    .card {
+        position: relative;
+        box-shadow: -3px 3px 14px -2px rgba(66, 68, 90, 1);
+        cursor: pointer;
+        transition: transform ease-in-out 100ms;
+
+        &::after {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            transition: height linear 80ms;
+            transform: translateY(60%);
+        }
+
+        &:hover {
+            transform: translateY(-60%);
+
+            &::after {
+                height: 100%;
+            }
+        }
     }
 }

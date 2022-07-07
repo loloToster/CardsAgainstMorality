@@ -60,7 +60,7 @@ def logged_in():
 
 @app.route("/")
 def root():
-    players = map(lambda x: x.metadata, game.get_players())
+    players = game.get_players()
     if "id" in req.cookies:
         query_result = users.search(User.id == req.cookies["id"])
         if len(query_result) > 0:
