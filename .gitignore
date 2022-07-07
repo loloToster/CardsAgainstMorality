@@ -18,3 +18,4 @@ db.json
 *.txt
 *.css
 load_json.py
+temp.py
