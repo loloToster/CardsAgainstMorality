@@ -17,7 +17,7 @@ socket.on("connect", () => {
 })
 
 const users = document.querySelector(".users")
-socket.on("players", (players) => {
+socket.on("players", players => {
     users.innerHTML = ""
     players.forEach(p => {
         users.appendChild(createUser(p.nick, p.crown, p.check, p.points))
@@ -42,6 +42,21 @@ startButton.onclick = () => fetch("/start").catch(e => {
 const topCards = document.querySelector(".top-cards")
 const submitButton = document.getElementById("submit-btn")
 const hand = document.querySelector(".hand")
+
+submitButton.onclick = () => {
+    const whiteCards = Array.from(topCards.getElementsByClassName("card--white"))
+    if (whiteCards.length < curBlackCard.pick) return
+
+    let submition = whiteCards.map(c => parseInt(c.dataset.id))
+
+    fetch("/submit_cards", {
+        method: "POST",
+        headers: {
+            "content-type": "application/json"
+        },
+        body: JSON.stringify(submition)
+    })
+}
 
 function onTopCardBtnClick(card, cardEl) {
     cardEl.remove()
@@ -71,7 +86,7 @@ function onHandCardClick(card, wrapper) {
     topCards.appendChild(cardEl)
 }
 
-socket.on("new_round", (data) => {
+socket.on("new_round", data => {
     console.log(data)
     startButton.remove()
 
@@ -88,6 +103,11 @@ socket.on("new_round", (data) => {
         cardEl.addEventListener("click", () => onHandCardClick(c, wrapper))
         hand.appendChild(wrapper)
     })
+})
+
+socket.on("choices", data => {
+    console.log("choices")
+    console.log(data)
 })
 
 /**

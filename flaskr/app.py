@@ -38,7 +38,7 @@ def update_users():
         "nick": p.metadata["nick"], 
         "points": p.points,
         "crown": p.is_tsar,
-        "check": False
+        "check": len(p.choice) > 0
     }, game.get_players())))
 
 @io.on("join_game")
@@ -96,8 +96,6 @@ def start():
 
     round_data = game.new_round()
     for p in game.get_players():
-        for c in p.cards:
-            c["pack"] = game.CARDS["packs"][c["watermark"]]
         io.emit("new_round", {
             "tsar": p.is_tsar, 
             "cards": p.cards, 
@@ -107,11 +105,29 @@ def start():
 
     return ""
 
+@app.route("/submit_cards", methods=["POST"])
+def submit_cards():
+    if not logged_in(): return redirect("/")
+
+    cards = req.json
+    player = game.players[req.cookies["id"]]
+
+    if player.is_tsar: return "User is tsar", 405
+    if len(player.choice) > 0: return "Already chose", 405 
+
+    player.choose(cards)
+    
+    if game.all_chose():
+        io.emit("choices", [p.choice for p in game.get_players() if not p.is_tsar])
+    
+    update_users()
+
+    return ""
+
+
 @app.route("/change_nick")
 def change_nick():
     if not logged_in(): return redirect("/")
-    if not "id" in req.cookies:
-        return "Not logged in", 401
     if not "n" in req.args:
         return "No n parameter in request", 400
     if default_user_regex.match(req.args["n"]):

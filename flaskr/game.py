@@ -10,15 +10,34 @@ class GameNotStartedError(Exception):
     pass
 
 class Player:
-    def __init__(self, id: str, cards: list, metadata = {}, points = 0):
+    def __init__(self, game, id: str, cards: list, metadata = {}, points = 0):
+        self.game = game
         self.id = id
         self.metadata = metadata
         self.cards = cards
         self.points = points
         self.is_tsar = False
+        self.choice = []
+
+    def choose(self, card_ids: List[int]):
+        if self.is_tsar: raise Exception("Player is tsar")
+        if len(card_ids) != self.game.current_black["pick"]:
+            raise Exception("Invalid number of cards")
+        self.choice = self.remove_cards(card_ids)
 
     def remove_cards(self, card_ids: List[int]):
-        self.cards = [c for c in self.cards if not c["id"] in card_ids]
+        removed = []
+        new_cards = []
+        for c in self.cards:
+            if c["id"] in card_ids:
+                card_ids.remove(c["id"])
+                removed.append(c)
+            else:
+                new_cards.append(c)
+        if len(card_ids) > 0:
+            raise Exception("Cards not found:", card_ids)
+        self.cards = new_cards
+        return removed
 
 
 class Game:
@@ -32,16 +51,18 @@ class Game:
         self.started = False
         self.previous_tsars = []
         self.card_tsar = None
+        self.current_black = None
 
     def new_player(self, id: str, metadata) -> bool:
+        new_player = Player(self, id, [], metadata)
         if id in self.players:
             if self.started:
-                self.players[id] = Player(id, [], metadata)
+                self.players[id] = new_player
                 self.fill_players_cards()
             else:
-                self.players[id] = Player(id, [], metadata)
+                self.players[id] = new_player
             return False
-        self.players[id] = Player(id, [], metadata)
+        self.players[id] = new_player
         return True
 
     def get_players(self) -> List[Player]:
@@ -53,11 +74,14 @@ class Game:
             if num_of_player_cards >= self.num_of_cards:
                 continue
             for _ in range(self.num_of_cards - num_of_player_cards):
-                player.cards.append(self.white_cards.pop())
+                card = self.white_cards.pop()
+                card["pack"] = self.CARDS["packs"][card["watermark"]]
+                player.cards.append(card)
 
     def get_black_card(self):
         card = self.black_cards.pop()
         card["pack"] = self.CARDS["packs"][card["watermark"]]
+        self.current_black = card
         return card
 
     def new_round(self):
@@ -72,9 +96,10 @@ class Game:
 
         possible_tsars = []
         for p in players:
+            p.choice = []
+            p.is_tsar = False
             if not p.id in self.previous_tsars:
                 possible_tsars.append(p)
-            p.is_tsar = False
             
         self.card_tsar = random.choice(possible_tsars)
         self.card_tsar.is_tsar = True
@@ -86,6 +111,9 @@ class Game:
             "other_players": [p for p in players if p.id != self.card_tsar.id]
         }
 
+    def all_chose(self):
+        return all([len(p.choice) > 0 for p in self.get_players() if not p.is_tsar])
+
     def start(self):
         if len(self.players.keys()) < 2:
             raise NotEnoughPlayersError()
@@ -94,3 +122,6 @@ class Game:
         random.shuffle(self.white_cards)
         self.black_cards = deepcopy(self.CARDS["black"])
         random.shuffle(self.black_cards)
+        for p in self.get_players():
+            p.choice = []
+            p.is_tsar = False
