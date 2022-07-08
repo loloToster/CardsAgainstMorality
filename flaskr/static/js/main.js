@@ -41,6 +41,7 @@ startButton.onclick = () => fetch("/start").catch(e => {
 
 const blackCard = document.getElementById("black-card")
 const topCards = document.querySelector(".top-cards")
+const choicesBox = document.querySelector(".choices")
 const submitButton = document.getElementById("submit-btn")
 const hand = document.querySelector(".hand")
 
@@ -69,6 +70,8 @@ function onTopCardBtnClick(card, cardEl) {
 }
 
 function onHandCardClick(card, wrapper) {
+    if (imTsar) return
+
     // check if there are available picks
     const numOfPicks = topCards.getElementsByClassName("card--white").length
     console.log(numOfPicks)
@@ -88,13 +91,14 @@ function onHandCardClick(card, wrapper) {
 }
 
 socket.on("new_round", data => {
-    console.log(data)
     startButton.remove()
 
     imTsar = data.tsar
 
-    curBlackCardData = data.black_card
     topCards.innerHTML = ""
+    choicesBox.innerHTML = ""
+
+    curBlackCardData = data.black_card
     blackCard.querySelector(".card__text").innerHTML = curBlackCardData.text
     blackCard.querySelector(".card__pack span").innerText = curBlackCardData.pack
 
@@ -107,14 +111,40 @@ socket.on("new_round", data => {
     })
 })
 
-socket.on("choices", data => {
-    console.log("choices")
-    console.log(data)
+function onChoiceClick(choice, choiceEl) {
+    document.querySelectorAll(".choices__choice")
+        .forEach(e => e.classList.remove("active"))
+    choiceEl.classList.add("active")
+    topCards.innerHTML = ""
+    choice.forEach(c => {
+        topCards.appendChild(createCard(c, "white"))
+    })
+}
+
+socket.on("choices", choices => {
+    topCards.innerHTML = ""
+    choicesBox.innerHTML = ""
+
+    choices.forEach((choice, i) => {
+        const choiceEl = createChoiceElement(choice, i + 1)
+        choiceEl.addEventListener("click", () => onChoiceClick(choice, choiceEl))
+        choicesBox.appendChild(choiceEl)
+    })
 })
 
 /**
  * Element creation
  */
+function createChoiceElement(choice, innerText) {
+    let el = document.createElement("div")
+    el.classList.add("choices__choice")
+    el.dataset.hash = choice.reduce((acc, c) => {
+        return acc + c["id"].toString()
+    }, "")
+    el.innerText = innerText
+    return el
+}
+
 function createCardWithWrapper(card) {
     let wrapper = document.createElement("div")
     wrapper.classList.add("hand__card-wrapper")

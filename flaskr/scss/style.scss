@@ -74,6 +74,10 @@ $card-height: 320px;
     display: flex;
     gap: 16px;
 
+    &:empty {
+        display: none;
+    }
+
     .card {
         button {
             display: none;
@@ -98,10 +102,16 @@ $card-height: 320px;
 }
 
 .choices {
-    display: grid;
-    width: 320px;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px 20px;
+    display: flex;
+    flex-flow: column wrap;
+
+    gap: 8px;
+    height: $card-height;
+    margin-left: 12px;
+
+    &:empty {
+        display: none;
+    }
 
     &__choice {
         display: flex;
@@ -109,13 +119,22 @@ $card-height: 320px;
         justify-content: center;
         position: relative;
 
-        height: 90px;
+        width: 70px;
+        height: 100px;
+        // margin to make space for pseudo-elements
+        margin-left: 12px;
 
         background-color: white;
         box-shadow: -2px 1px 7px 0 #262626;
         border-radius: 4px;
-        font-size: 2rem;
+        font-size: 2.3rem;
         font-weight: bold;
+        cursor: pointer;
+        transition: font-size 100ms linear;
+
+        &.active {
+            font-size: 3.3rem;
+        }
 
         &::before,
         &::after {
@@ -129,6 +148,7 @@ $card-height: 320px;
             border-radius: inherit;
             background-color: inherit;
             box-shadow: inherit;
+            cursor: pointer;
         }
 
         &::before {
