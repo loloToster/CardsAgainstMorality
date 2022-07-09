@@ -16,6 +16,10 @@ socket.on("connect", () => {
     socket.emit("join_game", userId)
 })
 
+socket.io.on("reconnect", () => {
+    location.reload()
+})
+
 const users = document.querySelector(".users")
 socket.on("players", players => {
     users.innerHTML = ""
@@ -43,9 +47,13 @@ const blackCard = document.getElementById("black-card")
 const topCards = document.querySelector(".top-cards")
 const choicesBox = document.querySelector(".choices")
 const submitButton = document.getElementById("submit-btn")
+const chooseBtn = document.getElementById("choose-btn")
 const hand = document.querySelector(".hand")
 
+let submitted = false
 submitButton.onclick = () => {
+    if (submitted) return
+
     const whiteCards = Array.from(topCards.getElementsByClassName("card--white"))
     if (whiteCards.length < curBlackCardData.pick) return
 
@@ -58,6 +66,9 @@ submitButton.onclick = () => {
         },
         body: JSON.stringify(submition)
     })
+
+    submitted = true
+    submitButton.innerText = "Submitted"
 }
 
 function onTopCardBtnClick(card, cardEl) {
@@ -74,7 +85,6 @@ function onHandCardClick(card, wrapper) {
 
     // check if there are available picks
     const numOfPicks = topCards.getElementsByClassName("card--white").length
-    console.log(numOfPicks)
 
     if (numOfPicks >= curBlackCardData.pick)
         return
@@ -94,7 +104,11 @@ socket.on("new_round", data => {
     startButton.remove()
 
     imTsar = data.tsar
+    chooseBtn.classList.remove("active")
 
+    submitted = false
+    submitButton.innerText = "Submit"
+    submitButton.classList.remove("active")
     topCards.innerHTML = ""
     choicesBox.innerHTML = ""
 
@@ -125,12 +139,27 @@ socket.on("choices", choices => {
     topCards.innerHTML = ""
     choicesBox.innerHTML = ""
 
+    chooseBtn.classList.toggle("active", imTsar)
+
     choices.forEach((choice, i) => {
         const choiceEl = createChoiceElement(choice, i + 1)
         choiceEl.addEventListener("click", () => onChoiceClick(choice, choiceEl))
         choicesBox.appendChild(choiceEl)
     })
 })
+
+chooseBtn.onclick = () => {
+    if (!imTsar) return
+
+    const decision = document.querySelector(".choices__choice.active").dataset.hash
+    fetch("/tsar_decision", {
+        method: "POST",
+        headers: {
+            "content-type": "application/json"
+        },
+        body: JSON.stringify({ decision })
+    })
+}
 
 /**
  * Element creation

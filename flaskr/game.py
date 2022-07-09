@@ -113,6 +113,14 @@ class Game:
 
     def all_chose(self):
         return all([len(p.choice) > 0 for p in self.get_players() if not p.is_tsar])
+    
+    def get_player_from_choice_hash(self, target):
+        for p in self.get_players():
+            h = ""
+            for card in p.choice:
+                h += str(card["id"])
+            if target == h: return p
+        raise Exception("There is no player with choice hash:", target)
 
     def start(self):
         if len(self.players.keys()) < 2:
@@ -123,5 +131,6 @@ class Game:
         self.black_cards = deepcopy(self.CARDS["black"])
         random.shuffle(self.black_cards)
         for p in self.get_players():
+            p.points = 0
             p.choice = []
             p.is_tsar = False

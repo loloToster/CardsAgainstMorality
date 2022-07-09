@@ -6,6 +6,7 @@ from tinydb import TinyDB, Query
 import os
 import re
 from uuid import uuid4
+from random import shuffle
 
 from game import Game, NotEnoughPlayersError
 
@@ -68,12 +69,14 @@ def logged_in():
 
 @app.route("/")
 def root():
+    # if user has valid cookie render page
     if "id" in req.cookies:
         query_result = users.search(User.id == req.cookies["id"])
         if len(query_result) > 0:
             user = query_result[0]
             return render_template("index.html")
 
+    # if user does not have cookie or cookie is invalid create new user
     new_user = {
         "nick": f"user{len(users) + 1}",
         "id": uuid4().hex
@@ -109,17 +112,43 @@ def start():
 def submit_cards():
     if not logged_in(): return redirect("/")
 
-    cards = req.json
     player = game.players[req.cookies["id"]]
 
     if player.is_tsar: return "User is tsar", 405
     if len(player.choice) > 0: return "Already chose", 405 
 
+    cards = req.json
     player.choose(cards)
     
     if game.all_chose():
-        io.emit("choices", [p.choice for p in game.get_players() if not p.is_tsar])
+        choices = [p.choice for p in game.get_players() if not p.is_tsar]
+        shuffle(choices)
+        io.emit("choices", choices)
+
+    update_users()
+
+    return ""
+
+@app.route("/tsar_decision", methods=["POST"])
+def tsar_decision():
+    if not logged_in(): return redirect("/")
+
+    player = game.players[req.cookies["id"]]
     
+    if not player.is_tsar: return "User is not tsar", 405
+    if not game.all_chose(): return "Not all users submitted choice", 405
+
+    decision = req.json["decision"]
+    winner = game.get_player_from_choice_hash(decision)
+    winner.points += 1
+
+    round_data = game.new_round()
+    for p in game.get_players():
+        io.emit("new_round", {
+            "tsar": p.is_tsar, 
+            "cards": p.cards, 
+            "black_card": round_data["black_card"]
+        }, room=p.id)
     update_users()
 
     return ""
