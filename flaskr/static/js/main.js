@@ -1,3 +1,37 @@
+/**
+ * User editing
+ */
+function fileToBase64(file) {
+    return new Promise(resolve => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result)
+        reader.readAsDataURL(file)
+    })
+}
+
+const avatarInp = document.getElementById("avatar-inp")
+const avatar = document.querySelector(".header__avatar")
+
+avatar.onclick = () => avatarInp.click()
+
+avatarInp.addEventListener("input", async () => {
+    const file = avatarInp.files[0]
+    if (!file) return
+
+    const base64 = await fileToBase64(file)
+
+    let res = await fetch("/change_avatar", {
+        method: "POST",
+        headers: {
+            "content-type": "application/json"
+        },
+        body: JSON.stringify({ avatar: base64 })
+    })
+
+    let newAvatar = await res.text()
+    avatar.style.setProperty("--avatar", `url(${newAvatar})`)
+})
+
 const socket = io()
 
 /**
@@ -24,7 +58,7 @@ const users = document.querySelector(".users")
 socket.on("players", players => {
     users.innerHTML = ""
     players.forEach(p => {
-        users.appendChild(createUser(p.nick, p.crown, p.check, p.points))
+        users.appendChild(createUser(p))
     })
 })
 
@@ -205,15 +239,22 @@ function createCard(card, color) {
     return cardEl
 }
 
-function createUser(nick, crown = false, check = false, points = 0) {
+function createUser({ nick, avatar, crown, check, points }) {
     let li = document.createElement("li")
     li.classList.add("users__user")
     li.classList.toggle("crown", crown)
     li.classList.toggle("check", check)
-    li.innerHTML = "<i class='fa-solid fa-crown'></i><i class='fa-solid fa-circle-check'></i><span class='material-symbols-outlined'>account_circle</span>"
+    li.innerHTML = "<i class='fa-solid fa-crown'></i><i class='fa-solid fa-circle-check'></i>"
 
-    let nickEl = document.createElement("user__nick")
-    nickEl.innerHTML = `<div class='user__nick'>${nick} (<span class='users__points'>${points}</span>)</div>`
+    console.log(avatar)
+    let avatarEl = document.createElement("img")
+    avatarEl.classList.add("users__avatar")
+    avatarEl.src = avatar
+    li.appendChild(avatarEl)
+
+    let nickEl = document.createElement("div")
+    nickEl.classList.add("user__nick")
+    nickEl.innerHTML = `${nick} (<span class='users__points'>${points}</span>)`
     li.appendChild(nickEl)
 
     return li

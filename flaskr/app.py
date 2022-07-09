@@ -2,11 +2,14 @@ from flask import Flask, redirect, render_template, make_response, request as re
 import flask_socketio as socketio
 from flask_assets import Environment, Bundle
 from tinydb import TinyDB, Query
+from PIL import Image
 
 import os
 import re
 from uuid import uuid4
 from random import shuffle
+from io import BytesIO
+import base64
 
 from game import Game, NotEnoughPlayersError
 
@@ -38,6 +41,7 @@ def on_connect():
 def update_users(): 
     io.emit("players", list(map(lambda p: {
         "nick": p.metadata["nick"], 
+        "avatar": p.metadata["avatar"],
         "points": p.points,
         "crown": p.is_tsar,
         "check": len(p.choice) > 0
@@ -80,9 +84,9 @@ def root():
     # if user does not have cookie or cookie is invalid create new user
     new_user = {
         "nick": f"user{len(users) + 1}",
-        "id": uuid4().hex
+        "id": uuid4().hex,
+        "avatar": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAARYSURBVHhe7Zs9jBVVGIbv/iSbbBAxxsJCXWNnEDG0ipRq0MVYKSg9xkhJg9hvor0kNjaQGClINDH8JEoDGiXBWCgsaiwIsq4BOvbO+rzHbyaz14/d+TlnbzHzJk/es9/9Zu6cb2bOnDk3OzEYDFahs5o076z6Aph3Vn0BzDurvgDmnVVfAPPOqi+AeWfV+QKM82XoFiyBvv8ReBjGIh3AZnF+YmLi6OTk5OO0R7WFz/bDL7S9bVPhBmOzDIegqnbCdfD2FZXNuAWuc1bnV1dXr+gPzv4DWZa9SHMX8R3ENQ7dov0N7c+UI01NTW0bDofnaD73XySd/leViCzR4SfwIDr5GvYjeLniL3LexoOmp6cfxNbLj4EbjMU+CKJj72ND8PLWQO4XeK45cPMi4QZj8DkE0aF3sQy8PBe2OYbn+gjcvAi4wRjsAWkb5I+7OmTcPs/gKuBjpXhs3GBbljnoLbh0GLycDWEfx/Eg2t9hbl4bkswEOdhLjOh37c+95rXFPt6wptoXrBlVSQrAwf5sTekp8yZ6CMKVRFE1L4iuzXgXeNS8kTQfsGYSpSqABq1cf5o3EXOh4T9qcFUlOdZUBQijt+m0eRNpEhTGEm6BF+Qp5I6ObdGUF9eB7yjH68C2R3DtQ+PAzTweGTcYAz3+gujAGczLWY9Fmwpr+wOleGzcYAw0+QmamZnRaL4IXp7HMoPfblyd15V03uIpcINR4OC/xoNsDeAquLklFsktzx0+AC8vFm4wGnRGL0GF+Ps9zLsaboDm/8VjjwIexPQUGM2NiRuMCh35FF8j7u+tFOMVPnsZilfmXMRUKC2kuPuMxWZMhK7xDP99dnZW40ChlZWV21mWfclnX+lzCwctLCxooUYKc4DUcisTAV3mhzjL4XFYFgPcVs7wHLxkbPfyTHr+p1wec4NtyOjQJ/joFFbLYLrHf4X7LYzcYNuTujVoj0pjibdNW9xgU3TPFqtAEh2ax34AL389rrLtmgEU7ST2G+7lN8UNNkFrAOpsEGdRj71T4OXWQdNhLYsFsV8NmHXmFBvhBuuy5swzwuty/xu83CbottKCahBtFeQeeLl1cYN1KVZyOUOatiZ5fNHxd/Ag2s9jbl5N3GBlOJDiGU/nn8VSP7tfhVwaVL2cOrjBqui+fxqXNOpXmeq2Re8J+WKpHp1tv9MNVqVYuuZgTmJeTgq+hyC+t+2bohusgs5+vvKjQWkFvLwkcLu9hefSL81uXgXcYBVOQBCF0Djg5aREvyIH8f1tfjhxg1XYDxr4dO8nf2nxsDmBjmF7OV6Hxi9DVP1bOS8yb2JJV27vJ16mXjf/CdP0uraaFmCJjv+hBv5kiIxH5YWTs+a11LQAl82l5L/fr6Pyd5d/jKmspgW4Yy6N8woo1hi4JWetWVvu4LARfOGH+Mej8TFwkWM5ijd69+j/Zca8s+oLYN5Z9QUw76z6Aph3Vn0BzDurvgDmnVXHCzAY/AtSAicujIG4tQAAAABJRU5ErkJggg=="
     }
-    print("New user:", new_user)
     users.insert(new_user)
     res = make_response(render_template("index.html", user=new_user))
     res.set_cookie("id", new_user["id"]) # , domain=".eu.ngrok.io"
@@ -167,6 +171,29 @@ def change_nick():
     
     users.update({"nick": req.args["n"]}, User.id == req.cookies["id"])
     return ""
+
+def downscale64base(data, w=64, h=64):
+    buffer = BytesIO()
+    imgdata = base64.b64decode(data)
+    img = Image.open(BytesIO(imgdata))
+    new_img = img.resize((w, h))
+    new_img.save(buffer, format="PNG")
+    img_b64 = base64.b64encode(buffer.getvalue())
+    return str(img_b64)[2:-1]
+
+@app.route("/change_avatar", methods=["POST"])
+def change_avatar():
+    if not logged_in(): return redirect("/")
+
+    new_avatar = str(req.json["avatar"]).split("base64,", 1)[1]
+
+    new_avatar_small = "data:image/png;base64," + downscale64base(new_avatar)
+
+    print(len(new_avatar), len(new_avatar_small))
+
+    users.update({"avatar": new_avatar_small}, User.id == req.cookies["id"])
+
+    return new_avatar_small
 
 if __name__ == "__main__":
     io.run(app, host="0.0.0.0", port=8080)

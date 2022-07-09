@@ -25,7 +25,8 @@
         <span class="header__username">
             <button id="edit-username">✏️</button>{{user["nick"]}}
         </span>
-        <div class="header__avatar"></div>
+        <div class="header__avatar" style="--avatar:url('{{user['avatar']}}');"></div>
+        <input style="display: none;" id="avatar-inp" type="file" accept="image/png, image/jpeg, image/jpg">
     </header>
     <section>
         <div class="top">
@@ -49,8 +50,7 @@
         </div>
     </section>
     <section>
-        <ul class="users">
-        </ul>
+        <ul class="users"></ul>
     </section>
     <section>
         <div class="hand">
