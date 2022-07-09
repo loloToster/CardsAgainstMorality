@@ -212,6 +212,39 @@ chooseBtn.onclick = () => {
 }
 
 /**
+ * Reconnecting
+ */
+socket.on("rejoin", data => {
+    startButton.remove()
+
+    imTsar = data.is_tsar
+
+    curBlackCardData = data.black_card
+    blackCard.querySelector(".card__text").innerHTML = curBlackCardData.text
+    blackCard.querySelector(".card__pack span").innerText = curBlackCardData.pack
+
+    const cards = data.cards
+    hand.innerHTML = ""
+    cards.forEach(c => {
+        const [wrapper, cardEl] = createCardWithWrapper(c, "white")
+        cardEl.addEventListener("click", () => onHandCardClick(c, wrapper))
+        hand.appendChild(wrapper)
+    })
+
+    if (data.choices) {
+        const choices = data.choices
+
+        chooseBtn.classList.toggle("active", imTsar)
+
+        choices.forEach((choice, i) => {
+            const choiceEl = createChoiceElement(choice, i + 1)
+            choiceEl.addEventListener("click", () => onChoiceClick(choice, choiceEl))
+            choicesBox.appendChild(choiceEl)
+        })
+    }
+})
+
+/**
  * Element creation
  */
 function createChoiceElement(choice, innerText) {
@@ -262,7 +295,6 @@ function createUser({ nick, avatar, crown, check, points }) {
     li.classList.toggle("check", check)
     li.innerHTML = "<i class='fa-solid fa-crown'></i><i class='fa-solid fa-circle-check'></i>"
 
-    console.log(avatar)
     let avatarEl = document.createElement("img")
     avatarEl.classList.add("users__avatar")
     avatarEl.src = avatar

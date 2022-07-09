@@ -54,15 +54,13 @@ class Game:
         self.current_black = None
 
     def new_player(self, id: str, metadata) -> bool:
-        new_player = Player(self, id, [], metadata)
         if id in self.players:
-            if self.started:
-                self.players[id] = new_player
-                self.fill_players_cards()
-            else:
-                self.players[id] = new_player
             return False
+            
+        new_player = Player(self, id, [], metadata)
         self.players[id] = new_player
+        if self.started:
+            self.fill_players_cards()
         return True
 
     def get_players(self) -> List[Player]:

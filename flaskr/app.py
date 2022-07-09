@@ -54,9 +54,33 @@ def join_game(data):
         print("unknown id", data)
         return
 
-    user = query_result[0] 
-    game.new_player(data, user)
-    socketio.join_room(data)
+    user = query_result[0]
+    u_id = user["id"]
+
+    if game.started:
+        if u_id in game.players:
+            socketio.join_room(u_id)
+            p = game.players[u_id]
+
+            rejoin_data = {
+                "is_tsar": p.is_tsar,
+                "black_card": game.current_black,
+                "cards": p.cards
+            }
+
+            if game.all_chose():
+                # TODO: shuffling here is another then in the /submit_cards route
+                choices = [p.choice for p in game.get_players() if not p.is_tsar]
+                shuffle(choices)
+                rejoin_data["choices"] = choices
+
+            socketio.emit("rejoin", rejoin_data, room=u_id)
+        else: 
+            socketio.disconnect()
+            return
+    else:
+        socketio.join_room(u_id)
+        game.new_player(data, user)
 
     update_users()
 
@@ -72,24 +96,36 @@ def logged_in():
         return False
     return True
 
-@app.route("/")
-def root():
-    # if user has valid cookie render page
+def get_res_with_user():
+    res = make_response()
+    # if user has valid cookie return user
     if "id" in req.cookies:
         query_result = users.search(User.id == req.cookies["id"])
         if len(query_result) > 0:
-            user = query_result[0]
-            return render_template("index.html", user=user)
-
-    # if user does not have cookie or cookie is invalid create new user
+            res.user = query_result[0]
+            return res
+    
+    # if user does not have cookie or cookie is invalid return new user & cookie that should be set
     new_user = {
         "nick": f"user{len(users) + 1}",
         "id": uuid4().hex,
         "avatar": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAARYSURBVHhe7Zs9jBVVGIbv/iSbbBAxxsJCXWNnEDG0ipRq0MVYKSg9xkhJg9hvor0kNjaQGClINDH8JEoDGiXBWCgsaiwIsq4BOvbO+rzHbyaz14/d+TlnbzHzJk/es9/9Zu6cb2bOnDk3OzEYDFahs5o076z6Aph3Vn0BzDurvgDmnVVfAPPOqi+AeWfV+QKM82XoFiyBvv8ReBjGIh3AZnF+YmLi6OTk5OO0R7WFz/bDL7S9bVPhBmOzDIegqnbCdfD2FZXNuAWuc1bnV1dXr+gPzv4DWZa9SHMX8R3ENQ7dov0N7c+UI01NTW0bDofnaD73XySd/leViCzR4SfwIDr5GvYjeLniL3LexoOmp6cfxNbLj4EbjMU+CKJj72ND8PLWQO4XeK45cPMi4QZj8DkE0aF3sQy8PBe2OYbn+gjcvAi4wRjsAWkb5I+7OmTcPs/gKuBjpXhs3GBbljnoLbh0GLycDWEfx/Eg2t9hbl4bkswEOdhLjOh37c+95rXFPt6wptoXrBlVSQrAwf5sTekp8yZ6CMKVRFE1L4iuzXgXeNS8kTQfsGYSpSqABq1cf5o3EXOh4T9qcFUlOdZUBQijt+m0eRNpEhTGEm6BF+Qp5I6ObdGUF9eB7yjH68C2R3DtQ+PAzTweGTcYAz3+gujAGczLWY9Fmwpr+wOleGzcYAw0+QmamZnRaL4IXp7HMoPfblyd15V03uIpcINR4OC/xoNsDeAquLklFsktzx0+AC8vFm4wGnRGL0GF+Ps9zLsaboDm/8VjjwIexPQUGM2NiRuMCh35FF8j7u+tFOMVPnsZilfmXMRUKC2kuPuMxWZMhK7xDP99dnZW40ChlZWV21mWfclnX+lzCwctLCxooUYKc4DUcisTAV3mhzjL4XFYFgPcVs7wHLxkbPfyTHr+p1wec4NtyOjQJ/joFFbLYLrHf4X7LYzcYNuTujVoj0pjibdNW9xgU3TPFqtAEh2ax34AL389rrLtmgEU7ST2G+7lN8UNNkFrAOpsEGdRj71T4OXWQdNhLYsFsV8NmHXmFBvhBuuy5swzwuty/xu83CbottKCahBtFeQeeLl1cYN1KVZyOUOatiZ5fNHxd/Ag2s9jbl5N3GBlOJDiGU/nn8VSP7tfhVwaVL2cOrjBqui+fxqXNOpXmeq2Re8J+WKpHp1tv9MNVqVYuuZgTmJeTgq+hyC+t+2bohusgs5+vvKjQWkFvLwkcLu9hefSL81uXgXcYBVOQBCF0Djg5aREvyIH8f1tfjhxg1XYDxr4dO8nf2nxsDmBjmF7OV6Hxi9DVP1bOS8yb2JJV27vJ16mXjf/CdP0uraaFmCJjv+hBv5kiIxH5YWTs+a11LQAl82l5L/fr6Pyd5d/jKmspgW4Yy6N8woo1hi4JWetWVvu4LARfOGH+Mej8TFwkWM5ijd69+j/Zca8s+oLYN5Z9QUw76z6Aph3Vn0BzDurvgDmnVXHCzAY/AtSAicujIG4tQAAAABJRU5ErkJggg=="
     }
     users.insert(new_user)
-    res = make_response(render_template("index.html", user=new_user))
     res.set_cookie("id", new_user["id"]) # , domain=".eu.ngrok.io"
+    res.user = new_user
+    return res
+
+
+@app.route("/")
+def root():
+    res = get_res_with_user()
+    user = res.user
+
+    if (game.started and user["id"] in game.players) or not game.started:
+        res.set_data(render_template("index.html", user=user))
+    else:
+        return "Cannot join the game because it has already started"
 
     return res
 
