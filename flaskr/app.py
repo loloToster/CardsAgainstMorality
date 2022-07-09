@@ -11,7 +11,7 @@ from random import shuffle
 from io import BytesIO
 import base64
 
-from game import Game, NotEnoughPlayersError
+from game import Game, NotEnoughPlayersError, WrongStageError
 
 app = Flask(__name__)
 app.config.update(TEMPLATES_AUTO_RELOAD=True)
@@ -38,14 +38,14 @@ game = Game(dirname + "/cards.json")
 def on_connect():
     print("new connection", req.sid)
 
-def update_users(): 
-    io.emit("players", list(map(lambda p: {
+def update_users():
+    io.emit("players", [{
         "nick": p.metadata["nick"], 
         "avatar": p.metadata["avatar"],
         "points": p.points,
         "crown": p.is_tsar,
         "check": len(p.choice) > 0
-    }, game.get_players())))
+    } for p in game.get_players()])
 
 @io.on("join_game")
 def join_game(data):
@@ -57,8 +57,9 @@ def join_game(data):
     user = query_result[0]
     u_id = user["id"]
 
-    if game.started:
+    if game.stage != Game.NOT_STARTED:
         if u_id in game.players:
+            # TODO: add choosen cards to rejoin data
             socketio.join_room(u_id)
             p = game.players[u_id]
 
@@ -68,11 +69,8 @@ def join_game(data):
                 "cards": p.cards
             }
 
-            if game.all_chose():
-                # TODO: shuffling here is another then in the /submit_cards route
-                choices = [p.choice for p in game.get_players() if not p.is_tsar]
-                shuffle(choices)
-                rejoin_data["choices"] = choices
+            if game.stage == Game.TSAR_VERDICT:
+                rejoin_data["choices"] = game.get_choices()
 
             socketio.emit("rejoin", rejoin_data, room=u_id)
         else: 
@@ -122,7 +120,7 @@ def root():
     res = get_res_with_user()
     user = res.user
 
-    if (game.started and user["id"] in game.players) or not game.started:
+    if (game.stage != Game.NOT_STARTED and user["id"] in game.players) or game.stage == Game.NOT_STARTED:
         res.set_data(render_template("index.html", user=user))
     else:
         return "Cannot join the game because it has already started"
@@ -159,12 +157,10 @@ def submit_cards():
     if len(player.choice) > 0: return "Already chose", 405 
 
     cards = req.json
-    player.choose(cards)
+    everyone_chose = player.choose(cards)
     
-    if game.all_chose():
-        choices = [p.choice for p in game.get_players() if not p.is_tsar]
-        shuffle(choices)
-        io.emit("choices", choices)
+    if everyone_chose:
+        io.emit("choices", game.get_choices())
 
     update_users()
 
@@ -177,11 +173,13 @@ def tsar_decision():
     player = game.players[req.cookies["id"]]
     
     if not player.is_tsar: return "User is not tsar", 405
-    if not game.all_chose(): return "Not all users submitted choice", 405
 
     decision = req.json["decision"]
-    winner = game.get_player_from_choice_hash(decision)
-    winner.points += 1
+
+    try:
+        game.choose_winner(decision)
+    except WrongStageError:
+        return "Cannot choose winner during card picking", 405
 
     round_data = game.new_round()
     for p in game.get_players():
