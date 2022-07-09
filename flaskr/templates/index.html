@@ -22,8 +22,10 @@
     <header class="header">
         <span class="header__logo">Cards Against Humanity</span>
         <div style="flex-grow: 1;"></div>
-        <span class="header__username">
-            <button id="edit-username">✏️</button>{{user["nick"]}}
+        <span class="header__username-wrapper">
+            <button id="edit-username">✏️</button>
+            <input id="username-inp" type="text">
+            <span class="header__username">{{user["nick"]}}</span>
         </span>
         <div class="header__avatar" style="--avatar:url('{{user['avatar']}}');"></div>
         <input style="display: none;" id="avatar-inp" type="file" accept="image/png, image/jpeg, image/jpg">

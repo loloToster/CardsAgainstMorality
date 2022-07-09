@@ -23,7 +23,7 @@ body {
         font-weight: bold;
     }
 
-    &__username {
+    &__username-wrapper {
         font-size: 1.4rem;
         cursor: default;
 
@@ -37,6 +37,33 @@ body {
 
         &:hover button {
             display: inline-block;
+        }
+
+        &__username {
+            display: inline;
+        }
+
+        input {
+            display: none;
+            font-size: 1.1rem;
+
+            &:focus {
+                outline: none;
+            }
+        }
+
+        &.editing {
+            button {
+                display: inline-block;
+            }
+
+            input {
+                display: inline-block;
+            }
+
+            .header__username {
+                display: none;
+            }
         }
     }
 

@@ -1,6 +1,22 @@
 /**
  * User editing
  */
+const usernameWrapper = document.querySelector(".header__username-wrapper")
+const editUsernameBtn = document.getElementById("edit-username")
+const usernameInp = document.getElementById("username-inp")
+const usernameEl = document.querySelector(".header__username")
+
+editUsernameBtn.onclick = () => {
+    const editing = usernameWrapper.classList.toggle("editing")
+    editUsernameBtn.innerText = editing ? "✅" : "✏️"
+
+    if (editing) return
+    if (!usernameInp.value.length) return
+
+    usernameEl.innerText = usernameInp.value
+    fetch("/change_nick?n=" + usernameInp.value)
+}
+
 function fileToBase64(file) {
     return new Promise(resolve => {
         const reader = new FileReader()
