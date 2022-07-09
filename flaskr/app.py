@@ -169,7 +169,13 @@ def change_nick():
     if users.contains(User.nick == req.args["n"]):
         return "Nick already taken", 409
     
-    users.update({"nick": req.args["n"]}, User.id == req.cookies["id"])
+    new_nick = req.args["n"]
+    users.update({"nick": new_nick}, User.id == req.cookies["id"])
+
+    if req.cookies["id"] in game.players:
+        game.players[req.cookies["id"]].metadata["nick"] = new_nick
+        update_users()
+
     return ""
 
 def downscale64base(data, w=64, h=64):
@@ -192,6 +198,10 @@ def change_avatar():
     print(len(new_avatar), len(new_avatar_small))
 
     users.update({"avatar": new_avatar_small}, User.id == req.cookies["id"])
+
+    if req.cookies["id"] in game.players:
+        game.players[req.cookies["id"]].metadata["avatar"] = new_avatar_small
+        update_users()
 
     return new_avatar_small
 
