@@ -107,7 +107,6 @@ $card-height: 320px;
 
     gap: 8px;
     height: $card-height;
-    margin-left: 12px;
 
     &:empty {
         display: none;
@@ -176,7 +175,13 @@ $card-height: 320px;
         color: white;
         border: none;
         border-radius: 8px;
-        cursor: pointer;
+        opacity: 0.6;
+        cursor: not-allowed;
+
+        &.active {
+            opacity: 1;
+            cursor: pointer;
+        }
 
         &:hover {
             filter: brightness(0.9);
@@ -189,13 +194,10 @@ $card-height: 320px;
 
     #submit-btn {
         background-color: #63d842;
-        opacity: 0.6;
-        cursor: not-allowed;
+    }
 
-        &.active {
-            opacity: 1;
-            cursor: pointer;
-        }
+    #choose-btn {
+        background-color: #ae42d8;
     }
 }
 
