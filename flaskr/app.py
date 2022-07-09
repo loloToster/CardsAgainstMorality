@@ -11,6 +11,7 @@ from random import shuffle
 from game import Game, NotEnoughPlayersError
 
 app = Flask(__name__)
+app.config.update(TEMPLATES_AUTO_RELOAD=True)
 io = socketio.SocketIO(app)
 assets = Environment(app)
 
@@ -74,7 +75,7 @@ def root():
         query_result = users.search(User.id == req.cookies["id"])
         if len(query_result) > 0:
             user = query_result[0]
-            return render_template("index.html")
+            return render_template("index.html", user=user)
 
     # if user does not have cookie or cookie is invalid create new user
     new_user = {
@@ -83,8 +84,8 @@ def root():
     }
     print("New user:", new_user)
     users.insert(new_user)
-    res = make_response(render_template("index.html"))
-    res.set_cookie("id", new_user["id"])
+    res = make_response(render_template("index.html", user=new_user))
+    res.set_cookie("id", new_user["id"]) # , domain=".eu.ngrok.io"
 
     return res
 

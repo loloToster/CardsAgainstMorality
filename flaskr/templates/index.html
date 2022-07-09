@@ -19,6 +19,14 @@
 </head>
 
 <body>
+    <header class="header">
+        <span class="header__logo">Cards Against Humanity</span>
+        <div style="flex-grow: 1;"></div>
+        <span class="header__username">
+            <button id="edit-username">✏️</button>{{user["nick"]}}
+        </span>
+        <div class="header__avatar"></div>
+    </header>
     <section>
         <div class="top">
             <div id="black-card" class="card card--black">
@@ -42,15 +50,6 @@
     </section>
     <section>
         <ul class="users">
-            {%for p in players%}
-            <li class="users__user">
-                <i class="fa-solid fa-crown"></i><i class="fa-solid fa-circle-check"></i>
-                <span class="material-symbols-outlined">
-                    account_circle
-                </span>
-                <div class="user__nick">{{p.metadata.nick}} (<span class="users__points">{{p.points}}</span>)</div>
-            </li>
-            {%endfor%}
         </ul>
     </section>
     <section>
