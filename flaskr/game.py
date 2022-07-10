@@ -93,7 +93,7 @@ class Game:
                 continue
             for _ in range(self.max_cards - num_of_player_cards):
                 card = self.white_cards.pop()
-                card["pack"] = self.CARDS["packs"][card["watermark"]]
+                card["pack"] = self.CARDS["packs"][card["watermark"]]["name"]
                 player.cards.append(card)
 
     def get_black_card(self):
@@ -101,7 +101,7 @@ class Game:
             raise GameNotStartedError()
 
         card = self.black_cards.pop()
-        card["pack"] = self.CARDS["packs"][card["watermark"]]
+        card["pack"] = self.CARDS["packs"][card["watermark"]]["name"]
         self.current_black = card
         return card
 

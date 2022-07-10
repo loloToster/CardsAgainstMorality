@@ -7,7 +7,6 @@ from PIL import Image
 import os
 import re
 from uuid import uuid4
-from random import shuffle
 from io import BytesIO
 import base64
 
@@ -121,7 +120,8 @@ def root():
     user = res.user
 
     if (game.stage != Game.NOT_STARTED and user["id"] in game.players) or game.stage == Game.NOT_STARTED:
-        res.set_data(render_template("index.html", user=user))
+        packs = zip(game.CARDS["packs"].keys(), game.CARDS["packs"].values())
+        res.set_data(render_template("index.html", user=user, packs=packs))
     else:
         return "Cannot join the game because it has already started"
 
@@ -192,7 +192,7 @@ def tsar_decision():
 
     return ""
 
-
+### - User editing - ###
 @app.route("/change_nick")
 def change_nick():
     if not logged_in(): return redirect("/")

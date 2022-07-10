@@ -138,6 +138,25 @@
             </div>
         </div>
     </section>
+    <div class="packs-modal">
+        <div class="packs-modal__content">
+            <h1>Choose Packs:</h1>
+            <div class="packs-modal__packs">
+                {%for watermark, pack in packs%}
+                <div data-watermark="{{watermark}}" class="packs-modal__pack">
+                    <img class="packs-modal__pack__icon" src='{{pack["icon"]}}' alt='{{pack["name"]}}'>
+                    <div class="packs-modal__pack__name">{{pack["name"]}}</div>
+                </div>
+                {%endfor%}
+            </div>
+            <div class="packs-modal__buttons">
+                <button>Check all</button>
+                <button>Uncheck all</button>
+                <div style="flex-grow: 1;"></div>
+                <button>Start</button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

@@ -1,47 +1,173 @@
 {
   "packs": {
-    "US": "Base Game (US)",
-    "CA": "Base Game (Canada)",
-    "UK": "Base Game (UK)",
-    "AU": "Base Game (Australia)",
-    "INTL": "Base Game (International)",
-    "RED": "Red Box Expansion",
-    "BLUE": "Blue Box Expansion",
-    "GREEN": "Green Box Expansion",
-    "90s": "90s Nostalgia Pack",
-    "\u27442012": "Holiday Pack 2012",
-    "V4HIL": "Vote for Hillary Pack",
-    "V4 45": "Vote for Trump Pack",
-    "HCARD": "House of Cards Pack",
-    "COLEG": "College Pack",
-    "\u27442013": "Holiday Pack 2013",
-    "FNTSY": "Fantasy Pack",
-    "MSFX": "Mass Effect Pack",
-    "\u27442014": "Holiday Pack 2014",
-    "NASA": "Nasa Pack",
-    "FOOD": "Food Pack",
-    "PE13A": "PAX East 2013 Pack A",
-    "\u2744": "Season's Greetings Pack",
-    "PE13B": "PAX East 2013 Pack B",
-    "PE13C": "PAX East 2013 Pack C",
-    "GEEK": "Geek Pack",
-    "PXE14": "PAX East 2014 Pack",
-    "JEW": "Jew Pack",
-    "13PAX": "PAX Prime 2013 Pack",
-    ".": "Period Pack",
-    "PST45": "Post-Trump Pack",
-    "RJECT": "Reject Pack",
-    "RTAIL": "Retail Pack",
-    "SCIFI": "Sci-Fi Pack",
-    "RJCT2": "Reject Pack 2",
-    "SCI": "Science Pack",
-    "WEED": "Weed Pack",
-    "RTPRD": "Retail Product Pack",
-    "TBLTP": "Tabletop Pack",
-    "WWW": "World Wide Web Pack",
-    "HIDDN": "Hidden Compartment Pack",
-    "BOX": "Box Expansion Pack",
-    "14PAX": "PAX East 2014 Pack"
+    "INTL": {
+      "name": "Base Game (International)",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/a3695e68ab205ea7ed56bc34e2f0165d40d79389-80x80.svg"
+    },
+    "US": {
+      "name": "Base Game (US)",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/a3695e68ab205ea7ed56bc34e2f0165d40d79389-80x80.svg"
+    },
+    "CA": {
+      "name": "Base Game (Canada)",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/a3695e68ab205ea7ed56bc34e2f0165d40d79389-80x80.svg"
+    },
+    "UK": {
+      "name": "Base Game (UK)",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/a3695e68ab205ea7ed56bc34e2f0165d40d79389-80x80.svg"
+    },
+    "AU": {
+      "name": "Base Game (Australia)",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/a3695e68ab205ea7ed56bc34e2f0165d40d79389-80x80.svg"
+    },
+    "RED": {
+      "name": "Red Box Expansion",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/712877d07e67d59a22a8b1549644cab3d96cf825-80x80.svg"
+    },
+    "BLUE": {
+      "name": "Blue Box Expansion",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/430495eae81ddab0b77893ae90b2336221f9910c-80x80.svg"
+    },
+    "GREEN": {
+      "name": "Green Box Expansion",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/e7abd109535364073ebcae48c56758a1e8fb1423-80x80.svg"
+    },
+    "90s": {
+      "name": "90s Nostalgia Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/10400e367b7b9bd1b99f8ff844c1504baf666614-80x80.svg"
+    },
+    "COLEG": {
+      "name": "College Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/000927f3fccfed7cecbd8479a4b05b2755f778e3-80x80.svg"
+    },
+    "FNTSY": {
+      "name": "Fantasy Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/790769faf357b32e91cfebfd6ab533caf207cb11-80x80.svg"
+    },
+    ".": {
+      "name": "Period Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/66978dd709bf459fade3a19116cd3e45ee8591e5-80x80.svg"
+    },
+    "SCIFI": {
+      "name": "Sci-Fi Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/c81d3cc0e62e1bfa33781b493c5b0262890f626b-80x80.svg"
+    },
+    "SCI": {
+      "name": "Science Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/fd3427f5830045151dc7e6754fbf0b983e710659-80x80.svg"
+    },
+    "WEED": {
+      "name": "Weed Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/295979978771a1200b5fe401075e5af4c6ce0e42-80x80.svg"
+    },
+    "FOOD": {
+      "name": "Food Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/1086b2441d0ca9bd6a3422e26eb9a220b42292bb-80x80.svg"
+    },
+    "JEW": {
+      "name": "Jew Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/cd0bcc80e8a5e20dd0d194d8f809dc0a61747748-80x80.svg"
+    },
+    "\u2744": {
+      "name": "Season's Greetings Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/99c04f6cce75bcfa11e9862af48cc38aadd915dd-80x80.svg"
+    },
+    "GEEK": {
+      "name": "Geek Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/a3c367347ac12fa3894c968901ad51ba1b59654e-80x80.svg"
+    },
+    "WWW": {
+      "name": "World Wide Web Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/fd40388ee4163d0977e6640a6efddf72ead3e263-80x80.svg"
+    },
+    "RTAIL": {
+      "name": "Retail Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/5c21465451554f3e0da1ed0ff9a6811c761c5169-80x80.svg"
+    },
+    "RTPRD": {
+      "name": "Retail Product Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/5c21465451554f3e0da1ed0ff9a6811c761c5169-80x80.svg"
+    },
+    "\u27442012": {
+      "name": "Holiday Pack 2012",
+      "icon": "/static/assets/holiday-pack.png"
+    },
+    "\u27442013": {
+      "name": "Holiday Pack 2013",
+      "icon": "/static/assets/holiday-pack.png"
+    },
+    "\u27442014": {
+      "name": "Holiday Pack 2014",
+      "icon": "/static/assets/holiday-pack.png"
+    },
+    "TBLTP": {
+      "name": "Tabletop Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/a3695e68ab205ea7ed56bc34e2f0165d40d79389-80x80.svg"
+    },
+    "BOX": {
+      "name": "Box Expansion Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/a3695e68ab205ea7ed56bc34e2f0165d40d79389-80x80.svg"
+    },
+    "HIDDN": {
+      "name": "Hidden Compartment Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/a3695e68ab205ea7ed56bc34e2f0165d40d79389-80x80.svg"
+    },
+    "HCARD": {
+      "name": "House of Cards Pack",
+      "icon": "/static/assets/hof-pack.png"
+    },
+    "MSFX": {
+      "name": "Mass Effect Pack",
+      "icon": "/static/assets/me-pack.png"
+    },
+    "NASA": {
+      "name": "Nasa Pack",
+      "icon": "/static/assets/nasa-pack.png"
+    },
+    "RJECT": {
+      "name": "Reject Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/a3695e68ab205ea7ed56bc34e2f0165d40d79389-80x80.svg"
+    },
+    "RJCT2": {
+      "name": "Reject Pack 2",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/a3695e68ab205ea7ed56bc34e2f0165d40d79389-80x80.svg"
+    },
+    "PE13A": {
+      "name": "PAX East 2013 Pack A",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/a3695e68ab205ea7ed56bc34e2f0165d40d79389-80x80.svg"
+    },
+    "PE13B": {
+      "name": "PAX East 2013 Pack B",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/a3695e68ab205ea7ed56bc34e2f0165d40d79389-80x80.svg"
+    },
+    "PE13C": {
+      "name": "PAX East 2013 Pack C",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/a3695e68ab205ea7ed56bc34e2f0165d40d79389-80x80.svg"
+    },
+    "13PAX": {
+      "name": "PAX Prime 2013 Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/a3695e68ab205ea7ed56bc34e2f0165d40d79389-80x80.svg"
+    },
+    "PXE14": {
+      "name": "PAX East 2014 Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/a3695e68ab205ea7ed56bc34e2f0165d40d79389-80x80.svg"
+    },
+    "14PAX": {
+      "name": "PAX East 2014 Pack 2",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/a3695e68ab205ea7ed56bc34e2f0165d40d79389-80x80.svg"
+    },
+    "PST45": {
+      "name": "Post-Trump Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/a3695e68ab205ea7ed56bc34e2f0165d40d79389-80x80.svg"
+    },
+    "V4HIL": {
+      "name": "Vote for Hillary Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/a3695e68ab205ea7ed56bc34e2f0165d40d79389-80x80.svg"
+    },
+    "V4 45": {
+      "name": "Vote for Trump Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/a3695e68ab205ea7ed56bc34e2f0165d40d79389-80x80.svg"
+    }
   },
   "black": [
     {
