@@ -80,6 +80,10 @@
       "name": "World Wide Web Pack",
       "icon": "https://cdn.sanity.io/images/vc07edlh/production/fd40388ee4163d0977e6640a6efddf72ead3e263-80x80.svg"
     },
+    "PRIDE": {
+      "name": "Pride Pack",
+      "icon": "https://cdn.sanity.io/images/vc07edlh/production/8688b3bce4a06be06b51c8f61ebe63cfe55d3c6b-80x80.svg"
+    },
     "RTAIL": {
       "name": "Retail Pack",
       "icon": "https://cdn.sanity.io/images/vc07edlh/production/5c21465451554f3e0da1ed0ff9a6811c761c5169-80x80.svg"
@@ -3956,6 +3960,41 @@
       "pick": 1,
       "text": "Nothing says \"I love you\" like <span class='pick'>____</span>.",
       "watermark": "WWW"
+    },
+    {
+      "id": 581,
+      "draw": 0,
+      "pick": 1,
+      "text": "Excuse me, straight man, but <span class='pick'>____</span> isn't for you, STRAIGHT MAN.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 582,
+      "draw": 0,
+      "pick": 1,
+      "text": "GOD HATES <span class='pick'>____</span>!",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 583,
+      "draw": 0,
+      "pick": 1,
+      "text": "If you can't love yourself, how the hell you gonna love <span class='pick'>____</span>?",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 584,
+      "draw": 0,
+      "pick": 1,
+      "text": "We're here! We're <span class='pick'>____</span>! Get used to it!",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 585,
+      "draw": 0,
+      "pick": 1,
+      "text": "YAAAAAAS! You are serving me <span class='pick'>____</span> realness!",
+      "watermark": "PRIDE"
     }
   ],
   "white": [
@@ -14153,6 +14192,131 @@
       "id": 2622,
       "text": "Matching with Mom on Tinder.",
       "watermark": "WWW"
+    },
+    {
+      "id": 2623,
+      "text": "30 shirtless bears emerging from the fog.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2624,
+      "text": "A 6-hour conversation on gender and queer theory.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2625,
+      "text": "A Subaru.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2626,
+      "text": "A big black dick strapped to a frail white body.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2627,
+      "text": "A genderless hole.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2628,
+      "text": "A messy bitch who lives for drama.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2629,
+      "text": "A twink in a bounce house.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2630,
+      "text": "All the different kinds of lesbians.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2631,
+      "text": "Black, white, Puerto Rican, and Chinese boys.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2632,
+      "text": "Britney, bitch!",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2633,
+      "text": "Getting your ass ate.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2634,
+      "text": "Having your titties sucked while sucking on titties.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2635,
+      "text": "Licking that pussy right.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2636,
+      "text": "Marsha P. Johnson, the trans woman of color who may have thrown the first brick at Stonewall.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2637,
+      "text": "Older fitness gays.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2638,
+      "text": "Peeing in a bathroom.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2639,
+      "text": "Poppers and lube.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2640,
+      "text": "PrEP.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2641,
+      "text": "Repeatedly coming out as bisexual.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2642,
+      "text": "Talking, laughing, loving, breathing, fighting, fucking, crying, drinking, riding, winning, losing, cheating, kissing, thinking, dreaming.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2643,
+      "text": "Telling Heather she can't pull off that top.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2644,
+      "text": "The careless cunt who left a water ring on my credenza.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2645,
+      "text": "The pan-ethnic, gender-fluid children of the future.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2646,
+      "text": "Those cheekbones, honey.",
+      "watermark": "PRIDE"
+    },
+    {
+      "id": 2647,
+      "text": "Whatever straight people do for fun.",
+      "watermark": "PRIDE"
     }
   ]
 }
