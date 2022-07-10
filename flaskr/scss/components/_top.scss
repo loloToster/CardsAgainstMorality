@@ -1,0 +1,99 @@
+.top {
+    display: flex;
+    width: fit-content;
+    margin: auto;
+    margin-top: 20px;
+    gap: 16px;
+}
+
+.top-cards {
+    display: flex;
+    gap: 16px;
+
+    &:empty {
+        display: none;
+    }
+
+    .card {
+        button {
+            display: none;
+            position: absolute;
+            top: $card-padding;
+            right: $card-padding;
+            width: 30px;
+            height: 30px;
+            border: none;
+            background-color: rgba(202, 56, 56, 0.8);
+            color: white;
+            border-radius: 50%;
+            font-weight: bolder;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        &:hover button {
+            display: block;
+        }
+    }
+}
+
+.choices {
+    display: flex;
+    flex-flow: column wrap;
+
+    gap: 8px;
+    height: $card-height;
+
+    &:empty {
+        display: none;
+    }
+
+    &__choice {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+
+        width: 70px;
+        height: 100px;
+        // margin to make space for pseudo-elements
+        margin-left: 12px;
+
+        background-color: white;
+        box-shadow: -2px 1px 7px 0 #262626;
+        border-radius: 4px;
+        font-size: 2.3rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: font-size 100ms linear;
+
+        &.active {
+            font-size: 3.3rem;
+        }
+
+        &::before,
+        &::after {
+            content: "";
+            position: absolute;
+
+            width: 100%;
+            height: 100%;
+            top: 0;
+
+            border-radius: inherit;
+            background-color: inherit;
+            box-shadow: inherit;
+            cursor: pointer;
+        }
+
+        &::before {
+            left: -6px;
+            z-index: -1;
+        }
+
+        &::after {
+            left: -12px;
+            z-index: -2;
+        }
+    }
+}

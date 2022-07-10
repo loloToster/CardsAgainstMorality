@@ -1,0 +1,97 @@
+.header {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+
+    width: 100vw;
+    padding: 12px 24px;
+
+    color: white;
+    background-color: black;
+    box-shadow: 0 0 8px 0 #111;
+
+    &__logo {
+        font-size: 48px;
+        font-weight: bold;
+    }
+
+    &__username-wrapper {
+        font-size: 1.4rem;
+        cursor: default;
+
+        button {
+            display: none;
+            background-color: unset;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        &:hover button {
+            display: inline-block;
+        }
+
+        &__username {
+            display: inline;
+        }
+
+        input {
+            display: none;
+            font-size: 1.1rem;
+
+            &:focus {
+                outline: none;
+            }
+        }
+
+        &.editing {
+            button {
+                display: inline-block;
+            }
+
+            input {
+                display: inline-block;
+            }
+
+            .header__username {
+                display: none;
+            }
+        }
+    }
+
+    &__avatar {
+        position: relative;
+        overflow: hidden;
+
+        width: 48px;
+        height: 48px;
+        margin-left: 12px;
+
+        border-radius: 50%;
+        border: solid white 1px;
+        background: var(#{--avatar}),
+        white;
+        background-size: contain;
+
+        &::after {
+            content: "✏️";
+            position: absolute;
+            display: none;
+            align-items: center;
+            justify-content: center;
+
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+
+            font-size: 1.3rem;
+            background-color: rgba(63, 63, 63, 0.267);
+            cursor: pointer;
+        }
+
+        &:hover::after {
+            display: flex;
+        }
+    }
+}

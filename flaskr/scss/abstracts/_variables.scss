@@ -1,0 +1,9 @@
+// card ratio 17:12
+$card-height: 320px;
+$card-width: $card-height / 17 * 12;
+
+$card-padding: $card-height * 0.058;
+
+$card-border-radius: $card-height * 0.035;
+$card-main-font-size: $card-height * 0.05;
+$card-icon-size: $card-height * 0.07;
