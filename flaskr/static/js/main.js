@@ -150,6 +150,21 @@ function onHandCardClick(card, wrapper) {
     topCards.appendChild(cardEl)
 }
 
+function updateBlackCard(card) {
+    curBlackCardData = card
+    blackCard.querySelector(".card__text").innerHTML = card.text
+    blackCard.querySelector(".card__pack span").innerText = card.pack
+}
+
+function updateHandCards(cards) {
+    hand.innerHTML = ""
+    cards.forEach(c => {
+        const [wrapper, cardEl] = createCardWithWrapper(c, "white")
+        cardEl.addEventListener("click", () => onHandCardClick(c, wrapper))
+        hand.appendChild(wrapper)
+    })
+}
+
 socket.on("new_round", data => {
     startButton.remove()
 
@@ -162,17 +177,8 @@ socket.on("new_round", data => {
     topCards.innerHTML = ""
     choicesBox.innerHTML = ""
 
-    curBlackCardData = data.black_card
-    blackCard.querySelector(".card__text").innerHTML = curBlackCardData.text
-    blackCard.querySelector(".card__pack span").innerText = curBlackCardData.pack
-
-    const cards = data.cards
-    hand.innerHTML = ""
-    cards.forEach(c => {
-        const [wrapper, cardEl] = createCardWithWrapper(c, "white")
-        cardEl.addEventListener("click", () => onHandCardClick(c, wrapper))
-        hand.appendChild(wrapper)
-    })
+    updateBlackCard(data.black_card)
+    updateHandCards(data.cards)
 })
 
 function onChoiceClick(choice, choiceEl) {
@@ -185,7 +191,7 @@ function onChoiceClick(choice, choiceEl) {
     })
 }
 
-socket.on("choices", choices => {
+function updateChoices(choices) {
     topCards.innerHTML = ""
     choicesBox.innerHTML = ""
 
@@ -196,6 +202,10 @@ socket.on("choices", choices => {
         choiceEl.addEventListener("click", () => onChoiceClick(choice, choiceEl))
         choicesBox.appendChild(choiceEl)
     })
+}
+
+socket.on("choices", choices => {
+    updateChoices(choices)
 })
 
 chooseBtn.onclick = () => {
@@ -219,29 +229,11 @@ socket.on("rejoin", data => {
 
     imTsar = data.is_tsar
 
-    curBlackCardData = data.black_card
-    blackCard.querySelector(".card__text").innerHTML = curBlackCardData.text
-    blackCard.querySelector(".card__pack span").innerText = curBlackCardData.pack
+    updateBlackCard(data.black_card)
+    updateHandCards(data.cards)
 
-    const cards = data.cards
-    hand.innerHTML = ""
-    cards.forEach(c => {
-        const [wrapper, cardEl] = createCardWithWrapper(c, "white")
-        cardEl.addEventListener("click", () => onHandCardClick(c, wrapper))
-        hand.appendChild(wrapper)
-    })
-
-    if (data.choices) {
-        const choices = data.choices
-
-        chooseBtn.classList.toggle("active", imTsar)
-
-        choices.forEach((choice, i) => {
-            const choiceEl = createChoiceElement(choice, i + 1)
-            choiceEl.addEventListener("click", () => onChoiceClick(choice, choiceEl))
-            choicesBox.appendChild(choiceEl)
-        })
-    }
+    if (data.choices)
+        updateChoices(data.choices)
 })
 
 /**
@@ -271,7 +263,10 @@ function createCard(card, color) {
     cardEl.classList.add("card")
     cardEl.classList.add("card--" + color)
 
-    cardEl.innerHTML = card.text
+    let cardText = document.createElement("span")
+    cardText.classList.add("card__text")
+    cardText.innerHTML = card.text
+    cardEl.appendChild(cardText)
 
     let packEl = document.createElement("div")
     packEl.classList.add("card__pack")
