@@ -33,6 +33,8 @@ default_user_regex = re.compile("^user\d+$")
 game = Game(dirname + "/cards.json")
 
 ### - Socket io - ###
+players_by_sid = {}
+
 @io.on("connect")
 def on_connect():
     print("new connection", req.sid)
@@ -43,7 +45,8 @@ def update_users():
         "avatar": p.metadata["avatar"],
         "points": p.points,
         "crown": p.is_tsar,
-        "check": len(p.choice) > 0
+        "check": len(p.choice) > 0,
+        "disconnected": not p.id in players_by_sid.values()
     } for p in game.get_players()])
 
 @io.on("join_game")
@@ -79,11 +82,16 @@ def join_game(data):
         socketio.join_room(u_id)
         game.new_player(data, user)
 
+    players_by_sid[req.sid] = u_id
+
     update_users()
 
 @io.on("disconnect")
 def on_connect():
     print("disconnected", req.sid)
+    if req.sid in players_by_sid:
+        del players_by_sid[req.sid]
+        update_users()
 
 ### - Routes - ###
 def logged_in():

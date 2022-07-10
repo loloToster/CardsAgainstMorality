@@ -324,12 +324,17 @@ function createCard(card, color) {
     return cardEl
 }
 
-function createUser({ nick, avatar, crown, check, points }) {
+function createUser({ nick, avatar, crown, check, points, disconnected }) {
     let li = document.createElement("li")
     li.classList.add("users__user")
-    li.classList.toggle("crown", crown)
-    li.classList.toggle("check", check)
-    li.innerHTML = "<i class='fa-solid fa-crown'></i><i class='fa-solid fa-circle-check'></i>"
+
+    li.classList.toggle("disconnected", disconnected)
+    if (!disconnected) {
+        li.classList.toggle("crown", crown)
+        li.classList.toggle("check", check)
+    }
+
+    li.innerHTML = "<i class='fa-solid fa-crown'></i><i class='fa-solid fa-circle-check'></i><i class='fa-solid fa-wifi'></i>"
 
     let avatarEl = document.createElement("img")
     avatarEl.classList.add("users__avatar")
