@@ -46,7 +46,7 @@
     </section>
     <section>
         <div class="control-btns">
-            <button id="start-btn" class="active">Start</button>
+            <button id="open-packs-modal" class="active">Start</button>
             <button id="submit-btn">Submit</button>
             <button id="choose-btn">Choose</button>
         </div>
@@ -142,21 +142,25 @@
         <div class="packs-modal__content">
             <h1>Choose Packs:</h1>
             <div class="packs-modal__packs">
-                {%for watermark, pack in packs%}
-                <div data-watermark="{{watermark}}" class="packs-modal__pack">
-                    <img class="packs-modal__pack__icon" src='{{pack["icon"]}}' alt='{{pack["name"]}}'>
-                    <div class="packs-modal__pack__name">{{pack["name"]}}</div>
+                {%for i, watermark, pack in packs%}
+                {%if i == 0%}
+                <div data-watermark="{{watermark}}" class="packs-modal__pack active">
+                    {%else%}
+                    <div data-watermark="{{watermark}}" class="packs-modal__pack">
+                        {%endif%}
+                        <img class="packs-modal__pack__icon" src='{{pack["icon"]}}' alt='{{pack["name"]}}'>
+                        <div class="packs-modal__pack__name">{{pack["name"]}}</div>
+                    </div>
+                    {%endfor%}
                 </div>
-                {%endfor%}
-            </div>
-            <div class="packs-modal__buttons">
-                <button>Check all</button>
-                <button>Uncheck all</button>
-                <div style="flex-grow: 1;"></div>
-                <button>Start</button>
+                <div class="packs-modal__buttons">
+                    <button id="packs-modal__check-all">Check all</button>
+                    <button id="packs-modal__uncheck-all">Uncheck all</button>
+                    <div style="flex-grow: 1;"></div>
+                    <button id="packs-modal__start">Start</button>
+                </div>
             </div>
         </div>
-    </div>
 </body>
 
 </html>

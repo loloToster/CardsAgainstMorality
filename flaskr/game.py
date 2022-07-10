@@ -161,15 +161,33 @@ class Game:
         self.stage = Game.CHOOSING
 
         return winner
+    
+    def enough_cards(self):
+        return self.black_cards and len(self.white_cards) >= len(self.players.keys()) * self.max_cards
 
-    def start(self):
+    def start(self, choosen_packs):
         if len(self.players.keys()) < 2:
             raise NotEnoughPlayersError()
-        self.stage = Game.CHOOSING
-        self.white_cards = deepcopy(self.CARDS["white"])
+            
+        def card_in_packs(c):
+            return c["watermark"] in choosen_packs
+
+        self.white_cards = list(filter(
+            card_in_packs, 
+            deepcopy(self.CARDS["white"])
+        ))
         random.shuffle(self.white_cards)
-        self.black_cards = deepcopy(self.CARDS["black"])
+
+        self.black_cards = list(filter(
+            card_in_packs,
+            deepcopy(self.CARDS["black"])
+        ))
         random.shuffle(self.black_cards)
+
+        if not self.enough_cards():
+            raise KeyError("Too little number of cards")
+
+        self.stage = Game.CHOOSING
         for p in self.get_players():
             p.points = 0
             p.choice = []

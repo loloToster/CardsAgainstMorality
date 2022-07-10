@@ -120,21 +120,30 @@ def root():
     user = res.user
 
     if (game.stage != Game.NOT_STARTED and user["id"] in game.players) or game.stage == Game.NOT_STARTED:
-        packs = zip(game.CARDS["packs"].keys(), game.CARDS["packs"].values())
+        packs = zip(
+            range(len(game.CARDS["packs"].keys())),
+            game.CARDS["packs"].keys(), 
+            game.CARDS["packs"].values()
+        )
+
         res.set_data(render_template("index.html", user=user, packs=packs))
     else:
         return "Cannot join the game because it has already started"
 
     return res
 
-@app.route("/start")
+@app.route("/start", methods=["POST"])
 def start():
     if not logged_in(): return redirect("/")
 
+    choosen_packs = req.json
+
     try:
-        game.start()
+        game.start(choosen_packs)
     except NotEnoughPlayersError:
         return "Not enough players", 405
+    except KeyError as e:
+        return "Choosen packs dont contain any white or black cards", 405
 
     round_data = game.new_round()
     for p in game.get_players():
@@ -143,6 +152,7 @@ def start():
             "cards": p.cards, 
             "black_card": round_data["black_card"]
         }, room=p.id)
+
     update_users()
 
     return ""

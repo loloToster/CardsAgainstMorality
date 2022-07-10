@@ -8,7 +8,7 @@ body {
 
 .packs-modal {
     position: absolute;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
 
@@ -18,6 +18,10 @@ body {
     height: 100vh;
 
     background-color: rgba(38, 38, 38, 0.7);
+
+    &.active {
+        display: flex;
+    }
 
     &__content {
         box-sizing: border-box;
@@ -75,9 +79,12 @@ body {
         cursor: pointer;
         transition: background-color 250ms;
 
-        &:hover,
-        &.active {
+        &:hover {
             background-color: #497ddf;
+        }
+
+        &.active {
+            background-color: #4da535;
         }
 
         &__icon {
@@ -390,7 +397,7 @@ $card-height: 320px;
         }
     }
 
-    #start-btn {
+    #open-packs-modal {
         background-color: #205fd3;
     }
 

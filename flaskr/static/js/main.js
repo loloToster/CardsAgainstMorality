@@ -79,19 +79,60 @@ socket.on("players", players => {
 })
 
 /**
+ * Packs modal
+ */
+const packsModal = document.querySelector(".packs-modal")
+const allPacks = document.querySelectorAll(".packs-modal__pack")
+const checkAll = document.getElementById("packs-modal__check-all")
+const uncheckAll = document.getElementById("packs-modal__uncheck-all")
+const startBtn = document.getElementById("packs-modal__start")
+
+const openPacksModalBtn = document.getElementById("open-packs-modal")
+
+openPacksModalBtn.onclick = () => {
+    packsModal.classList.add("active")
+}
+
+packsModal.addEventListener("click", e => {
+    if (e.target == packsModal) packsModal.classList.remove("active")
+})
+
+allPacks.forEach(pack =>
+    pack.addEventListener("click", () =>
+        pack.classList.toggle("active")
+    )
+)
+
+checkAll.onclick = () => allPacks.forEach(p => p.classList.add("active"))
+uncheckAll.onclick = () => allPacks.forEach(p => p.classList.remove("active"))
+
+startBtn.addEventListener("click", async () => {
+    let choosenPacks = []
+    document.querySelectorAll(".packs-modal__pack.active")
+        .forEach(p => choosenPacks.push(p.dataset.watermark))
+
+    if (!choosenPacks.length)
+        return
+
+    await fetch("/start", {
+        method: "POST",
+        headers: {
+            "content-type": "application/json"
+        },
+        body: JSON.stringify(choosenPacks)
+    })
+
+    openPacksModalBtn.style.display = "none"
+    packsModal.classList.remove("active")
+})
+
+/**
  * Game related
  */
 let imTsar = false
 let curBlackCardData = {
     pick: 0
 }
-
-const startButton = document.getElementById("start-btn")
-
-startButton.onclick = () => fetch("/start").catch(e => {
-    startButton.innerText = e
-    startButton.style.background = "red"
-})
 
 const blackCard = document.getElementById("black-card")
 const topCards = document.querySelector(".top-cards")
@@ -166,7 +207,7 @@ function updateHandCards(cards) {
 }
 
 socket.on("new_round", data => {
-    startButton.remove()
+    openPacksModalBtn.style.display = "none"
 
     imTsar = data.tsar
     chooseBtn.classList.remove("active")
@@ -225,7 +266,7 @@ chooseBtn.onclick = () => {
  * Reconnecting
  */
 socket.on("rejoin", data => {
-    startButton.remove()
+    openPacksModalBtn.style.display = "none"
 
     imTsar = data.is_tsar
 
