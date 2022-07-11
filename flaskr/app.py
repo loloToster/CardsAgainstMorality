@@ -40,7 +40,12 @@ assets = Environment(app)
 
 dirname = os.path.dirname(os.path.abspath(__file__)).replace("\\", "/")
 
-scss = Bundle(dirname + "/scss/style.scss", filters="pyscss", output="style.css")
+scss = Bundle(
+    dirname + "/scss/style.scss",
+    filters="pyscss",
+    output="style.css",
+    depends=dirname + "/scss/**/*.scss",
+)
 assets.register("scss", scss)
 
 # Setup DB
