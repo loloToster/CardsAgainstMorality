@@ -1,0 +1,61 @@
+.game-end-modal {
+    position: absolute;
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+
+    background-color: rgba(38, 38, 38, 0.7);
+
+    color: white;
+
+    &.active {
+        display: flex;
+    }
+
+    &__content {
+        width: fit-content;
+        padding: 24px;
+
+        border-radius: 16px;
+        background-color: #3375f0;
+
+        h2 {
+            margin-top: 0;
+        }
+    }
+
+    &__scoreboard {
+        font-weight: bold;
+        border-spacing: 0;
+        outline: #262626 solid 3px;
+        border-radius: 8px;
+
+        thead {
+            background-color: #262626;
+        }
+
+        th,
+        td {
+            padding: 6px 20px;
+            text-align: center;
+        }
+
+        tbody {
+            background-color: #d9d9d9;
+            color: black;
+
+            tr>td {
+                border-bottom: #262626 solid 1px;
+            }
+
+            tr:last-child>td {
+                border: none;
+            }
+        }
+    }
+}

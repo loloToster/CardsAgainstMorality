@@ -143,24 +143,35 @@
             <h1>Choose Packs:</h1>
             <div class="packs-modal__packs">
                 {%for i, watermark, pack in packs%}
-                {%if i == 0%}
-                <div data-watermark="{{watermark}}" class="packs-modal__pack active">
-                    {%else%}
-                    <div data-watermark="{{watermark}}" class="packs-modal__pack">
-                        {%endif%}
-                        <img class="packs-modal__pack__icon" src='{{pack["icon"]}}' alt='{{pack["name"]}}'>
-                        <div class="packs-modal__pack__name">{{pack["name"]}}</div>
-                    </div>
-                    {%endfor%}
+                <div data-watermark="{{watermark}}" class="packs-modal__pack {{'active' if i == 0 else ''}}">
+                    <img class="packs-modal__pack__icon" src='{{pack["icon"]}}' alt='{{pack["name"]}}'>
+                    <div class="packs-modal__pack__name">{{pack["name"]}}</div>
                 </div>
-                <div class="packs-modal__buttons">
-                    <button id="packs-modal__check-all">Check all</button>
-                    <button id="packs-modal__uncheck-all">Uncheck all</button>
-                    <div style="flex-grow: 1;"></div>
-                    <button id="packs-modal__start">Start</button>
-                </div>
+                {%endfor%}
+            </div>
+            <div class="packs-modal__buttons">
+                <button id="packs-modal__check-all">Check all</button>
+                <button id="packs-modal__uncheck-all">Uncheck all</button>
+                <div style="flex-grow: 1;"></div>
+                <button id="packs-modal__start">Start</button>
             </div>
         </div>
+    </div>
+    <div class="game-end-modal">
+        <div class="game-end-modal__content">
+            <h2>Game ended</h2>
+            <table class="game-end-modal__scoreboard">
+                <thead>
+                    <tr>
+                        <th>Points</th>
+                        <th>Player</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
 
 </html>

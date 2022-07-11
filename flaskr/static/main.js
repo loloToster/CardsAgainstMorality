@@ -264,8 +264,31 @@ chooseBtn.onclick = () => {
     })
 }
 
+const gameEndModal = document.querySelector(".game-end-modal")
+const scoreboard = document.querySelector(".game-end-modal__scoreboard tbody")
+
+window.addEventListener("click", e => {
+    if (e.target == gameEndModal)
+        gameEndModal.classList.remove("active")
+})
+
 socket.on("end", table => {
-    console.log(table)
+    scoreboard.innerHTML = ""
+    table.forEach(row => {
+        const tr = document.createElement("tr")
+
+        let td = document.createElement("td")
+        td.innerText = row.points
+        tr.appendChild(td)
+
+        td = document.createElement("td")
+        td.innerText = row.name
+        tr.appendChild(td)
+
+        scoreboard.appendChild(tr)
+    })
+    gameEndModal.classList.add("active")
+
     openPacksModalBtn.classList.add("active")
 
     imTsar = false
