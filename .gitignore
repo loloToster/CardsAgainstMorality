@@ -15,7 +15,6 @@ build/
 
 .webassets-cache/
 db.json
-*.txt
+custom.json
 *.css
-load_json.py
 temp.py
