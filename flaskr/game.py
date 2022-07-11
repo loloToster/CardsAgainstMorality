@@ -1,7 +1,11 @@
-import json
 import random
 from copy import deepcopy
 from typing import List
+
+DEFAULT_PACK_ICON = "https://cdn.sanity.io/images/vc07edlh/production/a3695e68ab205ea7ed56bc34e2f0165d40d79389-80x80.svg"
+
+class BadCardsError(Exception):
+    pass
 
 class NotEnoughPlayersError(Exception):
     pass
@@ -59,10 +63,9 @@ class Game:
     CHOOSING = 1
     TSAR_VERDICT = 2
 
-    def __init__(self, cards_file: str, max_cards = 10):
-        with open(cards_file) as f:
-            self.CARDS =  json.load(f)
-            
+    def __init__(self, cards: dict, max_cards = 10):
+        self.CARDS = self._parse_cards(cards)
+
         self.players = {}
         self.white_cards = []
         self.black_cards = []
@@ -72,6 +75,55 @@ class Game:
         self.card_tsar = None
         self.current_black = None
         self.stage = Game.NOT_STARTED
+
+    def _parse_cards(self, cards):
+        for pack in cards["packs"].values():
+            pack["icon"] = pack.get("icon", DEFAULT_PACK_ICON)
+
+            if not type(pack["icon"]) is str:
+                raise BadCardsError(f"icon parameter cannot be: {card['icon']}")
+            if not "name" in pack:
+                raise BadCardsError(f"name parameter cannot be empty")
+            if not type(pack["name"]) is str:
+                raise BadCardsError(f"name parameter cannot be: {pack['name']}")
+
+
+        c_id = 0
+
+        for card in cards["black"]:
+            card["draw"] = card.get("draw", 0)
+            card["pick"] = card.get("pick", 1)
+
+            if not type(card["draw"]) is int:
+                raise BadCardsError(f"draw parameter cannot be: {card['draw']}")
+            if not type(card["pick"]) is int:
+                raise BadCardsError(f"pick parameter cannot be: {card['pick']}")
+            if not "text" in card:
+                raise BadCardsError(f"text parameter cannot be empty")
+            if not type(card["text"]) is str:
+                raise BadCardsError(f"text parameter cannot be: {card['text']}")
+            if not "watermark" in card:
+                raise BadCardsError(f"watermark parameter cannot be empty")
+            if not type(card["watermark"]) is str:
+                raise BadCardsError(f"watermark parameter cannot be: {card['text']}")
+                
+            card["id"] = c_id
+            c_id += 1
+
+        for card in cards["white"]:
+            if not "text" in card:
+                raise BadCardsError(f"text parameter cannot be empty")
+            if not type(card["text"]) is str:
+                raise BadCardsError(f"text parameter cannot be: {card['text']}")
+            if not "watermark" in card:
+                raise BadCardsError(f"watermark parameter cannot be empty")
+            if not type(card["watermark"]) is str:
+                raise BadCardsError(f"watermark parameter cannot be: {card['text']}")
+                
+            card["id"] = c_id
+            c_id += 1
+
+        return cards
 
     def new_player(self, id: str, metadata) -> bool:
         if id in self.players:

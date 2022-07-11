@@ -4,14 +4,23 @@ from flask_assets import Environment, Bundle
 from tinydb import TinyDB, Query
 from PIL import Image
 
+import argparse
 import os
+import json
 import re
 from uuid import uuid4
 from io import BytesIO
 import base64
 
-from game import Game, NotEnoughPlayersError, WrongStageError
+from game import Game, BadCardsError, NotEnoughPlayersError, WrongStageError
 
+# Parsing args
+parser = argparse.ArgumentParser(description="Launch app.")
+parser.add_argument("-d", "--domain", type=str, metavar="", help="sets the domain that is used when setting a cookie of new user")
+parser.add_argument("-c", "--custom-cards", type=str, metavar="", help="loads json file with custom cards")
+args = parser.parse_args()
+
+# Setup Flask
 app = Flask(__name__)
 app.config.update(TEMPLATES_AUTO_RELOAD=True)
 io = socketio.SocketIO(app)
@@ -24,13 +33,35 @@ scss = Bundle(
 )
 assets.register("scss", scss)
 
+# Setup DB
 db = TinyDB(dirname + "/db.json")
 users = db.table("users")
 User = Query()
 
-default_user_regex = re.compile("^user\d+$")
+# Setup Game
+with open(dirname + "/cards.json") as f:
+    cards_dict = json.load(f)
 
-game = Game(dirname + "/cards.json")
+if args.custom_cards:
+    with open(args.custom_cards) as f:
+        custom_cards = json.load(f)
+
+    for pack in custom_cards["packs"]:
+        cards_dict["packs"][f"C-{pack}"] = custom_cards["packs"][pack]
+
+    for white_card in custom_cards["white"]:
+        white_card["watermark"] = "C-" + white_card["watermark"]
+        cards_dict["white"].append(white_card)
+
+    for black_card in custom_cards["black"]:
+        black_card["watermark"] = "C-" + black_card["watermark"]
+        cards_dict["black"].append(black_card)
+
+try:
+    game = Game(cards_dict)
+except BadCardsError as e:
+    print("Could not load cards to game:", e)
+    exit()
 
 ### - Socket io - ###
 players_by_sid = {}
@@ -117,7 +148,7 @@ def get_res_with_user():
         "avatar": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAARYSURBVHhe7Zs9jBVVGIbv/iSbbBAxxsJCXWNnEDG0ipRq0MVYKSg9xkhJg9hvor0kNjaQGClINDH8JEoDGiXBWCgsaiwIsq4BOvbO+rzHbyaz14/d+TlnbzHzJk/es9/9Zu6cb2bOnDk3OzEYDFahs5o076z6Aph3Vn0BzDurvgDmnVVfAPPOqi+AeWfV+QKM82XoFiyBvv8ReBjGIh3AZnF+YmLi6OTk5OO0R7WFz/bDL7S9bVPhBmOzDIegqnbCdfD2FZXNuAWuc1bnV1dXr+gPzv4DWZa9SHMX8R3ENQ7dov0N7c+UI01NTW0bDofnaD73XySd/leViCzR4SfwIDr5GvYjeLniL3LexoOmp6cfxNbLj4EbjMU+CKJj72ND8PLWQO4XeK45cPMi4QZj8DkE0aF3sQy8PBe2OYbn+gjcvAi4wRjsAWkb5I+7OmTcPs/gKuBjpXhs3GBbljnoLbh0GLycDWEfx/Eg2t9hbl4bkswEOdhLjOh37c+95rXFPt6wptoXrBlVSQrAwf5sTekp8yZ6CMKVRFE1L4iuzXgXeNS8kTQfsGYSpSqABq1cf5o3EXOh4T9qcFUlOdZUBQijt+m0eRNpEhTGEm6BF+Qp5I6ObdGUF9eB7yjH68C2R3DtQ+PAzTweGTcYAz3+gujAGczLWY9Fmwpr+wOleGzcYAw0+QmamZnRaL4IXp7HMoPfblyd15V03uIpcINR4OC/xoNsDeAquLklFsktzx0+AC8vFm4wGnRGL0GF+Ps9zLsaboDm/8VjjwIexPQUGM2NiRuMCh35FF8j7u+tFOMVPnsZilfmXMRUKC2kuPuMxWZMhK7xDP99dnZW40ChlZWV21mWfclnX+lzCwctLCxooUYKc4DUcisTAV3mhzjL4XFYFgPcVs7wHLxkbPfyTHr+p1wec4NtyOjQJ/joFFbLYLrHf4X7LYzcYNuTujVoj0pjibdNW9xgU3TPFqtAEh2ax34AL389rrLtmgEU7ST2G+7lN8UNNkFrAOpsEGdRj71T4OXWQdNhLYsFsV8NmHXmFBvhBuuy5swzwuty/xu83CbottKCahBtFeQeeLl1cYN1KVZyOUOatiZ5fNHxd/Ag2s9jbl5N3GBlOJDiGU/nn8VSP7tfhVwaVL2cOrjBqui+fxqXNOpXmeq2Re8J+WKpHp1tv9MNVqVYuuZgTmJeTgq+hyC+t+2bohusgs5+vvKjQWkFvLwkcLu9hefSL81uXgXcYBVOQBCF0Djg5aREvyIH8f1tfjhxg1XYDxr4dO8nf2nxsDmBjmF7OV6Hxi9DVP1bOS8yb2JJV27vJ16mXjf/CdP0uraaFmCJjv+hBv5kiIxH5YWTs+a11LQAl82l5L/fr6Pyd5d/jKmspgW4Yy6N8woo1hi4JWetWVvu4LARfOGH+Mej8TFwkWM5ijd69+j/Zca8s+oLYN5Z9QUw76z6Aph3Vn0BzDurvgDmnVXHCzAY/AtSAicujIG4tQAAAABJRU5ErkJggg=="
     }
     users.insert(new_user)
-    res.set_cookie("id", new_user["id"]) # , domain=".eu.ngrok.io"
+    res.set_cookie("id", new_user["id"], domain=args.domain)
     res.user = new_user
     return res
 
@@ -211,6 +242,7 @@ def tsar_decision():
     return ""
 
 ### - User editing - ###
+default_user_regex = re.compile("^user\d+$")
 @app.route("/change_nick")
 def change_nick():
     if not logged_in(): return redirect("/")
