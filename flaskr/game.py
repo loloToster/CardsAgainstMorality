@@ -35,19 +35,22 @@ class Player:
 
         return False
 
-
     def remove_cards(self, card_ids: List[int]):
-        removed = []
+        removed = [None] * len(card_ids)
         new_cards = []
-        for c in self.cards:
-            if c["id"] in card_ids:
-                card_ids.remove(c["id"])
-                removed.append(c)
-            else:
-                new_cards.append(c)
-        if len(card_ids) > 0:
-            raise Exception("Cards not found:", card_ids)
+
+        for card in self.cards:
+            try:
+                i = card_ids.index(card["id"])
+                removed[i] = card
+            except ValueError:
+                new_cards.append(card)
+
+        if None in removed:
+            raise Exception("There are card ids that don't point to any card")
+
         self.cards = new_cards
+        
         return removed
 
 
