@@ -90,6 +90,8 @@ const startBtn = document.getElementById("packs-modal__start")
 const openPacksModalBtn = document.getElementById("open-packs-modal")
 
 openPacksModalBtn.onclick = () => {
+    if (!openPacksModalBtn.classList.contains("active"))
+        return
     packsModal.classList.add("active")
 }
 
@@ -122,7 +124,7 @@ startBtn.addEventListener("click", async () => {
         body: JSON.stringify(choosenPacks)
     })
 
-    openPacksModalBtn.style.display = "none"
+    openPacksModalBtn.classList.remove("active")
     packsModal.classList.remove("active")
 })
 
@@ -207,7 +209,7 @@ function updateHandCards(cards) {
 }
 
 socket.on("new_round", data => {
-    openPacksModalBtn.style.display = "none"
+    openPacksModalBtn.classList.remove("active")
 
     imTsar = data.tsar
     chooseBtn.classList.remove("active")
@@ -262,11 +264,40 @@ chooseBtn.onclick = () => {
     })
 }
 
+socket.on("end", table => {
+    console.log(table)
+    openPacksModalBtn.classList.add("active")
+
+    imTsar = false
+    chooseBtn.classList.remove("active")
+
+    submitted = false
+    submitButton.innerText = "Submit"
+    submitButton.classList.remove("active")
+
+    topCards.innerHTML = ""
+    choicesBox.innerHTML = ""
+
+    blackCard.querySelector(".card__text").innerHTML = "Something something ____."
+    blackCard.querySelector(".card__pack span").innerText = "Cards Against Humanity"
+
+    hand.innerHTML = ""
+    for (let i = 0; i < 10; i++) {
+        const wrapper = createCardWithWrapper({
+            id: -1,
+            text: "-",
+            pack: "Cards Against Humanity"
+        }, "white")[0]
+
+        hand.appendChild(wrapper)
+    }
+})
+
 /**
  * Reconnecting
  */
 socket.on("rejoin", data => {
-    openPacksModalBtn.style.display = "none"
+    openPacksModalBtn.classList.remove("active")
 
     imTsar = data.is_tsar
 
