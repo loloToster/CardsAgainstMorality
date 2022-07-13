@@ -7,12 +7,17 @@ body {
 }
 
 // could not use modern scss syntax because of pyscss limitations
+@import "./base/resets";
+
 @import "./abstracts/variables";
-@import "./components/packs-modal";
-@import "./components/game-end-modal";
-@import "./components/header";
-@import "./components/card";
-@import "./components/top";
-@import "./components/control-btns";
-@import "./components/users";
-@import "./components/hand";
+
+@import "./components/modal";
+
+@import "./layout/packs-modal";
+@import "./layout/game-end-modal";
+@import "./layout/header";
+@import "./layout/card";
+@import "./layout/top";
+@import "./layout/control-btns";
+@import "./layout/users";
+@import "./layout/hand";

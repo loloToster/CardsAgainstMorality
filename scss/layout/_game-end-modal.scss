@@ -1,21 +1,5 @@
 .game-end-modal {
-    position: absolute;
-    display: none;
-    align-items: center;
-    justify-content: center;
-
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-
-    background-color: rgba(38, 38, 38, 0.7);
-
     color: white;
-
-    &.active {
-        display: flex;
-    }
 
     &__content {
         width: fit-content;
