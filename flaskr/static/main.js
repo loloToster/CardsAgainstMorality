@@ -143,6 +143,7 @@ const submitButton = document.getElementById("submit-btn")
 const chooseBtn = document.getElementById("choose-btn")
 const hand = document.querySelector(".hand")
 
+// Submitting
 let submitted = false
 submitButton.onclick = () => {
     if (submitted) return
@@ -224,6 +225,7 @@ socket.on("new_round", data => {
     updateHandCards(data.cards)
 })
 
+// tsar decision
 function onChoiceClick(choice, choiceEl) {
     document.querySelectorAll(".choices__choice")
         .forEach(e => e.classList.remove("active"))
@@ -264,6 +266,36 @@ chooseBtn.onclick = () => {
     })
 }
 
+// voting to end
+let votedToEnd = false
+const voteEndBtn = document.getElementById("vote-end-btn")
+voteEndBtn.onclick = async () => {
+    voteEndBtn.classList.remove("active")
+
+    const vote = !votedToEnd
+
+    const res = await fetch("/vote_end", {
+        method: "PUT",
+        headers: {
+            "content-type": "application/json"
+        },
+        body: JSON.stringify({ vote })
+    }).catch(() => voteEndBtn.classList.add("active"))
+
+    if (res.status == 200)
+        votedToEnd = vote
+
+    voteEndBtn.classList.add("active")
+}
+
+socket.on("vote_end", data => {
+    if (votedToEnd)
+        voteEndBtn.innerText = `Voted ${data.for}/${data.all}`
+    else
+        voteEndBtn.innerText = "Vote to End"
+})
+
+// ending
 const gameEndModal = document.querySelector(".game-end-modal")
 const scoreboard = document.querySelector(".game-end-modal__scoreboard tbody")
 
@@ -273,6 +305,9 @@ window.addEventListener("click", e => {
 })
 
 socket.on("end", table => {
+    votedToEnd = false
+    voteEndBtn.innerText = "Vote to End"
+
     scoreboard.innerHTML = ""
     table.forEach(row => {
         const tr = document.createElement("tr")

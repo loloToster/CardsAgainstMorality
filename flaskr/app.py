@@ -257,6 +257,19 @@ def submit_cards():
 
     return ""
 
+def handle_ending(table_data):
+    for p in game.get_players():
+        if "vote_end" in p.metadata:
+            del p.metadata["vote_end"]
+
+    table = [
+        {"points": x[0], "name": x[1].metadata["nick"]} for x in table_data
+    ]
+
+    io.emit("end", table)
+
+    update_users()
+
 
 @app.route("/tsar_decision", methods=["POST"])
 def tsar_decision():
@@ -278,13 +291,7 @@ def tsar_decision():
     round_data = game.new_round()
 
     if round_data["end"]:
-        table = [
-            {"points": x[0], "name": x[1].metadata["nick"]} for x in round_data["table"]
-        ]
-
-        io.emit("end", table)
-
-        update_users()
+        handle_ending(round_data["table"])
         return ""
 
     for p in game.get_players():
@@ -301,6 +308,31 @@ def tsar_decision():
 
     return ""
 
+
+@app.route("/vote_end", methods=["PUT"])
+def vote_end():
+    if not logged_in():
+        return redirect("/")
+    cookie = req.cookies["id"]
+    if not cookie in game.players:
+        return "Non players cannot vote", 405
+    if game.stage == Game.NOT_STARTED:
+        return "Game not started", 405
+
+    vote = req.json.get("vote", True)
+    game.players[cookie].metadata["vote_end"] = vote
+
+    all_votes = [p.metadata.get("vote_end", False) for p in game.get_players()]
+    if all(all_votes):
+        handle_ending(game.end())
+        return ""
+
+    io.emit("vote_end", {
+        "for": sum(all_votes),
+        "all": len(all_votes)
+    })
+
+    return ""
 
 ### - User editing - ###
 default_user_regex = re.compile("^user\d+$")
