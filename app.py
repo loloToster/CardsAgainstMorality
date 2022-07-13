@@ -196,7 +196,7 @@ def root():
 
         res.set_data(render_template("index.html", user=user, packs=packs))
     else:
-        return "Cannot join the game because it has already started"
+        res.set_data(render_template("game-started.html"))
 
     return res
 
