@@ -6,15 +6,20 @@ const editUsernameBtn = document.getElementById("edit-username")
 const usernameInp = document.getElementById("username-inp")
 const usernameEl = document.querySelector(".header__username")
 
-editUsernameBtn.onclick = () => {
+editUsernameBtn.onclick = async () => {
     const editing = usernameWrapper.classList.toggle("editing")
     editUsernameBtn.innerText = editing ? "✅" : "✏️"
 
     if (editing) return
     if (!usernameInp.value.length) return
 
+
+    const res = await fetch("/change_nick?n=" + usernameInp.value)
+
+    if (res.status != 200)
+        return createError(await res.text())
+
     usernameEl.innerText = usernameInp.value
-    fetch("/change_nick?n=" + usernameInp.value)
 }
 
 function fileToBase64(file) {
@@ -116,7 +121,7 @@ startBtn.addEventListener("click", async () => {
     if (!choosenPacks.length)
         return
 
-    await fetch("/start", {
+    const res = await fetch("/start", {
         method: "POST",
         headers: {
             "content-type": "application/json"
@@ -124,7 +129,11 @@ startBtn.addEventListener("click", async () => {
         body: JSON.stringify(choosenPacks)
     })
 
-    openPacksModalBtn.classList.remove("active")
+    if (res.status != 200)
+        createError(await res.text())
+    else
+        openPacksModalBtn.classList.remove("active")
+
     packsModal.classList.remove("active")
 })
 
@@ -441,4 +450,23 @@ function createUser({ nick, avatar, crown, check, points, disconnected }) {
     li.appendChild(nickEl)
 
     return li
+}
+
+const errorStack = document.querySelector(".error-stack")
+function createError(msg) {
+    let error = document.createElement("div")
+    error.classList.add("error-stack__error")
+    error.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${msg}`
+
+    const closeBtn = document.createElement("div")
+    closeBtn.classList.add("error-stack__close")
+    closeBtn.innerHTML = "<i class='fa-solid fa-xmark'></i>"
+
+    closeBtn.onclick = () => error.remove()
+
+    error.appendChild(closeBtn)
+
+    errorStack.appendChild(error)
+
+    setTimeout(() => error.remove(), 5000)
 }
