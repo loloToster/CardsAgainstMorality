@@ -218,8 +218,35 @@ function updateHandCards(cards) {
     })
 }
 
+const winnerModal = document.querySelector(".winner-modal")
+const winnerModalNick = winnerModal.querySelector(".winner-modal__nick")
+const winnerModalCards = winnerModal.querySelector(".winner-modal__cards")
+
+let removeWinnerModalTimeout = undefined
+window.addEventListener("click", e => {
+    if (e.target != winnerModal) return
+
+    clearTimeout(removeWinnerModalTimeout)
+    winnerModal.classList.remove("active")
+})
+
 const newRoundAudio = new Audio("/static/assets/new_round.mp3")
 socket.on("new_round", data => {
+    const previousRound = data.prev_round
+    if (previousRound) {
+        winnerModalNick.innerText = previousRound.winner
+
+        winnerModalCards.innerHTML = ""
+        winnerModalCards.appendChild(createCard(previousRound.black_card, "black"))
+        previousRound.winning_cards.forEach(card => {
+            winnerModalCards.appendChild(createCard(card, "white"))
+        })
+
+        winnerModal.classList.add("active")
+
+        removeWinnerModalTimeout = setTimeout(() => winnerModal.classList.remove("active"), 12000)
+    }
+
     openPacksModalBtn.classList.remove("active")
 
     imTsar = data.tsar

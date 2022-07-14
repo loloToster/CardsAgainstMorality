@@ -290,9 +290,15 @@ def tsar_decision():
     decision = req.json["decision"]
 
     try:
-        game.choose_winner(decision)
+        winner = game.choose_winner(decision)
     except WrongStageError:
         return "Cannot choose winner during card picking", 405
+
+    previous_round = {
+        "winner": winner.metadata["nick"],
+        "winning_cards": winner.choice,
+        "black_card": game.current_black
+    }
 
     round_data = game.new_round()
 
@@ -304,6 +310,7 @@ def tsar_decision():
         io.emit(
             "new_round",
             {
+                "prev_round": previous_round,
                 "tsar": p.is_tsar,
                 "cards": p.cards,
                 "black_card": round_data["black_card"],
