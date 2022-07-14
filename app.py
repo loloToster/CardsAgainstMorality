@@ -145,9 +145,15 @@ def join_game(data):
 @io.on("disconnect")
 def on_connect():
     print("disconnected", req.sid)
-    if req.sid in players_by_sid:
-        del players_by_sid[req.sid]
-        update_users()
+    if not req.sid in players_by_sid:
+        return
+
+    if game.stage == Game.NOT_STARTED:
+        u_id = players_by_sid[req.sid]
+        game.remove_player(u_id)
+    
+    del players_by_sid[req.sid]
+    update_users()
 
 
 ### - Routes - ###

@@ -136,6 +136,13 @@ class Game:
             self.fill_players_cards()
         return True
 
+    def remove_player(self, id):
+        if not id in self.players:
+            return False
+
+        del self.players[id]
+        return True
+
     def get_players(self) -> List[Player]:
         return list(self.players.values())
 
