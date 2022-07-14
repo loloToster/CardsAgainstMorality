@@ -1,3 +1,5 @@
+const noMouse = window.matchMedia("(any-hover: none)").matches
+
 /**
  * User editing
  */
@@ -183,8 +185,23 @@ function onTopCardBtnClick(card, cardEl) {
     hand.appendChild(wrapper)
 }
 
+if (noMouse)
+    window.addEventListener("click", e => {
+        if (!e.composedPath().includes(hand))
+            hand.querySelectorAll(".card--white").forEach(c => c.classList.remove("active"))
+    })
+
 function onHandCardClick(card, wrapper) {
     if (imTsar) return
+
+    if (noMouse) {
+        const cardFromWrapper = wrapper.querySelector(".card")
+        if (!cardFromWrapper.classList.contains("active")) {
+            hand.querySelectorAll(".card--white").forEach(c => c.classList.remove("active"))
+            cardFromWrapper.classList.add("active")
+            return
+        }
+    }
 
     // check if there are available picks
     const numOfPicks = topCards.getElementsByClassName("card--white").length
@@ -197,6 +214,7 @@ function onHandCardClick(card, wrapper) {
     wrapper.remove()
     let cardEl = createCard(card, "white")
     let xBtn = document.createElement("button")
+    if (noMouse) xBtn.classList.add("active")
     xBtn.innerHTML = "X"
     xBtn.addEventListener("click", () => onTopCardBtnClick(card, cardEl))
     cardEl.appendChild(xBtn)

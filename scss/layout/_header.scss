@@ -20,15 +20,12 @@
         cursor: default;
 
         button {
-            display: none;
+            display: inline-block;
+            padding: 0;
             background-color: unset;
             border: none;
             font-size: 1.1rem;
             cursor: pointer;
-        }
-
-        &:hover button {
-            display: inline-block;
         }
 
         &__username {

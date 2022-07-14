@@ -28,7 +28,8 @@
             transform: translateY(60%);
         }
 
-        &:hover {
+        &:hover,
+        &.active {
             transform: translateY(-60%);
 
             &::after {

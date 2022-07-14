@@ -31,7 +31,8 @@
             cursor: pointer;
         }
 
-        &:hover button {
+        &:hover button,
+        button.active {
             display: block;
         }
     }
