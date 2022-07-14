@@ -209,6 +209,7 @@ function updateHandCards(cards) {
     })
 }
 
+const newRoundAudio = new Audio("/static/assets/new_round.mp3")
 socket.on("new_round", data => {
     openPacksModalBtn.classList.remove("active")
 
@@ -223,6 +224,8 @@ socket.on("new_round", data => {
 
     updateBlackCard(data.black_card)
     updateHandCards(data.cards)
+
+    newRoundAudio.play()
 })
 
 // tsar decision
@@ -249,8 +252,10 @@ function updateChoices(choices) {
     })
 }
 
+const tsarChoiceAudio = new Audio("/static/assets/tsar_choice.mp3")
 socket.on("choices", choices => {
     updateChoices(choices)
+    tsarChoiceAudio.play()
 })
 
 chooseBtn.onclick = () => {
