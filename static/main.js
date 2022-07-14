@@ -14,7 +14,7 @@ editUsernameBtn.onclick = async () => {
     if (!usernameInp.value.length) return
 
 
-    const res = await fetch("/change_nick?n=" + usernameInp.value)
+    const res = await fetch("/change_nick?n=" + encodeURIComponent(usernameInp.value))
 
     if (res.status != 200)
         return createError(await res.text())
@@ -444,10 +444,17 @@ function createUser({ nick, avatar, crown, check, points, disconnected }) {
     avatarEl.src = avatar
     li.appendChild(avatarEl)
 
-    let nickEl = document.createElement("div")
-    nickEl.classList.add("user__nick")
-    nickEl.innerHTML = `${nick} (<span class='users__points'>${points}</span>)`
-    li.appendChild(nickEl)
+    let nickWrapper = document.createElement("div")
+    nickWrapper.classList.add("users__nick-wrapper")
+
+    let nickEl = document.createElement("span")
+    nickEl.classList.add("users__nick")
+    nickEl.innerText = nick
+
+    nickWrapper.appendChild(nickEl)
+    nickWrapper.innerHTML += ` (${points})`
+
+    li.appendChild(nickWrapper)
 
     return li
 }

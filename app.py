@@ -336,7 +336,7 @@ def vote_end():
 
 ### - User editing - ###
 default_user_regex = re.compile("^user\d+$")
-
+allowed_chars_regex = re.compile("^[A-Z0-9`~!@#$%^&*()-=_+{}\[\]:;'\",./<>?\\\|\s]+$", re.IGNORECASE)
 
 @app.route("/change_nick")
 def change_nick():
@@ -344,12 +344,18 @@ def change_nick():
         return redirect("/")
     if not "n" in req.args:
         return "No n parameter in request", 400
-    if default_user_regex.match(req.args["n"]):
-        return "Nick cannot match user{number}", 400
-    if users.contains(User.nick == req.args["n"]):
-        return "Nick already taken", 409
 
     new_nick = req.args["n"]
+
+    if len(new_nick) > 16:
+        return "Nick cannot be longer then 16 characters", 400
+    if default_user_regex.match(new_nick):
+        return "Nick cannot match user{number}", 400
+    if not allowed_chars_regex.match(new_nick):
+        return "Nick contains disallowed characters", 400
+    if users.contains(User.nick == new_nick):
+        return "Nick already taken", 409
+
     users.update({"nick": new_nick}, User.id == req.cookies["id"])
 
     if req.cookies["id"] in game.players:

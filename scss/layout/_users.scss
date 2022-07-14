@@ -13,8 +13,10 @@
     &__user {
         position: relative;
         box-sizing: border-box;
+
         width: 100px;
         padding: 8px;
+
         background-color: #c8c8c8;
         border-radius: 8px;
 
@@ -47,6 +49,16 @@
         &.disconnected .fa-wifi {
             opacity: 1;
         }
+    }
+
+    &__nick-wrapper {
+        width: 84px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__nick {
+        white-space: nowrap;
     }
 
     &__avatar {
