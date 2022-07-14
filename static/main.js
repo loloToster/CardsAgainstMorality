@@ -172,6 +172,8 @@ submitButton.onclick = () => {
         body: JSON.stringify(submition)
     })
 
+    topCards.innerHTML = ""
+
     submitted = true
     submitButton.innerText = "Submitted"
 }
@@ -192,7 +194,7 @@ if (noMouse)
     })
 
 function onHandCardClick(card, wrapper) {
-    if (imTsar) return
+    if (imTsar || submitted) return
 
     if (noMouse) {
         const cardFromWrapper = wrapper.querySelector(".card")
