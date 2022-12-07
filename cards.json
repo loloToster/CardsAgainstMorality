@@ -1,5 +1,8 @@
 {
   "packs": {
+    "PL": {
+      "name": "Polish Game + Expansions"
+    },
     "INTL": {
       "name": "Base Game (International)"
     },
@@ -178,6 +181,897 @@
     }
   },
   "black": [
+    {
+      "text": "PZPN zakaza\u0142 <span class='pick'>____</span> bowiem dawa\u0142o to graczom niesprawiedliw\u0105 przewag\u0119.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Podczas lotu samolotem zabrania si\u0119 <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Czego wstydzi si\u0119 Batman?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co jest moim narkotykiem?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co jest kolejn\u0105 modn\u0105 diet\u0105?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co jest najbardziej chrupi\u0105ce?",
+      "watermark": "PL"
+    },
+    {
+      "text": "To straszna szkoda, \u017ce wszystkie dzieci w dzisiejszych czasach maj\u0105 do czynienia z <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nast\u0119pna ksi\u0105\u017cka JK Rowling b\u0119dzie nosi\u0142a tytu\u0142: Harry Potter i Komnata <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Gdy USA \u015bciga\u0142o si\u0119 ze Zwi\u0105zkiem Radzieckim na ksi\u0119\u017cyc, rz\u0105d Meksyku wyda\u0142 milion pesos na <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co Bogus\u0142aw Linda jad\u0142 na obiad?",
+      "watermark": "PL"
+    },
+    {
+      "text": "W wi\u0119zieniu za 200 fajek dostaniesz <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Za 1000 lat zamiast papierkowych pieni\u0119dzy b\u0119dziemy u\u017cywa\u0107 <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co przywioz\u0142em z Turcji?",
+      "watermark": "PL"
+    },
+    {
+      "text": "W nowym filmie Disneya Hannah Montana po raz pierwszy zmaga si\u0119 z <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Gdy Faraon nie dawa\u0142 si\u0119 przekona\u0107 Moj\u017cesz zes\u0142a\u0142 plag\u0119 <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Po wielkiej powodzi w 2010 roku, jako pomoc, polski rz\u0105d zorganizowa\u0142 powodzianom <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "<span class='pick'>____</span>? Istnieje aplikacja, kt\u00f3ra to robi.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co jest moj\u0105 super moc\u0105?",
+      "watermark": "PL"
+    },
+    {
+      "text": "W jaki spos\u00f3b udaje mi si\u0119 utrzyma\u0107 m\u00f3j zwi\u0105zek?",
+      "watermark": "PL"
+    },
+    {
+      "text": "W dzisiejszych czasach niegrzeczne dzieci zamiast r\u00f3zgi dostaj\u0105 pod choink\u0119 <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\u017bycie Indian zosta\u0142o na zawsze zmienione gdy bia\u0142y cz\u0142owiek pokaza\u0142 im <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Biali ludzie lubi\u0105 <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "TV Mango prezentuje <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Jak b\u0119d\u0119 premierem, to stworze Ministerstwo <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "<span class='pick'>____</span>: dobry do ostatniej kropli.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Przy pomocy czego polski rz\u0105d wspiera student\u00f3w z region\u00f3w wiejskich?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Przez co wszystko mnie boli?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wycieczka szkolna zosta\u0142a zrujnowana przez <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co ukrywaj\u0105 przede mn\u0105 rodzice?",
+      "watermark": "PL"
+    },
+    {
+      "text": "<span class='pick'>____</span>. To pu\u0142apka!",
+      "watermark": "PL"
+    },
+    {
+      "text": "Mo\u017ce to jej urok, a mo\u017ce to <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Romantyczna kolacja ze \u015bwiecami nie mo\u017ce obej\u015b\u0107 si\u0119 bez <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co jest najlepszym przyjacielem kobiety?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co zawsze rozkr\u0119ca imprezy?",
+      "watermark": "PL"
+    },
+    {
+      "text": "W nowym reality show MTV o\u015bmiu celebryt\u00f3w wprowadza si\u0119 do domu z <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "W ostatnich chwilach swego \u017cycia Michael Jackson my\u015bla\u0142 o <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co sprowadz\u0119 z przysz\u0142o\u015bci by przekona\u0107 ludzi, \u017ce jestem pot\u0119\u017cnym czarodziejem.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Drogie Bravo, mam problem z <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co staje si\u0119 lepsze z wiekiem?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co jest najbardziej emo?",
+      "watermark": "PL"
+    },
+    {
+      "text": "W czasie seksu lubi\u0119 my\u015ble\u0107 o <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Przez co ca\u0142y si\u0119 kleje?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Na co zawsze mo\u017cna poderwa\u0107 lask\u0119?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co pomaga Obamie si\u0119 wyluzowa\u0107?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Badania wykazuj\u0105, \u017ce myszy laboratoryjne pokonuj\u0105 labirynt 50% szybciej po kontakcie z <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co zako\u0144czy\u0142o m\u00f3j ostatni zwi\u0105zek?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co b\u0119dzie nast\u0119pn\u0105 zabawk\u0105 w zestawie Happy Meal\u00ae?",
+      "watermark": "PL"
+    },
+    {
+      "text": "<span class='pick'>____</span>: Dla Ciebie, dla Rodziny.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Do teatr\u00f3w wchodzi musical o",
+      "watermark": "PL"
+    },
+    {
+      "text": "Na \u017cywo, tylko w Polsat Sport: cykl turniej\u00f3w <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co to za d\u017awi\u0119k?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Czego jest pe\u0142no w niebie?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Przez co nie mog\u0119 spa\u0107 w nocy?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Antropologowie odkryli ostatnio staro\u017cytne plemi\u0119 czcz\u0105ce <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Jak b\u0119d\u0119 miliarderem, to wznios\u0119 50 metrowy pomnik na cze\u015b\u0107 <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "<span class='pick'>____</span>. Tak chce umrze\u0107.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nie wiem czym b\u0119dzie si\u0119 walczy\u0107 podczas trzeciej wojny \u015bwiatowej, ale podczas czwartej wojny \u015bwiatowej b\u0119dzie si\u0119 walczy\u0107 <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co tak pachnie?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zanim Pana zabije, Panie Bond, musz\u0119 pokaza\u0107 Panu <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "By przyci\u0105gn\u0105\u0107 wi\u0119cej go\u015bci, Muzeum Narodowe otworzy\u0142o interaktywny eksponat z <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wojna! Jaki z niej po\u017cytek?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Medycyna alternatywna zacz\u0119\u0142a docenia\u0107 w\u0142a\u015bciwo\u015bci lecznicze <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pije by zapomnie\u0107 o <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co b\u0119dzie nast\u0119pnym duetem superbohater\u00f3w?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Picasso w czasie swoich tw\u00f3rczych eksperyment\u00f3w z uproszczeniem formy stworzy\u0142 setki obraz\u00f3w przedstawiaj\u0105cych <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "<span class='pick'>____</span>. Pi\u0105tka stary!",
+      "watermark": "PL"
+    },
+    {
+      "text": "Przepraszam profesorze, ale nie mog\u0142em odrobi\u0107 pracy domowej przez <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Jako moj\u0105 nast\u0119pn\u0105 sztuczk\u0119, wyci\u0105gn\u0119 <span class='pick'>____</span> z <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Co powoduje u mnie gazy?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Czym \u015bmierdz\u0105 starzy ludzie?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Z czego rezygnuje w czasie postu?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co USA wysy\u0142a\u0142o dzieciom w Afganistanie?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co preferuje Janusz Korwin-Mikke?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Czego nie chcieliby\u015bcie znale\u017a\u0107 w chi\u0144skim \u017carciu?",
+      "watermark": "PL"
+    },
+    {
+      "text": "<span class='pick'>____</span> to pierwszy krok do <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Tak, to ja zabi\u0142em <span class='pick'>____</span>. Pytacie jak? <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Nagrod\u0119 za <span class='pick'>____</span> otrzymuje <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Krok 1: <span class='pick'>____</span>. Krok 2: <span class='pick'>____</span>. Krok 3: Profity",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Jak by\u0142em na kwasie, to <span class='pick'>____</span> zmieni\u0142 si\u0119 w <span class='pick'>____</span>",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "W \u015bwiecie zniszczonym przez <span class='pick'>____</span> jedyn\u0105 nasz\u0105 nadziej\u0105 b\u0119dzie <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "W nowym filmie akcji Bruce Willis odkrywa, \u017ce <span class='pick'>____</span> by\u0142 tak naprawd\u0119 <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Nigdy nie rozumia\u0142em <span class='pick'>____</span> dop\u00f3ki nie <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Plotka g\u0142osi, \u017ce ulubionym daniem W\u0142adimira Putina jest <span class='pick'>____</span> nadziewane <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "TVP Kultura przedstawia film dokumentalny pt. <span class='pick'>____</span> - nieznana historia <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "<span class='pick'>____</span> + <span class='pick'>____</span> = <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 3
+    },
+    {
+      "text": "Stw\u00f3rz Haiku.",
+      "watermark": "PL"
+    },
+    {
+      "text": "W swoim nowym albumie w\u0142asnej produkcji, Tede rapuje na d\u017awi\u0119ki <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "W przysz\u0142ym sezonie na Szko\u0142y Przetrwania, Bear Grylls musi prze\u017cy\u0107 w g\u0142\u0119bokiej Amazonii tylko z <span class='pick'>____</span>  i jego rozumem.",
+      "watermark": "PL"
+    },
+    {
+      "text": "W swojej nowej kampanii turystycznej, miasto \u0141\u00f3d\u017a dumnie g\u0142osi, \u017ce w ko\u0144cu wyeliminowano <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Gdy wszystko inne zawiedzie, zawsze mog\u0119 masturbowa\u0107 si\u0119 do <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "W odleg\u0142ej przysz\u0142o\u015bci, historycy zgodz\u0105 si\u0119, \u017ce <span class='pick'>____</span>  to pocz\u0105tek upadku Ameryki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nauka nigdy nie wyja\u015bni <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Socjalistyczne rz\u0105dy Skandynawii zadeklarowa\u0142y, \u017ce dost\u0119p do <span class='pick'>____</span>  jest podstawowym prawem cz\u0142owieka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "KGB przes\u0142uchuje wrogich agent\u00f3w poprzez wielokrotne poddawanie ich <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "W Rzymie kr\u0105\u017c\u0105 pog\u0142oski, \u017ce w Watykanie znajduje si\u0119 tajny pok\u00f3j po\u015bwi\u0119cony <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co doprowadzi\u0142o orgi\u0119 do zastoju? <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dowiedzia\u0142em si\u0119 na w\u0142asnej sk\u00f3rze, \u017ce <span class='pick'>____</span>  nie pocieszy przyjaciela w \u017ca\u0142obie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "W ci\u0119\u017ckiej sytuacji <span class='pick'>____</span>  mo\u017ce by\u0107 odpowiednim zamiennikiem dla <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Co wysz\u0142o z mojego ty\u0142ka kiedy robi\u0142em kup\u0119? <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Mi\u0119dzynarodowy Trybuna\u0142 uzna\u0142 <span class='pick'>____</span>  za winnego <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "I wszystko by mi si\u0119 uda\u0142o gdyby nie <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Szanowni Pa\u0144stwo, z przykro\u015bci\u0105 informujemy, \u017ce urz\u0105d <span class='pick'>____</span>  odrzuci\u0142 Wasz\u0105 pro\u015bb\u0119 o <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Niechciany prezent, kt\u00f3ry ci\u0105gle zmienia w\u0142a\u015bciciela? <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "M\u00f3j plan dominacji nad \u015bwiatem zaczyna si\u0119 od <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nowy, zajebisty, trzy godzinny film Michaela Baya stawia <span class='pick'>____</span>  do walki przeciw <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Co utrudnia \u017cycie w kolonii nudyst\u00f3w? <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Sekretem udanego zwi\u0105zku jest rozmowa, rozmowa i jeszcze raz <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nauka nigdy nie wyja\u015bni pochodzenia <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Aby przygotowa\u0107 si\u0119 do nadchodz\u0105cej roli, Andrzej Grabowski musia\u0142 wej\u015b\u0107 w \u015bwiat <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Przed pojawieniem si\u0119 <span class='pick'>____</span>  wszytko co mieli\u015bmy to <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Zanim wystartuj\u0119 w wyborach,  musz\u0119 zniszczy\u0107 wszystkie dowody mojego zaanga\u017cowania w <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Tylko dwie rzeczy w \u017cyciu s\u0105 pewne: \u015bmier\u0107 i <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "G\u0142osowane zako\u0144czone. Now\u0105 maskotk\u0105 klubow\u0105 jest <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wszyscy na ziemi\u0119! Nie chcemy nikogo skrzywdzi\u0107. Jeste\u015bmy tu tylko po <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Proces leczenia rozpocz\u0105\u0142 si\u0119, gdy do\u0142\u0105czy\u0142em do grupy wsparcia dla ofiar <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dzisiaj w Faktach: Czego nie wiesz o <span class='pick'>____</span>  a mog\u0142o by ci\u0119 zabi\u0107.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\"Po miesi\u0105cach dyskusji, walne zgromadzenie przeciwnik\u00f3w rz\u0105du zgodnie wnioskuje: \"\"Wi\u0119cej <span class='pick'>____</span> !\"\"\"",
+      "watermark": "PL"
+    },
+    {
+      "text": "\"W nast\u0119pnym odcinku \"\"Rozm\u00f3w w toku\"\": Jak rozmawia\u0107 z dzieckiem o <span class='pick'>____</span>.\"",
+      "watermark": "PL"
+    },
+    {
+      "text": "Przeszed\u0142em drog\u0119 z <span class='pick'>____</span>  do <span class='pick'>____</span>. Wszystko dzi\u0119ki <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 3
+    },
+    {
+      "text": "\"W tym miesi\u0105cu w Cosmopolitan: \"\"Urozmai\u0107 swoje \u017cycie seksualne, przynie\u015b <span class='pick'>____</span>  do sypialni.\"\"\"",
+      "watermark": "PL"
+    },
+    {
+      "text": "Podczas jego kryzysu wieku \u015bredniego, m\u00f3j tata powa\u017cnie zainteresowa\u0142 si\u0119 <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pi\u0119\u0107 etap\u00f3w \u017ca\u0142oby: zaprzeczenie, gniew, bezradno\u015b\u0107, <span class='pick'>____</span>  , akceptacja.",
+      "watermark": "PL"
+    },
+    {
+      "text": "M\u00f3wi wasz kapitan. Zapnijcie pasy i przygotuje si\u0119 na <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Gdyby B\u00f3g nie chcia\u0142 aby\u015bmy si\u0119 cieszyli z <span class='pick'>____</span>  , nie dawa\u0142by nam <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "W swoim najnowszym i najtrudniejszym wyczynie, David Cooperfield musi uciec z <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Cz\u0142onkowie elity spo\u0142ecznej w Warszawie p\u0142ac\u0105 tysi\u0105ce z\u0142otych by tylko do\u015bwiadczy\u0107 <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\"Moim nowym ulubionym gwiazdorem porno jest Janusz \"\" <span class='pick'>____</span> \"\" Trzepieko\u0144ski.\"",
+      "watermark": "PL"
+    },
+    {
+      "text": "<span class='pick'>____</span>  by\u0142oby \u017ca\u0142o\u015bnie niekompletne bez <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Nie b\u0119dziesz \u017cy\u0142 na prawd\u0119 dop\u00f3ki nie do\u015bwiadczysz <span class='pick'>____</span>  i <span class='pick'>____</span>  w tym samym momencie.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Kalambury zosta\u0142y dla mnie na zawsze zniszczone, kiedy moja mama musia\u0142a zaprezentowa\u0107 <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "M\u00f3j kraj, taki pi\u0119kny. S\u0142odka kraina <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\"Biega, krzyczy pan Hilary: \"\"Gdzie s\u0105 moje <span class='pick'>____</span> ?\"\"\"",
+      "watermark": "PL"
+    },
+    {
+      "text": "Moja mama wkurzy\u0142a si\u0119, kiedy w\u0142\u0105czy\u0142a moj\u0105 histori\u0119 przegl\u0105dania i znalaz\u0142a <span class='pick'>____</span>.com/ <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Sp\u0119dzi\u0142em ca\u0142e moje \u017cycie d\u0105\u017c\u0105c do <span class='pick'>____</span>  , i wszystko leg\u0142o w gruzach przez <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Tw\u00f3j up\u00f3r jest godny pochwa\u0142y m\u00f3j drogi ksi\u0105\u017c\u0119. Ale nie zdob\u0119dziesz mego serca tylko przy pomocy <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Okaza\u0142o si\u0119, \u017ce <span class='pick'>____</span> -men nie by\u0142 bohaterem, kt\u00f3rego potrzebowali\u015bmy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Hej, kotku, chod\u017amy do mnie,  poka\u017c\u0119 ci <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "S\u0142uchaj, synu. Je\u015bli chcesz zaanga\u017cowa\u0107 si\u0119 w <span class='pick'>____</span>  ,nie b\u0119d\u0119 ci\u0119 zatrzymywa\u0142. Po prostu trzymaj si\u0119 z daleka od <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Nareszcie! Us\u0142uga, kt\u00f3ra dostarcza <span class='pick'>____</span>  prosto pod twoje drzwi.",
+      "watermark": "PL"
+    },
+    {
+      "text": "M\u00f3j nauczyciel wuefu zosta\u0142 wylany ze szko\u0142y za dodanie <span class='pick'>____</span>  do toru przeszk\u00f3d.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Sk\u0105d si\u0119 wzi\u0119\u0142a ta plama na mojej kanapie? <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Jak do tego odpowiednio podejdziesz, <span class='pick'>____</span>  to po prostu <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Po miesi\u0105cach \u0107wicze\u0144 z <span class='pick'>____</span>  , my\u015bl\u0119, \u017ce jestem gotowy do <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Dzwo\u0144 do kancelarii prawniczej, poniewa\u017c nikt nie powinien tolerowa\u0107 <span class='pick'>____</span>  w miejscu pracy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co robi Kamil Durczok jak zobaczy upierdolony st\u00f3\u0142? <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "W ramach zawartej z nim umowy, Micha\u0142 Wi\u015bniewski nie za\u015bpiewa bez <span class='pick'>____</span>  w jego garderobie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "W si\u00f3dmym kr\u0119gu piek\u0142a, grzesznicy musz\u0105 znosi\u0107 <span class='pick'>____</span>  przez ca\u0142\u0105 wieczno\u015b\u0107.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Aby przygotowa\u0107 si\u0119 do nadchodz\u0105cej roli, Andrzej Grabowski musia\u0142 wej\u015b\u0107 w \u015bwiat <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Randka w ciemno by\u0142a okropna dop\u00f3ki nie odkryli\u015bmy wsp\u00f3lnego zainteresowania <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\u0141atwo jest cie kocha\u0107, poniewa\u017c jeste\u015b <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Udana rozmowa kwalifikacyjna rozpoczyna si\u0119 mocnym u\u015bciskiem d\u0142oni, a ko\u0144czy <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Jaki temat wybra\u0142e\u015b na matur\u0119? <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Z biegiem czasu i przy odpowiednich \u015brodkach, <span class='pick'>____</span>  zmieni si\u0119 w <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "B\u0119d\u0105c w szkole \u015bredniej nie mog\u0142em si\u0119 dopasowa\u0107 do otoczenia, dop\u00f3ki nie znalaz\u0142em klubu <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "<span class='pick'>____</span>. Niesamowite w teorii, gorzej w praktyce.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nie jestem taki jak wy. Jestem zbyt bogaty i zaj\u0119ty <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "<span class='pick'>____</span>  : Godziny zabawy. \u0141atwe w u\u017cyciu. Perfekcyjne dla <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Pieni\u0105dze nie mog\u0105 kupi\u0107 mi mi\u0142o\u015bci, ale za to mog\u0105 mi kupi\u0107 <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Masz problemy z <span class='pick'>____</span> ? Wypr\u00f3buj <span class='pick'>____</span> !",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Moje \u017cycie to b\u0142\u0119dne ko\u0142o <span class='pick'>____</span>  oraz <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "\"Tegoroczny najgor\u0119tszy album to \"\" <span class='pick'>____</span> \"\" autorstwa <span class='pick'>____</span>.\"",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Jestem pewien, \u017ce jestem teraz na haju, bo jestem absolutnie zauroczony <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zapomnij wszystko co wiedzia\u0142e\u015b o <span class='pick'>____</span>  , poniewa\u017c teraz po\u0142\u0105czyli\u015bmy to z <span class='pick'>____</span> !",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Je\u015bli nie mo\u017cesz sobie poradzi\u0107 z <span class='pick'>____</span>  , lepiej trzymaj si\u0119 z dala od <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "W zamian za moj\u0105 dusz\u0119, Diabe\u0142 obieca\u0142 mi <span class='pick'>____</span>  , ale wszystko, co dosta\u0142em to <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Kochanie, wymy\u015bli\u0142em now\u0105 scenk\u0119 do wypr\u00f3bowana dzi\u015b wieczorem! Mo\u017cesz by\u0107 <span class='pick'>____</span>  , a ja b\u0119d\u0119 <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Sta\u0142em si\u0119 <span class='pick'>____</span>  , niszczycielem <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "<span class='pick'>____</span>  ju\u017c nigdy nie b\u0119dzie takie same po <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "\"Ksi\u0105\u017cka miesi\u0105ca to \"\" <span class='pick'>____</span>  dla <span class='pick'>____</span>  : historia o nadziei\"\".\"",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Ch\u0142opy, jaki widzia\u0142em wczoraj szalony film! Zaczyna si\u0119 <span class='pick'>____</span>  , potem jest troch\u0119 o <span class='pick'>____</span>  , a ko\u0144czy si\u0119 <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 3
+    },
+    {
+      "text": "Nigdy nie znale\u017ali\u015bmy <span class='pick'>____</span>  , ale po drodze nauczyli\u015bmy si\u0119 wiele o <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Nie zadzieraj ze mn\u0105! W tym momencie jestem dos\u0142ownie <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "To czai si\u0119 w nocy. To \u0142aknie mi\u0119sa. Tego lata, nikt si\u0119 nie schowa przed <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ona przez ca\u0142\u0105 noc lubi imprezowa\u0107. Ja przez ca\u0142\u0105 noc lubi\u0119 <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Cz\u0142owieku, to jest g\u00f3wno prawda. Pieprzy\u0107 <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ka\u017cdy krok w kierunku <span class='pick'>____</span>  przybli\u017ca mnie do <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Co jest zabawne dop\u00f3ki nie stanie si\u0119 dziwne? <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Godzina 2:00 w mie\u015bcie, kt\u00f3re nigdy nie \u015bpi. Drzwi otwieraj\u0105 si\u0119, wchodzi ona. Podchodzi do mnie. Co\u015b w jej oczach m\u00f3wi mi, \u017ce szuka <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Jak rekompensuj\u0119 mojego malutkiego penisa? <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Widzieli\u015bcie kobiet\u0119 z brod\u0105! Widzieli\u015bcie pier\u015bcie\u0144 ognia! A teraz, panie i panowie, nacieszcie swoje oczy <span class='pick'>____</span> !",
+      "watermark": "PL"
+    },
+    {
+      "text": "Najdro\u017cszy Przyw\u00f3dco Kim Jong-un, nasza wie\u015b chwali Twoj\u0105 niesko\u0144czon\u0105 m\u0105dro\u015b\u0107 i pokornie ofiaruje <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\"Na pocz\u0105tku by\u0142 <span class='pick'>____</span>. Wtedy B\u00f3g rzek\u0142, \"\"Niech si\u0119 stanie <span class='pick'>____</span>.\"\".\"",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Nowy film Krzysztofa Zanussiego opowiada histori\u0119 upo\u015bledzonego dziecka pogodzonego z <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bracia, nasza siedziba zosta\u0142a przej\u0119ta, a nasze dziwki wzi\u0119te do niewoli. Czas rozpocz\u0105\u0107 operacj\u0119 <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "To jest rozkwit mojego \u017cycia. Jestem m\u0142oda, seksowna i pe\u0142na <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Przykro mi prosz\u0119 pana, ale nie zezwalamy <span class='pick'>____</span>  w naszym klubie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\"Przygoda. Romans. <span class='pick'>____</span>. Prosto ze studia filmowego KADR, \"\" <span class='pick'>____</span>\"\".\"",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Jak nauczy\u0142bym podw\u0142adnych dyscypliny gdybym by\u0142 kr\u00f3lem? <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "<span class='pick'>____</span>  przeminie, ale <span class='pick'>____</span>  przetrwa wiecznie.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Japo\u0144czycy opracowali mniejsz\u0105, bardziej wydajn\u0105 wersj\u0119 <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zupa dnia: Krem z <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Garnitur od Armaniego: 4,000 z\u0142. Kolacja dla dwojga w TEJ restauracji: 1500 z\u0142. Ten widok na jej twarzy kiedy zaskoczysz j\u0105 <span class='pick'>____</span>: bezcenne.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\"Nie zapomnij! Od tego tygodnia Lu\u017ane Pi\u0105tki zostan\u0105 zast\u0105pione przez \"\" <span class='pick'>____</span> Pi\u0105tki.\"\"\"",
+      "watermark": "PL"
+    },
+    {
+      "text": "Przygotuj si\u0119 na film tego lata! Jeden porz\u0105dny glina. Drugiego interesuje  tylko : <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Najgorszy dzie\u0144 W \u017bYCIU. # <span class='pick'>____</span>",
+      "watermark": "PL"
+    },
+    {
+      "text": "Baczcie, \u015bmiertelnicy! Jam jest b\u00f3g <span class='pick'>____</span> i nie b\u0119d\u0119 tolerowa\u0142 <span class='pick'>____</span>!",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Pomocy, doktorze, mam <span class='pick'>____</span> w odbycie!",
+      "watermark": "PL"
+    },
+    {
+      "text": "Cze\u015b\u0107 MTV! Mam na imi\u0119 Izka, mieszkam w Warszawie, kr\u0119ci mnie <span class='pick'>____</span>, i kocham si\u0119 dobrze bawi\u0107.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\"Tutaj Mietek z ksi\u0119gowo\u015bci. Zauwa\u017cyli\u015bmy rachunek na 4000 z\u0142  za  \"\" <span class='pick'>____</span>.\"\" Mo\u017cesz to wyja\u015bni\u0107?\"",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nie chc\u0119 si\u0119 przechwala\u0107, ale zw\u0105 mnie Adamem Ma\u0142yszem <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "W swoim li\u015bcie po\u017cegnalnym George Washington ostrzeg\u0142 przed niebezpiecze\u0144stwem kryj\u0105cym si\u0119 za <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "W nowym filmie akcji, Bogus\u0142aw Linda musi walczy\u0107 z ninjami oraz <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pacjent ma : <span class='pick'>____</span>. To zapewne wynik: <span class='pick'>____</span>.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "C\u00f3\u017c je\u017celi <span class='pick'>____</span> jest dobre dla <span class='pick'>____</span>, to jest i dobre dla mnie.",
+      "watermark": "PL",
+      "pick": 2
+    },
+    {
+      "text": "Co masz do powiedzenia Janusz? To ju\u017c trzeci raz kiedy jeste\u015b u dyrektora za <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co ubi\u0142o m\u00f3j wzw\u00f3d?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co powoduje niezr\u0119czn\u0105 sytuacj\u0119 w saunie?",
+      "watermark": "PL"
+    },
+    {
+      "text": "ZAJEBI\u015aCIE! Uwielbiam <span class='pick'>____</span>!",
+      "watermark": "PL"
+    },
+    {
+      "text": "Czemu jestem taki sp\u0142ukany?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Twoja stara jest taka gruba, \u017ce <span class='pick'>____</span>.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Lidl wprowadzi\u0142 szalon\u0105 promocje na <span class='pick'>____</span>. Emeryci atakuj\u0105!",
+      "watermark": "PL"
+    },
     {
       "text": "Here is the church Here is the steeple Open the doors And there is <span class='pick'>____</span>.",
       "watermark": "US"
@@ -2558,6 +3452,3046 @@
     }
   ],
   "white": [
+    {
+      "text": "Afryka\u0144skie dzieci.",
+      "watermark": "PL"
+    },
+    {
+      "text": "AIDS.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Aktywne s\u0142uchanie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Anna Mucha.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Arnold Schwarzenegger.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Auschwitz.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Baby z nosa.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Borys Szyc.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bycie bajecznie pi\u0119knym.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bycie naprawd\u0119 mocno spalonym.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bycie tak z\u0142ym, \u017ce a\u017c ci staje.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Chwytaj\u0105ce za serce sierotki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Cyga\u0144ska kl\u0105twa.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Delikatne pieszczoty wewn\u0119trznej cz\u0119\u015bci uda.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Duchy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dw\u00f3ch kar\u0142\u00f3w sraj\u0105cych do wiadra.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dzieci z rakiem odbytu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dzieci\u0119ce konkursy pi\u0119kno\u015bci.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Finalista kangura.",
+      "watermark": "PL"
+    },
+    {
+      "text": "G\u0105bka pe\u0142na kocich sik\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Geje.",
+      "watermark": "PL"
+    },
+    {
+      "text": "G\u0142\u00f3d.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Gwiazdy Porno.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Homoerotyczna scena gry w siatk\u00f3wk\u0119.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Hot-dogi za 1z\u0142.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Janusz Korwin-Mikke.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Jej wysoko\u015b\u0107, kr\u00f3lowa El\u017cbieta II.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Jezioro \u0142ab\u0119dzie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Justin Bieber.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Katapulty.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kobiety w reklamach jogurt\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kochanie si\u0119 w ty\u0142ek.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Konina.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Krew Chrystusa.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Laktacja.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Masturbacja.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Mikro penis.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Mleko w tubce.",
+      "watermark": "PL"
+    },
+    {
+      "text": "M\u0142yn pe\u0142en trup\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Murzyni.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nag\u0142y zwrot akcji.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Napletek.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nastoletnie ci\u0105\u017ce.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Naturalna selekcja.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nauka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nazi\u015bci.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Niewyobra\u017calna g\u0142upota.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Oblizywanie rzeczy, \u017ceby oznaczy\u0107 je jako swoje.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ob\u017ceranie si\u0119 i wymiotowanie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Opowiadanie dowcip\u00f3w o \u017cydach w nieodpowiednim momencie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Oszukiwanie na olimpiadzie specjalnej.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Paradoks podr\u00f3\u017cy w czasie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Petting.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Picie w samotno\u015bci.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Podda\u0144stwo.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Porno z mackami.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Potajemne drapanie si\u0119 po ty\u0142ku.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pracownicy dzia\u0142u obs\u0142ugi klienta.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Prawdziwe znaczenie \u015bwi\u0105t.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Problemy z erekcj\u0105.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Propaganda homoseksualna.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Przeciwstawne kciuki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Przyjaciele z bonusem.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pszczo\u0142y?",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pterodaktyle jaja.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Robert Burneika.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Robienie smutnej minki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Rozbieranie si\u0119 do naga i ogl\u0105danie Cartoon Network.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Rzut kar\u0142em.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Samos\u0105d.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Skalpowanie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Spontanicznie wyrwanie si\u0119 do ta\u0144ca i \u015bpiewu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Strach w czystej postaci.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Suche wymioty.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Szczeniaczki!",
+      "watermark": "PL"
+    },
+    {
+      "text": "\u015aci\u0105ganie koszulki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Tabletki gwa\u0142tu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Tarcie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "To uczucie, gdy wydaje Ci si\u0119, \u017ce to tylko bekni\u0119cie, a okazuje si\u0119, \u017ce to rzyg.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Tortury.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Uwodzenie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Viagra\u00ae.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Walki kogut\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Whiskas\u00ae.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wielki wybuch.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wybielony odbyt.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wykorzystywanie dzieci.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zamra\u017carka pe\u0142na organ\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zaspany Lew w ZOO.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zastawianie pu\u0142apek na z\u0142odziei.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zesp\u00f3\u0142 Feel.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zmazy nocne.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zno\u015bni transwestyci.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zrzucane \u017cyrandolu na przeciwnik\u00f3w i wje\u017cd\u017canie do g\u00f3ry po linie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\u017ba\u0142osna gra wst\u0119pna.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Donald Tusk.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zdj\u0119cia piersi.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Czystki etniczne.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Macanie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Obci\u0105ganie w czasie jazdy autem.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\u017b\u00f3\u0142w jaszczurowaty gryz\u0105cy ci\u0119 w ko\u0144c\u00f3wk\u0119 penisa.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Cud porodu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Opryszczka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nekrofilia.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Scjentologia.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Darmowe pr\u00f3bki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "MechaHitler.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Minuta ciszy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Napi\u0119cie seksualne.",
+      "watermark": "PL"
+    },
+    {
+      "text": "N iesy metryczne, sztuczne piersi.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ku Klux Klan.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\u015al\u0105sk.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wybuchy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kucyk.",
+      "watermark": "PL"
+    },
+    {
+      "text": "J\u00f3zef Pi\u0142sudski.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ludzka g\u0142upota.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bakteria \u017cywi\u0105ca si\u0119 mi\u0119sem.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Mordowanie, palenie, gwa\u0142cenie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Szcz\u0119ko\u015bcisk.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Tede.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Amputanci.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bycie zmarginalizowanym.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Spuszczanie si\u0119 do basenu dzieci\u0119cych \u0142ez.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Krasnoludki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Biedni ludzie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zio\u0142owe tabletki na problemy z potencj\u0105.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dokarmianie Magdy Gessler.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Naprawd\u0119 fajny kapelusz.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Przera\u017caj\u0105ce wypadki podczas laserowego usuwania w\u0142os\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pok\u00f3j na \u015bwiecie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pierdzenie pochw\u0105.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Moja dusza.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Policyjna przemoc.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Chocapic.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Rycersko\u015b\u0107.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pedofile.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Sol\u00f3wki na saksofonie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Gandhi.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Amatorskie aborcje.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nieodwzajemniony seks oralny.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Za\u017cywanie Krokodyla.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Euphoria\u2122 Calvina Kleina.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Tyskie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Olbrzymie lizaki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Morze problem\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Charyzma.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Z\u0142oty \u0142a\u0144cuch.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kazirodztwo.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dziurawe r\u0119ce.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nierozmawianie z obcymi.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Konwulsyjnie wymiotuj\u0105cy Kuba Wojew\u00f3dzki podczas gdy chmara paj\u0105k\u00f3w wyl\u0119ga si\u0119 w jego m\u00f3zgu i eksploduje z kanalik\u00f3w \u0142zowych.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pasywno-agresywne og\u0142oszenia.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wzw\u00f3d trwaj\u0105cy ponad 4 godziny.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Estrogen.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Moja kolekcja nowoczesnych gad\u017cet\u00f3w erotycznych.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ci\u0119\u017cko pracuj\u0105cy cygan.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Gadanie g\u0142upot.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Malowanie palcami.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Erotyczna wersja Harrego Pottera.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zaj\u0119cia integracyjne.",
+      "watermark": "PL"
+    },
+    {
+      "text": "B\u00f3g.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kobiece prawa wyborcze.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Udawane wsp\u00f3\u0142czucie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bezchmurne niebo i \u015bwiec\u0105ce s\u0142o\u0144ce.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ocenzurowane bukkake.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Smsowanie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Tr\u0105d.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Lady Gaga.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Terrory\u015bci.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pobudka na parkingu b\u0119d\u0105c na wp\u00f3\u0142 nagim.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\u201cSerek\u201d spod napletka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Moja pochwa.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ludzie zawsze psuj\u0105cy dobr\u0105 zabaw\u0119.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Leki na ADHD.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zbilansowane \u015bniadanie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kompleks Edypa.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Za gor\u0105ca zupa.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Strzelanie do swoich.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bogactwo.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Miny l\u0105dowe.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Michael Jackson.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Koraliki analne.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ameryka\u0144ski sen.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Paczka magicznych fasolek.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Materac z TV Mango.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zerkni\u0119cie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\u017bydzi.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Seksowne walki na poduszki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Jaros\u0142aw Kaczy\u0144ski.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Biblia.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wymiana uprzejmo\u015bci.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nelli Rokita.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Parow\u00f3z Tomek.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Piloci kamikaze.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Spektakularne mi\u0119\u015bnie brzucha.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wybuch termoj\u0105drowy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Obowi\u0105zki ma\u0142\u017ce\u0144skie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kaszaloty.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Centaury.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Leczenie homoseksualizmu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wielkie halo o nic.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pieczenie odbytu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Gej party.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zakazany owoc.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Palc\u00f3wka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Czyngis-chan.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Naruszanie podstawowych praw cz\u0142owieka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "W\u0105chanie kleju.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Olaf Lubaszenko.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Przytulanie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "M\u0119\u017cczy\u017ani.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Olewanie problem\u00f3w trzeciego \u015bwiata.",
+      "watermark": "PL"
+    },
+    {
+      "text": "72 dziewice.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Taniec godowy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ser topiony.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Status mojego zwi\u0105zku.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Gobliny.",
+      "watermark": "PL"
+    },
+    {
+      "text": "M\u0119ska Pa\u0142a.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Niestosowne jod\u0142owanie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Moc Jedi.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bycie pierdolonym czarodziejem.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Uczenie robota mi\u0142o\u015bci.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kim Jong-il.",
+      "watermark": "PL"
+    },
+    {
+      "text": "BATMAN!!!",
+      "watermark": "PL"
+    },
+    {
+      "text": "RoboCop.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ukrywanie wzwodu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wikingowie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "General Wojciech Jaruzelski.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Noszenie bielizny na lew\u0105 stron\u0119 by unikn\u0105\u0107 prania.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Suki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dro\u017cd\u017ce.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Niemcy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zostawianie k\u0142opotliwych wiadomo\u015bci na poczcie g\u0142osowej.",
+      "watermark": "PL"
+    },
+    {
+      "text": "World of Warcraft.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ptaki nieloty.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Steven Hawking m\u00f3wi\u0105cy \u015bwi\u0144stwa.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Przekazywanie dalej niechcianych prezent\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\u0141o\u017cysko.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wstr\u0119t do samego siebie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Fantazje o drwalach.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Tomasz Karolak.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Konsultanci.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pac-man tryskaj\u0105cy sperm\u0105 w amoku.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Liczne rany k\u0142ute.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kariera aktorska Przemys\u0142awa Salety.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Za du\u017co \u017celu we w\u0142osach.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Chi\u0144ska dru\u017cyna gimnastyczna.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Moje genitalia.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ten pas na brzuch z TV Mango.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Papie\u017c.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Sok\u00f3\u0142 z czapk\u0105 na g\u0142owie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pi\u0142y \u0142a\u0144cuchowe zamiast r\u0105k.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zapach starych ludzi.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Studia.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Guz m\u00f3zgu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Z\u0142oty deszcz.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dziurawa prezerwatywa.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Publiczne o\u015bmieszenie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ma\u0142pa pal\u0105ca cygara.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wieczny smutek.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Darth Vader.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kolczyki do sutk\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Mleczarz.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Britney Spears w wieku 55 lat.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pochwa Marii Czubaszek.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Alkoholizm.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Spodnie bez ty\u0142ka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pierdzenie i odchodzenie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kom\u00f3rki macierzyste.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Faktyczne zabranie dziecku cukierka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "G\u0119si.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Mahomet (chwa\u0142a mu po wieczne czasy).",
+      "watermark": "PL"
+    },
+    {
+      "text": "Lech Wa\u0142\u0119sa.",
+      "watermark": "PL"
+    },
+    {
+      "text": "S\u0142odka zemsta.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Znajomi wyjadaj\u0105cy ca\u0142\u0105 zagrych\u0119.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Cybernetyczne ulepszenia.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ofiary w\u015br\u00f3d cywili.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Mokry b\u0105k.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Z\u0142e decyzje \u017cyciowe",
+      "watermark": "PL"
+    },
+    {
+      "text": "Umieranie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Sranie tam i z powrotem. W niesko\u0144czono\u015b\u0107.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pot\u0119\u017cne uda.",
+      "watermark": "PL"
+    },
+    {
+      "text": "J\u0105dra.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nago\u015b\u0107.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Niemieckie porno w lochach.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zabawa w wampira podczas miesi\u0105czki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ameryka\u0144scy gladiatorzy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Czekanie do \u015blubu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Andrzej Grabowski.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Mazurek.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\u0141echtaczka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dezodorant AXE.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bezdomni.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Adam S\u0142odowy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Igraszki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "W\u0142a\u015bciwe post\u0119powanie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kolejny, cholerny film z wampirami.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Uczciwy gliniarz z niczym do stracenia.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Szkieletor.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kuba Wojew\u00f3dzki zaczepiony moszn\u0105 o haczyk od zas\u0142ony.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Metamfetamina.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Gwa\u0142t na randce.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kuba Wojew\u00f3dzki n\u0119kany przez r\u00f3j myszo\u0142ow\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wyruszanie w stron\u0119 zachodu s\u0142o\u0144ca.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zielsko / Jaranie / Palenie / Trawa / Ganja.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Amisze.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Spro\u015bne SMSy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Napad w bramie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Skr\u0119t j\u0105dra.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ataki dinozaur\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Olaf Lubaszenko.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nadzieja.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Czas dla siebie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dojrzewanie p\u0142uciowe.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Paplanie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Piercing genitali\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wpierdol.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zab\u0142\u0105kany w\u0142os \u0142onowy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Rolnictwo.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bezczelno\u015b\u0107.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Jadalna bielizna.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pi\u0119kni ludzie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dzieci.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\u015amierciono\u015bny laser.",
+      "watermark": "PL"
+    },
+    {
+      "text": "G\u0142\u0119boko upo\u015bledzeni.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Okradanie grob\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "P\u0142\u00f3d.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Cios podbr\u00f3dkowy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Oty\u0142o\u015b\u0107.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Mocne sztachni\u0119cie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Martwi rodzice.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Autokanibalizm.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Spontaniczne samospalenie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dzieci na smyczy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "G\u0142os Krystyny Czub\u00f3wny.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Tomasz Kot.",
+      "watermark": "PL"
+    },
+    {
+      "text": "D\u0142ug publiczny.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Mim w trakcie zawa\u0142u.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ubrudzenie si\u0119.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Hasanie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Seppuku.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Popuszczenie w majtki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Podrywanie dziewczyn w klinice aborcyjnej.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Rodzenie kamienia nerkowego.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Biali ludzie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ministranci.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Cezary Pazura.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Moje wewn\u0119trzne demony.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Upijanie si\u0119 p\u0142ynem do spryskiwaczy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Karty przeciwko ludzko\u015bci.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Emocje.",
+      "watermark": "PL"
+    },
+    {
+      "text": "S\u0119dzia Anna Maria Weso\u0142owska.",
+      "watermark": "PL"
+    },
+    {
+      "text": "U\u017cywanie wsp\u00f3lnej strzykawki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Gwa\u0142towna pow\u00f3d\u017a.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Rasizm.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dok\u0142adnie to czego si\u0119 spodziewasz.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Serce dziecka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Niewyparzona buzia.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nastawienie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "To miejsce u m\u0119\u017cczyzny mi\u0119dzy j\u0105drami, a odbytem.",
+      "watermark": "PL"
+    },
+    {
+      "text": "40-latek na rolkach.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dawanie z siebie 110%.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bycie chujem w stosunku do dzieci.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Lobotomia szpikulcem do lodu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Fundacja Polsat dzieciom.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Globalne ocieplenie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Seks niespodzianka!",
+      "watermark": "PL"
+    },
+    {
+      "text": "Rozczarowuj\u0105ce przyj\u0119cie urodzinowe.",
+      "watermark": "PL"
+    },
+    {
+      "text": "PiS.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kozy po\u017ceraj\u0105ce \u015bmieci.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kolesie kt\u00f3rzy nie dzwoni\u0105 p\u00f3\u017aniej do dziewczyn poznanych na imprezie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Piotr Adamczyk.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Martwe niemowl\u0119ta.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Moje \u017cycie seksualne.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Huragan Katrina.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Menstruacja.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Puszczanie oczek do starszych ludzi.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Babcia.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Terapia hormonalna.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Palenie si\u0119.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ty.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ja.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Moja mama.",
+      "watermark": "PL"
+    },
+    {
+      "text": "M\u00f3j ch\u0142opak.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Moja dziewczyna.",
+      "watermark": "PL"
+    },
+    {
+      "text": "U\u017cywanie przepychacza do kibla na twarzy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Sosnowiec.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nag\u0142a przypad\u0142o\u015b\u0107 wybuchowego srania.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Walka niczym gladiatorzy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Rekonstrukcja bitwy pod Grunwaldem.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Seksowne bli\u017ani\u0119ta syjamskie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nienasycona \u017c\u0105dza krwi.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Cztery ramiona Vishnu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ostre \u015bwiat\u0142o dnia.",
+      "watermark": "PL"
+    },
+    {
+      "text": "NIEEEEEEEEEEEEEEE!!!",
+      "watermark": "PL"
+    },
+    {
+      "text": "Malutka, s\u0142abiutka r\u0105czka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kosmiczne babeczki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Arnie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Awansowanie na nast\u0119pny poziom.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Apetyczni ch\u0142opcy niewolnicy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Moralna dwuznaczno\u015b\u0107.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Z\u0142y cz\u0142owiek w diabolicznym garniaku.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Micha\u0142 Pir\u00f3g.",
+      "watermark": "PL"
+    },
+    {
+      "text": "24-godzinna relacja na \u017cywo.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Mama.",
+      "watermark": "PL"
+    },
+    {
+      "text": "S\u0142owa, s\u0142owa, s\u0142owa.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kradzie\u017c kobiecych majtek.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\u0141askotanie moszny.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ten go\u015bciu!",
+      "watermark": "PL"
+    },
+    {
+      "text": "Jedzenie albinosa.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nie wsadzanie g\u0142\u0119boko.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Tarta.",
+      "watermark": "PL"
+    },
+    {
+      "text": "D\u017cafar.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zmy\u015blanie statystyk.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bycie porwanym przez Piotrusia Pana.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Przepraszanie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bicie \u017cony.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ma\u0142\u017ce.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bycie na ostrej fazie po grzybkach halucynkach.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wielki czarny kutas.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bycie zaj\u0119tym doros\u0142ym z wieloma wa\u017cnymi rzeczami do zrobienia.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ogromne skandynawskie kobiety.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Niski poziom \u017cycia.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pan Kleks.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Czosnkowy oddech.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Samookaleczanie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Smoczek we krwi.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Z\u0142owieszcza muzyka w tle.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Rozerwanie klatki piersiowej m\u0119\u017cczyzny i wyci\u0105ganie wci\u0105\u017c bij\u0105cego serca.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pi\u017cmo Daniela Olbrychskiego.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\u015alina.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Rewizjonizm historyczny.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kaszlenie do waginy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Erekcja starszych pan\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dopracowana krytyka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Syndrom sztokholmski.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\u0141ysy grubas z internet\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Osadzony na mieli\u017anie wieloryb.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Znalezienie szkieletu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Gu\u0142agi.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Hipsterzy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\u015awi\u0119ty Miko\u0142aj.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Szalone tricki podczas grania w Zo\u015bk\u0119.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Moja maczeta.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Posiadanie penisa.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dos\u0142ownie jedzenie g\u00f3wna.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ki\u0142owe szale\u0144stwo.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Tysi\u0105c kabanos\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Przezwyci\u0119\u017cenie swojego ojca.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Statystycznie potwierdzone stereotypy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Rozdziewiczanie ksi\u0119\u017cniczki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Czkawka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Rz\u0105dza seksualna Zeusa.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Sie\u0107 k\u0142amstw.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Poni\u017canie seksualne.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Szlam.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nami\u0119tna latynowska kochanka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Genetycznie zaprojektowani super \u017co\u0142nierze.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Gospodarka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wzgardzona kobieta.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zaci\u015bni\u0119te po\u015bladki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "My\u015bli samob\u00f3jcze.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Alba\u0144ski pastuch.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bycie dinozaurem.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ryan Gosling wje\u017cd\u017caj\u0105cy na bia\u0142ym koniu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Podw\u00f3jna penetracja.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Mieszanie ras.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Podstawowa ludzka przyzwoito\u015b\u0107.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pot\u0119ga.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pas tatusia.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Chy\u017ce osi\u0105ganie orgazmu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Armia szkielet\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Odmro\u017cenie moszny.",
+      "watermark": "PL"
+    },
+    {
+      "text": "G\u00f3wno prawda.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Spocony, zdyszany dominator seksualny.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Powstanie z grobu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Przerwa wakacyjna!",
+      "watermark": "PL"
+    },
+    {
+      "text": "Szukanie Walliego.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Szmata nas\u0105czona eterem.",
+      "watermark": "PL"
+    },
+    {
+      "text": "M\u0119\u017cczyzna w spodniach do jogi z kucykiem i kolczykami z pi\u00f3r.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Jaros\u0142aw Boberek.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dzie\u0144, w kt\u00f3rym ptaki zaatakowa\u0142y.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dennis Rozrabiaka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Odm\u0142adzaj\u0105ca Krzy\u015bka Ibisza, szara, od\u017cywcza papka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pi?ata pe\u0142na skorpion\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Cia\u0142o ludzkie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Jeden, by wszystkimi rz\u0105dzi\u0107.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Biczowanie niepos\u0142usznego niewolnika.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ta ca\u0142a krew.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Loki, b\u00f3g szachraj.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pompowanie dziecka co dziewi\u0119\u0107 miesi\u0119cy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zajebisty statek kosmiczny.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Narzekanie jak ma\u0142a dziwka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\"Uduchowione wydanie \"\"Dni, kt\u00f3rych nie znamy\"\".\"",
+      "watermark": "PL"
+    },
+    {
+      "text": "\"Kolacja z kartonowymi postaciami z \"\"Przyjaci\u00f3\u0142\"\".\"",
+      "watermark": "PL"
+    },
+    {
+      "text": "J\u0119zyk.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wyrwanie facetowi j\u0105der i ga\u0142ek ocznych a nast\u0119pnie w\u0142o\u017cenie j\u0105der do oczodo\u0142\u00f3w i ga\u0142ek ocznych do moszny.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Magiczna chmurka mi\u0142o\u015bci hipisa.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ciosy nunczakiem.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bycie niesaowitym w \u0142\u00f3\u017cku.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Niesprawny diabelski m\u0142yn tocz\u0105cy si\u0119 w stron\u0119 morza.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Problemy intymne.",
+      "watermark": "PL"
+    },
+    {
+      "text": "55-litrowa beczka lubrykantu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zbli\u017caj\u0105cy si\u0119 korek uliczny.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Maksymalna penetracja.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kleks z \u015bmietany.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Borys, radziecki M\u0142ot Mi\u0142o\u015bci.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Korporacje.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Noszenie o\u015bmiornicy jako kapelusza.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Przemoc, przekle\u0144stwa i troch\u0119 erotyki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Grupa ludzi uprawiaj\u0105cych seks na \u0142y\u017ceczk\u0119.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Specjalny go\u015b\u0107 muzyczny, Maryla Rodowicz.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ja.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Czarny Power Ranger.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Jeszcze jedna dawka morfiny.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zaprzyja\u017anienie si\u0119.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\u015amier\u0107 z r\u0105k Stevena Seagala.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Smutny, gruby, nie maj\u0105cy przyjaci\u00f3\u0142 smok.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pluton do produkcji broni atomowej.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Malutkie sutki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Sie\u0107 restauracji Magdy Gessler.",
+      "watermark": "PL"
+    },
+    {
+      "text": "W chuj du\u017co.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wykorzystywanie bezdomnych ludzi do stworzenia ruchomych hotspot\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Syndrom poobozowy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Prochy dziadka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nowa p\u0142yta Comy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Katastrofalny uraz cewki moczowej.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zapanowanie nad nied\u017awiedziem grizzly i uczynienie go swoj\u0105 \u017con\u0105.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\u0141agodny autyzm.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Muczenie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wi\u0119kszy, bardziej czarny kutas.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Alkoholowy zesp\u00f3\u0142 p\u0142odowy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nadmiernie bujne i zapuszczone w\u0142osy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Szwadron moli nosz\u0105cych okulary lotnika.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Mieszkanie w koszu na \u015bmieci.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Istnienie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Moje pierwsze zab\u00f3jstwo.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nieznacznie chujowszy r\u00f3wnoleg\u0142y wszech\u015bwiat.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co\u015b naprawd\u0119 popierdolonego.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Google.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Gor\u0105czka disco.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Prymitywny seks jaki w\u0142a\u015bnie uprawiaj\u0105 twoi rodzice.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wychodz\u0105ce z kibla gady, gryz\u0105ce cie kiedy robisz kup\u0119.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Huj.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nieograniczone zupy, sa\u0142atki, i paluszki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\"Reprodukcja serialu \"\"Wied\u017amin\"\" tylko i wy\u0142\u0105cznie z aktorami-kar\u0142ami.\"",
+      "watermark": "PL"
+    },
+    {
+      "text": "Jedzenie w\u0105s\u00f3w Chucka Norrisa aby zdoby\u0107 jego umiej\u0119tno\u015bci.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ca\u0142y Internet.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Niez\u0142a dupa!",
+      "watermark": "PL"
+    },
+    {
+      "text": "Chytra Baba z Radomia.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zawiedzenie wszystkich.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Rzewny p\u0142acz podczas czytania Harlequina.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Prezentacja w PowerPoint.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Te\u015bciowa.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bieganie nago po centrum handlowym, sikanie i sranie wsz\u0119dzie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nieopisana samotno\u015b\u0107.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Lataj\u0105ce roboty, kt\u00f3re zabijaj\u0105 ludzi.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Samobiczowanie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Spos\u00f3b bycia bia\u0142ych ludzi.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Policjant, kt\u00f3ry jednocze\u015bnie jest psem.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ryszard Kalisz trzymaj\u0105cy saksofon le\u017c\u0105c nago na nied\u017awiedziej sk\u00f3rze.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pierre Dzoncy, kr\u00f3lewski przydupas.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Rzep.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zrobienie sobie kuku.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Scena \u015bmierci Mufasy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Samuel L. Jackson.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Brak wspomagania reszty spo\u0142ecze\u0144stwa w jaki\u015b znacz\u0105cy spos\u00f3b.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Op\u0119tanie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Stos wij\u0105cych si\u0119 cia\u0142.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wszyscy moi przyjaciele umieraj\u0105.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Spontaniczny taniec Konga.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kraina czekolady.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Picie kilku Tiger\u00f3w pod rz\u0105d aby mie\u0107 energi\u0119 na ca\u0142y tydzie\u0144.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Reprezentacja polskich polityk\u00f3w w pi\u0142ce no\u017cnej.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dziewczyny, kt\u00f3re wiecznie smsuj\u0105.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wskakiwanie na ludzi.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Umieranie w samotno\u015bci i b\u00f3lu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zamkni\u0119cie ryja.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Rzyganie w trakcie lodzika.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nape\u0142nianie ka\u017cdego otworu cia\u0142a budyniem karmelowym.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bycie postrzelonym, na serio.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Retrospekcje wojenne.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nieudane obrzezanie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zatrza\u015bni\u0119cie penisa w pu\u0142apce na myszy z innym penisem.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kichanie, pierdzenie i dochodzenie w tym samym czasie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Czarny 20-letni m\u0119\u017cczyzna, ostatnio widziany w bluzie z kapturem.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kupowanie odpowiednich spodni by by\u0107 lubianym.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co\u015b w rodzaju cz\u0142owieka-ptaka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nasmarowany olejkiem Rafa\u0142 Maserak.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wilgotna, wymagaj\u0105ca przepa\u015b\u0107 na jego twarzy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Biegunka rozpryskowa w gaciach.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Posiadanie strzelb zamiast n\u00f3g.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Szastanie kas\u0105.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Geje z innej planety.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wk\u0142adanie kanapki z d\u017cemem i mas\u0142em orzechowym do magnetowidu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Systematyczne niszczenie wszystkich ludzi, i ich sposobu \u017cycia.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Krzyczenie jak wariat.",
+      "watermark": "PL"
+    },
+    {
+      "text": "M\u00f3j s\u0142uga, Czarek.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Uderzenie staruszki-rasistki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zrobienie dobre kilku go\u015bciom w ciemnej alejce.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pochwa b\u0119d\u0105ca portalem do innego wymiaru.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Niepowstrzymana fala ognistych mr\u00f3wek.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zaskakuj\u0105ca ilo\u015b\u0107 w\u0142os\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Trzy miesi\u0105ce w dziurze.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nic.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Fisting.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Jaki\u015b fagas z gitar\u0105 akustyczn\u0105.",
+      "watermark": "PL"
+    },
+    {
+      "text": "W\u0142\u00f3czenie si\u0119, bicie ludzi.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nie uprawienie seksu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Taki s\u0142odki filmik z kotem, \u017ce twoje oczy potocz\u0105 si\u0119 wzd\u0142u\u017c kr\u0119gos\u0142upa i wyjd\u0105 z odbytu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Krwawy b\u0105k.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ciep\u0142y, aksamitny seks pacynek.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Seks na wierzchu pizzy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wychlanie lampy z law\u0105.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Imprezowi cyganie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Spokojny i niegro\u017any rozw\u00f3j Podkarpacia.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Sekretna formu\u0142a ostatecznego zaspokojenia kobiety.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Telefon zaufania.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Odpowiedzialne picie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kupka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Rodowity Amerykanin, kt\u00f3ry rozwi\u0105zuje zbrodnie przechodz\u0105c do \u015bwiata duch\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Na przyk\u0142ad palenie koki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\u017badnych ubra\u0144, penis w pochwie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Z dupy do ust.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Prawie dawanie pieni\u0119dzy bezdomnym.",
+      "watermark": "PL"
+    },
+    {
+      "text": "M\u00f3j loch seksu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Sperma.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Niepohamowana ch\u0119\u0107 uduszenia w\u0142\u00f3cz\u0119gi.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Afryka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Czarnosk\u00f3ry wampir.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Oczy szalone od opium.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ali Baba i czterdziestu rozb\u00f3jnik\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Napalony goblin i jego weso\u0142y penis.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Rekiny z nogami.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Przemy\u015blanie ka\u017cdego zachowania \u017ceby nie wyj\u015b\u0107 na homoseksualist\u0119.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Niejednoznaczny sarkazm.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Faszerowanie twarzy dziecka cukrem pudrem dop\u00f3ki nie b\u0119dzie mu si\u0119 tu podoba\u0142o.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Trzy kolejne sekundy szcz\u0119\u015bcia.",
+      "watermark": "PL"
+    },
+    {
+      "text": "10 niesamowitych fakt\u00f3w o odbycie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ruch taneczny, kt\u00f3ry jest po prostu pozycj\u0105 seksualn\u0105.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bezwarunkowe pos\u0142usze\u0144stwo.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wybuchaj\u0105ce go\u0142\u0119bie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Mi\u0119dzyrasowy u\u015bcisk d\u0142oni.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Cukierkowe szale\u0144stwo.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Poca\u0142unek w usta.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Jaki\u015b tam Azjata.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wstrzykiwanie metamfetaminy w jedno rami\u0119 i \u015brodka na uspokojenie w drugie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Spodnie w khaki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wci\u0105ganie koksu ze stoj\u0105cej ku\u015bki klauna.",
+      "watermark": "PL"
+    },
+    {
+      "text": "G\u0142upia, pieprzona twarz mojego ojca.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bezpieczne s\u0142owo.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Te w\u0142a\u015bciwe mutanty, czyli chore i bez \u017cadnych supermocy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wiele, wiele aborcji.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Polityczne grz\u0119zawisko jakim jest Bliski Wsch\u00f3d.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Najmniejszy cie\u0144 dowodu, \u017ce B\u00f3g istnieje.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Najwi\u0119ksze przeboje Krzysztofa Krawczyka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "M\u00f3j bezwarto\u015bciowy syn.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wyko\u0144czenie w ko\u0144cu wszystkich g\u00f3rali.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pierd.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Banda idiot\u00f3w graj\u0105ca w karty, zamiast integrowa\u0107 si\u0119 jak normalni ludzie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Gramatyczni nazi\u015bci, kt\u00f3rzy r\u00f3wnie\u017c s\u0105 zwyk\u0142ymi nazistami.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Hipsterzy paleni w imi\u0119 staro\u017cytnego niebia\u0144skiego po\u0142\u0105czenia do gwiezdnej pr\u0105dnicy w maszynerii nocy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\u015awi\u0144stwa, z kt\u00f3rych robione s\u0105 hamburgery z McDonalda.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Cycuszki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "M\u0119ski odbyt.",
+      "watermark": "PL"
+    },
+    {
+      "text": "To\u017csamo\u015b\u0107 p\u0142ciowa, z kt\u00f3r\u0105 mo\u017cna komunikowa\u0107 si\u0119 tylko poprzez poezj\u0119 wi\u0119zienn\u0105.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wszystkie samotne panie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Depresja.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wpadanie do kibla.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Co zrobi\u0142by Jezus.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Rozmiar mojego penisa.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Mi\u0119dzyrasowe ma\u0142\u017ce\u0144stwo.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Seks kometa z Neptuna pogr\u0105\u017caj\u0105ca Ziemi\u0119 w wiecznej seksualno\u015bci.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ko\u0144 bez n\u00f3g.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Prawdziwa jaszczurka, kt\u00f3ra strzela krwi\u0105 z oczu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Wyruchanie trupa z powrotem do \u017cycia.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Beznadziejna ilo\u015b\u0107 paj\u0105k\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Jak niesamowity jestem.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Lekkoatletyka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Seksowne szeptanie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "B\u0142yszcz\u0105cy kamie\u0144 kt\u00f3ry jest dowodem mojej mi\u0142o\u015bci.",
+      "watermark": "PL"
+    },
+    {
+      "text": "\u015arednio-mocny b\u00f3l staw\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Podskakiwanie.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ugandyjski w\u00f3dz plemienny.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ta szalona rzecz zwana mi\u0142o\u015bci\u0105.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Rozczarowuj\u0105ca sa\u0142atka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pe\u0142na micha sa\u0142atki ziemniaczanej.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bilet w jedn\u0105 stron\u0119 do Sosnowca.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dopalony egzoszkielet.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pow\u00f3d \u017ceby nie pope\u0142nia\u0107 samob\u00f3jstwa.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dru\u017cyna prawnik\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ca\u0142kowicie nowy rodzaj porno.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Spos\u00f3b by zarobi\u0107 6000 z\u0142 bez wychodzenia z domu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ma\u0142py z AIDS.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Te wszystkie dekoracyjne poduszki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Niezapomniana studni\u00f3wka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bycie dziewi\u0119ciolatkiem.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bycie sparali\u017cowanym od ramion w d\u00f3\u0142.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bycie wielbionym jako jedyny, prawdziwy B\u00f3g.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Czarnuch.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Obci\u0105ganie dla wszystkich.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nudny sex waginalny.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zmienianie pogl\u0105d\u00f3w innych wykorzystuj\u0105c logik\u0119 i fakty.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Alimenty.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Karta p\u0142atnicza Tatusia.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Orzeszki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Odpowiednie zaj\u0119cie si\u0119 jej sutkami.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ejakulacja \u017cywymi pszczo\u0142ami, a pszczo\u0142y s\u0105 w\u015bciek\u0142e.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nuda.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Rozkminianie jak uprawia\u0107 seks z delfinem.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Darmowe lody, jo\u0142.",
+      "watermark": "PL"
+    },
+    {
+      "text": "DNA Czyngis Chana.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bycie z\u0142apanym przez policj\u0119 i wrzuconym do wi\u0119zienia.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Po\u017carcie \u017cywcem przez Magd\u0119 Gessler.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Gigantyczna sperma z kosmosu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kopytko.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bycie martwym przez jaki\u015b czas.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nowy ch\u0142opak mamy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "G\u0142upi penis mojego ch\u0142opaka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Moja pierwsza miesi\u0105czka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ropa naftowa!",
+      "watermark": "PL"
+    },
+    {
+      "text": "Cycory nie z tego \u015bwiata.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Magda Gessler.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Rosyjska super-gru\u017alica.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Widzenie rzeczy z perspektywy Hitlera.",
+      "watermark": "PL"
+    },
+    {
+      "text": "11.09.2001.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zajebi\u015bcie dobra sol\u00f3wka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "O\u015bmiu gejowskich w\u0142adc\u00f3w \u015bwiata mody.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Duch Ojca Chrzestnego.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Brak umiej\u0119tno\u015bci zak\u0142adania powa\u017cnych zwi\u0105zk\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Up\u0142yw czasu.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Ca\u0142a dru\u017cyna p\u0142ywacka.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Tygrys kt\u00f3ry zabi\u0142 mojego ojca.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Niesamowity \u015bwiat grzyb\u00f3w.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Czarna po\u0142owa Baracka Obamy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Bia\u0142a po\u0142owa Baracka Obamy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Za du\u017co koki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Opcje dla wegetarian.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Noszenie okular\u00f3w i brzmienie m\u0105drze.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zachodnie standardy pi\u0119kna.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Krwawa \u015bcie\u017cka z szabl\u0105 przez LIDL.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kolacja wigilijna z mro\u017conek.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Zdejmowanie Miko\u0142aja rakiet\u0105 ziemia-powietrze.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Janusz.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Sprzedawanie kupionych taniej rzeczy na Allegro.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Cholerne hemoroidy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Stara kurwica.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Chi\u0144skie porno bajki.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Piwne granaty.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Drugie terminy.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Cholerne promocje.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Konwenty.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Kot skurwiel.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Dru\u017cyna pier\u015bcienia.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Nadepni\u0119cie klocka LEGO. Bos\u0105 stop\u0105.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Spojlery.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Pierogi.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Liczenie ca\u0142ek na liczydle.",
+      "watermark": "PL"
+    },
+    {
+      "text": "4chan.",
+      "watermark": "PL"
+    },
+    {
+      "text": "Foch. I chuj.",
+      "watermark": "PL"
+    },
     {
       "text": "Throwing grapes at a man until he loses touch with reality.",
       "watermark": "US"
