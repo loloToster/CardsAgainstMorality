@@ -1,6 +1,6 @@
 import random
 from copy import deepcopy
-from typing import List
+from typing import Union
 
 DEFAULT_PACK_ICON = "https://cdn.sanity.io/images/vc07edlh/production/a3695e68ab205ea7ed56bc34e2f0165d40d79389-80x80.svg"
 
@@ -18,6 +18,13 @@ class WrongStageError(Exception):
 
 
 class Player:
+    id: str
+    metadata: dict
+    points: int
+    is_tsar: bool
+    cards: list[dict]
+    choice: list[dict]
+
     def __init__(self, game, id: str, metadata={}):
         self.game = game
         self.id = id
@@ -27,7 +34,7 @@ class Player:
         self.cards = []
         self.choice = []
 
-    def choose(self, card_ids: List[int]):
+    def choose(self, card_ids: list[int]):
         if self.is_tsar:
             raise Exception("Player is tsar")
         if len(card_ids) != self.game.current_black["pick"]:
@@ -41,7 +48,7 @@ class Player:
 
         return False
 
-    def remove_cards(self, card_ids: List[int]):
+    def remove_cards(self, card_ids: list[int]):
         removed = [None] * len(card_ids)
         new_cards = []
 
@@ -64,6 +71,16 @@ class Game:
     NOT_STARTED = 0
     CHOOSING = 1
     TSAR_VERDICT = 2
+
+    players: dict[str, Player]
+    white_cards: list[dict]
+    black_cards: list[dict]
+    max_cards: int
+
+    previous_tsars: list[str]
+    card_tsar: Union[Player, None]
+    current_black: Union[dict, None]
+    stage: int
 
     def __init__(self, cards: dict, max_cards=10):
         self.CARDS = self._parse_cards(cards)
@@ -126,7 +143,7 @@ class Game:
 
         return cards
 
-    def new_player(self, id: str, metadata) -> bool:
+    def new_player(self, id: str, metadata: dict) -> bool:
         if id in self.players:
             return False
 
@@ -136,14 +153,14 @@ class Game:
             self.fill_players_cards()
         return True
 
-    def remove_player(self, id):
+    def remove_player(self, id: str) -> bool:
         if not id in self.players:
             return False
 
         del self.players[id]
         return True
 
-    def get_players(self) -> List[Player]:
+    def get_players(self) -> list[Player]:
         return list(self.players.values())
 
     def fill_players_cards(self):
@@ -210,10 +227,7 @@ class Game:
         return all([len(p.choice) > 0 for p in self.get_players() if not p.is_tsar])
 
     def choice_to_hash(self, choice):
-        h = ""
-        for card in choice:
-            h += str(card["id"])
-        return h
+        return "".join([str(card["id"]) for card in choice])
 
     def get_player_from_choice_hash(self, choice_hash):
         for p in self.get_players():
@@ -261,8 +275,12 @@ class Game:
     def end(self):
         self.stage = Game.NOT_STARTED
 
-        return_value = [(p.points, p) for p in self.get_players()]
-        return_value.sort(key=lambda x: x[0], reverse=True)
+        end_table = [(p.points, p) for p in self.get_players()]
+        end_table.sort(key=lambda x: x[0], reverse=True)
+
+        self.previous_tsars = []
+        self.card_tsar = None
+        self.current_black = None
 
         # restart players
         for p in self.get_players():
@@ -271,4 +289,4 @@ class Game:
             p.choice = []
             p.points = 0
 
-        return return_value
+        return end_table
