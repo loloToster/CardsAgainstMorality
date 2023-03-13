@@ -8,10 +8,11 @@
     "eslint:recommended",
     "plugin:vue/vue3-essential",
     "plugin:@typescript-eslint/recommended",
+    "@vue/typescript/recommended",
     "prettier"
   ],
   "overrides": [],
-  "parser": "@typescript-eslint/parser",
+  "parser": "vue-eslint-parser",
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module"
