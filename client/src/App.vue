@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { RouterView, RouterLink } from "vue-router"
-import HelloWorld from "./components/HelloWorld.vue"
 import PlayingCard from "./components/PlayingCard.vue"
 
 function click() {
@@ -17,7 +16,6 @@ function click() {
     Something something ____.
   </PlayingCard>
   <PlayingCard @click="click" pack="TEST 2"> Something. </PlayingCard>
-  <HelloWorld msg="Vite + Vue" />
   <RouterView />
 </template>
 
