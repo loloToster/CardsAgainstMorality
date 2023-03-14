@@ -1,21 +1,10 @@
 <script setup lang="ts">
-import { RouterView, RouterLink } from "vue-router"
-import PlayingCard from "./components/PlayingCard.vue"
-
-function click() {
-  console.log("click")
-}
+import { RouterView } from "vue-router"
+import AppHeader from "./components/AppHeader.vue"
 </script>
 
 <template>
-  <ul>
-    <li><RouterLink to="/">Home</RouterLink></li>
-    <li><RouterLink to="/game">Game</RouterLink></li>
-  </ul>
-  <PlayingCard pack="TEST" color="black">
-    Something something ____.
-  </PlayingCard>
-  <PlayingCard @click="click" pack="TEST 2"> Something. </PlayingCard>
+  <AppHeader v-if="$route.name !== 'Login'" />
   <RouterView />
 </template>
 
