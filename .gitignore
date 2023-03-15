@@ -10,3 +10,7 @@ dist-ssr
 *.local
 
 .vscode/
+
+.env
+*/prisma/*.db
+*/prisma/*.db-journal
