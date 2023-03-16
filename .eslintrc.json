@@ -28,6 +28,7 @@
     "quotes": ["error", "double"],
     "semi": ["error", "never"],
     "no-console": ["error", { "allow": ["warn", "error"] }],
-    "no-duplicate-imports": "error"
+    "no-duplicate-imports": "error",
+    "@typescript-eslint/no-namespace": "off"
   }
 }
