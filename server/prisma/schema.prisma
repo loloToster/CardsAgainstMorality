@@ -8,8 +8,10 @@ datasource db {
 }
 
 model User {
-    id   Int    @id @default(autoincrement())
-    name String
+    id         Int     @id @default(autoincrement())
+    name       String
+    picture    String?
+    strategyId String  @unique @map("strategy_id")
 
     @@map("users")
 }

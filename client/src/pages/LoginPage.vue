@@ -20,7 +20,7 @@ import { RouterLink } from "vue-router"
       </div>
       <div class="login__or">or</div>
       <div class="login__btns">
-        <a class="login__btn">
+        <a href="/auth/google/callback" class="login__btn">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             role="img"
@@ -33,7 +33,7 @@ import { RouterLink } from "vue-router"
           </svg>
           <div class="login__btn__text">Login with Google</div>
         </a>
-        <a class="login__btn">
+        <a href="/auth/discord/callback" class="login__btn">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             role="img"
@@ -46,7 +46,7 @@ import { RouterLink } from "vue-router"
           </svg>
           <div class="login__btn__text">Login with Discord</div>
         </a>
-        <a class="login__btn">
+        <a href="/auth/facebook/callback" class="login__btn">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             role="img"
@@ -118,6 +118,8 @@ import { RouterLink } from "vue-router"
     border-radius: 8px;
     cursor: pointer;
     transition: all 100ms;
+    color: inherit;
+    text-decoration: none;
 
     $colors: #ee4134, #7285d1, #1877f2;
 

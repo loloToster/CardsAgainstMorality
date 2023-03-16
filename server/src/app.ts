@@ -1,19 +1,42 @@
+import dotenv from "dotenv"
 import express from "express"
-import db, { syncedCards } from "./modules/db"
-import { User as PrismaUser } from "@prisma/client"
+import cookieSession from "cookie-session"
+import passport from "passport"
+
+import configurePassport from "./modules/passport"
+import { syncedCards } from "./modules/db"
+import { loadRoutes } from "./utils/loadRoutes"
+
+import type { User as PrismaUser } from "@prisma/client"
+
+declare global {
+  namespace Express {
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface User extends PrismaUser {}
+  }
+}
+
+dotenv.config()
 
 const app = express()
 const port = 3000
 
-/* app.get("/", (req, res) => {
-  res.send("Hello World!")
-}) */
+configurePassport()
 
-declare global {
-  namespace Express {
-    type User = PrismaUser
-  }
-}
+app.use(
+  cookieSession({
+    maxAge: 24 * 60 * 60 * 1000,
+    keys: ["process.env.COOKIE_SECRET"] // todo: move to env var
+  })
+)
+
+app.use(passport.initialize())
+app.use(passport.session())
+
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
+
+loadRoutes(app, __dirname + "/routes")
 
 app.use(express.static(__dirname + "/../../client/dist"))
 

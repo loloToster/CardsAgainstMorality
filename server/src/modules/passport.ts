@@ -44,7 +44,23 @@ export default () => {
         callbackURL: "/auth/google/callback",
         scope: ["profile", "email"]
       },
-      () => null // todo: implement
+      async (at, rt, profile, done) => {
+        const strategyId = `ggl-${profile.id}`
+
+        let user = await db.user.findUnique({ where: { strategyId } })
+
+        if (!user) {
+          user = await db.user.create({
+            data: {
+              name: profile.displayName,
+              strategyId,
+              picture: profile._json.picture
+            }
+          })
+        }
+
+        done(null, user)
+      }
     )
   )
 
@@ -56,7 +72,25 @@ export default () => {
         callbackURL: "/auth/discord/callback",
         scope: ["identify", "email"]
       },
-      () => null // todo: implement
+      async (at, rt, profile, done) => {
+        const strategyId = `dsc-${profile.id}`
+
+        let user = await db.user.findUnique({ where: { strategyId } })
+
+        if (!user) {
+          user = await db.user.create({
+            data: {
+              name: profile.username,
+              strategyId,
+              picture: profile.avatar
+                ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
+                : undefined
+            }
+          })
+        }
+
+        done(null, user)
+      }
     )
   )
 

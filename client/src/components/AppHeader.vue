@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router"
+import type { LoggedInUser } from "../types/user"
+
+defineProps<{ user: LoggedInUser }>()
 </script>
 
 <template>
   <header class="header">
     <RouterLink class="header__logo header__link" to="/">CAH</RouterLink>
-    <RouterLink class="header__login header__link" to="/login">
+    <img v-if="user" :src="user.picture" :alt="`${user.name} avatar`" />
+    <RouterLink v-else class="header__login header__link" to="/login">
       Login
     </RouterLink>
   </header>
