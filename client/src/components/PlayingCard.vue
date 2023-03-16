@@ -28,27 +28,27 @@ withDefaults(defineProps<PlayingCardProps>(), { color: "white" })
 @use "sass:math" as math;
 
 $card-height: 320px;
-$card-width: math.div($card-height, 17) * 12;
+$card-width: 226px;
 
-$card-padding: $card-height * 0.058;
+$card-padding: $card-width * 0.081;
 
-$card-border-radius: $card-height * 0.035;
-$card-main-font-size: $card-height * 0.05;
-$card-icon-size: $card-height * 0.07;
+$card-border-radius: $card-width * 0.049;
+$card-main-font-size: $card-width * 0.07;
+$card-icon-size: $card-width * 0.098;
 
 .card {
   box-sizing: border-box;
   position: relative;
 
-  height: $card-height;
   width: $card-width;
+  aspect-ratio: 12 / 17;
   padding: $card-padding;
 
   border-radius: $card-border-radius;
   font-size: $card-main-font-size;
   line-height: 140%;
   font-weight: bold;
-  /* box-shadow: -3px 3px 14px -2px rgba(66, 68, 90, 1); */
+  box-shadow: -3px 3px 10px -2px #242424;
 
   img {
     display: inline-block;
