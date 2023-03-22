@@ -1,43 +1,20 @@
 <script setup lang="ts">
-import { onUnmounted, reactive } from "vue"
-import { useRoute } from "vue-router"
-
-import { setAuth as setSocketAuth, socket } from "../contexts/socket"
 import { BlackCard, Player, WhiteCard } from "../types/game"
-import PlayingCard from "../components/PlayingCard.vue"
+import PlayingCard from "./PlayingCard.vue"
 
-const route = useRoute()
-
-setSocketAuth({ roomId: route.params.id })
-socket.connect()
-
-onUnmounted(() => {
-  socket.disconnect()
-})
-
-const state = reactive<{
+defineProps<{
   blackCard: BlackCard
   cards: WhiteCard[]
   players: Player[]
-}>({
-  blackCard: { id: -1, text: "test", pack: "test pack" },
-  cards: new Array(10).fill(null).map((_, i) => ({
-    id: i,
-    text: i.toString(),
-    pack: "testpack"
-  })),
-  players: [{ img: "", name: "You", points: 0 }]
-})
+}>()
 </script>
-
 <template>
   <div class="game">
-    <button @click="socket.emit('start')">start</button>
     <div class="game__top">
       <div class="game__table">
         <div class="game__table__cards">
-          <PlayingCard :pack="state.blackCard.pack" color="black">
-            {{ state.blackCard.text }}
+          <PlayingCard :pack="blackCard.pack" color="black">
+            {{ blackCard.text }}
           </PlayingCard>
           <PlayingCard v-for="i in 2" pack="" color="white" :key="i">
             Something.
@@ -51,7 +28,7 @@ const state = reactive<{
       </div>
       <div class="game__players">
         <div
-          v-for="player in state.players"
+          v-for="player in players"
           class="game__players__player"
           :key="player.name"
         >
@@ -62,7 +39,7 @@ const state = reactive<{
     </div>
     <div class="game__hand">
       <div
-        v-for="card in state.cards"
+        v-for="card in cards"
         class="game__hand__card-wrapper"
         :key="card.id"
       >
@@ -73,7 +50,6 @@ const state = reactive<{
     </div>
   </div>
 </template>
-
 <style scoped lang="scss">
 $main-gap: 20px;
 .game {

@@ -8,7 +8,7 @@ async function onRoomCreate() {
   const res = await fetch("/api/room")
   const json = await res.json()
 
-  router.push("/game/" + json.roomId)
+  router.push("/room/" + json.roomId)
 }
 </script>
 
