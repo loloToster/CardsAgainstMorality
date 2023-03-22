@@ -1,5 +1,33 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useRouter } from "vue-router"
+import PlayingCard from "../components/PlayingCard.vue"
 
-<template>Home</template>
+const router = useRouter()
 
-<style scoped lang="scss"></style>
+async function onRoomCreate() {
+  const res = await fetch("/api/room")
+  const json = await res.json()
+
+  router.push("/game/" + json.roomId)
+}
+</script>
+
+<template>
+  <div class="container">
+    <PlayingCard pack="" color="black"> I would like to ____. </PlayingCard>
+    <PlayingCard @click="onRoomCreate" pack="" color="white">
+      Create a room.
+    </PlayingCard>
+    <PlayingCard pack="" color="white"> Join a room. </PlayingCard>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.container {
+  display: flex;
+  gap: 16px;
+  width: fit-content;
+  margin: auto;
+  margin-top: 90px;
+}
+</style>

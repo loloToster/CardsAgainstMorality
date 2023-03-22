@@ -5,11 +5,12 @@ interface PlayingCardProps {
 }
 
 withDefaults(defineProps<PlayingCardProps>(), { color: "white" })
+defineEmits(["click"])
 </script>
 
 <template>
   <div
-    id="black-card"
+    @click="$emit('click')"
     class="card"
     :class="color === 'white' ? 'card--white' : 'card--black'"
   >

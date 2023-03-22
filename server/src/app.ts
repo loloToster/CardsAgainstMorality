@@ -1,10 +1,14 @@
 import dotenv from "dotenv"
 import express from "express"
+import { createServer as createHttpServer } from "http"
+import { Server as SocketIoServer } from "socket.io"
 import cookieSession from "cookie-session"
 import passport from "passport"
 
 import configurePassport from "./modules/passport"
 import { syncedCards } from "./modules/db"
+import setupSocketIo from "./modules/io"
+
 import { loadRoutes } from "./utils/loadRoutes"
 
 import type { User as PrismaUser } from "@prisma/client"
@@ -19,7 +23,11 @@ declare global {
 dotenv.config()
 
 const app = express()
+const server = createHttpServer(app)
 const port = 3000
+
+const io = new SocketIoServer(server, { cors: { origin: "*" } })
+setupSocketIo(io)
 
 configurePassport()
 
@@ -41,7 +49,7 @@ loadRoutes(app, __dirname + "/routes")
 app.use(express.static(__dirname + "/../../client/dist"))
 
 syncedCards.then(() => {
-  app.listen(port, async () => {
+  server.listen(port, async () => {
     console.log(`Example app listening on port ${port}`)
   })
 })

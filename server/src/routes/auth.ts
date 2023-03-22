@@ -1,7 +1,7 @@
-import express from "express"
+import { Router } from "express"
 import passport from "passport"
 
-const router = express.Router()
+const router = Router()
 
 router.get("/me", (req, res) => {
   req.user ? res.send(req.user) : res.status(404).send()

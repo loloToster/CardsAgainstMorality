@@ -1,5 +1,18 @@
 <script setup lang="ts">
+import { onUnmounted } from "vue"
+import { useRoute } from "vue-router"
+
+import { setAuth as setSocketAuth, socket } from "../contexts/socket"
 import PlayingCard from "../components/PlayingCard.vue"
+
+const route = useRoute()
+
+setSocketAuth({ roomId: route.params.id })
+socket.connect()
+
+onUnmounted(() => {
+  socket.disconnect()
+})
 </script>
 
 <template>
@@ -19,7 +32,7 @@ import PlayingCard from "../components/PlayingCard.vue"
         </div>
       </div>
       <div class="game__players">
-        <div v-for="i in 10" class="game__players__player" :key="i">
+        <div v-for="i in 5" class="game__players__player" :key="i">
           <img src="" alt="" />
           <span>{{ i }}</span>
         </div>
