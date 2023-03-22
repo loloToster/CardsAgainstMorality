@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { onUnmounted } from "vue"
+import { onUnmounted, reactive } from "vue"
 import { useRoute } from "vue-router"
 
 import { setAuth as setSocketAuth, socket } from "../contexts/socket"
+import { BlackCard, Player, WhiteCard } from "../types/game"
 import PlayingCard from "../components/PlayingCard.vue"
 
 const route = useRoute()
@@ -13,14 +14,31 @@ socket.connect()
 onUnmounted(() => {
   socket.disconnect()
 })
+
+const state = reactive<{
+  blackCard: BlackCard
+  cards: WhiteCard[]
+  players: Player[]
+}>({
+  blackCard: { id: -1, text: "test", pack: "test pack" },
+  cards: new Array(10).fill(null).map((_, i) => ({
+    id: i,
+    text: i.toString(),
+    pack: "testpack"
+  })),
+  players: [{ img: "", name: "You", points: 0 }]
+})
 </script>
 
 <template>
   <div class="game">
+    <button @click="socket.emit('start')">start</button>
     <div class="game__top">
       <div class="game__table">
         <div class="game__table__cards">
-          <PlayingCard pack="" color="black"> Something ____. </PlayingCard>
+          <PlayingCard :pack="state.blackCard.pack" color="black">
+            {{ state.blackCard.text }}
+          </PlayingCard>
           <PlayingCard v-for="i in 2" pack="" color="white" :key="i">
             Something.
           </PlayingCard>
@@ -32,16 +50,24 @@ onUnmounted(() => {
         </div>
       </div>
       <div class="game__players">
-        <div v-for="i in 5" class="game__players__player" :key="i">
-          <img src="" alt="" />
-          <span>{{ i }}</span>
+        <div
+          v-for="player in state.players"
+          class="game__players__player"
+          :key="player.name"
+        >
+          <img :src="player.img" alt="" />
+          <span>{{ player.name }}</span>
         </div>
       </div>
     </div>
     <div class="game__hand">
-      <div v-for="i in 10" class="game__hand__card-wrapper" :key="i">
-        <PlayingCard class="game__hand__card" pack="" color="white">
-          {{ i }}
+      <div
+        v-for="card in state.cards"
+        class="game__hand__card-wrapper"
+        :key="card.id"
+      >
+        <PlayingCard class="game__hand__card" :pack="card.pack" color="white">
+          {{ card.text }}
         </PlayingCard>
       </div>
     </div>
