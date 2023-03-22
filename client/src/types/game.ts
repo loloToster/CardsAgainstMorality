@@ -4,6 +4,11 @@ export interface Player {
   points: number
 }
 
+export interface CardPack {
+  id: number
+  name: string
+}
+
 export interface WhiteCard {
   id: number
   text: string

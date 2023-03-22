@@ -13,12 +13,12 @@ export interface BlackCard {
 }
 
 export interface PlayerOpts<M> {
-  game: Game
+  game: Game<M>
   metadata?: M
 }
 
 export class Player<M = unknown> {
-  game: Game
+  game: Game<M>
   metadata: M | undefined
   points: number
   cards: number[]
@@ -89,15 +89,15 @@ export interface GameOpts {
   maxCards?: number
 }
 
-export class Game {
+export class Game<PM = unknown> {
   state: GameState
 
   whiteCards: number[]
   blackCards: BlackCard[]
   curBlackCard: BlackCard | null
 
-  tsar: Player | null
-  players: Player[]
+  tsar: Player<PM> | null
+  players: Player<PM>[]
 
   maxCards: number
 
@@ -134,9 +134,9 @@ export class Game {
     )
   }
 
-  addPlayer<M>(metadata?: M) {
+  addPlayer(metadata?: PM) {
     this.players.push(new Player({ game: this, metadata }))
-    this.dealCards()
+    if (this.state !== GameState.NOT_STARTED) this.dealCards()
   }
 
   removePlayer(player: Player) {
@@ -153,8 +153,10 @@ export class Game {
     this.blackCards = shuffle(this.blackCards)
 
     this.players = shuffle(this.players)
+    this.dealCards()
 
     this.state = GameState.CHOOSING
+    this.newRound()
   }
 
   // TODO: make sure to deal evenly
@@ -168,7 +170,8 @@ export class Game {
     for (const player of this.players) {
       while (player.cards.length + player.choice.length < target) {
         const newCard = this.whiteCards.pop()
-        if (newCard) player.cards.push(newCard)
+        if (!newCard) break
+        player.cards.push(newCard)
       }
     }
   }

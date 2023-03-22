@@ -1,9 +1,14 @@
 import { nanoid } from "nanoid"
-import type { Server } from "socket.io"
+import type { Server, Socket } from "socket.io"
 
+import db from "./db"
 import { Game } from "../utils/game"
 
-export const rooms = new Map<string, Game | undefined>()
+interface PlayerMetadata {
+  socket: Socket
+}
+
+export const rooms = new Map<string, Game<PlayerMetadata> | undefined>()
 
 export function createRoom() {
   let roomId = ""
@@ -19,13 +24,74 @@ export function deleteRoom(roomId: string) {
 }
 
 export default (io: Server) => {
+  async function sendNewRound(game: Game<PlayerMetadata>) {
+    if (!game.curBlackCard) throw new Error("No black card")
+
+    const blackCard = await db.blackCard.findUnique({
+      where: { id: game.curBlackCard.id },
+      include: { pack: true }
+    })
+
+    if (!blackCard) throw new Error("No corresponding black card")
+
+    const allDbWhiteCards = await db.whiteCard.findMany({
+      where: { id: { in: game.players.map(p => p.cards).flat() } },
+      include: { pack: true }
+    })
+
+    const allWhiteCards = allDbWhiteCards.map(c => ({
+      id: c.id,
+      text: c.text,
+      pack: c.pack.name
+    }))
+
+    for (const player of game.players) {
+      player.metadata?.socket.emit("new-round", {
+        blackCard: {
+          text: blackCard.text,
+          pack: blackCard.pack.name,
+          pick: blackCard.pick || 1
+        },
+        cards: allWhiteCards.filter(c => player.cards.includes(c.id)),
+        tsar: player.isTsar
+      })
+    }
+  }
+
   io.on("connection", socket => {
     const { roomId } = socket.handshake.auth
+    console.log("connection", roomId)
 
     const game = rooms.get(roomId)
     if (!game) return
 
+    socket.join(roomId)
     game.addPlayer({ socket })
+
+    socket.on("start", async settings => {
+      const whiteCards = await db.whiteCard.findMany({
+        where: { packId: { in: settings.packs } },
+        select: { id: true }
+      })
+
+      const blackCards = await db.blackCard.findMany({
+        where: { packId: { in: settings.packs } },
+        select: { id: true, pick: true }
+      })
+
+      try {
+        game.setCards(
+          whiteCards.map(c => c.id),
+          blackCards
+        )
+        game.start()
+
+        await sendNewRound(game)
+      } catch (err) {
+        socket.emit("error")
+        console.error(err)
+      }
+    })
 
     socket.on("disconnect", () => {
       console.log("socket disconnected")
