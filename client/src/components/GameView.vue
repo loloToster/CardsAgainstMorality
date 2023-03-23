@@ -1,12 +1,48 @@
 <script setup lang="ts">
-import { BlackCard, Player, WhiteCard } from "../types/game"
+import { computed, reactive } from "vue"
+import { BlackCard, GameStage, Player, WhiteCard } from "../types/game"
 import PlayingCard from "./PlayingCard.vue"
 
-defineProps<{
+const props = defineProps<{
+  stage: GameStage
+  imTsar: boolean
   blackCard: BlackCard
   cards: WhiteCard[]
+  pickedCards: WhiteCard[]
+  choices: WhiteCard[][]
   players: Player[]
 }>()
+
+const state = reactive<{ activeChoiceIdx: number | null }>({
+  activeChoiceIdx: null
+})
+
+const activeChoice = computed(() => {
+  return state.activeChoiceIdx !== null &&
+    props.stage === GameStage.TSAR_VERDICT
+    ? props.choices[state.activeChoiceIdx]
+    : []
+})
+
+const emit = defineEmits<{
+  (ev: "onCardPick", cardId: number): void
+  (ev: "onPickedCardClick", cardId: number): void
+  (ev: "submit"): void
+  (ev: "verdict", choiceIdx: number): void
+}>()
+
+function onCardPick(cardId: number) {
+  emit("onCardPick", cardId)
+}
+
+function onPickedCardClick(cardId: number) {
+  emit("onPickedCardClick", cardId)
+}
+
+function onChangeChoice(choiceIdx: number) {
+  if (choiceIdx === state.activeChoiceIdx) emit("verdict", choiceIdx)
+  else state.activeChoiceIdx = choiceIdx
+}
 </script>
 <template>
   <div class="game">
@@ -16,13 +52,39 @@ defineProps<{
           <PlayingCard :pack="blackCard.pack" color="black">
             {{ blackCard.text }}
           </PlayingCard>
-          <PlayingCard v-for="i in 2" pack="" color="white" :key="i">
-            Something.
+          <PlayingCard
+            v-for="card in pickedCards"
+            @click="onPickedCardClick(card.id)"
+            :pack="card.pack"
+            color="white"
+            :key="card.id"
+          >
+            {{ card.text }}
+          </PlayingCard>
+          <PlayingCard
+            v-for="card in activeChoice"
+            :pack="card.pack"
+            color="white"
+            :key="card.id"
+          >
+            {{ card.text }}
           </PlayingCard>
         </div>
-        <div class="game__choices">
-          <div v-for="i in 3" class="game__choices__choice" :key="i">
-            {{ i }}
+        <div class="game__under-cards">
+          <div v-if="stage === GameStage.TSAR_VERDICT" class="game__choices">
+            <div
+              v-for="choice in choices.length"
+              @click="onChangeChoice(choice - 1)"
+              :class="{ active: choice - 1 === state.activeChoiceIdx }"
+              class="game__choices__choice"
+              :key="choice"
+            >
+              {{ choice }}
+            </div>
+          </div>
+          <div v-else class="game__submit">
+            <div v-if="imTsar">You are the tsar</div>
+            <button v-else @click="$emit('submit')">Submit</button>
           </div>
         </div>
       </div>
@@ -43,7 +105,12 @@ defineProps<{
         class="game__hand__card-wrapper"
         :key="card.id"
       >
-        <PlayingCard class="game__hand__card" :pack="card.pack" color="white">
+        <PlayingCard
+          @click="onCardPick(card.id)"
+          class="game__hand__card"
+          :pack="card.pack"
+          color="white"
+        >
           {{ card.text }}
         </PlayingCard>
       </div>
@@ -76,6 +143,43 @@ $main-gap: 20px;
       align-items: center;
       justify-content: center;
       gap: 8px;
+    }
+  }
+
+  &__under-cards {
+    height: 80px;
+  }
+
+  &__submit {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    button {
+      $c: #6b6b6b;
+      outline: none;
+      border: none;
+      appearance: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      background-color: $c;
+
+      &:hover {
+        background-color: #7b7b7b;
+      }
+
+      &:active {
+        background-color: $c;
+      }
+
+      &:disabled {
+        background-color: $c;
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
     }
   }
 

@@ -1,3 +1,9 @@
+export enum GameStage {
+  NOT_STARTED,
+  CHOOSING,
+  TSAR_VERDICT
+}
+
 export interface Player {
   img: string
   name: string
@@ -17,5 +23,5 @@ export interface WhiteCard {
 
 export interface BlackCard extends WhiteCard {
   draw?: number
-  pick?: number
+  pick: number
 }

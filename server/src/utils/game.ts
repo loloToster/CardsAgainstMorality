@@ -44,9 +44,9 @@ export class Player<M = unknown> {
       const idx = cards.indexOf(card)
 
       if (idx < 0) {
-        removed[idx] = card
-      } else {
         filteredCards.push(card)
+      } else {
+        removed[idx] = card
       }
     }
 
@@ -67,13 +67,13 @@ export class Player<M = unknown> {
     }
   }
 
-  makeVerdict(choiceHash: string) {
+  makeVerdict(choice: number[]) {
     if (this.game.state !== GameState.TSAR_VERDICT)
       throw new Error("Not TSAR VERDICT state")
     if (!this.isTsar) throw new Error("Player is not a tsar")
 
     for (const player of this.game.players) {
-      if (Game.hashChoice(player.choice) !== choiceHash) continue
+      if (Game.hashChoice(player.choice) !== Game.hashChoice(choice)) continue
 
       player.points++
       return player
@@ -134,9 +134,11 @@ export class Game<PM = unknown> {
     )
   }
 
-  addPlayer(metadata?: PM) {
-    this.players.push(new Player({ game: this, metadata }))
+  addPlayer(metadata?: PM): Player<PM> {
+    const player = new Player({ game: this, metadata })
+    this.players.push(player)
     if (this.state !== GameState.NOT_STARTED) this.dealCards()
+    return player
   }
 
   removePlayer(player: Player) {
@@ -199,8 +201,17 @@ export class Game<PM = unknown> {
     this.curBlackCard = this.blackCards.pop() ?? null
   }
 
+  getChoices() {
+    const choices = []
+
+    for (const player of this.players)
+      if (!player.isTsar) choices.push(player.choice)
+
+    return choices
+  }
+
   everyoneChose() {
-    return this.players.every(p => p.choice.length)
+    return this.players.every(p => p.choice.length || p.isTsar)
   }
 
   end() {

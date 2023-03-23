@@ -2,7 +2,7 @@ import { nanoid } from "nanoid"
 import type { Server, Socket } from "socket.io"
 
 import db from "./db"
-import { Game } from "../utils/game"
+import { Game, GameState } from "../utils/game"
 
 interface PlayerMetadata {
   socket: Socket
@@ -66,7 +66,7 @@ export default (io: Server) => {
     if (!game) return
 
     socket.join(roomId)
-    game.addPlayer({ socket })
+    const player = game.addPlayer({ socket })
 
     socket.on("start", async settings => {
       const whiteCards = await db.whiteCard.findMany({
@@ -91,6 +91,45 @@ export default (io: Server) => {
         socket.emit("error")
         console.error(err)
       }
+    })
+
+    socket.on("submit", async (cardIds: number[]) => {
+      try {
+        player.choose(cardIds)
+      } catch (err) {
+        console.error(err)
+        return
+      }
+
+      if (game.state !== GameState.TSAR_VERDICT) return
+
+      const allDbCards = await db.whiteCard.findMany({
+        where: { id: { in: game.getChoices().flat() } },
+        include: { pack: true }
+      })
+
+      const allCards = allDbCards.map(c => ({
+        id: c.id,
+        text: c.text,
+        pack: c.pack.name
+      }))
+
+      const choices = game
+        .getChoices()
+        .map(choice => choice.map(cid => allCards.find(c => c.id === cid)))
+
+      io.to(roomId).emit("choices", { choices })
+    })
+
+    socket.on("verdict", choice => {
+      try {
+        player.makeVerdict(choice)
+      } catch (err) {
+        console.error(err)
+      }
+
+      game.newRound()
+      sendNewRound(game)
     })
 
     socket.on("disconnect", () => {

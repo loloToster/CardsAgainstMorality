@@ -2,6 +2,7 @@
 import { reactive } from "vue"
 
 import { CardPack } from "../types/game"
+import { moveItem } from "../utils"
 import SimpleChip from "./SimpleChip.vue"
 
 const emit = defineEmits<{
@@ -17,17 +18,11 @@ const state = reactive<{
 })
 
 function selectPack(packId: number) {
-  const idx = state.unselectedPacks.findIndex(p => p.id === packId)
-  const pack = state.unselectedPacks[idx]
-  state.selectedPacks.push(pack)
-  state.unselectedPacks.splice(idx, 1)
+  moveItem(state.unselectedPacks, state.selectedPacks, p => p.id === packId)
 }
 
 function unselectPack(packId: number) {
-  const idx = state.selectedPacks.findIndex(p => p.id === packId)
-  const pack = state.selectedPacks[idx]
-  state.unselectedPacks.push(pack)
-  state.selectedPacks.splice(idx, 1)
+  moveItem(state.selectedPacks, state.unselectedPacks, p => p.id === packId)
 }
 
 fetch("/api/packs").then(async res => {

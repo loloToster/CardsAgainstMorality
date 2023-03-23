@@ -2,8 +2,9 @@
 import { onUnmounted, reactive } from "vue"
 import { useRoute } from "vue-router"
 
+import { moveItem } from "../utils"
 import { setAuth as setSocketAuth, socket } from "../contexts/socket"
-import { BlackCard, Player, WhiteCard } from "../types/game"
+import { BlackCard, GameStage, Player, WhiteCard } from "../types/game"
 
 import GameView from "../components/GameView.vue"
 import GameSettings from "../components/GameSettings.vue"
@@ -17,41 +18,91 @@ onUnmounted(() => {
   socket.disconnect()
 })
 
+// TODO: move game logic to GameView
 const state = reactive<{
-  started: boolean
+  stage: GameStage
+  imTsar: boolean
   blackCard: BlackCard
   cards: WhiteCard[]
+  pickedCards: WhiteCard[]
+  choices: WhiteCard[][]
   players: Player[]
 }>({
-  started: false,
-  blackCard: { id: -1, text: "test", pack: "test pack" },
+  stage: GameStage.NOT_STARTED,
+  imTsar: false,
+  blackCard: { id: -1, text: "test", pack: "test pack", pick: 1 },
   cards: new Array(10).fill(null).map((_, i) => ({
     id: i,
     text: i.toString(),
     pack: "testpack"
   })),
+  pickedCards: [],
+  choices: [],
   players: [{ img: "", name: "You", points: 0 }]
 })
 
 socket.on("new-round", data => {
-  state.started = true
+  state.stage = GameStage.CHOOSING
+  state.imTsar = data.tsar
   state.blackCard = data.blackCard
   state.cards = data.cards
+})
+
+socket.on("choices", ({ choices }) => {
+  state.stage = GameStage.TSAR_VERDICT
+  state.choices = choices
+  state.pickedCards = []
 })
 
 function onStart(packs: number[]) {
   socket.emit("start", { packs })
 }
+
+function onCardPick(cardId: number) {
+  if (
+    state.pickedCards.length >= state.blackCard.pick ||
+    state.stage !== GameStage.CHOOSING
+  )
+    return
+
+  moveItem(state.cards, state.pickedCards, c => c.id === cardId)
+}
+
+function onCardPickRemove(cardId: number) {
+  moveItem(state.pickedCards, state.cards, c => c.id === cardId)
+}
+
+function onSubmit() {
+  socket.emit(
+    "submit",
+    state.pickedCards.map(c => c.id)
+  )
+}
+
+function onVerdict(choiceIdx: number) {
+  socket.emit(
+    "verdict",
+    state.choices[choiceIdx].map(c => c.id)
+  )
+}
 </script>
 
 <template>
   <GameView
-    v-if="state.started"
+    v-if="state.stage !== GameStage.NOT_STARTED"
+    :stage="state.stage"
+    :im-tsar="state.imTsar"
     :black-card="state.blackCard"
     :cards="state.cards"
+    :picked-cards="state.pickedCards"
+    :choices="state.choices"
     :players="state.players"
+    @on-card-pick="onCardPick"
+    @on-picked-card-click="onCardPickRemove"
+    @submit="onSubmit"
+    @verdict="onVerdict"
   />
-  <GameSettings @start="onStart" v-else />
+  <GameSettings v-else @start="onStart" />
 </template>
 
 <style scoped lang="scss"></style>
