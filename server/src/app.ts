@@ -26,20 +26,26 @@ const app = express()
 const server = createHttpServer(app)
 const port = 3000
 
-const io = new SocketIoServer(server, { cors: { origin: "*" } })
-setupSocketIo(io)
+const sessionMw = cookieSession({
+  maxAge: 24 * 60 * 60 * 1000,
+  keys: ["process.env.COOKIE_SECRET"] // todo: move to env var
+})
+
+app.use(sessionMw)
 
 configurePassport()
-
-app.use(
-  cookieSession({
-    maxAge: 24 * 60 * 60 * 1000,
-    keys: ["process.env.COOKIE_SECRET"] // todo: move to env var
-  })
-)
-
 app.use(passport.initialize())
 app.use(passport.session())
+
+const io = new SocketIoServer(server, { cors: { origin: "*" } })
+io.use((s, next) =>
+  sessionMw(
+    s.request as express.Request,
+    {} as express.Response,
+    next as express.NextFunction
+  )
+)
+setupSocketIo(io)
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))

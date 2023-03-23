@@ -1,11 +1,16 @@
 import { nanoid } from "nanoid"
 import type { Server, Socket } from "socket.io"
+import type { IncomingMessage } from "http"
 
 import db from "./db"
 import { Game, GameState } from "../utils/game"
 
 interface PlayerMetadata {
   socket: Socket
+}
+
+interface ExtendedReq extends IncomingMessage {
+  session?: { passport?: { user?: number } }
 }
 
 export const rooms = new Map<string, Game<PlayerMetadata> | undefined>()
@@ -59,6 +64,9 @@ export default (io: Server) => {
   }
 
   io.on("connection", socket => {
+    const userId = (socket.request as ExtendedReq).session?.passport?.user
+    console.log(userId)
+
     const { roomId } = socket.handshake.auth
     console.log("connection", roomId)
 

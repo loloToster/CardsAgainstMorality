@@ -5,14 +5,12 @@ export const socketState = reactive({
   connected: false
 })
 
-const URL = "http://localhost:3000"
-
 let auth = {}
 export function setAuth(a: object) {
   auth = a
 }
 
-export const socket = io(URL, {
+export const socket = io({
   autoConnect: false,
   auth: cb => {
     cb(auth)
