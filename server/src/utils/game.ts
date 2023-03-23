@@ -36,6 +36,10 @@ export class Player<M = unknown> {
     return this.game.tsar === this
   }
 
+  get chose(): boolean {
+    return (this.game.curBlackCard?.pick || 1) === this.choice.length
+  }
+
   removeCards(cards: number[]) {
     const removed: Array<number | null> = new Array(cards.length).fill(null)
     const filteredCards: number[] = []

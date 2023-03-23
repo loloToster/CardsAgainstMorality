@@ -4,6 +4,8 @@ import { createRoom } from "../../modules/io"
 const router = Router()
 
 router.get("/", (req, res) => {
+  if (!req.user) return res.status(401).send()
+
   const roomId = createRoom()
   res.json({ roomId })
 })

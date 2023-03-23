@@ -2,11 +2,14 @@ import { nanoid } from "nanoid"
 import type { Server, Socket } from "socket.io"
 import type { IncomingMessage } from "http"
 
+import { User } from "@prisma/client"
 import db from "./db"
-import { Game, GameState } from "../utils/game"
+import { Game, GameState, Player } from "../utils/game"
 
 interface PlayerMetadata {
+  connected: boolean
   socket: Socket
+  user: User
 }
 
 interface ExtendedReq extends IncomingMessage {
@@ -29,7 +32,20 @@ export function deleteRoom(roomId: string) {
 }
 
 export default (io: Server) => {
-  async function sendNewRound(game: Game<PlayerMetadata>) {
+  function sendPlayers(roomId: string, game: Game<PlayerMetadata>) {
+    const players = game.players.map(p => ({
+      name: p.metadata?.user.name,
+      picture: p.metadata?.user.picture,
+      connected: p.metadata?.connected,
+      tsar: p.isTsar,
+      ready: p.chose,
+      points: p.points
+    }))
+
+    io.to(roomId).emit("players", { players })
+  }
+
+  async function sendNewRound(roomId: string, game: Game<PlayerMetadata>) {
     if (!game.curBlackCard) throw new Error("No black card")
 
     const blackCard = await db.blackCard.findUnique({
@@ -61,20 +77,57 @@ export default (io: Server) => {
         tsar: player.isTsar
       })
     }
+
+    sendPlayers(roomId, game)
   }
 
-  io.on("connection", socket => {
+  async function sendChoices(roomId: string, game: Game<PlayerMetadata>) {
+    const allDbCards = await db.whiteCard.findMany({
+      where: { id: { in: game.getChoices().flat() } },
+      include: { pack: true }
+    })
+
+    const allCards = allDbCards.map(c => ({
+      id: c.id,
+      text: c.text,
+      pack: c.pack.name
+    }))
+
+    const choices = game
+      .getChoices()
+      .map(choice => choice.map(cid => allCards.find(c => c.id === cid)))
+
+    io.to(roomId).emit("choices", { choices })
+  }
+
+  io.on("connection", async socket => {
     const userId = (socket.request as ExtendedReq).session?.passport?.user
-    console.log(userId)
+    if (!userId) return socket.disconnect()
+
+    const user = await db.user.findUnique({ where: { id: userId } })
+
+    if (!user) return socket.disconnect()
 
     const { roomId } = socket.handshake.auth
-    console.log("connection", roomId)
+    console.log("connection to room:", roomId)
 
     const game = rooms.get(roomId)
     if (!game) return
 
+    const foundPlayer = game.players.find(p => p.metadata?.user.id === user.id)
+
+    let player: Player<PlayerMetadata>
+    if (foundPlayer) {
+      player = foundPlayer
+      player.metadata?.socket.disconnect()
+      player.metadata = { socket, user, connected: true }
+    } else {
+      player = game.addPlayer({ socket, user, connected: true })
+    }
+
     socket.join(roomId)
-    const player = game.addPlayer({ socket })
+
+    sendPlayers(roomId, game)
 
     socket.on("start", async settings => {
       const whiteCards = await db.whiteCard.findMany({
@@ -94,7 +147,7 @@ export default (io: Server) => {
         )
         game.start()
 
-        await sendNewRound(game)
+        sendNewRound(roomId, game)
       } catch (err) {
         socket.emit("error")
         console.error(err)
@@ -111,22 +164,7 @@ export default (io: Server) => {
 
       if (game.state !== GameState.TSAR_VERDICT) return
 
-      const allDbCards = await db.whiteCard.findMany({
-        where: { id: { in: game.getChoices().flat() } },
-        include: { pack: true }
-      })
-
-      const allCards = allDbCards.map(c => ({
-        id: c.id,
-        text: c.text,
-        pack: c.pack.name
-      }))
-
-      const choices = game
-        .getChoices()
-        .map(choice => choice.map(cid => allCards.find(c => c.id === cid)))
-
-      io.to(roomId).emit("choices", { choices })
+      sendChoices(roomId, game)
     })
 
     socket.on("verdict", choice => {
@@ -137,11 +175,13 @@ export default (io: Server) => {
       }
 
       game.newRound()
-      sendNewRound(game)
+      sendNewRound(roomId, game)
     })
 
     socket.on("disconnect", () => {
       console.log("socket disconnected")
+      if (player.metadata) player.metadata.connected = false
+      sendPlayers(roomId, game)
     })
   })
 }
