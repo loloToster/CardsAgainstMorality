@@ -51,6 +51,20 @@ socket.on("choices", ({ choices }) => {
   state.pickedCards = []
 })
 
+socket.on("rejoin", data => {
+  state.imTsar = data.isTsar
+  state.blackCard = data.blackCard
+  state.cards = data.cards
+
+  // todo: not started
+  if (data.choices) {
+    state.stage = GameStage.TSAR_VERDICT
+    state.choices = data.choices
+  } else {
+    state.stage = GameStage.CHOOSING
+  }
+})
+
 function onStart(packs: number[]) {
   socket.emit("start", { packs })
 }

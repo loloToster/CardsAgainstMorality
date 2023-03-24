@@ -100,6 +100,71 @@ export default (io: Server) => {
     io.to(roomId).emit("choices", { choices })
   }
 
+  async function sendRejoinData(player: Player<PlayerMetadata>) {
+    const { game } = player
+
+    if (!game.curBlackCard) return
+
+    const blackCard = await db.blackCard.findUnique({
+      where: { id: game.curBlackCard.id },
+      include: { pack: true }
+    })
+
+    if (!blackCard) return
+
+    const allDbWhiteCards = await db.whiteCard.findMany({
+      where: { id: { in: player.cards } },
+      include: { pack: true }
+    })
+
+    const allWhiteCards = allDbWhiteCards.map(c => ({
+      id: c.id,
+      text: c.text,
+      pack: c.pack.name
+    }))
+
+    let choices:
+      | (
+          | {
+              id: number
+              text: string
+              pack: string
+            }
+          | undefined
+        )[][]
+      | undefined // todo: move to interface
+
+    if ((game.state = GameState.TSAR_VERDICT)) {
+      const allDbCards = await db.whiteCard.findMany({
+        where: { id: { in: game.getChoices().flat() } },
+        include: { pack: true }
+      })
+
+      const allCards = allDbCards.map(c => ({
+        id: c.id,
+        text: c.text,
+        pack: c.pack.name
+      }))
+
+      choices = game
+        .getChoices()
+        .map(choice => choice.map(cid => allCards.find(c => c.id === cid)))
+    }
+
+    const data = {
+      isTsar: player.isTsar,
+      blackCard: {
+        text: blackCard.text,
+        pack: blackCard.pack.name,
+        pick: blackCard.pick || 1
+      },
+      cards: allWhiteCards,
+      choices
+    }
+
+    player.metadata?.socket.emit("rejoin", data)
+  }
+
   io.on("connection", async socket => {
     const userId = (socket.request as ExtendedReq).session?.passport?.user
     if (!userId) return socket.disconnect()
@@ -121,6 +186,8 @@ export default (io: Server) => {
       player = foundPlayer
       player.metadata?.socket.disconnect()
       player.metadata = { socket, user, connected: true }
+
+      sendRejoinData(player)
     } else {
       player = game.addPlayer({ socket, user, connected: true })
     }
