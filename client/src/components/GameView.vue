@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed, reactive } from "vue"
+
 import { BlackCard, GameStage, Player, WhiteCard } from "../types/game"
 import PlayingCard from "./PlayingCard.vue"
+import GamePlayer from "./GamePlayer.vue"
 
 const props = defineProps<{
   stage: GameStage
@@ -89,14 +91,11 @@ function onChangeChoice(choiceIdx: number) {
         </div>
       </div>
       <div class="game__players">
-        <div
+        <GamePlayer
           v-for="player in players"
-          class="game__players__player"
+          :player="player"
           :key="player.name"
-        >
-          <img :src="player.picture" alt="" />
-          <span>{{ player.name }}</span>
-        </div>
+        />
       </div>
     </div>
     <div class="game__hand">
@@ -250,29 +249,6 @@ $main-gap: 20px;
     max-height: 320px;
     flex-shrink: 0;
     overflow-y: auto;
-
-    &__player {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px;
-      background-color: #4c4c4c;
-      margin-bottom: 8px;
-      border-radius: 8px;
-      overflow: hidden;
-
-      img {
-        width: 32px;
-        height: 32px;
-        background-color: gray;
-        border-radius: 50%;
-        flex-shrink: 0;
-      }
-
-      span {
-        white-space: nowrap;
-      }
-    }
   }
 
   &__hand {

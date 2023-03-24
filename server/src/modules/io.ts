@@ -162,6 +162,8 @@ export default (io: Server) => {
         return
       }
 
+      sendPlayers(roomId, game)
+
       if (game.state !== GameState.TSAR_VERDICT) return
 
       sendChoices(roomId, game)
