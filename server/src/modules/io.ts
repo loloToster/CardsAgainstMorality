@@ -5,6 +5,10 @@ import type { IncomingMessage } from "http"
 import { User } from "@prisma/client"
 import db from "./db"
 import { Game, GameState, Player } from "../utils/game"
+import {
+  ClientToServerSocketEvents,
+  ServerToClientSocketEvents
+} from "../types"
 
 interface PlayerMetadata {
   connected: boolean
@@ -31,12 +35,14 @@ export function deleteRoom(roomId: string) {
   rooms.delete(roomId)
 }
 
-export default (io: Server) => {
+export default (
+  io: Server<ClientToServerSocketEvents, ServerToClientSocketEvents>
+) => {
   function sendPlayers(roomId: string, game: Game<PlayerMetadata>) {
     const players = game.players.map(p => ({
-      name: p.metadata?.user.name,
-      picture: p.metadata?.user.picture,
-      connected: p.metadata?.connected,
+      name: p.metadata?.user.name ?? "Unknown",
+      picture: p.metadata?.user.picture ?? "",
+      connected: p.metadata?.connected ?? false,
       tsar: p.isTsar,
       ready: p.chose,
       points: p.points
@@ -93,11 +99,19 @@ export default (io: Server) => {
       pack: c.pack.name
     }))
 
-    const choices = game
-      .getChoices()
-      .map(choice => choice.map(cid => allCards.find(c => c.id === cid)))
+    try {
+      const choices = game.getChoices().map(choice =>
+        choice.map(cid => {
+          const card = allCards.find(c => c.id === cid)
+          if (!card) throw new Error("Non existing card")
+          return card
+        })
+      )
 
-    io.to(roomId).emit("choices", { choices })
+      io.to(roomId).emit("choices", { choices })
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   async function sendRejoinData(player: Player<PlayerMetadata>) {
@@ -216,14 +230,13 @@ export default (io: Server) => {
 
         sendNewRound(roomId, game)
       } catch (err) {
-        socket.emit("error")
         console.error(err)
       }
     })
 
-    socket.on("submit", async (cardIds: number[]) => {
+    socket.on("submit", async ({ submition }) => {
       try {
-        player.choose(cardIds)
+        player.choose(submition)
       } catch (err) {
         console.error(err)
         return
@@ -236,9 +249,9 @@ export default (io: Server) => {
       sendChoices(roomId, game)
     })
 
-    socket.on("verdict", choice => {
+    socket.on("verdict", ({ verdict }) => {
       try {
-        player.makeVerdict(choice)
+        player.makeVerdict(verdict)
         game.newRound()
         sendNewRound(roomId, game)
       } catch (err) {

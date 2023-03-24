@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import BlackCardIcon from "../assets/black-card-icon.svg"
+import WhiteCardIcon from "../assets/white-card-icon.svg"
+
 interface PlayingCardProps {
   text?: string
   pack: string
@@ -22,8 +25,8 @@ defineEmits(["click"])
       <slot v-else></slot>
     </span>
     <div class="card__pack">
-      <img v-if="color === 'white'" src="src/assets/black-card-icon.svg" />
-      <img v-else src="src/assets/white-card-icon.svg" />
+      <img v-if="color === 'white'" :src="BlackCardIcon" />
+      <img v-else :src="WhiteCardIcon" />
       <span>{{ pack }}</span>
     </div>
   </div>

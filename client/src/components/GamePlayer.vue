@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Player } from "../types/game"
+import { ApiPlayer } from "@backend/types"
 
-defineProps<{ player: Player }>()
+defineProps<{ player: ApiPlayer }>()
 </script>
 <template>
   <div class="player" :key="player.name">

@@ -2,9 +2,10 @@
 import { onUnmounted, reactive } from "vue"
 import { useRoute } from "vue-router"
 
+import { ApiWhiteCard, ApiBlackCard, ApiPlayer } from "@backend/types"
 import { moveItem } from "../utils"
 import { setAuth as setSocketAuth, socket } from "../contexts/socket"
-import { BlackCard, GameStage, Player, WhiteCard } from "../types/game"
+import { GameStage } from "../types/game"
 
 import GameView from "../components/GameView.vue"
 import GameSettings from "../components/GameSettings.vue"
@@ -15,11 +16,11 @@ const route = useRoute()
 const state = reactive<{
   stage: GameStage
   imTsar: boolean
-  blackCard: BlackCard
-  cards: WhiteCard[]
-  pickedCards: WhiteCard[]
-  choices: WhiteCard[][]
-  players: Player[]
+  blackCard: ApiBlackCard
+  cards: ApiWhiteCard[]
+  pickedCards: ApiWhiteCard[]
+  choices: ApiWhiteCard[][]
+  players: ApiPlayer[]
 }>({
   stage: GameStage.NOT_STARTED,
   imTsar: false,
@@ -52,7 +53,7 @@ socket.on("choices", ({ choices }) => {
 })
 
 socket.on("rejoin", data => {
-  state.imTsar = data.isTsar
+  state.imTsar = data.tsar
   state.blackCard = data.blackCard
   state.cards = data.cards
 
@@ -85,17 +86,11 @@ function onCardPickRemove(cardId: number) {
 }
 
 function onSubmit() {
-  socket.emit(
-    "submit",
-    state.pickedCards.map(c => c.id)
-  )
+  socket.emit("submit", { submition: state.pickedCards.map(c => c.id) })
 }
 
 function onVerdict(choiceIdx: number) {
-  socket.emit(
-    "verdict",
-    state.choices[choiceIdx].map(c => c.id)
-  )
+  socket.emit("verdict", { verdict: state.choices[choiceIdx].map(c => c.id) })
 }
 
 setSocketAuth({ roomId: route.params.id })

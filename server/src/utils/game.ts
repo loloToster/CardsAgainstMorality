@@ -56,6 +56,8 @@ export class Player<M = unknown> {
 
     if (removed.includes(null)) throw new Error("There are non existing cards")
 
+    this.cards = filteredCards
+
     return removed as number[]
   }
 

@@ -1,7 +1,4 @@
-export interface User {
-  id: number
-  name: string
-  picture: string
-}
+import { ApiUser } from "@backend/types"
 
+export type User = ApiUser
 export type LoggedInUser = null | User

@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { reactive } from "vue"
 
-import { CardPack, Player } from "../types/game"
+import { ApiPlayer, ApiCardPack } from "@backend/types"
 import { moveItem } from "../utils"
 import SimpleChip from "./SimpleChip.vue"
 
-defineProps<{ players: Player[] }>()
+defineProps<{ players: ApiPlayer[] }>()
 
 const emit = defineEmits<{
   (e: "start", packsIds: number[]): void
 }>()
 
 const state = reactive<{
-  unselectedPacks: CardPack[]
-  selectedPacks: CardPack[]
+  unselectedPacks: ApiCardPack[]
+  selectedPacks: ApiCardPack[]
 }>({
   unselectedPacks: [],
   selectedPacks: []

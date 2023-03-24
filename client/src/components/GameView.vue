@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import { computed, reactive } from "vue"
 
-import { BlackCard, GameStage, Player, WhiteCard } from "../types/game"
+import { ApiBlackCard, ApiPlayer, ApiWhiteCard } from "@backend/types"
+import { GameStage } from "../types/game"
+
 import PlayingCard from "./PlayingCard.vue"
 import GamePlayer from "./GamePlayer.vue"
 
 const props = defineProps<{
   stage: GameStage
   imTsar: boolean
-  blackCard: BlackCard
-  cards: WhiteCard[]
-  pickedCards: WhiteCard[]
-  choices: WhiteCard[][]
-  players: Player[]
+  blackCard: ApiBlackCard
+  cards: ApiWhiteCard[]
+  pickedCards: ApiWhiteCard[]
+  choices: ApiWhiteCard[][]
+  players: ApiPlayer[]
 }>()
 
 const state = reactive<{ activeChoiceIdx: number | null }>({

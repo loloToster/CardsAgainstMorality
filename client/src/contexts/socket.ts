@@ -1,5 +1,9 @@
 import { reactive } from "vue"
-import { io } from "socket.io-client"
+import { io, Socket } from "socket.io-client"
+import {
+  ClientToServerSocketEvents,
+  ServerToClientSocketEvents
+} from "@backend/types"
 
 export const socketState = reactive({
   connected: false
@@ -10,7 +14,10 @@ export function setAuth(a: object) {
   auth = a
 }
 
-export const socket = io({
+export const socket: Socket<
+  ServerToClientSocketEvents,
+  ClientToServerSocketEvents
+> = io({
   autoConnect: false,
   auth: cb => {
     cb(auth)

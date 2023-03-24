@@ -2,15 +2,11 @@
 import { onMounted, onUnmounted, reactive } from "vue"
 import { RouterLink } from "vue-router"
 
-import { WhiteCard } from "../types/game"
+import { ApiRandomCard } from "@backend/types"
 import { getRandomInt } from "../utils"
 import PlayingCard from "../components/PlayingCard.vue"
 
-interface ApiCard extends WhiteCard {
-  color: "black" | "white"
-}
-
-interface AnimatedCard extends ApiCard {
+interface AnimatedCard extends ApiRandomCard {
   size: number
   pos: number
   delay: number
@@ -21,7 +17,7 @@ interface AnimatedCard extends ApiCard {
 
 const state = reactive<{ fallingCards: AnimatedCard[] }>({ fallingCards: [] })
 
-function addCards(newCards: ApiCard[]) {
+function addCards(newCards: ApiRandomCard[]) {
   const animatedCards: AnimatedCard[] = newCards.map(c => ({
     ...c,
     size: getRandomInt(80, 160),
@@ -53,7 +49,7 @@ onUnmounted(() => {
   clearInterval(newCardsInterval)
 })
 
-function onFallen(card: ApiCard) {
+function onFallen(card: ApiRandomCard) {
   state.fallingCards = state.fallingCards.filter(c => c !== card)
 }
 </script>
