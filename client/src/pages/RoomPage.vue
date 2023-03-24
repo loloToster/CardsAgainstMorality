@@ -11,13 +11,6 @@ import GameSettings from "../components/GameSettings.vue"
 
 const route = useRoute()
 
-setSocketAuth({ roomId: route.params.id })
-socket.connect()
-
-onUnmounted(() => {
-  socket.disconnect()
-})
-
 // TODO: move game logic to GameView
 const state = reactive<{
   stage: GameStage
@@ -38,7 +31,11 @@ const state = reactive<{
   })),
   pickedCards: [],
   choices: [],
-  players: [{ img: "", name: "You", points: 0 }]
+  players: []
+})
+
+socket.on("players", ({ players }) => {
+  state.players = players
 })
 
 socket.on("new-round", data => {
@@ -61,7 +58,8 @@ function onStart(packs: number[]) {
 function onCardPick(cardId: number) {
   if (
     state.pickedCards.length >= state.blackCard.pick ||
-    state.stage !== GameStage.CHOOSING
+    state.stage !== GameStage.CHOOSING ||
+    state.imTsar
   )
     return
 
@@ -85,6 +83,13 @@ function onVerdict(choiceIdx: number) {
     state.choices[choiceIdx].map(c => c.id)
   )
 }
+
+setSocketAuth({ roomId: route.params.id })
+socket.connect()
+
+onUnmounted(() => {
+  socket.disconnect()
+})
 </script>
 
 <template>
@@ -102,7 +107,7 @@ function onVerdict(choiceIdx: number) {
     @submit="onSubmit"
     @verdict="onVerdict"
   />
-  <GameSettings v-else @start="onStart" />
+  <GameSettings v-else :players="state.players" @start="onStart" />
 </template>
 
 <style scoped lang="scss"></style>

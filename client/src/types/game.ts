@@ -5,8 +5,11 @@ export enum GameStage {
 }
 
 export interface Player {
-  img: string
   name: string
+  picture: string
+  connected: boolean
+  tsar: boolean
+  ready: boolean
   points: number
 }
 

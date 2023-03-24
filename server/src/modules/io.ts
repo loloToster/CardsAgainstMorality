@@ -170,12 +170,11 @@ export default (io: Server) => {
     socket.on("verdict", choice => {
       try {
         player.makeVerdict(choice)
+        game.newRound()
+        sendNewRound(roomId, game)
       } catch (err) {
         console.error(err)
       }
-
-      game.newRound()
-      sendNewRound(roomId, game)
     })
 
     socket.on("disconnect", () => {

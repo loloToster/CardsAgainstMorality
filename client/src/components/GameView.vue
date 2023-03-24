@@ -49,26 +49,26 @@ function onChangeChoice(choiceIdx: number) {
     <div class="game__top">
       <div class="game__table">
         <div class="game__table__cards">
-          <PlayingCard :pack="blackCard.pack" color="black">
-            {{ blackCard.text }}
-          </PlayingCard>
+          <PlayingCard
+            :text="blackCard.text"
+            :pack="blackCard.pack"
+            color="black"
+          />
           <PlayingCard
             v-for="card in pickedCards"
             @click="onPickedCardClick(card.id)"
+            :text="card.text"
             :pack="card.pack"
             color="white"
             :key="card.id"
-          >
-            {{ card.text }}
-          </PlayingCard>
+          />
           <PlayingCard
             v-for="card in activeChoice"
+            :text="card.text"
             :pack="card.pack"
             color="white"
             :key="card.id"
-          >
-            {{ card.text }}
-          </PlayingCard>
+          />
         </div>
         <div class="game__under-cards">
           <div v-if="stage === GameStage.TSAR_VERDICT" class="game__choices">
@@ -94,7 +94,7 @@ function onChangeChoice(choiceIdx: number) {
           class="game__players__player"
           :key="player.name"
         >
-          <img :src="player.img" alt="" />
+          <img :src="player.picture" alt="" />
           <span>{{ player.name }}</span>
         </div>
       </div>

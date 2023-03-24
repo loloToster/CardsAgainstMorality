@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { reactive } from "vue"
 
-import { CardPack } from "../types/game"
+import { CardPack, Player } from "../types/game"
 import { moveItem } from "../utils"
 import SimpleChip from "./SimpleChip.vue"
+
+defineProps<{ players: Player[] }>()
 
 const emit = defineEmits<{
   (e: "start", packsIds: number[]): void
@@ -69,7 +71,13 @@ function onStart() {
         <div class="settings__panel"></div>
       </div>
       <div class="settings__players">
-        <div class="settings__panel"></div>
+        <div class="settings__panel">
+          <ul style="margin: 0">
+            <li v-for="player in players" :key="player.name">
+              {{ player.name }}
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
