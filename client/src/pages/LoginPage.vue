@@ -1,9 +1,85 @@
 <script setup lang="ts">
+import { onMounted, onUnmounted, reactive } from "vue"
 import { RouterLink } from "vue-router"
+
+import { WhiteCard } from "../types/game"
+import { getRandomInt } from "../utils"
+import PlayingCard from "../components/PlayingCard.vue"
+
+interface ApiCard extends WhiteCard {
+  color: "black" | "white"
+}
+
+interface AnimatedCard extends ApiCard {
+  size: number
+  pos: number
+  delay: number
+  fallSpeed: number
+  rotateSpeed: number
+  rotateDirection: boolean
+}
+
+const state = reactive<{ fallingCards: AnimatedCard[] }>({ fallingCards: [] })
+
+function addCards(newCards: ApiCard[]) {
+  const animatedCards: AnimatedCard[] = newCards.map(c => ({
+    ...c,
+    size: getRandomInt(80, 160),
+    pos: getRandomInt(0, 90),
+    delay: getRandomInt(0, 10000),
+    fallSpeed: getRandomInt(8000, 13000),
+    rotateSpeed: getRandomInt(7000, 10000),
+    rotateDirection: Math.random() < 0.5
+  }))
+
+  animatedCards.forEach(c => state.fallingCards.push(c))
+}
+
+async function fetchNewCards() {
+  const res = await fetch("/api/packs/random-cards")
+  const { cards } = await res.json()
+
+  addCards(cards)
+}
+
+let newCardsInterval: number | undefined
+
+onMounted(() => {
+  fetchNewCards()
+  newCardsInterval = setInterval(fetchNewCards, 8000)
+})
+
+onUnmounted(() => {
+  clearInterval(newCardsInterval)
+})
+
+function onFallen(card: ApiCard) {
+  state.fallingCards = state.fallingCards.filter(c => c !== card)
+}
 </script>
 
 <template>
   <div class="login">
+    <div
+      v-for="card in state.fallingCards"
+      @animationend="onFallen(card)"
+      class="login__card"
+      :class="{ 'login__card--spin-left': card.rotateDirection }"
+      :style="{
+        '--pos': card.pos,
+        '--delay': card.delay,
+        '--fall-speed': card.fallSpeed,
+        '--rotate-speed': card.rotateSpeed
+      }"
+      :key="card.id"
+    >
+      <PlayingCard
+        :color="card.color"
+        :text="card.text"
+        :pack="card.pack"
+        :width="card.size"
+      />
+    </div>
     <div class="login__container">
       <RouterLink to="/" class="login__logo">CAH</RouterLink>
       <a class="login__btn login__anonymous-btn">
@@ -66,16 +142,64 @@ import { RouterLink } from "vue-router"
 
 <style scoped lang="scss">
 .login {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
+
+  @keyframes fall {
+    from {
+      top: -30%;
+    }
+
+    to {
+      top: 110%;
+    }
+  }
+
+  @keyframes spin-right {
+    from {
+      transform: rotate(0);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spin-left {
+    from {
+      transform: rotate(0);
+    }
+
+    to {
+      transform: rotate(-360deg);
+    }
+  }
+
+  &__card {
+    position: absolute;
+    top: -30%;
+    left: calc(var(--pos, 0) * 1%);
+    z-index: -1;
+    animation: fall linear calc(var(--fall-speed, 10000) * 1ms) forwards,
+      spin-right linear calc(var(--rotate-speed, 8000) * 1ms) infinite;
+    animation-delay: calc(var(--delay, 0) * 1ms);
+
+    &--spin-left {
+      animation: fall linear calc(var(--fall-speed, 10000) * 1ms) forwards,
+        spin-left linear calc(var(--rotate-speed, 8000) * 1ms) infinite;
+    }
+  }
 
   &__container {
     padding: 24px;
     border: grey 1px solid;
     border-radius: 12px;
+    background-color: #242424df;
   }
 
   &__logo {

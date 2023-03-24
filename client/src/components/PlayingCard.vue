@@ -1,7 +1,9 @@
 <script setup lang="ts">
 interface PlayingCardProps {
+  text?: string
   pack: string
   color: "white" | "black"
+  width?: number
 }
 
 withDefaults(defineProps<PlayingCardProps>(), { color: "white" })
@@ -13,9 +15,11 @@ defineEmits(["click"])
     @click="$emit('click')"
     class="card"
     :class="color === 'white' ? 'card--white' : 'card--black'"
+    :style="width ? { '--w': width + 'px' } : undefined"
   >
     <span class="card__text">
-      <slot></slot>
+      <span v-if="text" v-html="text"></span>
+      <slot v-else></slot>
     </span>
     <div class="card__pack">
       <img v-if="color === 'white'" src="src/assets/black-card-icon.svg" />
@@ -26,35 +30,34 @@ defineEmits(["click"])
 </template>
 
 <style scoped lang="scss">
-@use "sass:math" as math;
-
-$card-height: 320px;
-$card-width: 226px;
-
-$card-padding: $card-width * 0.081;
-
-$card-border-radius: $card-width * 0.049;
-$card-main-font-size: $card-width * 0.07;
-$card-icon-size: $card-width * 0.098;
+$default-card-height: 320px;
+$default-card-width: 226px;
 
 .card {
+  --w: #{$default-card-width};
+
+  --padding: calc(var(--w) * 0.081);
+  --border-radius: calc(var(--w) * 0.049);
+  --main-font-size: calc(var(--w) * 0.07);
+  --main-icon-size: calc(var(--w) * 0.098);
+
   box-sizing: border-box;
   position: relative;
 
-  width: $card-width;
+  width: var(--w);
   aspect-ratio: 12 / 17;
-  padding: $card-padding;
+  padding: var(--padding);
 
-  border-radius: $card-border-radius;
-  font-size: $card-main-font-size;
+  border-radius: var(--border-radius);
+  font-size: var(--main-font-size);
   line-height: 140%;
   font-weight: bold;
   box-shadow: -3px 3px 10px -2px #242424;
 
   img {
     display: inline-block;
-    width: $card-icon-size;
-    height: $card-icon-size;
+    width: var(--main-icon-size);
+    height: var(--main-icon-size);
   }
 
   &--white {
@@ -72,11 +75,11 @@ $card-icon-size: $card-width * 0.098;
     display: flex;
     align-items: center;
 
-    gap: $card-height * 0.01;
-    left: $card-padding;
-    bottom: $card-padding;
+    gap: calc(var(--w) * 0.014);
+    left: var(--padding);
+    bottom: var(--padding);
 
-    font-size: $card-height * 0.03;
+    font-size: calc(var(--w) * 0.04);
   }
 }
 </style>
