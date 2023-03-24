@@ -4,6 +4,7 @@ import { computed, reactive } from "vue"
 import { ApiBlackCard, ApiPlayer, ApiWhiteCard } from "@backend/types"
 import { GameStage } from "../types/game"
 
+import AppButton from "./AppButton.vue"
 import PlayingCard from "./PlayingCard.vue"
 import GamePlayer from "./GamePlayer.vue"
 
@@ -87,8 +88,10 @@ function onChangeChoice(choiceIdx: number) {
             </div>
           </div>
           <div v-else class="game__submit">
-            <div v-if="imTsar">You are the tsar</div>
-            <button v-else @click="$emit('submit')">Submit</button>
+            <div v-if="imTsar" class="game__ur-tsar">
+              You are the <span>Tsar</span>
+            </div>
+            <AppButton v-else @click="$emit('submit')">Submit</AppButton>
           </div>
         </div>
       </div>
@@ -156,31 +159,25 @@ $main-gap: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
 
-    button {
-      $c: #6b6b6b;
-      outline: none;
-      border: none;
-      appearance: none;
-      padding: 8px 16px;
-      border-radius: 4px;
-      font-size: 1.2rem;
-      cursor: pointer;
-      background-color: $c;
+  &__ur-tsar {
+    font-size: 2.4rem;
+    font-weight: bold;
+    letter-spacing: 1px;
 
-      &:hover {
-        background-color: #7b7b7b;
-      }
-
-      &:active {
-        background-color: $c;
-      }
-
-      &:disabled {
-        background-color: $c;
-        opacity: 0.7;
-        cursor: not-allowed;
-      }
+    span {
+      background-image: linear-gradient(
+        70deg,
+        #c28d3e 0,
+        #f8df61 30%,
+        #f1eb95 50%,
+        #f8df61 80%,
+        #c28d3e 100%
+      );
+      color: transparent;
+      background-clip: text;
+      -webkit-background-clip: text;
     }
   }
 
