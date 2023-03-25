@@ -1,39 +1,24 @@
 <script setup lang="ts">
-import { computed, reactive } from "vue"
+import { computed } from "vue"
 
-import { ApiBlackCard, ApiPlayer, ApiWhiteCard } from "@backend/types"
-import { GameStage } from "../types/game"
+import { ApiPlayer } from "@backend/types"
+import { GameStage, GameState } from "../types/game"
 
 import WinnerModal from "./WinnerModal.vue"
 import AppButton from "./AppButton.vue"
 import PlayingCard from "./PlayingCard.vue"
 import GamePlayer from "./GamePlayer.vue"
+import { moveItem } from "../utils"
 
 const props = defineProps<{
-  stage: GameStage
-  imTsar: boolean
-  blackCard: ApiBlackCard
-  cards: ApiWhiteCard[]
-  pickedCards: ApiWhiteCard[]
-  submitted: boolean
-  choices: ApiWhiteCard[][]
-  winnerData: {
-    winner: string
-    blackCard: ApiBlackCard
-    winningCards: ApiWhiteCard[]
-    imWinner: boolean
-  } | null
+  gameState: GameState
   players: ApiPlayer[]
 }>()
 
-const state = reactive<{ activeChoiceIdx: number | null }>({
-  activeChoiceIdx: null
-})
-
 const activeChoice = computed(() => {
-  return state.activeChoiceIdx !== null &&
-    props.stage === GameStage.TSAR_VERDICT
-    ? props.choices[state.activeChoiceIdx]
+  return props.gameState.activeChoiceIdx !== null &&
+    props.gameState.stage === GameStage.TSAR_VERDICT
+    ? props.gameState.choices[props.gameState.activeChoiceIdx]
     : []
 })
 
@@ -42,42 +27,56 @@ const emit = defineEmits<{
   (ev: "onPickedCardClick", cardId: number): void
   (ev: "submit"): void
   (ev: "verdict", choiceIdx: number): void
-  (ev: "onWinnerClose"): void
 }>()
 
 function onCardPick(cardId: number) {
-  emit("onCardPick", cardId)
+  if (
+    props.gameState.pickedCards.length >= props.gameState.blackCard.pick ||
+    props.gameState.stage !== GameStage.CHOOSING ||
+    props.gameState.imTsar
+  )
+    return
+
+  moveItem(
+    props.gameState.cards,
+    props.gameState.pickedCards,
+    c => c.id === cardId
+  )
 }
 
 function onPickedCardClick(cardId: number) {
-  emit("onPickedCardClick", cardId)
+  moveItem(
+    props.gameState.pickedCards,
+    props.gameState.cards,
+    c => c.id === cardId
+  )
 }
 
 function onChangeChoice(choiceIdx: number) {
-  if (choiceIdx === state.activeChoiceIdx) emit("verdict", choiceIdx)
-  else state.activeChoiceIdx = choiceIdx
+  if (choiceIdx === props.gameState.activeChoiceIdx) emit("verdict", choiceIdx)
+  else props.gameState.activeChoiceIdx = choiceIdx
 }
 </script>
 <template>
   <WinnerModal
-    v-if="winnerData"
-    @close="$emit('onWinnerClose')"
-    :winner="winnerData.winner"
-    :black-card="winnerData.blackCard"
-    :winning-cards="winnerData.winningCards"
-    :im-winner="winnerData.imWinner"
+    v-if="gameState.winnerData"
+    @close="gameState.winnerData = null"
+    :winner="gameState.winnerData.winner"
+    :black-card="gameState.winnerData.blackCard"
+    :winning-cards="gameState.winnerData.winningCards"
+    :im-winner="gameState.winnerData.imWinner"
   />
   <div class="game">
     <div class="game__top">
       <div class="game__table">
         <div class="game__table__cards">
           <PlayingCard
-            :text="blackCard.text"
-            :pack="blackCard.pack"
+            :text="gameState.blackCard.text"
+            :pack="gameState.blackCard.pack"
             color="black"
           />
           <PlayingCard
-            v-for="card in pickedCards"
+            v-for="card in gameState.pickedCards"
             @click="onPickedCardClick(card.id)"
             :text="card.text"
             :pack="card.pack"
@@ -93,11 +92,16 @@ function onChangeChoice(choiceIdx: number) {
           />
         </div>
         <div class="game__under-cards">
-          <div v-if="stage === GameStage.TSAR_VERDICT" class="game__choices">
+          <div
+            v-if="gameState.stage === GameStage.TSAR_VERDICT"
+            class="game__choices"
+          >
             <div
-              v-for="choice in choices.length"
+              v-for="choice in gameState.choices.length"
               @click="onChangeChoice(choice - 1)"
-              :class="{ active: choice - 1 === state.activeChoiceIdx }"
+              :class="{
+                active: choice - 1 === props.gameState.activeChoiceIdx
+              }"
               class="game__choices__choice"
               :key="choice"
             >
@@ -105,14 +109,17 @@ function onChangeChoice(choiceIdx: number) {
             </div>
           </div>
           <div v-else class="game__submit">
-            <div v-if="imTsar" class="game__ur-tsar">
+            <div v-if="gameState.imTsar" class="game__ur-tsar">
               You are the <span>Tsar</span>
             </div>
             <AppButton
               v-else
-              :disabled="pickedCards.length !== blackCard.pick || submitted"
+              :disabled="
+                gameState.pickedCards.length !== gameState.blackCard.pick ||
+                gameState.submitted
+              "
               @click="$emit('submit')"
-              >{{ submitted ? "Submitted" : "Submit" }}</AppButton
+              >{{ gameState.submitted ? "Submitted" : "Submit" }}</AppButton
             >
           </div>
         </div>
@@ -127,7 +134,7 @@ function onChangeChoice(choiceIdx: number) {
     </div>
     <div class="game__hand">
       <div
-        v-for="card in cards"
+        v-for="card in gameState.cards"
         class="game__hand__card-wrapper"
         :key="card.id"
       >

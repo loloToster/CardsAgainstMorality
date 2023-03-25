@@ -2,33 +2,22 @@
 import { onUnmounted, reactive } from "vue"
 import { useRoute } from "vue-router"
 
-import { ApiWhiteCard, ApiBlackCard, ApiPlayer } from "@backend/types"
-import { moveItem } from "../utils"
+import { ApiPlayer } from "@backend/types"
 import { setAuth as setSocketAuth, socket } from "../contexts/socket"
-import { GameStage } from "../types/game"
+import { GameStage, GameState } from "../types/game"
 
 import GameView from "../components/GameView.vue"
 import GameSettings from "../components/GameSettings.vue"
 
 const route = useRoute()
 
-// TODO: move game logic to GameView
 const state = reactive<{
-  stage: GameStage
-  imTsar: boolean
-  blackCard: ApiBlackCard
-  cards: ApiWhiteCard[]
-  pickedCards: ApiWhiteCard[]
-  submitted: boolean
-  choices: ApiWhiteCard[][]
-  winnerData: {
-    winner: string
-    blackCard: ApiBlackCard
-    winningCards: ApiWhiteCard[]
-    imWinner: boolean
-  } | null
   players: ApiPlayer[]
 }>({
+  players: []
+})
+
+const gameState = reactive<GameState>({
   stage: GameStage.NOT_STARTED,
   imTsar: false,
   blackCard: { id: -1, text: "test", pack: "test pack", pick: 1 },
@@ -40,8 +29,8 @@ const state = reactive<{
   pickedCards: [],
   submitted: false,
   choices: [],
-  winnerData: null,
-  players: []
+  activeChoiceIdx: null,
+  winnerData: null
 })
 
 socket.on("players", ({ players }) => {
@@ -49,31 +38,32 @@ socket.on("players", ({ players }) => {
 })
 
 socket.on("new-round", data => {
-  state.stage = GameStage.CHOOSING
-  state.imTsar = data.tsar
-  state.blackCard = data.blackCard
-  state.cards = data.cards
-  state.submitted = false
-  state.winnerData = data.prevRound ?? null
+  gameState.stage = GameStage.CHOOSING
+  gameState.imTsar = data.tsar
+  gameState.blackCard = data.blackCard
+  gameState.cards = data.cards
+  gameState.submitted = false
+  gameState.winnerData = data.prevRound ?? null
 })
 
 socket.on("choices", ({ choices }) => {
-  state.stage = GameStage.TSAR_VERDICT
-  state.choices = choices
-  state.pickedCards = []
+  gameState.stage = GameStage.TSAR_VERDICT
+  gameState.activeChoiceIdx = null
+  gameState.choices = choices
+  gameState.pickedCards = []
 })
 
 socket.on("rejoin", data => {
-  state.imTsar = data.tsar
-  state.blackCard = data.blackCard
-  state.cards = data.cards
+  gameState.imTsar = data.tsar
+  gameState.blackCard = data.blackCard
+  gameState.cards = data.cards
 
   // todo: not started
   if (data.choices) {
-    state.stage = GameStage.TSAR_VERDICT
-    state.choices = data.choices
+    gameState.stage = GameStage.TSAR_VERDICT
+    gameState.choices = data.choices
   } else {
-    state.stage = GameStage.CHOOSING
+    gameState.stage = GameStage.CHOOSING
   }
 })
 
@@ -81,28 +71,15 @@ function onStart(packs: number[]) {
   socket.emit("start", { packs })
 }
 
-function onCardPick(cardId: number) {
-  if (
-    state.pickedCards.length >= state.blackCard.pick ||
-    state.stage !== GameStage.CHOOSING ||
-    state.imTsar
-  )
-    return
-
-  moveItem(state.cards, state.pickedCards, c => c.id === cardId)
-}
-
-function onCardPickRemove(cardId: number) {
-  moveItem(state.pickedCards, state.cards, c => c.id === cardId)
-}
-
 function onSubmit() {
-  state.submitted = true
-  socket.emit("submit", { submition: state.pickedCards.map(c => c.id) })
+  gameState.submitted = true
+  socket.emit("submit", { submition: gameState.pickedCards.map(c => c.id) })
 }
 
 function onVerdict(choiceIdx: number) {
-  socket.emit("verdict", { verdict: state.choices[choiceIdx].map(c => c.id) })
+  socket.emit("verdict", {
+    verdict: gameState.choices[choiceIdx].map(c => c.id)
+  })
 }
 
 const roomId = route.params.id
@@ -116,21 +93,11 @@ onUnmounted(() => {
 
 <template>
   <GameView
-    v-if="state.stage !== GameStage.NOT_STARTED"
-    :stage="state.stage"
-    :im-tsar="state.imTsar"
-    :black-card="state.blackCard"
-    :cards="state.cards"
-    :picked-cards="state.pickedCards"
-    :submitted="state.submitted"
-    :choices="state.choices"
-    :winner-data="state.winnerData"
+    v-if="gameState.stage !== GameStage.NOT_STARTED"
+    :game-state="gameState"
     :players="state.players"
-    @on-card-pick="onCardPick"
-    @on-picked-card-click="onCardPickRemove"
     @submit="onSubmit"
     @verdict="onVerdict"
-    @on-winner-close="state.winnerData = null"
   />
   <GameSettings
     v-else
