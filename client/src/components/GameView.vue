@@ -14,6 +14,7 @@ const props = defineProps<{
   blackCard: ApiBlackCard
   cards: ApiWhiteCard[]
   pickedCards: ApiWhiteCard[]
+  submitted: boolean
   choices: ApiWhiteCard[][]
   players: ApiPlayer[]
 }>()
@@ -91,7 +92,12 @@ function onChangeChoice(choiceIdx: number) {
             <div v-if="imTsar" class="game__ur-tsar">
               You are the <span>Tsar</span>
             </div>
-            <AppButton v-else @click="$emit('submit')">Submit</AppButton>
+            <AppButton
+              v-else
+              :disabled="pickedCards.length !== blackCard.pick || submitted"
+              @click="$emit('submit')"
+              >{{ submitted ? "Submitted" : "Submit" }}</AppButton
+            >
           </div>
         </div>
       </div>

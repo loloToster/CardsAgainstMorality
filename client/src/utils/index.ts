@@ -20,3 +20,32 @@ export function getRandomInt(min: number, max: number) {
   max = Math.floor(max)
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
+
+// https://stackoverflow.com/a/30810322/15331983
+export async function copyToClipboard(text: string) {
+  try {
+    await window.navigator.clipboard.writeText(text)
+  } catch {
+    console.warn("could not copy with clipboard.writeText")
+
+    const textArea = document.createElement("textarea")
+
+    // Avoid scrolling to bottom
+    textArea.style.top = "0"
+    textArea.style.left = "0"
+    textArea.style.position = "fixed"
+
+    textArea.value = text
+    document.body.appendChild(textArea)
+    textArea.focus()
+    textArea.select()
+
+    try {
+      document.execCommand("copy")
+    } catch (err) {
+      console.error("Unable to copy to clipboard", err)
+    }
+
+    document.body.removeChild(textArea)
+  }
+}

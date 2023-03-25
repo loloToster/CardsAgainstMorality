@@ -1,8 +1,12 @@
 <script setup lang="ts">
-withDefaults(defineProps<{ color?: string; hColor?: string }>(), {
-  color: "#6b6b6b",
-  hColor: "#7b7b7b"
-})
+withDefaults(
+  defineProps<{ color?: string; hColor?: string; disabled?: boolean }>(),
+  {
+    color: "#6b6b6b",
+    hColor: "#7b7b7b",
+    disabled: false
+  }
+)
 
 defineEmits(["click"])
 </script>
@@ -14,6 +18,7 @@ defineEmits(["click"])
       '--color': color,
       '--h-color': hColor
     }"
+    :disabled="disabled"
     v-wave
   >
     <slot></slot>

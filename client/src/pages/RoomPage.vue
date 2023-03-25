@@ -19,6 +19,7 @@ const state = reactive<{
   blackCard: ApiBlackCard
   cards: ApiWhiteCard[]
   pickedCards: ApiWhiteCard[]
+  submitted: boolean
   choices: ApiWhiteCard[][]
   players: ApiPlayer[]
 }>({
@@ -31,6 +32,7 @@ const state = reactive<{
     pack: "testpack"
   })),
   pickedCards: [],
+  submitted: false,
   choices: [],
   players: []
 })
@@ -44,6 +46,7 @@ socket.on("new-round", data => {
   state.imTsar = data.tsar
   state.blackCard = data.blackCard
   state.cards = data.cards
+  state.submitted = false
 })
 
 socket.on("choices", ({ choices }) => {
@@ -86,6 +89,7 @@ function onCardPickRemove(cardId: number) {
 }
 
 function onSubmit() {
+  state.submitted = true
   socket.emit("submit", { submition: state.pickedCards.map(c => c.id) })
 }
 
@@ -93,7 +97,8 @@ function onVerdict(choiceIdx: number) {
   socket.emit("verdict", { verdict: state.choices[choiceIdx].map(c => c.id) })
 }
 
-setSocketAuth({ roomId: route.params.id })
+const roomId = route.params.id
+setSocketAuth({ roomId })
 socket.connect()
 
 onUnmounted(() => {
@@ -109,6 +114,7 @@ onUnmounted(() => {
     :black-card="state.blackCard"
     :cards="state.cards"
     :picked-cards="state.pickedCards"
+    :submitted="state.submitted"
     :choices="state.choices"
     :players="state.players"
     @on-card-pick="onCardPick"
@@ -116,7 +122,12 @@ onUnmounted(() => {
     @submit="onSubmit"
     @verdict="onVerdict"
   />
-  <GameSettings v-else :players="state.players" @start="onStart" />
+  <GameSettings
+    v-else
+    :room-id="roomId.toString()"
+    :players="state.players"
+    @start="onStart"
+  />
 </template>
 
 <style scoped lang="scss"></style>
