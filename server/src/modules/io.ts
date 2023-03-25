@@ -4,10 +4,11 @@ import type { IncomingMessage } from "http"
 
 import { User } from "@prisma/client"
 import db from "./db"
-import { Game, GameState, Player } from "../utils/game"
+import { Game, GameState, Player, WinnerData } from "../utils/game"
 import {
   ApiWhiteCard,
   ClientToServerSocketEvents,
+  PrevRound,
   ServerToClientSocketEvents
 } from "../types"
 
@@ -52,7 +53,11 @@ export default (
     io.to(roomId).emit("players", { players })
   }
 
-  async function sendNewRound(roomId: string, game: Game<PlayerMetadata>) {
+  async function sendNewRound(
+    roomId: string,
+    game: Game<PlayerMetadata>,
+    winnerData?: WinnerData<PlayerMetadata>
+  ) {
     if (!game.curBlackCard) throw new Error("No black card")
 
     const blackCard = await db.getApiBlackCard(game.curBlackCard.id)
@@ -63,14 +68,35 @@ export default (
       allPlayersCardsIds
     )) as ApiWhiteCard[][]
 
+    let prevRound: PrevRound | undefined
+
+    if (winnerData) {
+      const prevRoundBlack = await db.getApiBlackCard(winnerData.blackCard)
+      const winningCards = (await db.mapIdsToApiWhiteCards(
+        winnerData.winningCards
+      )) as ApiWhiteCard[]
+
+      prevRound = {
+        winner: winnerData.winner.metadata?.user.name ?? "Unknown",
+        blackCard: prevRoundBlack,
+        winningCards,
+        imWinner: false
+      }
+    }
+
     for (let i = 0; i < game.players.length; i++) {
       const player = game.players[i]
       const cards = allPlayersCards[i]
 
+      if (prevRound) {
+        prevRound.imWinner = player === winnerData?.winner
+      }
+
       player.metadata?.socket.emit("new-round", {
         blackCard,
         cards,
-        tsar: player.isTsar
+        tsar: player.isTsar,
+        prevRound
       })
     }
 
@@ -186,9 +212,9 @@ export default (
 
     socket.on("verdict", ({ verdict }) => {
       try {
-        player.makeVerdict(verdict)
+        const winnerData = player.makeVerdict(verdict)
         game.newRound()
-        sendNewRound(roomId, game)
+        sendNewRound(roomId, game, winnerData)
       } catch (err) {
         console.error(err)
       }

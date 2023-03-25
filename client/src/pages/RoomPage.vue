@@ -21,6 +21,12 @@ const state = reactive<{
   pickedCards: ApiWhiteCard[]
   submitted: boolean
   choices: ApiWhiteCard[][]
+  winnerData: {
+    winner: string
+    blackCard: ApiBlackCard
+    winningCards: ApiWhiteCard[]
+    imWinner: boolean
+  } | null
   players: ApiPlayer[]
 }>({
   stage: GameStage.NOT_STARTED,
@@ -34,6 +40,7 @@ const state = reactive<{
   pickedCards: [],
   submitted: false,
   choices: [],
+  winnerData: null,
   players: []
 })
 
@@ -47,6 +54,7 @@ socket.on("new-round", data => {
   state.blackCard = data.blackCard
   state.cards = data.cards
   state.submitted = false
+  state.winnerData = data.prevRound ?? null
 })
 
 socket.on("choices", ({ choices }) => {
@@ -116,11 +124,13 @@ onUnmounted(() => {
     :picked-cards="state.pickedCards"
     :submitted="state.submitted"
     :choices="state.choices"
+    :winner-data="state.winnerData"
     :players="state.players"
     @on-card-pick="onCardPick"
     @on-picked-card-click="onCardPickRemove"
     @submit="onSubmit"
     @verdict="onVerdict"
+    @on-winner-close="state.winnerData = null"
   />
   <GameSettings
     v-else

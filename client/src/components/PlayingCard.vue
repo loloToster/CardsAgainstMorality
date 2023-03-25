@@ -2,14 +2,15 @@
 import BlackCardIcon from "../assets/black-card-icon.svg"
 import WhiteCardIcon from "../assets/white-card-icon.svg"
 
-interface PlayingCardProps {
-  text?: string
-  pack: string
-  color: "white" | "black"
-  width?: number
-}
-
-withDefaults(defineProps<PlayingCardProps>(), { color: "white" })
+withDefaults(
+  defineProps<{
+    text?: string
+    pack?: string
+    color?: "white" | "black"
+    width?: number
+  }>(),
+  { color: "white" }
+)
 defineEmits(["click"])
 </script>
 

@@ -17,6 +17,12 @@ export interface PlayerOpts<M> {
   metadata?: M
 }
 
+export interface WinnerData<PM> {
+  winner: Player<PM>
+  blackCard: number
+  winningCards: number[]
+}
+
 export class Player<M = unknown> {
   game: Game<M>
   metadata: M | undefined
@@ -73,8 +79,8 @@ export class Player<M = unknown> {
     }
   }
 
-  makeVerdict(choice: number[]) {
-    if (this.game.state !== GameState.TSAR_VERDICT)
+  makeVerdict(choice: number[]): WinnerData<M> {
+    if (this.game.state !== GameState.TSAR_VERDICT || !this.game.curBlackCard)
       throw new Error("Not TSAR VERDICT state")
     if (!this.isTsar) throw new Error("Player is not a tsar")
 
@@ -82,7 +88,12 @@ export class Player<M = unknown> {
       if (Game.hashChoice(player.choice) !== Game.hashChoice(choice)) continue
 
       player.points++
-      return player
+
+      return {
+        winner: player,
+        blackCard: this.game.curBlackCard.id,
+        winningCards: player.choice
+      }
     }
 
     throw Error("No player with this choice")

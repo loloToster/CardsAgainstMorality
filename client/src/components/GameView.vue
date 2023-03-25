@@ -4,6 +4,7 @@ import { computed, reactive } from "vue"
 import { ApiBlackCard, ApiPlayer, ApiWhiteCard } from "@backend/types"
 import { GameStage } from "../types/game"
 
+import WinnerModal from "./WinnerModal.vue"
 import AppButton from "./AppButton.vue"
 import PlayingCard from "./PlayingCard.vue"
 import GamePlayer from "./GamePlayer.vue"
@@ -16,6 +17,12 @@ const props = defineProps<{
   pickedCards: ApiWhiteCard[]
   submitted: boolean
   choices: ApiWhiteCard[][]
+  winnerData: {
+    winner: string
+    blackCard: ApiBlackCard
+    winningCards: ApiWhiteCard[]
+    imWinner: boolean
+  } | null
   players: ApiPlayer[]
 }>()
 
@@ -35,6 +42,7 @@ const emit = defineEmits<{
   (ev: "onPickedCardClick", cardId: number): void
   (ev: "submit"): void
   (ev: "verdict", choiceIdx: number): void
+  (ev: "onWinnerClose"): void
 }>()
 
 function onCardPick(cardId: number) {
@@ -51,6 +59,14 @@ function onChangeChoice(choiceIdx: number) {
 }
 </script>
 <template>
+  <WinnerModal
+    v-if="winnerData"
+    @close="$emit('onWinnerClose')"
+    :winner="winnerData.winner"
+    :black-card="winnerData.blackCard"
+    :winning-cards="winnerData.winningCards"
+    :im-winner="winnerData.imWinner"
+  />
   <div class="game">
     <div class="game__top">
       <div class="game__table">
