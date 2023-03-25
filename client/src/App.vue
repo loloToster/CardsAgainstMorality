@@ -15,7 +15,7 @@ fetch("/auth/me").then(async res => {
 </script>
 
 <template>
-  <AppHeader :user="user" v-if="$route.name !== 'Login'" />
+  <AppHeader v-if="!$route.meta?.hideHeader" :user="user" />
   <RouterView />
 </template>
 

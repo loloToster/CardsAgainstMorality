@@ -2,8 +2,10 @@
 import { onMounted, onUnmounted, reactive } from "vue"
 import { RouterLink, useRouter } from "vue-router"
 
-import { ApiRandomCard } from "@backend/types"
+import type { ApiRandomCard } from "@backend/types"
+import { TITLE } from "../consts"
 import { getRandomInt } from "../utils"
+
 import AppButton from "../components/AppButton.vue"
 import PlayingCard from "../components/PlayingCard.vue"
 
@@ -84,7 +86,9 @@ function onFallen(card: ApiRandomCard) {
       />
     </div>
     <div class="login__container">
-      <RouterLink to="/" class="login__logo">CAH</RouterLink>
+      <RouterLink to="/" class="login__logo">
+        {{ TITLE }}
+      </RouterLink>
       <AppButton
         color="#080808"
         hColor="black"
@@ -227,8 +231,9 @@ function onFallen(card: ApiRandomCard) {
   &__logo {
     display: block;
     margin: 0;
-    margin-bottom: 10px;
-    font-size: 1.7rem;
+    margin: 12px 0 30px 0;
+    font-size: 1.2rem;
+    text-align: center;
     text-decoration: none;
     color: inherit;
   }

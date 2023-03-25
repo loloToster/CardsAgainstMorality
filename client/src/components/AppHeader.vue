@@ -4,6 +4,7 @@ import { RouterLink, useRouter } from "vue-router"
 import { onClickOutside } from "@vueuse/core"
 
 import type { LoggedInUser } from "../types/user"
+import { TITLE } from "../consts"
 
 import AppButton from "./AppButton.vue"
 
@@ -24,7 +25,9 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
 
 <template>
   <header class="header">
-    <RouterLink class="header__logo header__link" to="/">CAH</RouterLink>
+    <RouterLink class="header__logo header__link" to="/">
+      {{ TITLE }}
+    </RouterLink>
     <div
       @click="state.profileMenuOpen = !state.profileMenuOpen"
       v-if="user"
