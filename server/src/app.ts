@@ -8,7 +8,7 @@ import passport from "passport"
 import { ClientToServerSocketEvents, ServerToClientSocketEvents } from "./types"
 
 import configurePassport from "./modules/passport"
-import { syncedCards } from "./modules/db"
+import db from "./modules/db"
 import setupGameSocketIoHandlers from "./modules/io"
 
 import { loadRoutes } from "./utils/loadRoutes"
@@ -61,7 +61,7 @@ loadRoutes(app, __dirname + "/routes")
 
 app.use(express.static(__dirname + "/../../client/dist"))
 
-syncedCards.then(() => {
+db.syncCards().then(() => {
   server.listen(port, async () => {
     console.log(`Example app listening on port ${port}`)
   })

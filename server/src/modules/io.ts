@@ -6,13 +6,14 @@ import { User } from "@prisma/client"
 import db from "./db"
 import { Game, GameState, Player } from "../utils/game"
 import {
+  ApiWhiteCard,
   ClientToServerSocketEvents,
   ServerToClientSocketEvents
 } from "../types"
 
 interface PlayerMetadata {
   connected: boolean
-  socket: Socket
+  socket: Socket<ClientToServerSocketEvents, ServerToClientSocketEvents>
   user: User
 }
 
@@ -54,32 +55,21 @@ export default (
   async function sendNewRound(roomId: string, game: Game<PlayerMetadata>) {
     if (!game.curBlackCard) throw new Error("No black card")
 
-    const blackCard = await db.blackCard.findUnique({
-      where: { id: game.curBlackCard.id },
-      include: { pack: true }
-    })
+    const blackCard = await db.getApiBlackCard(game.curBlackCard.id)
 
-    if (!blackCard) throw new Error("No corresponding black card")
+    const allPlayersCardsIds = game.players.map(p => p.cards)
 
-    const allDbWhiteCards = await db.whiteCard.findMany({
-      where: { id: { in: game.players.map(p => p.cards).flat() } },
-      include: { pack: true }
-    })
+    const allPlayersCards = (await db.mapIdsToApiWhiteCards(
+      allPlayersCardsIds
+    )) as ApiWhiteCard[][]
 
-    const allWhiteCards = allDbWhiteCards.map(c => ({
-      id: c.id,
-      text: c.text,
-      pack: c.pack.name
-    }))
+    for (let i = 0; i < game.players.length; i++) {
+      const player = game.players[i]
+      const cards = allPlayersCards[i]
 
-    for (const player of game.players) {
       player.metadata?.socket.emit("new-round", {
-        blackCard: {
-          text: blackCard.text,
-          pack: blackCard.pack.name,
-          pick: blackCard.pick || 1
-        },
-        cards: allWhiteCards.filter(c => player.cards.includes(c.id)),
+        blackCard,
+        cards,
         tsar: player.isTsar
       })
     }
@@ -88,30 +78,11 @@ export default (
   }
 
   async function sendChoices(roomId: string, game: Game<PlayerMetadata>) {
-    const allDbCards = await db.whiteCard.findMany({
-      where: { id: { in: game.getChoices().flat() } },
-      include: { pack: true }
-    })
+    const choices = (await db.mapIdsToApiWhiteCards(
+      game.getChoices()
+    )) as ApiWhiteCard[][]
 
-    const allCards = allDbCards.map(c => ({
-      id: c.id,
-      text: c.text,
-      pack: c.pack.name
-    }))
-
-    try {
-      const choices = game.getChoices().map(choice =>
-        choice.map(cid => {
-          const card = allCards.find(c => c.id === cid)
-          if (!card) throw new Error("Non existing card")
-          return card
-        })
-      )
-
-      io.to(roomId).emit("choices", { choices })
-    } catch (err) {
-      console.error(err)
-    }
+    io.to(roomId).emit("choices", { choices })
   }
 
   async function sendRejoinData(player: Player<PlayerMetadata>) {
@@ -119,60 +90,24 @@ export default (
 
     if (!game.curBlackCard) return
 
-    const blackCard = await db.blackCard.findUnique({
-      where: { id: game.curBlackCard.id },
-      include: { pack: true }
-    })
+    const blackCard = await db.getApiBlackCard(game.curBlackCard.id)
 
-    if (!blackCard) return
+    const cards = (await db.mapIdsToApiWhiteCards(
+      player.cards
+    )) as ApiWhiteCard[]
 
-    const allDbWhiteCards = await db.whiteCard.findMany({
-      where: { id: { in: player.cards } },
-      include: { pack: true }
-    })
+    let choices: ApiWhiteCard[][] | undefined
 
-    const allWhiteCards = allDbWhiteCards.map(c => ({
-      id: c.id,
-      text: c.text,
-      pack: c.pack.name
-    }))
-
-    let choices:
-      | (
-          | {
-              id: number
-              text: string
-              pack: string
-            }
-          | undefined
-        )[][]
-      | undefined // todo: move to interface
-
-    if ((game.state = GameState.TSAR_VERDICT)) {
-      const allDbCards = await db.whiteCard.findMany({
-        where: { id: { in: game.getChoices().flat() } },
-        include: { pack: true }
-      })
-
-      const allCards = allDbCards.map(c => ({
-        id: c.id,
-        text: c.text,
-        pack: c.pack.name
-      }))
-
-      choices = game
-        .getChoices()
-        .map(choice => choice.map(cid => allCards.find(c => c.id === cid)))
+    if (game.state === GameState.TSAR_VERDICT) {
+      choices = (await db.mapIdsToApiWhiteCards(
+        game.getChoices()
+      )) as ApiWhiteCard[][]
     }
 
     const data = {
-      isTsar: player.isTsar,
-      blackCard: {
-        text: blackCard.text,
-        pack: blackCard.pack.name,
-        pick: blackCard.pick || 1
-      },
-      cards: allWhiteCards,
+      tsar: player.isTsar,
+      blackCard,
+      cards,
       choices
     }
 
