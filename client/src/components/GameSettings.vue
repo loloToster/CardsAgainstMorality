@@ -5,6 +5,7 @@ import { ApiPlayer, ApiCardPack } from "@backend/types"
 import { moveItem, copyToClipboard } from "../utils"
 
 import AppButton from "./AppButton.vue"
+import AppLoader from "./AppLoader.vue"
 import SimpleChip from "./SimpleChip.vue"
 
 const props = defineProps<{ roomId: string; players: ApiPlayer[] }>()
@@ -14,9 +15,11 @@ const emit = defineEmits<{
 }>()
 
 const state = reactive<{
+  loading: boolean
   unselectedPacks: ApiCardPack[]
   selectedPacks: ApiCardPack[]
 }>({
+  loading: true,
   unselectedPacks: [],
   selectedPacks: []
 })
@@ -40,6 +43,7 @@ function unselectPack(packId: number) {
 fetch("/api/packs").then(async res => {
   const { packs } = await res.json()
   state.unselectedPacks = packs
+  state.loading = false
 })
 
 function onStart() {
@@ -60,7 +64,10 @@ function onCopyLink() {
 <template>
   <div class="settings">
     <div class="settings__left">
-      <div class="settings__panel settings__main">
+      <div v-if="state.loading" class="settings__panel settings__loading">
+        <AppLoader outline-color="#3a3a3a" />
+      </div>
+      <div v-else class="settings__panel settings__main">
         <div class="settings__main__options">
           <h3>Select packs that you want to use:</h3>
           <div class="settings__packs">
@@ -97,7 +104,12 @@ function onCopyLink() {
           </div>
         </div>
         <div class="settings__main__btns">
-          <AppButton @click="onStart()">Start</AppButton>
+          <AppButton
+            @click="onStart()"
+            :disabled="!state.selectedPacks.length || players.length < 2"
+          >
+            Start
+          </AppButton>
         </div>
       </div>
     </div>
@@ -116,7 +128,6 @@ function onCopyLink() {
           <AppButton
             @click="onCopyCode"
             color="#15b041"
-            hColor="#119937"
             class="settings__invite__btn"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
@@ -128,7 +139,6 @@ function onCopyLink() {
           </AppButton>
           <AppButton
             color="#1869cc"
-            hColor="#1457a8"
             @click="onCopyLink"
             class="settings__invite__btn"
           >
@@ -141,7 +151,13 @@ function onCopyLink() {
           </AppButton>
         </div>
       </div>
-      <div class="settings__players settings__panel">
+      <div
+        v-if="!players.length"
+        class="settings__players settings__panel settings__loading"
+      >
+        <AppLoader outline-color="#3a3a3a" />
+      </div>
+      <div v-else class="settings__players settings__panel">
         <div
           v-for="player in players"
           :key="player.name"
@@ -169,6 +185,7 @@ $main-gap: 16px;
   &__left {
     height: 100%;
     flex-grow: 1;
+    flex-basis: 0;
   }
 
   &__right {
@@ -186,6 +203,13 @@ $main-gap: 16px;
     height: 100%;
     border-radius: $main-gap;
     padding: 14px;
+  }
+
+  &__loading {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   &__main {

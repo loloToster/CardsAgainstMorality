@@ -19,7 +19,7 @@ const hoverColor = computed(() => {
 
 <template>
   <button
-    @click="$emit('click')"
+    @click="() => !disabled && $emit('click')"
     :style="{
       '--color': color,
       '--h-color': hoverColor

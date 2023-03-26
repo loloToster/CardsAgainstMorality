@@ -4,11 +4,13 @@ import { computed } from "vue"
 import { ApiPlayer } from "@backend/types"
 import { GameStage, GameState } from "../types/game"
 
+import { moveItem } from "../utils"
+
 import WinnerModal from "./WinnerModal.vue"
 import AppButton from "./AppButton.vue"
 import PlayingCard from "./PlayingCard.vue"
 import GamePlayer from "./GamePlayer.vue"
-import { moveItem } from "../utils"
+import GameChoice from "./GameChoice.vue"
 
 const props = defineProps<{
   gameState: GameState
@@ -22,9 +24,7 @@ const activeChoice = computed(() => {
     : []
 })
 
-const emit = defineEmits<{
-  (ev: "onCardPick", cardId: number): void
-  (ev: "onPickedCardClick", cardId: number): void
+defineEmits<{
   (ev: "submit"): void
   (ev: "verdict", choiceIdx: number): void
 }>()
@@ -53,8 +53,7 @@ function onPickedCardClick(cardId: number) {
 }
 
 function onChangeChoice(choiceIdx: number) {
-  if (choiceIdx === props.gameState.activeChoiceIdx) emit("verdict", choiceIdx)
-  else props.gameState.activeChoiceIdx = choiceIdx
+  props.gameState.activeChoiceIdx = choiceIdx
 }
 </script>
 <template>
@@ -96,17 +95,17 @@ function onChangeChoice(choiceIdx: number) {
             v-if="gameState.stage === GameStage.TSAR_VERDICT"
             class="game__choices"
           >
-            <div
+            <GameChoice
               v-for="choice in gameState.choices.length"
               @click="onChangeChoice(choice - 1)"
-              :class="{
-                active: choice - 1 === props.gameState.activeChoiceIdx
-              }"
-              class="game__choices__choice"
+              @choose="$emit('verdict', choice - 1)"
+              :choosable="gameState.imTsar"
+              :active="choice - 1 === gameState.activeChoiceIdx"
+              :num-of-cards="gameState.blackCard.pick"
               :key="choice"
             >
               {{ choice }}
-            </div>
+            </GameChoice>
           </div>
           <div v-else class="game__submit">
             <div v-if="gameState.imTsar" class="game__ur-tsar">
@@ -217,59 +216,7 @@ $main-gap: 20px;
     gap: 16px;
     width: fit-content;
     max-width: 100%;
-    overflow-x: auto;
     margin: auto;
-
-    &__choice {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-
-      flex-shrink: 0;
-      width: 56px;
-      height: 80px;
-      // margin to make space for pseudo-elements
-      margin-left: 12px;
-
-      color: black;
-      background-color: white;
-      box-shadow: -2px 1px 7px 0 #262626;
-      border-radius: 4px;
-      font-size: 1.8rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: font-size 100ms linear;
-
-      &.active {
-        font-size: 3.3rem;
-      }
-
-      &::before,
-      &::after {
-        content: "";
-        position: absolute;
-
-        width: 100%;
-        height: 100%;
-        top: 0;
-
-        border-radius: inherit;
-        background-color: inherit;
-        box-shadow: inherit;
-        cursor: pointer;
-      }
-
-      &::before {
-        left: -6px;
-        z-index: -1;
-      }
-
-      &::after {
-        left: -12px;
-        z-index: -2;
-      }
-    }
   }
 
   &__players {

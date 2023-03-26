@@ -35,6 +35,7 @@ defineEmits(["close"])
           :key="card.id"
         />
       </div>
+      <div @animationend="$emit('close')" class="winner-modal__timer"></div>
     </div>
   </div>
 </template>
@@ -54,11 +55,32 @@ defineEmits(["close"])
 
   h1 {
     max-width: 60vw;
+    margin: 0;
+    margin-bottom: 16px;
   }
 
   &__cards {
     display: flex;
     gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  @keyframes timer {
+    from {
+      width: 100px;
+    }
+
+    to {
+      width: 0;
+    }
+  }
+
+  &__timer {
+    height: 3px;
+    width: 100px;
+    background-color: darkcyan;
+
+    animation: timer 10s linear;
   }
 }
 </style>
