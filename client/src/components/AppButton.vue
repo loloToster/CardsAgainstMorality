@@ -1,14 +1,20 @@
 <script setup lang="ts">
-withDefaults(
+import { computed } from "vue"
+import Color from "color"
+
+const props = withDefaults(
   defineProps<{ color?: string; hColor?: string; disabled?: boolean }>(),
   {
     color: "#6b6b6b",
-    hColor: "#7b7b7b",
     disabled: false
   }
 )
 
 defineEmits(["click"])
+
+const hoverColor = computed(() => {
+  return props.hColor || Color(props.color).darken(0.2).hex()
+})
 </script>
 
 <template>
@@ -16,7 +22,7 @@ defineEmits(["click"])
     @click="$emit('click')"
     :style="{
       '--color': color,
-      '--h-color': hColor
+      '--h-color': hoverColor
     }"
     :disabled="disabled"
     v-wave

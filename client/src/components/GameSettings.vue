@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive } from "vue"
+import { computed, reactive } from "vue"
 
 import { ApiPlayer, ApiCardPack } from "@backend/types"
 import { moveItem, copyToClipboard } from "../utils"
@@ -19,6 +19,14 @@ const state = reactive<{
 }>({
   unselectedPacks: [],
   selectedPacks: []
+})
+
+const sortedUnselectedPacks = computed(() => {
+  return [...state.unselectedPacks].sort((a, b) => a.id - b.id)
+})
+
+const sortedSelectedPacks = computed(() => {
+  return [...state.selectedPacks].sort((a, b) => a.id - b.id)
 })
 
 function selectPack(packId: number) {
@@ -52,28 +60,45 @@ function onCopyLink() {
 <template>
   <div class="settings">
     <div class="settings__left">
-      <div class="settings__panel">
-        <h3>Select packs that you want to use:</h3>
-        <div class="settings__packs">
-          <SimpleChip
-            @click="selectPack(pack.id)"
-            v-for="pack in state.unselectedPacks"
-            :key="pack.id"
-          >
-            {{ pack.name }}
-          </SimpleChip>
+      <div class="settings__panel settings__main">
+        <div class="settings__main__options">
+          <h3>Select packs that you want to use:</h3>
+          <div class="settings__packs">
+            <SimpleChip
+              v-for="pack in sortedUnselectedPacks"
+              @click="selectPack(pack.id)"
+              :color="pack.color || 'black'"
+              :key="pack.id"
+            >
+              {{ pack.name }}
+            </SimpleChip>
+          </div>
+          <h3>Selected packs:</h3>
+          <div class="settings__packs">
+            <SimpleChip
+              v-for="pack in sortedSelectedPacks"
+              @click="unselectPack(pack.id)"
+              :color="pack.color || 'black'"
+              class="settings__packs__pack"
+              :key="pack.id"
+            >
+              <span> {{ pack.name }}</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="14"
+                viewBox="0 96 960 960"
+                width="14"
+              >
+                <path
+                  d="m291 848-83-83 189-189-189-189 83-83 189 189 189-189 83 83-189 189 189 189-83 83-189-189-189 189Z"
+                />
+              </svg>
+            </SimpleChip>
+          </div>
         </div>
-        <h3>Selected packs:</h3>
-        <div class="settings__packs">
-          <SimpleChip
-            @click="unselectPack(pack.id)"
-            v-for="pack in state.selectedPacks"
-            :key="pack.id"
-          >
-            {{ pack.name }}
-          </SimpleChip>
+        <div class="settings__main__btns">
+          <AppButton @click="onStart()">Start</AppButton>
         </div>
-        <button @click="onStart()">Start</button>
       </div>
     </div>
     <div class="settings__right">
@@ -141,11 +166,6 @@ $main-gap: 16px;
   height: 80vh;
   margin: auto;
 
-  h3 {
-    margin-top: 0;
-    padding-top: 10px;
-  }
-
   &__left {
     height: 100%;
     flex-grow: 1;
@@ -165,18 +185,50 @@ $main-gap: 16px;
     width: 100%;
     height: 100%;
     border-radius: $main-gap;
+    padding: 14px;
+  }
+
+  &__main {
+    display: flex;
+    flex-direction: column;
+
+    h3 {
+      margin: 0;
+      margin-bottom: 8px;
+    }
+
+    &__options {
+      flex-grow: 1;
+    }
+
+    &__btns {
+      display: flex;
+      gap: 8px;
+
+      & > *:first-child {
+        margin-left: auto;
+      }
+    }
   }
 
   &__packs {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
+    margin-bottom: 8px;
+
+    &__pack {
+      gap: 3px;
+
+      svg {
+        fill: currentColor;
+      }
+    }
   }
 
   &__invite {
     $space: 14px;
 
-    padding: 12px;
     height: fit-content;
 
     h2,
@@ -230,11 +282,10 @@ $main-gap: 16px;
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 6px;
-    padding-bottom: 0;
+    margin-bottom: 6px;
 
     &:last-child {
-      padding-bottom: 6px;
+      padding-bottom: 0;
     }
 
     img {

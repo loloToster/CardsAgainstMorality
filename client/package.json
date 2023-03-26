@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@vueuse/core": "^9.13.0",
+    "color": "^4.2.3",
     "js-confetti": "^0.11.0",
     "socket.io-client": "^4.6.1",
     "v-wave": "^1.5.0",
@@ -17,6 +18,7 @@
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
+    "@types/color": "^3.0.3",
     "@vitejs/plugin-vue": "^4.0.0",
     "sass": "^1.59.2",
     "typescript": "^4.9.3",

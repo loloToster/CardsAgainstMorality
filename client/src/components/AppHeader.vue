@@ -52,6 +52,7 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
         <AppButton
           @click="logout"
           color="transparent"
+          hColor="#7b7b7b"
           class="header__profile-menu__btn"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
@@ -68,7 +69,6 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
       @click="router.push('/login')"
       class="header__link"
       color="darkcyan"
-      h-color="#007676"
     >
       Login
     </AppButton>
