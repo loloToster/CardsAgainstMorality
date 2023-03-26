@@ -12,6 +12,8 @@ export interface BlackCard {
   draw?: number | null
 }
 
+export type CurBlackCard = Required<BlackCard>
+
 export interface PlayerOpts<M> {
   game: Game<M>
   metadata?: M
@@ -43,7 +45,7 @@ export class Player<M = unknown> {
   }
 
   get chose(): boolean {
-    return (this.game.curBlackCard?.pick || 1) === this.choice.length
+    return this.game.curBlackCard?.pick === this.choice.length
   }
 
   removeCards(cards: number[]) {
@@ -111,7 +113,7 @@ export class Game<PM = unknown> {
 
   whiteCards: number[]
   blackCards: BlackCard[]
-  curBlackCard: BlackCard | null
+  curBlackCard: CurBlackCard | null
 
   tsar: Player<PM> | null
   players: Player<PM>[]
@@ -215,7 +217,14 @@ export class Game<PM = unknown> {
       this.tsar = this.players[0]
     }
 
-    this.curBlackCard = this.blackCards.pop() ?? null
+    const newBlackCard = this.blackCards.pop() ?? null
+    this.curBlackCard = newBlackCard
+      ? {
+        id: newBlackCard.id,
+        pick: newBlackCard.pick ?? 1,
+        draw: newBlackCard.draw ?? 1
+      }
+      : null
   }
 
   getChoices() {
