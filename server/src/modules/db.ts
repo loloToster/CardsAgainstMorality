@@ -25,14 +25,15 @@ class Database extends PrismaClient {
     await this.whiteCard.deleteMany()
     await this.cardPack.deleteMany()
 
-    for (let i = 0; i < cards.packs.length; i++) {
-      const pack = cards.packs[i]
-      const blackCards = cards.black.filter(c => c.pack === i)
-      const whiteCards = cards.white.filter(c => c.pack === i)
+    for (const pack of cards.packs) {
+      const blackCards = cards.black.filter(c => c.pack === pack.id)
+      const whiteCards = cards.white.filter(c => c.pack === pack.id)
 
       await this.cardPack.create({
         data: {
           name: pack.name,
+          color: pack.color,
+          icon: pack.icon,
           blackCards: {
             create: blackCards.map(c => ({ text: c.text, pick: c.pick }))
           },
@@ -53,7 +54,7 @@ class Database extends PrismaClient {
     return {
       id: card.id,
       text: card.text,
-      pick: card.pick,
+      pick: card.pick || 1,
       pack: card.pack.name
     }
   }

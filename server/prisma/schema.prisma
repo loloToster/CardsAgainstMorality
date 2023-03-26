@@ -19,6 +19,8 @@ model User {
 model CardPack {
     id         Int         @id @default(autoincrement())
     name       String
+    icon       String?
+    color      String?
     blackCards BlackCard[]
     whiteCards WhiteCard[]
 
@@ -28,7 +30,8 @@ model CardPack {
 model BlackCard {
     id     Int      @id @default(autoincrement())
     text   String
-    pick   Int      @default(1)
+    pick   Int?
+    draw   Int?
     packId Int      @map("pack_id")
     pack   CardPack @relation(fields: [packId], references: [id])
 

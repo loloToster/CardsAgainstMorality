@@ -8,8 +8,8 @@ export enum GameState {
 
 export interface BlackCard {
   id: number
-  pick?: number
-  draw?: number
+  pick?: number | null
+  draw?: number | null
 }
 
 export interface PlayerOpts<M> {
@@ -227,7 +227,7 @@ export class Game<PM = unknown> {
     return choices
   }
 
-  everyoneChose() {
+  everyoneChose(): boolean {
     return this.players.every(p => p.choice.length || p.isTsar)
   }
 
