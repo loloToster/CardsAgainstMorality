@@ -29,6 +29,8 @@
     "semi": ["error", "never"],
     "no-console": ["error", { "allow": ["warn", "error"] }],
     "no-duplicate-imports": "error",
-    "@typescript-eslint/no-namespace": "off"
+    "@typescript-eslint/no-namespace": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "vue/no-mutating-props": "off"
   }
 }
