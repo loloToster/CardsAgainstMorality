@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import BlackCardIcon from "../assets/black-card-icon.svg"
-import WhiteCardIcon from "../assets/white-card-icon.svg"
+import BlackCardIcon from "../assets/black-card-icon.svg?component"
+import WhiteCardIcon from "../assets/white-card-icon.svg?component"
 
 withDefaults(
   defineProps<{
@@ -26,8 +26,8 @@ defineEmits(["click"])
       <slot v-else></slot>
     </span>
     <div class="card__pack">
-      <img v-if="color === 'white'" :src="BlackCardIcon" />
-      <img v-else :src="WhiteCardIcon" />
+      <BlackCardIcon v-if="color === 'white'" />
+      <WhiteCardIcon v-else />
       <span>{{ pack }}</span>
     </div>
   </div>
@@ -58,7 +58,7 @@ $default-card-width: 226px;
   font-weight: bold;
   box-shadow: -3px 3px 10px -2px #242424;
 
-  img {
+  svg {
     display: inline-block;
     width: var(--main-icon-size);
     height: var(--main-icon-size);

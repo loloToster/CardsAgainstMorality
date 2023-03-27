@@ -6,7 +6,7 @@ import { moveItem, copyToClipboard } from "../utils"
 
 import AppButton from "./AppButton.vue"
 import AppLoader from "./AppLoader.vue"
-import SimpleChip from "./SimpleChip.vue"
+import GamePack from "./GamePack.vue"
 
 const props = defineProps<{ roomId: string; players: ApiPlayer[] }>()
 
@@ -71,36 +71,22 @@ function onCopyLink() {
         <div class="settings__main__options">
           <h3>Select packs that you want to use:</h3>
           <div class="settings__packs">
-            <SimpleChip
+            <GamePack
               v-for="pack in sortedUnselectedPacks"
               @click="selectPack(pack.id)"
-              :color="pack.color || 'black'"
+              :pack="pack"
               :key="pack.id"
-            >
-              {{ pack.name }}
-            </SimpleChip>
+            />
           </div>
           <h3>Selected packs:</h3>
           <div class="settings__packs">
-            <SimpleChip
+            <GamePack
               v-for="pack in sortedSelectedPacks"
               @click="unselectPack(pack.id)"
-              :color="pack.color || 'black'"
-              class="settings__packs__pack"
+              :pack="pack"
+              closable
               :key="pack.id"
-            >
-              <span> {{ pack.name }}</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="14"
-                viewBox="0 96 960 960"
-                width="14"
-              >
-                <path
-                  d="m291 848-83-83 189-189-189-189 83-83 189 189 189-189 83 83-189 189 189 189-83 83-189-189-189 189Z"
-                />
-              </svg>
-            </SimpleChip>
+            />
           </div>
         </div>
         <div class="settings__main__btns">
@@ -240,14 +226,6 @@ $main-gap: 16px;
     flex-wrap: wrap;
     gap: 4px;
     margin-bottom: 8px;
-
-    &__pack {
-      gap: 3px;
-
-      svg {
-        fill: currentColor;
-      }
-    }
   }
 
   &__invite {

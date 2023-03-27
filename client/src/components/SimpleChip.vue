@@ -24,7 +24,8 @@ const light = computed(() => {
 
 <style scoped lang="scss">
 .chip {
-  display: inline-flex;
+  display: flex;
+  gap: 4px;
   align-items: center;
   height: 32px;
   padding: 0 12px;
