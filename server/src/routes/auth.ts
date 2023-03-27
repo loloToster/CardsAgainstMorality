@@ -12,6 +12,11 @@ router.get("/logout", (req, res) => {
   res.redirect("/")
 })
 
+router.get(
+  "/anonymous",
+  passport.authenticate("custom", { successRedirect: "/" })
+)
+
 router.get("/google", passport.authenticate("google"))
 
 router.get(

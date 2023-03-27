@@ -1,6 +1,9 @@
 import passport from "passport"
 import db from "./db"
 
+import { User } from "@prisma/client"
+
+import { Strategy as AnonymousStrategy } from "passport-custom"
 import { Strategy as GoogleStrategy } from "passport-google-oauth20"
 import { Strategy as DiscordStrategy } from "passport-discord"
 import { Strategy as FacebookStrategy } from "passport-facebook"
@@ -29,12 +32,20 @@ export default () => {
     done(null, user.id)
   })
 
-  passport.deserializeUser(async (id, done) => {
-    if (typeof id !== "number") return done(new Error("Invalid id"))
-
+  passport.deserializeUser<User["id"]>(async (id, done) => {
     const user = await db.user.findUnique({ where: { id } })
     done(null, user)
   })
+
+  passport.use(
+    new AnonymousStrategy(async (req, done) => {
+      const user = await db.user.create({
+        data: { name: "Anonymous", strategyId: "ans" }
+      })
+
+      done(null, user)
+    })
+  )
 
   passport.use(
     new GoogleStrategy(

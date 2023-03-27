@@ -90,6 +90,7 @@ function onFallen(card: ApiRandomCard) {
         {{ TITLE }}
       </RouterLink>
       <AppButton
+        @click="loginWith('anonymous')"
         color="#080808"
         hColor="black"
         class="login__btn login__anonymous-btn"
