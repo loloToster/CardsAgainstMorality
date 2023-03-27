@@ -13,11 +13,15 @@ export interface PrevRound {
   imWinner: boolean
 }
 
+export type SyncData =
+  | { started: false }
+  | (NewRoundData & { started: true; choices?: ApiWhiteCard[][] })
+
 export interface ServerToClientSocketEvents {
   players: (data: { players: ApiPlayer[] }) => void
   "new-round": (data: NewRoundData & { prevRound?: PrevRound }) => void
   choices: (data: { choices: ApiWhiteCard[][] }) => void
-  rejoin: (data: NewRoundData & { choices?: ApiWhiteCard[][] }) => void
+  sync: (data: SyncData) => void
 }
 
 export interface ClientToServerSocketEvents {

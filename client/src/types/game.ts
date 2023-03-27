@@ -1,6 +1,7 @@
 import { ApiBlackCard, ApiWhiteCard } from "@backend/types"
 
 export enum GameStage {
+  UNKNOWN,
   NOT_STARTED,
   CHOOSING,
   TSAR_VERDICT

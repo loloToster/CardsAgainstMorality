@@ -111,8 +111,13 @@ export default (
     io.to(roomId).emit("choices", { choices })
   }
 
-  async function sendRejoinData(player: Player<PlayerMetadata>) {
+  async function sendSyncData(player: Player<PlayerMetadata>) {
     const { game } = player
+
+    if (game.state === GameState.NOT_STARTED) {
+      player.metadata?.socket.emit("sync", { started: false })
+      return
+    }
 
     if (!game.curBlackCard) return
 
@@ -131,13 +136,14 @@ export default (
     }
 
     const data = {
+      started: true,
       tsar: player.isTsar,
       blackCard,
       cards,
       choices
     }
 
-    player.metadata?.socket.emit("rejoin", data)
+    player.metadata?.socket.emit("sync", data)
   }
 
   io.on("connection", async socket => {
@@ -161,14 +167,13 @@ export default (
       player = foundPlayer
       player.metadata?.socket.disconnect()
       player.metadata = { socket, user, connected: true }
-
-      sendRejoinData(player)
     } else {
       player = game.addPlayer({ socket, user, connected: true })
     }
 
     socket.join(roomId)
 
+    sendSyncData(player)
     sendPlayers(roomId, game)
 
     socket.on("start", async settings => {
@@ -222,6 +227,7 @@ export default (
 
     socket.on("disconnect", () => {
       console.log("socket disconnected")
+      if (game.players.every(p => !p.metadata?.connected)) deleteRoom(roomId)
       if (player.metadata) player.metadata.connected = false
       sendPlayers(roomId, game)
     })

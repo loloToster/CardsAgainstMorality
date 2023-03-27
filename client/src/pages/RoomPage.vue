@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import { onUnmounted, reactive } from "vue"
+import { onMounted, onUnmounted, reactive, watch } from "vue"
 import { useRoute } from "vue-router"
 
-import { ApiPlayer } from "@backend/types"
-import { setAuth as setSocketAuth, socket } from "../contexts/socket"
+import type { ApiPlayer } from "@backend/types"
 import { GameStage, GameState } from "../types/game"
 
+import {
+  setAuth as setSocketAuth,
+  socket,
+  socketState
+} from "../contexts/socket"
+
+import AppLoader from "../components/AppLoader.vue"
 import GameView from "../components/GameView.vue"
 import GameSettings from "../components/GameSettings.vue"
 
@@ -18,7 +24,7 @@ const state = reactive<{
 })
 
 const gameState = reactive<GameState>({
-  stage: GameStage.NOT_STARTED,
+  stage: GameStage.UNKNOWN,
   imTsar: false,
   blackCard: { id: -1, text: "test", pack: "test pack", pick: 1 },
   cards: new Array(10).fill(null).map((_, i) => ({
@@ -53,7 +59,12 @@ socket.on("choices", ({ choices }) => {
   gameState.pickedCards = []
 })
 
-socket.on("rejoin", data => {
+socket.on("sync", data => {
+  if (!data.started) {
+    gameState.stage = GameStage.NOT_STARTED
+    return
+  }
+
   gameState.imTsar = data.tsar
   gameState.blackCard = data.blackCard
   gameState.cards = data.cards
@@ -82,18 +93,40 @@ function onVerdict(choiceIdx: number) {
   })
 }
 
+watch(
+  () => socketState.connected,
+  val => {
+    if (!val) gameState.stage = GameStage.UNKNOWN
+  }
+)
+
 const roomId = route.params.id
 setSocketAuth({ roomId })
-socket.connect()
+
+onMounted(() => {
+  socket.connect()
+})
 
 onUnmounted(() => {
+  socket.off("players")
+  socket.off("new-round")
+  socket.off("choices")
+  socket.off("sync")
+
   socket.disconnect()
 })
 </script>
 
 <template>
+  <div
+    v-if="gameState.stage === GameStage.UNKNOWN || !socketState.connected"
+    class="connecting"
+  >
+    <AppLoader outline-color="#242424" />
+    <span>Connecting to the game</span>
+  </div>
   <GameView
-    v-if="gameState.stage !== GameStage.NOT_STARTED"
+    v-else-if="gameState.stage !== GameStage.NOT_STARTED"
     :game-state="gameState"
     :players="state.players"
     @submit="onSubmit"
@@ -107,4 +140,21 @@ onUnmounted(() => {
   />
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.connecting {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: fit-content;
+  margin: auto;
+  margin-top: 20vh;
+  padding: 48px;
+  border: #c0c0c0 3px solid;
+  border-radius: 12px;
+
+  span {
+    margin-top: 30px;
+    font-size: 1.6rem;
+  }
+}
+</style>
