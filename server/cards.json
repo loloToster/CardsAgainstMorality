@@ -257,6 +257,11 @@
     {
       "name": "Test Pack",
       "id": 49
+    },
+    {
+      "name": "Family Edition",
+      "color": "#fefc74",
+      "id": 50
     }
   ],
   "black": [
@@ -3528,6 +3533,382 @@
       "pick": 2,
       "text": "<span class='pick'>____</span> & <span class='pick'>____</span>.",
       "pack": 49
+    },
+    {
+      "text": "Papa, come quickly! There, in the garden! Do you see ____? Tell me you see it, Papa!",
+      "pack": 50
+    },
+    {
+      "text": "Attention students! Principal Butthead is at home recovering from ____. We hope he'll be back soon.",
+      "pack": 50
+    },
+    {
+      "text": "I'm sorry, Jordan, but that's not an acceptable Science Fair project. That's just ____.",
+      "pack": 50
+    },
+    {
+      "text": "The warm August air was filled with change. Things were different, for Kayla was now ____.",
+      "pack": 50
+    },
+    {
+      "text": "This is gonna be the best sleepover ever. Once Mom goes to bed, it's time for ____!",
+      "pack": 50
+    },
+    {
+      "text": "Coming soon! Batman vs. ____.",
+      "pack": 50
+    },
+    {
+      "text": "Class, pay close attention. I will now demonstrate the physics of ____.",
+      "pack": 50
+    },
+    {
+      "text": "Hey Riley, I'll give you five bucks if you try ____.",
+      "pack": 50
+    },
+    {
+      "text": "Time to put on my favorite t-shirt, the one that says \"I heart ____.\"",
+      "pack": 50
+    },
+    {
+      "text": "My dad and I enjoy ____ together.",
+      "pack": 50
+    },
+    {
+      "text": "Hey, kids. I'm Sensei Todd. Today, I'm gonna teach you how to defend yourself against ____.",
+      "pack": 50
+    },
+    {
+      "text": "MY NAME CHUNGO. <br> CHUNGO LOVE ____.",
+      "pack": 50
+    },
+    {
+      "text": "Never fear, Captain ____ is here!",
+      "pack": 50
+    },
+    {
+      "text": "Kids, Dad is trying something new this week. It's called \"____.\"",
+      "pack": 50
+    },
+    {
+      "text": "Oh, no thank you, Mrs. Lee. I've had plenty of ____ for now.",
+      "pack": 50
+    },
+    {
+      "text": "There's nothing better than a peanut butter and ____ sandwich.",
+      "pack": 50
+    },
+    {
+      "text": "And over here is Picasso's most famous painting, \"Portrait of ____.\"",
+      "pack": 50
+    },
+    {
+      "text": "The aliens are here. They want ____.",
+      "pack": 50
+    },
+    {
+      "text": "They call me \"Mr. ____.\"",
+      "pack": 50
+    },
+    {
+      "text": "CHUNGO FEEL SICK. <br> CHUNGO NO LIKE ____ ANYMORE.",
+      "pack": 50
+    },
+    {
+      "text": "Mom!? You have to come pick me up! There's ____ at this party!",
+      "pack": 50
+    },
+    {
+      "text": "CNN breaking news! Over half of Americans are now ____.",
+      "pack": 50
+    },
+    {
+      "text": "On the next episode of Dora the Explorer, Dora explores ____.",
+      "pack": 50
+    },
+    {
+      "text": "Alright, which one of you little turds is responsible for ____?!",
+      "pack": 50
+    },
+    {
+      "text": "Ladies and gentlemen, I have discovered something amazing. I have discovered ____.",
+      "pack": 50
+    },
+    {
+      "text": "And in the blue corner, weighing in at 280 pounds, it's Tommy \"____\" Takahashi!",
+      "pack": 50
+    },
+    {
+      "text": "Outback Steakhouse: No rules. Just ____.",
+      "pack": 50
+    },
+    {
+      "text": "Ew. Grandpa smells like ____.",
+      "pack": 50
+    },
+    {
+      "text": "My name is Peter Parker. I was bitten by a radioactive spider, and now I'm ____.",
+      "pack": 50
+    },
+    {
+      "text": "Put on your helmet, strap on your goggles, and get ready for ____!",
+      "pack": 50
+    },
+    {
+      "text": "Attention students! This is Principal Butthead reminding you that we do not allow ____ in the hallway. Thank you.",
+      "pack": 50
+    },
+    {
+      "text": "What's about to take this school dance to the next level?",
+      "pack": 50
+    },
+    {
+      "text": "Little Miss Muffet Sat on a tuffet Eating her curds and ____.",
+      "pack": 50
+    },
+    {
+      "text": "All I want for Christmas is ____.",
+      "pack": 50
+    },
+    {
+      "text": "Me and my friends don't play with dolls anymore. We're into ____ now.",
+      "pack": 50
+    },
+    {
+      "text": "We're not supposed to go in the attic. My parents keep ____ in there.",
+      "pack": 50
+    },
+    {
+      "text": "Police! Arrest this man! He's ____.",
+      "pack": 50
+    },
+    {
+      "text": "My favorite dinosaur is \"____asaurus.\"",
+      "pack": 50
+    },
+    {
+      "text": "When I pooped, what came out of my butt?",
+      "pack": 50
+    },
+    {
+      "text": "I'm not like the other children. Toys bore me, and I don't care for sweets. I prefer ____.",
+      "pack": 50
+    },
+    {
+      "text": "I'm sorry, Mrs. Sanchez, but I couldn't finish my homework because of ____.",
+      "pack": 50
+    },
+    {
+      "text": "Oh Dark Lord, we show our devotion with a humble offering of ____!",
+      "pack": 50
+    },
+    {
+      "text": "Thanks for watching! If you want to see more vids of ____, smash that subscribe.",
+      "pack": 50
+    },
+    {
+      "text": "We're off to see the wizard, the wonderful wizard of ____!",
+      "pack": 50
+    },
+    {
+      "text": "What's all fun and games until somebody gets hurt?",
+      "pack": 50
+    },
+    {
+      "text": "Young lady, we do not allow ____ at the dinner table.",
+      "pack": 50
+    },
+    {
+      "text": "Welcome! We're glad you're here. Now sit back, relax, and enjoy ____.",
+      "pack": 50
+    },
+    {
+      "text": "My favorite book is The Amazing Adventures of ____.",
+      "pack": 50
+    },
+    {
+      "text": "Well, look what we have here! A big fancy man walkin' in like he's ____.",
+      "pack": 50
+    },
+    {
+      "text": "ENOUGH! I will not let ____ tear this family apart!",
+      "pack": 50
+    },
+    {
+      "text": "Rub a dub dub, ____ in a tub!",
+      "pack": 50
+    },
+    {
+      "text": "Madam President, we've run out of time. The only option is ____.",
+      "pack": 50
+    },
+    {
+      "text": "I have invented a new sport. I call it \"____ ball.\"",
+      "pack": 50
+    },
+    {
+      "text": "Hey, check out my band! We're called \"Rage Against ____.\"",
+      "pack": 50
+    },
+    {
+      "text": "Moms love ____.",
+      "pack": 50
+    },
+    {
+      "text": "Where do babies come from?",
+      "pack": 50
+    },
+    {
+      "text": "CHUNGO ANGRY.<br>CHUNGO DESTROY ____.",
+      "pack": 50
+    },
+    {
+      "text": "At school, I'm just Mandy. But at summer camp, I'm \"____ Mandy.\"",
+      "pack": 50
+    },
+    {
+      "text": "James Bond will return in \"No Time for ____.\"",
+      "pack": 50
+    },
+    {
+      "text": "It's BIG. It's SCARY. It's ____!",
+      "pack": 50
+    },
+    {
+      "text": "Disney proudly presents: \"____ on Ice.\"",
+      "pack": 50
+    },
+    {
+      "text": "What really killed the dinosaurs?",
+      "pack": 50
+    },
+    {
+      "text": "Beep beep! ____ coming through!",
+      "pack": 50
+    },
+    {
+      "text": "Now in bookstores: <i>Nancy Drew and the Mystery of</i> ____.",
+      "pack": 50
+    },
+    {
+      "text": "You don't love me, Sam. All you care about is ____.",
+      "pack": 50
+    },
+    {
+      "text": "Did you know that Benjamin Franklin invented ____?",
+      "pack": 50
+    },
+    {
+      "text": "One nation, under God, indivisible, with liberty and ____ for all.",
+      "pack": 50
+    },
+    {
+      "text": "The easiest way to tell me and my twin apart is that I have a freckle on my cheek and she's ____.",
+      "pack": 50
+    },
+    {
+      "text": "Hey guys. I just want to tell all my followers who are struggling with ____: it DOES get better.",
+      "pack": 50
+    },
+    {
+      "text": "Whoa there, partner! Looks like ____ spooked my horse.Princess Marigold, the kingdom is in danger! You must stop ____.",
+      "pack": 50
+    },
+    {
+      "text": "Shut up, Becky! At least I'm not ____.",
+      "pack": 50
+    },
+    {
+      "text": "I lost my arm in a ____ accident.",
+      "pack": 50
+    },
+    {
+      "text": "Isn't this great, honey? Just you, me, the kids, and ____.",
+      "pack": 50
+    },
+    {
+      "text": "Foolish child! Did you think you could escape from ____?",
+      "pack": 50
+    },
+    {
+      "text": "Girls just wanna have ____.",
+      "pack": 50
+    },
+    {
+      "text": "Run, run, as fast as you can. You can't catch me, I'm ____!",
+      "pack": 50
+    },
+    {
+      "text": "New from Mattel, it's ____ Barbie!",
+      "pack": 50
+    },
+    {
+      "text": "No fair! How come Chloe gets her own phone, and all I get is ____?",
+      "pack": 50
+    },
+    {
+      "text": "Bow before me, for I am the Queen of ____!",
+      "pack": 50
+    },
+    {
+      "text": "New from Hasbro! It's BUNGO: The Game of ____.",
+      "pack": 50
+    },
+    {
+      "text": "I don't really know what my mom's job is, but I think it has something to do with ____.",
+      "pack": 50
+    },
+    {
+      "text": "Our day at the water park was totally ruined by ____.",
+      "pack": 50
+    },
+    {
+      "text": "Charmander has evolved into ____!",
+      "pack": 50
+    },
+    {
+      "text": "What killed Old Jim?",
+      "pack": 50
+    },
+    {
+      "text": "Next from J.K. Rowling: Harry Potter and the Chamber of ____.",
+      "pack": 50
+    },
+    {
+      "text": "What's keeping Dad so busy in the garage?",
+      "pack": 50
+    },
+    {
+      "text": "Boys? No. ____? Yes!",
+      "pack": 50
+    },
+    {
+      "text": "ME HUNGRY. ME WANT ____.",
+      "pack": 50
+    },
+    {
+      "text": "Oh, that's my mom's friend Carl. He comes over and helps her with ____.",
+      "pack": 50
+    },
+    {
+      "text": "Guys, stop it! There's nothing funny about ____.",
+      "pack": 50
+    },
+    {
+      "text": "Huddle up, Wildcats! They may be bigger. They may be faster. But we've got a secret weapon: ____.",
+      "pack": 50
+    },
+    {
+      "text": "Coming to theaters this holiday season, \"Star Wars: The Rise of ____.\"",
+      "pack": 50
+    },
+    {
+      "text": "I do not fight for wealth. I do not fight for glory. I fight for ____!",
+      "pack": 50
+    },
+    {
+      "text": "Come on, Danny. All the cool kids are doin' it. Wanna try ____?",
+      "pack": 50
     }
   ],
   "white": [
@@ -15362,6 +15743,2034 @@
     {
       "text": "Making the printer work.",
       "pack": 21
+    },
+    {
+      "text": "A big wet kiss from Great Aunt Sharon.",
+      "pack": 50
+    },
+    {
+      "text": "A cloud that rains diarrhea.",
+      "pack": 50
+    },
+    {
+      "text": "A pirate with two peg arms, two peg legs, and a peg head.",
+      "pack": 50
+    },
+    {
+      "text": "Athena, Goddess of Wisdom.",
+      "pack": 50
+    },
+    {
+      "text": "Baby boomers.",
+      "pack": 50
+    },
+    {
+      "text": "Beautiful Grandma.",
+      "pack": 50
+    },
+    {
+      "text": "Defecating on the neighbor's lawn.",
+      "pack": 50
+    },
+    {
+      "text": "Eight hours of video games.",
+      "pack": 50
+    },
+    {
+      "text": "Going night-night.",
+      "pack": 50
+    },
+    {
+      "text": "Hanging out with Zendaya.",
+      "pack": 50
+    },
+    {
+      "text": "Kissing.",
+      "pack": 50
+    },
+    {
+      "text": "Mom on the lips.",
+      "pack": 50
+    },
+    {
+      "text": "Me, your dad.",
+      "pack": 50
+    },
+    {
+      "text": "Playing trumpet for the Mayor.",
+      "pack": 50
+    },
+    {
+      "text": "Ratzilla.",
+      "pack": 50
+    },
+    {
+      "text": "Teeny tiny turds.",
+      "pack": 50
+    },
+    {
+      "text": "That there tarantula.",
+      "pack": 50
+    },
+    {
+      "text": "The way Grandpa smells.",
+      "pack": 50
+    },
+    {
+      "text": "Three glasses of red wine.",
+      "pack": 50
+    },
+    {
+      "text": "Whatever Dad does at work.",
+      "pack": 50
+    },
+    {
+      "text": "Getting shot out of a cannon.",
+      "pack": 50
+    },
+    {
+      "text": "Jesus.",
+      "pack": 50
+    },
+    {
+      "text": "Eating pasta out of my pants.",
+      "pack": 50
+    },
+    {
+      "text": "A burrito smoothie.",
+      "pack": 50
+    },
+    {
+      "text": "A bear.",
+      "pack": 50
+    },
+    {
+      "text": "Old people.",
+      "pack": 50
+    },
+    {
+      "text": "My sister's stupid boyfriend.",
+      "pack": 50
+    },
+    {
+      "text": "Stuffing my underwear with pancakes.",
+      "pack": 50
+    },
+    {
+      "text": "Stinky Martha, the superhero that nobody likes.",
+      "pack": 50
+    },
+    {
+      "text": "My chainsaw.",
+      "pack": 50
+    },
+    {
+      "text": "Diarrhea.",
+      "pack": 50
+    },
+    {
+      "text": "Boogers.",
+      "pack": 50
+    },
+    {
+      "text": "The police.",
+      "pack": 50
+    },
+    {
+      "text": "Sniffing a dog's butt.",
+      "pack": 50
+    },
+    {
+      "text": "Horrible allergies.",
+      "pack": 50
+    },
+    {
+      "text": "Your face.",
+      "pack": 50
+    },
+    {
+      "text": "A gerbil named \"Gerbil.\"",
+      "pack": 50
+    },
+    {
+      "text": "Fartus Magnimus, God of Beans.",
+      "pack": 50
+    },
+    {
+      "text": "Rated-R stuff.",
+      "pack": 50
+    },
+    {
+      "text": "Blowing up the Moon.",
+      "pack": 50
+    },
+    {
+      "text": "Getting launched into space.",
+      "pack": 50
+    },
+    {
+      "text": "Likes.",
+      "pack": 50
+    },
+    {
+      "text": "A bird pooping on the president's head.",
+      "pack": 50
+    },
+    {
+      "text": "Chungo, the talking gorilla.",
+      "pack": 50
+    },
+    {
+      "text": "The way I feel when I see Kyle.",
+      "pack": 50
+    },
+    {
+      "text": "Hot gossip.",
+      "pack": 50
+    },
+    {
+      "text": "Forgetting to put on underwear.",
+      "pack": 50
+    },
+    {
+      "text": "Running full speed into a wall.",
+      "pack": 50
+    },
+    {
+      "text": "The Russians.",
+      "pack": 50
+    },
+    {
+      "text": "A black hole.",
+      "pack": 50
+    },
+    {
+      "text": "Putting my butt on stuff.",
+      "pack": 50
+    },
+    {
+      "text": "Racism, sexism, and homophobia.",
+      "pack": 50
+    },
+    {
+      "text": "Making the bees angry.",
+      "pack": 50
+    },
+    {
+      "text": "My strong, terrifying daughter.",
+      "pack": 50
+    },
+    {
+      "text": "A Democrat.",
+      "pack": 50
+    },
+    {
+      "text": "TikTok.",
+      "pack": 50
+    },
+    {
+      "text": "Cheeto fingers.",
+      "pack": 50
+    },
+    {
+      "text": "A huge honkin' carrot.",
+      "pack": 50
+    },
+    {
+      "text": "The country of Bolivia.",
+      "pack": 50
+    },
+    {
+      "text": "My parents.",
+      "pack": 50
+    },
+    {
+      "text": "Idiots.",
+      "pack": 50
+    },
+    {
+      "text": "Filling my butt with spaghetti.",
+      "pack": 50
+    },
+    {
+      "text": "Putting an apple in a little boy's mouth and roasting him for dinner.",
+      "pack": 50
+    },
+    {
+      "text": "Thousands of lasagna.",
+      "pack": 50
+    },
+    {
+      "text": "Climbing into a cow's butt.",
+      "pack": 50
+    },
+    {
+      "text": "War with Canada.",
+      "pack": 50
+    },
+    {
+      "text": "Mashing a banana into your belly button.",
+      "pack": 50
+    },
+    {
+      "text": "China.",
+      "pack": 50
+    },
+    {
+      "text": "Shrek.",
+      "pack": 50
+    },
+    {
+      "text": "Cavities.",
+      "pack": 50
+    },
+    {
+      "text": "Eating people.",
+      "pack": 50
+    },
+    {
+      "text": "Butts of all shapes and sizes.",
+      "pack": 50
+    },
+    {
+      "text": "A 40-piece Chicken McNuggets.",
+      "pack": 50
+    },
+    {
+      "text": "Climate change.",
+      "pack": 50
+    },
+    {
+      "text": "Barf.",
+      "pack": 50
+    },
+    {
+      "text": "A poop as big as Mom.",
+      "pack": 50
+    },
+    {
+      "text": "A couch that eats children.",
+      "pack": 50
+    },
+    {
+      "text": "Going to Hell.",
+      "pack": 50
+    },
+    {
+      "text": "The loose skin at the joint of the elbow known as \"the weenus.\"",
+      "pack": 50
+    },
+    {
+      "text": "A horse withno legs.",
+      "pack": 50
+    },
+    {
+      "text": "Fat stacks of cash.",
+      "pack": 50
+    },
+    {
+      "text": "Dora the Explorer.",
+      "pack": 50
+    },
+    {
+      "text": "Illegal drugs.",
+      "pack": 50
+    },
+    {
+      "text": "BULBASAUR.",
+      "pack": 50
+    },
+    {
+      "text": "Dad's meatloaf.",
+      "pack": 50
+    },
+    {
+      "text": "Extra-warm Pepsi.",
+      "pack": 50
+    },
+    {
+      "text": "The old man with the rake who lives down the dark and winding road.",
+      "pack": 50
+    },
+    {
+      "text": "Calling 9-1-1.",
+      "pack": 50
+    },
+    {
+      "text": "Spending my parents' hard-earned money.",
+      "pack": 50
+    },
+    {
+      "text": "Toe jam.",
+      "pack": 50
+    },
+    {
+      "text": "Hot lava.",
+      "pack": 50
+    },
+    {
+      "text": "Butt surgery.",
+      "pack": 50
+    },
+    {
+      "text": "Freeing allthe animals from the zoo.",
+      "pack": 50
+    },
+    {
+      "text": "A bountiful harvest of squashes and corns.",
+      "pack": 50
+    },
+    {
+      "text": "Bombs.",
+      "pack": 50
+    },
+    {
+      "text": "Boobies.",
+      "pack": 50
+    },
+    {
+      "text": "Respecting personal boundaries.",
+      "pack": 50
+    },
+    {
+      "text": "Having no idea what's going on.",
+      "pack": 50
+    },
+    {
+      "text": "John Wilkes Booth.",
+      "pack": 50
+    },
+    {
+      "text": "Getting married.",
+      "pack": 50
+    },
+    {
+      "text": "Politics.",
+      "pack": 50
+    },
+    {
+      "text": "Garbage.",
+      "pack": 50
+    },
+    {
+      "text": "Naked people.",
+      "pack": 50
+    },
+    {
+      "text": "This stupid game.",
+      "pack": 50
+    },
+    {
+      "text": "Biting a rich person.",
+      "pack": 50
+    },
+    {
+      "text": "Screaming at birds.",
+      "pack": 50
+    },
+    {
+      "text": "Getting stuck in the toilet.",
+      "pack": 50
+    },
+    {
+      "text": "Getting crushed by a piano.",
+      "pack": 50
+    },
+    {
+      "text": "Huge pants.",
+      "pack": 50
+    },
+    {
+      "text": "Mom's spaghetti.",
+      "pack": 50
+    },
+    {
+      "text": "An old, dirty cat with bad breath.",
+      "pack": 50
+    },
+    {
+      "text": "A corn dog.",
+      "pack": 50
+    },
+    {
+      "text": "My followers.",
+      "pack": 50
+    },
+    {
+      "text": "Principal Butthead.",
+      "pack": 50
+    },
+    {
+      "text": "A statue of a naked guy.",
+      "pack": 50
+    },
+    {
+      "text": "A tiny detective who solves tiny crimes.",
+      "pack": 50
+    },
+    {
+      "text": "Joining the army.",
+      "pack": 50
+    },
+    {
+      "text": "Witchcraft.",
+      "pack": 50
+    },
+    {
+      "text": "Taking out my eyeballs.",
+      "pack": 50
+    },
+    {
+      "text": "Sacrificing Uncle Tim.",
+      "pack": 50
+    },
+    {
+      "text": "Moving to Ohio.",
+      "pack": 50
+    },
+    {
+      "text": "A hundred screaming monkeys.",
+      "pack": 50
+    },
+    {
+      "text": "A wise old woman with no teeth and cloudy eyes.",
+      "pack": 50
+    },
+    {
+      "text": "Emotions.",
+      "pack": 50
+    },
+    {
+      "text": "Ham.",
+      "pack": 50
+    },
+    {
+      "text": "Clams.",
+      "pack": 50
+    },
+    {
+      "text": "Spider-Man.",
+      "pack": 50
+    },
+    {
+      "text": "Drinking out of the toilet and eating garbage.",
+      "pack": 50
+    },
+    {
+      "text": "Trying to catch that dang raccoon.",
+      "pack": 50
+    },
+    {
+      "text": "Slapping my huge belly.",
+      "pack": 50
+    },
+    {
+      "text": "The doll that watches me sleep.",
+      "pack": 50
+    },
+    {
+      "text": "Money.",
+      "pack": 50
+    },
+    {
+      "text": "LeBron James.",
+      "pack": 50
+    },
+    {
+      "text": "Father's forbidden chocolates.",
+      "pack": 50
+    },
+    {
+      "text": "Me.",
+      "pack": 50
+    },
+    {
+      "text": "Salmon.",
+      "pack": 50
+    },
+    {
+      "text": "Screaming the F-word.",
+      "pack": 50
+    },
+    {
+      "text": "A whole thing of cottage cheese.",
+      "pack": 50
+    },
+    {
+      "text": "Crab-walking from the toilet to get more toilet paper.",
+      "pack": 50
+    },
+    {
+      "text": "Mayonnaise.",
+      "pack": 50
+    },
+    {
+      "text": "Total world domination.",
+      "pack": 50
+    },
+    {
+      "text": "Failure.",
+      "pack": 50
+    },
+    {
+      "text": "JoJo Siwa.",
+      "pack": 50
+    },
+    {
+      "text": "Getting kicked in the nuts.",
+      "pack": 50
+    },
+    {
+      "text": "Farting and walking away.",
+      "pack": 50
+    },
+    {
+      "text": "Sharks with legs.",
+      "pack": 50
+    },
+    {
+      "text": "Triangles.",
+      "pack": 50
+    },
+    {
+      "text": "Ninjas.",
+      "pack": 50
+    },
+    {
+      "text": "The floor.",
+      "pack": 50
+    },
+    {
+      "text": "The whole family.",
+      "pack": 50
+    },
+    {
+      "text": "Bench pressing a horse.",
+      "pack": 50
+    },
+    {
+      "text": "Spiders.",
+      "pack": 50
+    },
+    {
+      "text": "Uranus.",
+      "pack": 50
+    },
+    {
+      "text": "A Republican.",
+      "pack": 50
+    },
+    {
+      "text": "Giving wedgies to my haters.",
+      "pack": 50
+    },
+    {
+      "text": "14 cheeseburgers, 6 large fries, and a medium Sprite.",
+      "pack": 50
+    },
+    {
+      "text": "Big Randy.",
+      "pack": 50
+    },
+    {
+      "text": "Blasting my math teacher into the sun.",
+      "pack": 50
+    },
+    {
+      "text": "Dreaming about boys.",
+      "pack": 50
+    },
+    {
+      "text": "Taking a dump in the pool.",
+      "pack": 50
+    },
+    {
+      "text": "Crying in the bathroom.",
+      "pack": 50
+    },
+    {
+      "text": "Happiness.",
+      "pack": 50
+    },
+    {
+      "text": "Poison.",
+      "pack": 50
+    },
+    {
+      "text": "My sister's hair all over the place.",
+      "pack": 50
+    },
+    {
+      "text": "A scoop of tuna.",
+      "pack": 50
+    },
+    {
+      "text": "Doing karate.",
+      "pack": 50
+    },
+    {
+      "text": "Hades, God of the Underworld.",
+      "pack": 50
+    },
+    {
+      "text": "Lil Nas X.",
+      "pack": 50
+    },
+    {
+      "text": "Dad's famous poops.",
+      "pack": 50
+    },
+    {
+      "text": "Squirty cheese.",
+      "pack": 50
+    },
+    {
+      "text": "My girlfriend, who goes to another school.",
+      "pack": 50
+    },
+    {
+      "text": "Mowing the stupid lawn.",
+      "pack": 50
+    },
+    {
+      "text": "Slapping that butt.",
+      "pack": 50
+    },
+    {
+      "text": "Questioning authority.",
+      "pack": 50
+    },
+    {
+      "text": "Chugging a gallon of milk and then vomiting a gallon of milk.",
+      "pack": 50
+    },
+    {
+      "text": "Farting a lot today.",
+      "pack": 50
+    },
+    {
+      "text": "Going bald.",
+      "pack": 50
+    },
+    {
+      "text": "Germs.",
+      "pack": 50
+    },
+    {
+      "text": "Nuclear war.",
+      "pack": 50
+    },
+    {
+      "text": "Barfing into a popcorn bucket.",
+      "pack": 50
+    },
+    {
+      "text": "A cursed llama with no eyes.",
+      "pack": 50
+    },
+    {
+      "text": "The wettest fart you ever heard.",
+      "pack": 50
+    },
+    {
+      "text": "Shaving Dad's back.",
+      "pack": 50
+    },
+    {
+      "text": "Overthrowing the government.",
+      "pack": 50
+    },
+    {
+      "text": "Murdering.",
+      "pack": 50
+    },
+    {
+      "text": "Exploding.",
+      "pack": 50
+    },
+    {
+      "text": "Bleeding.",
+      "pack": 50
+    },
+    {
+      "text": "The oppressive system of capitalism.",
+      "pack": 50
+    },
+    {
+      "text": "Supreme Court Justice Ruth Bader Ginsburg.",
+      "pack": 50
+    },
+    {
+      "text": "A long, hot pee.",
+      "pack": 50
+    },
+    {
+      "text": "Throwing up double peace signs with my besties at Starbucks.",
+      "pack": 50
+    },
+    {
+      "text": "A balloon filled with chili.",
+      "pack": 50
+    },
+    {
+      "text": "The dishes.",
+      "pack": 50
+    },
+    {
+      "text": "The freedom of speech.",
+      "pack": 50
+    },
+    {
+      "text": "Egg salad.",
+      "pack": 50
+    },
+    {
+      "text": "Mom's friend, Donna.",
+      "pack": 50
+    },
+    {
+      "text": "Rich people.",
+      "pack": 50
+    },
+    {
+      "text": "Pirate music.",
+      "pack": 50
+    },
+    {
+      "text": "Being a dinosaur.",
+      "pack": 50
+    },
+    {
+      "text": "A fake kid made out of wood.",
+      "pack": 50
+    },
+    {
+      "text": "Homework.",
+      "pack": 50
+    },
+    {
+      "text": "Batman.",
+      "pack": 50
+    },
+    {
+      "text": "A dead body.",
+      "pack": 50
+    },
+    {
+      "text": "Drinking a whole bottle of ranch.",
+      "pack": 50
+    },
+    {
+      "text": "Destroying the planet.",
+      "pack": 50
+    },
+    {
+      "text": "Living in a pineapple under the sea.",
+      "pack": 50
+    },
+    {
+      "text": "Pizza.",
+      "pack": 50
+    },
+    {
+      "text": "This pumpkin.",
+      "pack": 50
+    },
+    {
+      "text": "Extremely tight.",
+      "pack": 50
+    },
+    {
+      "text": "underpants.",
+      "pack": 50
+    },
+    {
+      "text": "A nice, warm glass of pee.",
+      "pack": 50
+    },
+    {
+      "text": "Poseidon, Lord of the Sea.",
+      "pack": 50
+    },
+    {
+      "text": "Complaining.",
+      "pack": 50
+    },
+    {
+      "text": "Bursting into flames.",
+      "pack": 50
+    },
+    {
+      "text": "Spawning sheep.",
+      "pack": 50
+    },
+    {
+      "text": "My whole body getting big and strong and beautiful.",
+      "pack": 50
+    },
+    {
+      "text": "Big, juicy pimples.",
+      "pack": 50
+    },
+    {
+      "text": "The humble earthworm.",
+      "pack": 50
+    },
+    {
+      "text": "The garbage man.",
+      "pack": 50
+    },
+    {
+      "text": "A big, and I mean BIG turtle.",
+      "pack": 50
+    },
+    {
+      "text": "Your mom!",
+      "pack": 50
+    },
+    {
+      "text": "The octopusstuck to my face.",
+      "pack": 50
+    },
+    {
+      "text": "Dying of old age.",
+      "pack": 50
+    },
+    {
+      "text": "Smashing the patriarchy.",
+      "pack": 50
+    },
+    {
+      "text": "Screaming into a can of Pringles.",
+      "pack": 50
+    },
+    {
+      "text": "Grandpa.",
+      "pack": 50
+    },
+    {
+      "text": "Shutting up.",
+      "pack": 50
+    },
+    {
+      "text": "Silence.",
+      "pack": 50
+    },
+    {
+      "text": "My annoying brother.",
+      "pack": 50
+    },
+    {
+      "text": "My future husband.",
+      "pack": 50
+    },
+    {
+      "text": "A hot air balloon powered by fart gas.",
+      "pack": 50
+    },
+    {
+      "text": "Sitting on the toilet and going poop.",
+      "pack": 50
+    },
+    {
+      "text": "A screaming soccer dad.",
+      "pack": 50
+    },
+    {
+      "text": "Cocktail weenies.",
+      "pack": 50
+    },
+    {
+      "text": "The British.",
+      "pack": 50
+    },
+    {
+      "text": "Voldemort.",
+      "pack": 50
+    },
+    {
+      "text": "Science.",
+      "pack": 50
+    },
+    {
+      "text": "Picking my nose and eating it.",
+      "pack": 50
+    },
+    {
+      "text": "Having a really big head.",
+      "pack": 50
+    },
+    {
+      "text": "A dead whale.",
+      "pack": 50
+    },
+    {
+      "text": "Fortnite.",
+      "pack": 50
+    },
+    {
+      "text": "The power of the Dark Side.",
+      "pack": 50
+    },
+    {
+      "text": "Big butt cheeks filled with poop.",
+      "pack": 50
+    },
+    {
+      "text": "My friend Steve.",
+      "pack": 50
+    },
+    {
+      "text": "Violence.",
+      "pack": 50
+    },
+    {
+      "text": "Magic: The Gathering.",
+      "pack": 50
+    },
+    {
+      "text": "Eating toenail clippings.",
+      "pack": 50
+    },
+    {
+      "text": "Using balloons as boobies.",
+      "pack": 50
+    },
+    {
+      "text": "My dang kids.",
+      "pack": 50
+    },
+    {
+      "text": "Squeezing a lemon into my eye.",
+      "pack": 50
+    },
+    {
+      "text": "Tombus, the talking rhombus.",
+      "pack": 50
+    },
+    {
+      "text": "Greta Thunberg.",
+      "pack": 50
+    },
+    {
+      "text": "Ellen.",
+      "pack": 50
+    },
+    {
+      "text": "Uncle Bob.",
+      "pack": 50
+    },
+    {
+      "text": "Outback Steakhouse.",
+      "pack": 50
+    },
+    {
+      "text": "Dwayne \"The Rock\" Johnson.",
+      "pack": 50
+    },
+    {
+      "text": "A baby with a full mustache.",
+      "pack": 50
+    },
+    {
+      "text": "Getting hit in the face with a soccer ball.",
+      "pack": 50
+    },
+    {
+      "text": "Eating a whole roll of toilet paper.",
+      "pack": 50
+    },
+    {
+      "text": "The bacon.",
+      "pack": 50
+    },
+    {
+      "text": "The first female president of the United States.",
+      "pack": 50
+    },
+    {
+      "text": "Falling off a mountain.",
+      "pack": 50
+    },
+    {
+      "text": "Person milk.",
+      "pack": 50
+    },
+    {
+      "text": "Pink eye.",
+      "pack": 50
+    },
+    {
+      "text": "Pork.",
+      "pack": 50
+    },
+    {
+      "text": "The government.",
+      "pack": 50
+    },
+    {
+      "text": "Nunchucks.",
+      "pack": 50
+    },
+    {
+      "text": "Nothing.",
+      "pack": 50
+    },
+    {
+      "text": "GOOOAAALLLL!!!",
+      "pack": 50
+    },
+    {
+      "text": "Mom's new haircut.",
+      "pack": 50
+    },
+    {
+      "text": "Happy daddies with happy sandals.",
+      "pack": 50
+    },
+    {
+      "text": "Giggling and farting and slurping milkshakes.",
+      "pack": 50
+    },
+    {
+      "text": "Ice pee.",
+      "pack": 50
+    },
+    {
+      "text": "Obama.",
+      "pack": 50
+    },
+    {
+      "text": "Twerking.",
+      "pack": 50
+    },
+    {
+      "text": "Reading my sister's diary.",
+      "pack": 50
+    },
+    {
+      "text": "The ice cream man.",
+      "pack": 50
+    },
+    {
+      "text": "Love.",
+      "pack": 50
+    },
+    {
+      "text": "Stank breath.",
+      "pack": 50
+    },
+    {
+      "text": "Living in the dumpster.",
+      "pack": 50
+    },
+    {
+      "text": "Having a baby.",
+      "pack": 50
+    },
+    {
+      "text": "Shoplifting.",
+      "pack": 50
+    },
+    {
+      "text": "My father, who is a walrus.",
+      "pack": 50
+    },
+    {
+      "text": "The dentist.",
+      "pack": 50
+    },
+    {
+      "text": "Aunt Linda.",
+      "pack": 50
+    },
+    {
+      "text": "One tough mama.",
+      "pack": 50
+    },
+    {
+      "text": "Releasing the falcons!",
+      "pack": 50
+    },
+    {
+      "text": "Literally ruining my life.",
+      "pack": 50
+    },
+    {
+      "text": "Flushing myself down the toilet.",
+      "pack": 50
+    },
+    {
+      "text": "Fire farts.",
+      "pack": 50
+    },
+    {
+      "text": "Lice.",
+      "pack": 50
+    },
+    {
+      "text": "A killer clown.",
+      "pack": 50
+    },
+    {
+      "text": "Blossoming into a beautiful young man.",
+      "pack": 50
+    },
+    {
+      "text": "Wiping my butt.",
+      "pack": 50
+    },
+    {
+      "text": "Saying mean stuff and making people feel bad.",
+      "pack": 50
+    },
+    {
+      "text": "Beyonc\u0102\u00a9.",
+      "pack": 50
+    },
+    {
+      "text": "A truck.",
+      "pack": 50
+    },
+    {
+      "text": "Only beans.",
+      "pack": 50
+    },
+    {
+      "text": "The beautiful potato.",
+      "pack": 50
+    },
+    {
+      "text": "Legs.",
+      "pack": 50
+    },
+    {
+      "text": "The woman I'm going to marry one day.",
+      "pack": 50
+    },
+    {
+      "text": "Unleashing a hell demon that will destroy our world.",
+      "pack": 50
+    },
+    {
+      "text": "Feminism.",
+      "pack": 50
+    },
+    {
+      "text": "Lighting stuff on fire.",
+      "pack": 50
+    },
+    {
+      "text": "Turning 40.",
+      "pack": 50
+    },
+    {
+      "text": "Getting a skull tattoo.",
+      "pack": 50
+    },
+    {
+      "text": "An invisible giant who takes giant, visible poops.",
+      "pack": 50
+    },
+    {
+      "text": "A cowboy who is half boy, half cow.",
+      "pack": 50
+    },
+    {
+      "text": "The longest tongue in the world.",
+      "pack": 50
+    },
+    {
+      "text": "Josh.",
+      "pack": 50
+    },
+    {
+      "text": "Locking Mother in the pantry.",
+      "pack": 50
+    },
+    {
+      "text": "Ariana Grande.",
+      "pack": 50
+    },
+    {
+      "text": "Puberty.",
+      "pack": 50
+    },
+    {
+      "text": "A glorious beard.",
+      "pack": 50
+    },
+    {
+      "text": "All of my teeth falling out.",
+      "pack": 50
+    },
+    {
+      "text": "Floating through the void of space and time.",
+      "pack": 50
+    },
+    {
+      "text": "Farting, barfing, and passing out.",
+      "pack": 50
+    },
+    {
+      "text": "Flamin' Hot Cheetos.",
+      "pack": 50
+    },
+    {
+      "text": "Snakes.",
+      "pack": 50
+    },
+    {
+      "text": "Free ice cream, yo.",
+      "pack": 50
+    },
+    {
+      "text": "Screaming and screaming and never waking up.",
+      "pack": 50
+    },
+    {
+      "text": "Running away from home.",
+      "pack": 50
+    },
+    {
+      "text": "Using my butt as a microwave.",
+      "pack": 50
+    },
+    {
+      "text": "Glen's fabulous body.",
+      "pack": 50
+    },
+    {
+      "text": "Gluten.",
+      "pack": 50
+    },
+    {
+      "text": "Wakanda.",
+      "pack": 50
+    },
+    {
+      "text": "Many wolves.",
+      "pack": 50
+    },
+    {
+      "text": "One long hair growing out of a mole.",
+      "pack": 50
+    },
+    {
+      "text": "A butt that eats underwear.",
+      "pack": 50
+    },
+    {
+      "text": "Poo-poo.",
+      "pack": 50
+    },
+    {
+      "text": "Mooing.",
+      "pack": 50
+    },
+    {
+      "text": "Robbing a bank.",
+      "pack": 50
+    },
+    {
+      "text": "Punching everyone.",
+      "pack": 50
+    },
+    {
+      "text": "How much wood a woodchuck would chuck if a woodchuck could chuck wood.",
+      "pack": 50
+    },
+    {
+      "text": "Swords.",
+      "pack": 50
+    },
+    {
+      "text": "Kevin's mom.",
+      "pack": 50
+    },
+    {
+      "text": "Getting scalded in the face with hot beans.",
+      "pack": 50
+    },
+    {
+      "text": "Chest hair.",
+      "pack": 50
+    },
+    {
+      "text": "My annoying sister.",
+      "pack": 50
+    },
+    {
+      "text": "Getting slapped with a fish.",
+      "pack": 50
+    },
+    {
+      "text": "Harry Potter.",
+      "pack": 50
+    },
+    {
+      "text": "Peeing sand.",
+      "pack": 50
+    },
+    {
+      "text": "Being French, hoh-hoh-hoh!",
+      "pack": 50
+    },
+    {
+      "text": "Guacamole.",
+      "pack": 50
+    },
+    {
+      "text": "Getting naked.",
+      "pack": 50
+    },
+    {
+      "text": "A super angry cat I found outside.",
+      "pack": 50
+    },
+    {
+      "text": "Slappy Spatchy, the game where you slap each other with spatulas. <br> Learn more at www.SlappySpatchy.com",
+      "pack": 50
+    },
+    {
+      "text": "A pregnant person.",
+      "pack": 50
+    },
+    {
+      "text": "A bunch of dead squirrels on a trampoline.",
+      "pack": 50
+    },
+    {
+      "text": "Grandma panties.",
+      "pack": 50
+    },
+    {
+      "text": "Thick, nasty burps.",
+      "pack": 50
+    },
+    {
+      "text": "Having no bones.",
+      "pack": 50
+    },
+    {
+      "text": "Famous peanut scientist George Washington Carver.",
+      "pack": 50
+    },
+    {
+      "text": "Saving up my boogers for ten years and then building the world's largest booger.",
+      "pack": 50
+    },
+    {
+      "text": "The president.",
+      "pack": 50
+    },
+    {
+      "text": "A hug.",
+      "pack": 50
+    },
+    {
+      "text": "The Dark Lord.",
+      "pack": 50
+    },
+    {
+      "text": "Being super serious right now.",
+      "pack": 50
+    },
+    {
+      "text": "Freeing a fart from its butt prison.",
+      "pack": 50
+    },
+    {
+      "text": "An order of mozzarella sticks.",
+      "pack": 50
+    },
+    {
+      "text": "Fake news.",
+      "pack": 50
+    },
+    {
+      "text": "The baby.",
+      "pack": 50
+    },
+    {
+      "text": "Like a million alligators.",
+      "pack": 50
+    },
+    {
+      "text": "Big, slappy hands.",
+      "pack": 50
+    },
+    {
+      "text": "Beer.",
+      "pack": 50
+    },
+    {
+      "text": "Spit.",
+      "pack": 50
+    },
+    {
+      "text": "The fifth graders.",
+      "pack": 50
+    },
+    {
+      "text": "Licking a goat.",
+      "pack": 50
+    },
+    {
+      "text": "A flamethrower.",
+      "pack": 50
+    },
+    {
+      "text": "Drama!",
+      "pack": 50
+    },
+    {
+      "text": "Old Jim's Steamy Butt Sauce.",
+      "pack": 50
+    },
+    {
+      "text": "Going to the emergency room.",
+      "pack": 50
+    },
+    {
+      "text": "Sitting atop a pile of tuna, like some kind of tuna queen.",
+      "pack": 50
+    },
+    {
+      "text": "Girls.",
+      "pack": 50
+    },
+    {
+      "text": "A Pringle.",
+      "pack": 50
+    },
+    {
+      "text": "Never showering.",
+      "pack": 50
+    },
+    {
+      "text": "Naptime.",
+      "pack": 50
+    },
+    {
+      "text": "The gym teacher.",
+      "pack": 50
+    },
+    {
+      "text": "Coming back from the dead.",
+      "pack": 50
+    },
+    {
+      "text": "Burning books.",
+      "pack": 50
+    },
+    {
+      "text": "Falling in love.",
+      "pack": 50
+    },
+    {
+      "text": "Tossed salads and scrambled eggs.",
+      "pack": 50
+    },
+    {
+      "text": "Building a ladder of hot dogs to the moon.",
+      "pack": 50
+    },
+    {
+      "text": "Practicing kissing.",
+      "pack": 50
+    },
+    {
+      "text": "Eating a lightning bug to gain its lightning powers.",
+      "pack": 50
+    },
+    {
+      "text": "Slowly turning into cheese.",
+      "pack": 50
+    },
+    {
+      "text": "Whispering secrets to my best friend, Turkey.",
+      "pack": 50
+    },
+    {
+      "text": "Ear wax.",
+      "pack": 50
+    },
+    {
+      "text": "Knives.",
+      "pack": 50
+    },
+    {
+      "text": "Stuff.",
+      "pack": 50
+    },
+    {
+      "text": "Taking a selfie.",
+      "pack": 50
+    },
+    {
+      "text": "Dancing with my son.",
+      "pack": 50
+    },
+    {
+      "text": "Punching a guy through a wall.",
+      "pack": 50
+    },
+    {
+      "text": "Nipples.",
+      "pack": 50
+    },
+    {
+      "text": "Cat pee.",
+      "pack": 50
+    },
+    {
+      "text": "Dump cake.",
+      "pack": 50
+    },
+    {
+      "text": "Billie Eilish.",
+      "pack": 50
+    },
+    {
+      "text": "Steven Universe.",
+      "pack": 50
+    },
+    {
+      "text": "Elegant party hats.",
+      "pack": 50
+    },
+    {
+      "text": "Santa Claus.",
+      "pack": 50
+    },
+    {
+      "text": "The gluteus maximus.",
+      "pack": 50
+    },
+    {
+      "text": "Baby Yoda.",
+      "pack": 50
+    },
+    {
+      "text": "Peeing in the cat's litter box.",
+      "pack": 50
+    },
+    {
+      "text": "A big sad dragon with no friends.",
+      "pack": 50
+    },
+    {
+      "text": "A big whiny cry-baby.",
+      "pack": 50
+    },
+    {
+      "text": "Seymour Butts.",
+      "pack": 50
+    },
+    {
+      "text": "The bus driver.",
+      "pack": 50
+    },
+    {
+      "text": "Getting run over by a train.",
+      "pack": 50
+    },
+    {
+      "text": "Spinning and barfing.",
+      "pack": 50
+    },
+    {
+      "text": "Some freakin' privacy.",
+      "pack": 50
+    },
+    {
+      "text": "Butt hair.",
+      "pack": 50
+    },
+    {
+      "text": "Having many husbands.",
+      "pack": 50
+    },
+    {
+      "text": "Making the bathroom smell.",
+      "pack": 50
+    },
+    {
+      "text": "Coffee.",
+      "pack": 50
+    },
+    {
+      "text": "Anime.",
+      "pack": 50
+    },
+    {
+      "text": "The sweet honking of Karen's bassoon.",
+      "pack": 50
+    },
+    {
+      "text": "Pooping in a bag and lighting it on fire.",
+      "pack": 50
+    },
+    {
+      "text": "Space lasers.",
+      "pack": 50
+    },
+    {
+      "text": "Being dead.",
+      "pack": 50
+    },
+    {
+      "text": "Pooping barf forever.",
+      "pack": 50
+    },
+    {
+      "text": "FOOOOD FIIIIIIIIIIIIIIIIIGHT!!!",
+      "pack": 50
+    },
+    {
+      "text": "Wearing high heels.",
+      "pack": 50
+    },
+    {
+      "text": "A long, long snake.",
+      "pack": 50
+    },
+    {
+      "text": "Getting trampled by horses.",
+      "pack": 50
+    },
+    {
+      "text": "The babysitter.",
+      "pack": 50
+    },
+    {
+      "text": "The lunch lady.",
+      "pack": 50
+    },
+    {
+      "text": "Peeing on my poopy.",
+      "pack": 50
+    },
+    {
+      "text": "Not wearing pants.",
+      "pack": 50
+    },
+    {
+      "text": "Meatballs, meatballs, meatballs!",
+      "pack": 50
+    },
+    {
+      "text": "Finding Waldo.",
+      "pack": 50
+    },
+    {
+      "text": "Going around sniffing people's armpits.",
+      "pack": 50
+    },
+    {
+      "text": "The divorce.",
+      "pack": 50
+    },
+    {
+      "text": "Diaper beans.",
+      "pack": 50
+    },
+    {
+      "text": "Cigarettes.",
+      "pack": 50
+    },
+    {
+      "text": "Getting my ponytail stuck in my butt.",
+      "pack": 50
+    },
+    {
+      "text": "Looking into people's windows.",
+      "pack": 50
+    },
+    {
+      "text": "Sucking at life.",
+      "pack": 50
+    },
+    {
+      "text": "Crossbows.",
+      "pack": 50
+    },
+    {
+      "text": "Evil.",
+      "pack": 50
+    },
+    {
+      "text": "A big rock.",
+      "pack": 50
+    },
+    {
+      "text": "Rubbing lotion on a hairless cat.",
+      "pack": 50
+    },
+    {
+      "text": "Goblins.",
+      "pack": 50
+    },
+    {
+      "text": "Nasty Cousin Amber.",
+      "pack": 50
+    },
+    {
+      "text": "Tongue kissing.",
+      "pack": 50
+    },
+    {
+      "text": "Abraham Lincoln.",
+      "pack": 50
+    },
+    {
+      "text": "Covering myself with ketchup and mustard because I am hot dog.",
+      "pack": 50
+    },
+    {
+      "text": "Hot, fresh doodies.",
+      "pack": 50
+    },
+    {
+      "text": "Feet.",
+      "pack": 50
+    },
+    {
+      "text": "Sadness.",
+      "pack": 50
+    },
+    {
+      "text": "Going beast mode.",
+      "pack": 50
+    },
+    {
+      "text": "An owl that hates you.",
+      "pack": 50
+    },
+    {
+      "text": "A doll that pees real pee!",
+      "pack": 50
+    },
+    {
+      "text": "A naked lady in a painting.",
+      "pack": 50
+    },
+    {
+      "text": "Chunks.",
+      "pack": 50
+    },
+    {
+      "text": "Some weird guy.",
+      "pack": 50
+    },
+    {
+      "text": "Getting a girlfriend.",
+      "pack": 50
+    },
+    {
+      "text": "Falling in love with a hot dog.",
+      "pack": 50
+    },
+    {
+      "text": "Throwing stuff at other stuff.",
+      "pack": 50
+    },
+    {
+      "text": "Hogs.",
+      "pack": 50
+    },
+    {
+      "text": "A turd that just won't flush.",
+      "pack": 50
+    },
+    {
+      "text": "The entire state of Texas.",
+      "pack": 50
+    },
+    {
+      "text": "Showing everyone my butt.",
+      "pack": 50
+    },
+    {
+      "text": "My big donkey brother.",
+      "pack": 50
+    },
+    {
+      "text": "The huge, stupid moon.",
+      "pack": 50
+    },
+    {
+      "text": "Math.",
+      "pack": 50
+    },
+    {
+      "text": "Pee-pee.",
+      "pack": 50
+    },
+    {
+      "text": "Dinner.",
+      "pack": 50
+    },
+    {
+      "text": "Butthole.",
+      "pack": 50
+    },
+    {
+      "text": "Smelling like onions.",
+      "pack": 50
+    },
+    {
+      "text": "Being fake.",
+      "pack": 50
+    },
+    {
+      "text": "Peer pressure.",
+      "pack": 50
+    },
+    {
+      "text": "Peeing in my backpack.",
+      "pack": 50
+    },
+    {
+      "text": "Bad parenting.",
+      "pack": 50
+    },
+    {
+      "text": "Mom's butt.",
+      "pack": 50
+    },
+    {
+      "text": "One weird lookin' toe.",
+      "pack": 50
+    },
+    {
+      "text": "You.",
+      "pack": 50
+    },
+    {
+      "text": "Boys.",
+      "pack": 50
+    },
+    {
+      "text": "Sitting on a cake.",
+      "pack": 50
+    },
+    {
+      "text": "Teaching a chicken to kill.",
+      "pack": 50
+    },
+    {
+      "text": "The middle finger.",
+      "pack": 50
+    },
+    {
+      "text": "A bra.",
+      "pack": 50
+    },
+    {
+      "text": "Being famous on YouTube.",
+      "pack": 50
+    },
+    {
+      "text": "Cream.",
+      "pack": 50
+    },
+    {
+      "text": "Balls.",
+      "pack": 50
+    },
+    {
+      "text": "Having no friends.",
+      "pack": 50
+    },
+    {
+      "text": "Peeing into everyone's mouth.",
+      "pack": 50
+    },
+    {
+      "text": "Gluing my butt cheeks together.",
+      "pack": 50
+    },
+    {
+      "text": "How school slowly breaks your spirit and drains your will to live.",
+      "pack": 50
+    },
+    {
+      "text": "A Pok\u0102\u00a9mon named \"Jim.\"",
+      "pack": 50
+    },
+    {
+      "text": "True love's kiss.",
+      "pack": 50
+    },
+    {
+      "text": "Total crap.",
+      "pack": 50
+    },
+    {
+      "text": "Cool sunglasses.",
+      "pack": 50
+    },
+    {
+      "text": "Literally dying from the smell of a fart.",
+      "pack": 50
+    },
+    {
+      "text": "Snot bubbles.",
+      "pack": 50
+    },
+    {
+      "text": "Doing crimes and going to jail.",
+      "pack": 50
+    },
+    {
+      "text": "This goat, who is my friend.",
+      "pack": 50
+    },
+    {
+      "text": "Aliens.",
+      "pack": 50
+    },
+    {
+      "text": "School.",
+      "pack": 50
+    },
+    {
+      "text": "A cow.",
+      "pack": 50
+    },
+    {
+      "text": "The terrible winter of 1609.",
+      "pack": 50
+    },
+    {
+      "text": "Getting sucked into a jet engine.",
+      "pack": 50
+    },
+    {
+      "text": "Not breathing.",
+      "pack": 50
+    },
+    {
+      "text": "Licking a used band-aid.",
+      "pack": 50
+    },
+    {
+      "text": "Braiding my armpit hair.",
+      "pack": 50
+    },
+    {
+      "text": "Waking up inside of a spider web.",
+      "pack": 50
+    },
+    {
+      "text": "Blasting farts in the powder room.",
+      "pack": 50
+    },
+    {
+      "text": "Having to pee so bad.",
+      "pack": 50
     }
   ]
 }
