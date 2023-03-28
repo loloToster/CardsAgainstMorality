@@ -28,7 +28,10 @@ const packIcon = computed(() => {
   >
     <div
       class="pack__icon"
-      :class="{ 'pack__icon--not-default': Boolean(pack.icon) }"
+      :class="{
+        'pack__icon--colored-icon': pack.icon && pack.color,
+        'pack__icon--only-colored': pack.color && !pack.icon
+      }"
       v-html="packIcon"
     ></div>
     {{ pack.name }}
@@ -62,12 +65,18 @@ const packIcon = computed(() => {
       height: 16px;
     }
 
-    &--not-default :deep(svg) {
+    &--colored-icon :deep(svg) {
       *[fill="white"] {
         fill: var(--pack-color);
       }
 
       *[fill="black"] {
+        fill: currentColor;
+      }
+    }
+
+    &--only-colored :deep(svg) {
+      *[fill="white"] {
         fill: currentColor;
       }
     }
