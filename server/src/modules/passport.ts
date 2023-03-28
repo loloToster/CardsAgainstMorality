@@ -1,6 +1,7 @@
 import passport from "passport"
-import db from "./db"
+import { v4 as uuid } from "uuid"
 
+import db from "./db"
 import { User } from "@prisma/client"
 
 import { Strategy as AnonymousStrategy } from "passport-custom"
@@ -39,8 +40,10 @@ export default () => {
 
   passport.use(
     new AnonymousStrategy(async (req, done) => {
+      const strategyId = `ans-${uuid()}`
+
       const user = await db.user.create({
-        data: { name: "Anonymous", strategyId: "ans" }
+        data: { name: "Anonymous", strategyId }
       })
 
       done(null, user)
