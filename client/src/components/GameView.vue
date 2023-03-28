@@ -72,6 +72,7 @@ function onChangeChoice(choiceIdx: number) {
           <PlayingCard
             :text="gameState.blackCard.text"
             :pack="gameState.blackCard.pack"
+            :pick="gameState.blackCard.pick"
             color="black"
           />
           <PlayingCard
