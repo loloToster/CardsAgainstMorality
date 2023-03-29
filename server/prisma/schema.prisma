@@ -8,10 +8,11 @@ datasource db {
 }
 
 model User {
-    id         Int     @id @default(autoincrement())
+    id         Int       @id @default(autoincrement())
     name       String
     picture    String?
-    strategyId String  @unique @map("strategy_id")
+    lastUsed   DateTime? @map("last_used")
+    strategyId String    @map("strategy_id")
 
     @@map("users")
 }

@@ -21,3 +21,7 @@ export function getRandomInt(min: number, max: number) {
   max = Math.floor(max)
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
+
+export function subtractMs(date: Date, ms: number) {
+  return new Date(date.getTime() - ms)
+}

@@ -1,5 +1,4 @@
 import passport from "passport"
-import { v4 as uuid } from "uuid"
 
 import db from "./db"
 import { User } from "@prisma/client"
@@ -8,6 +7,8 @@ import { Strategy as AnonymousStrategy } from "passport-custom"
 import { Strategy as GoogleStrategy } from "passport-google-oauth20"
 import { Strategy as DiscordStrategy } from "passport-discord"
 import { Strategy as FacebookStrategy } from "passport-facebook"
+
+import { StrategyIdentifier } from "../consts"
 
 export default () => {
   const {
@@ -40,10 +41,10 @@ export default () => {
 
   passport.use(
     new AnonymousStrategy(async (req, done) => {
-      const strategyId = `ans-${uuid()}`
+      const strategyId = StrategyIdentifier.Anonymous
 
       const user = await db.user.create({
-        data: { name: "Anonymous", strategyId }
+        data: { name: "Anonymous", strategyId, lastUsed: new Date() }
       })
 
       done(null, user)
@@ -59,9 +60,9 @@ export default () => {
         scope: ["profile", "email"]
       },
       async (at, rt, profile, done) => {
-        const strategyId = `ggl-${profile.id}`
+        const strategyId = `${StrategyIdentifier.Google}-${profile.id}`
 
-        let user = await db.user.findUnique({ where: { strategyId } })
+        let user = await db.user.findFirst({ where: { strategyId } })
 
         if (!user) {
           user = await db.user.create({
@@ -87,9 +88,9 @@ export default () => {
         scope: ["identify", "email"]
       },
       async (at, rt, profile, done) => {
-        const strategyId = `dsc-${profile.id}`
+        const strategyId = `${StrategyIdentifier.Discord}-${profile.id}`
 
-        let user = await db.user.findUnique({ where: { strategyId } })
+        let user = await db.user.findFirst({ where: { strategyId } })
 
         if (!user) {
           user = await db.user.create({

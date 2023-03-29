@@ -1,12 +1,90 @@
 import cards from "../../cards.json"
-import { PrismaClient } from "@prisma/client"
+
+import { PrismaClient, User } from "@prisma/client"
+
+import { subtractMs } from "../utils"
 import { ApiWhiteCard } from "../types"
+import {
+  MIN_TIME_BETWEEN_ANS_USER_RM,
+  INACTIVITY_TIME,
+  StrategyIdentifier
+} from "../consts"
 
 type ValueOrArray<T> = T | ValueOrArray<T>[]
 
 class Database extends PrismaClient {
+  lastInactiveAnonymousUserRemoval: Date
+
   constructor() {
     super()
+
+    this.lastInactiveAnonymousUserRemoval = new Date(0)
+
+    this.$use(async (params, next) => {
+      const result: unknown = await next(params)
+
+      if (params.model === "User" && params.action === "findUnique") {
+        this.anonymousUsersMiddleware(result as User | null)
+      }
+
+      return result
+    })
+  }
+
+  async anonymousUsersMiddleware(user: User | null) {
+    try {
+      if (user) await this.bumpAnonymousUser(user)
+    } catch (err) {
+      console.error(err)
+    }
+
+    const now = new Date()
+
+    if (
+      now.getTime() - this.lastInactiveAnonymousUserRemoval.getTime() >
+      MIN_TIME_BETWEEN_ANS_USER_RM
+    ) {
+      this.lastInactiveAnonymousUserRemoval = now
+      await this.deleteInactiveAnonymousUsers()
+    }
+  }
+
+  async deleteInactiveAnonymousUsers() {
+    console.log("deleting inactive users")
+    await this.user.deleteMany({
+      where: {
+        AND: [
+          {
+            strategyId: { equals: StrategyIdentifier.Anonymous }
+          },
+          { lastUsed: { not: null } },
+          { lastUsed: { lte: subtractMs(new Date(), INACTIVITY_TIME) } }
+        ]
+      }
+    })
+  }
+
+  async bumpAnonymousUser(user: User, currentlyUsing = false) {
+    if (user.strategyId !== StrategyIdentifier.Anonymous) return
+
+    const lastUsed = currentlyUsing ? null : new Date()
+    console.log("bumbing user with id", user.id, lastUsed)
+
+    try {
+      await this.user.update({ where: { id: user.id }, data: { lastUsed } })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  async preHttpServerStart() {
+    await this.syncCards()
+
+    await this.user.deleteMany({
+      where: {
+        AND: [{ strategyId: StrategyIdentifier.Anonymous }, { lastUsed: null }]
+      }
+    })
   }
 
   async syncCards() {

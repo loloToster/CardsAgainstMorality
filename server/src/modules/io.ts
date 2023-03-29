@@ -158,7 +158,13 @@ export default (
     console.log("connection to room:", roomId)
 
     const game = rooms.get(roomId)
-    if (!game) return
+    if (!game) return socket.disconnect()
+
+    try {
+      await db.bumpAnonymousUser(user, true)
+    } catch (err) {
+      console.error(err)
+    }
 
     const foundPlayer = game.players.find(p => p.metadata?.user.id === user.id)
 
@@ -229,7 +235,10 @@ export default (
       console.log("socket disconnected")
       if (game.players.every(p => !p.metadata?.connected)) deleteRoom(roomId)
       if (player.metadata) player.metadata.connected = false
+
       sendPlayers(roomId, game)
+
+      db.bumpAnonymousUser(user, false)
     })
   })
 }

@@ -61,7 +61,7 @@ loadRoutes(app, __dirname + "/routes")
 
 app.use(express.static(__dirname + "/../../client/dist"))
 
-db.syncCards().then(() => {
+db.preHttpServerStart().then(() => {
   server.listen(port, async () => {
     console.log(`Example app listening on port ${port}`)
   })
