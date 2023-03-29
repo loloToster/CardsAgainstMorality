@@ -74,6 +74,7 @@ function onChangeChoice(choiceIdx: number) {
             :pack="gameState.blackCard.pack"
             :pick="gameState.blackCard.pick"
             color="black"
+            :animated="!(gameState.pickedCards.length || activeChoice.length)"
           />
           <PlayingCard
             v-for="card in gameState.pickedCards"
