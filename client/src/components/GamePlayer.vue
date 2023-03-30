@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ApiPlayer } from "@backend/types"
+import UserAvatar from "./UserAvatar.vue"
 
 defineProps<{ player: ApiPlayer }>()
 </script>
@@ -47,7 +48,7 @@ defineProps<{ player: ApiPlayer }>()
           />
         </g>
       </svg>
-      <img :src="player.picture" alt="" />
+      <UserAvatar :user="player" class="header__avatar" />
       <div class="player__points">{{ player.points }}</div>
     </div>
     <span class="player__name">{{ player.name }}</span>

@@ -7,6 +7,7 @@ import { moveItem, copyToClipboard } from "../utils"
 import AppButton from "./AppButton.vue"
 import AppLoader from "./AppLoader.vue"
 import GamePack from "./GamePack.vue"
+import UserAvatar from "./UserAvatar.vue"
 
 const props = defineProps<{ roomId: string; players: ApiPlayer[] }>()
 
@@ -149,7 +150,7 @@ function onCopyLink() {
           :key="player.name"
           class="settings__player"
         >
-          <img :src="player.picture" />
+          <UserAvatar :user="player" />
           <span>{{ player.name }}</span>
         </div>
       </div>
@@ -290,7 +291,7 @@ $main-gap: 16px;
       padding-bottom: 0;
     }
 
-    img {
+    :deep(img) {
       width: 36px;
       height: 36px;
       border-radius: 50%;

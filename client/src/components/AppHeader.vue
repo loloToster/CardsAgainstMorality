@@ -7,6 +7,7 @@ import type { LoggedInUser } from "../types/user"
 import { TITLE } from "../consts"
 
 import AppButton from "./AppButton.vue"
+import UserAvatar from "./UserAvatar.vue"
 
 const router = useRouter()
 
@@ -34,18 +35,14 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
       class="header__profile"
       ref="target"
     >
-      <img
-        :src="user.picture"
-        :alt="`${user.name} avatar`"
-        class="header__avatar"
-      />
+      <UserAvatar :user="user" class="header__avatar" />
       <div
         v-if="state.profileMenuOpen"
         @click="e => e.stopPropagation()"
         class="header__profile-menu"
       >
         <div class="header__profile-menu__details">
-          <img :src="user.picture" :alt="`${user.name} avatar`" />
+          <UserAvatar :user="user" class="header__avatar" />
           <span>{{ user.name }}</span>
         </div>
         <div class="header__profile-menu__divider"></div>
@@ -127,7 +124,7 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
       align-items: center;
       gap: 12px;
 
-      img {
+      :deep(img) {
         height: 58px;
         width: 58px;
         border-radius: 50%;
