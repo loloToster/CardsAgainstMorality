@@ -13,6 +13,7 @@ const props = withDefaults(
     color?: "white" | "black"
     width?: number
     animated?: boolean
+    glow?: boolean
   }>(),
   { color: "white" }
 )
@@ -29,33 +30,40 @@ const actions = computed(() => {
 
 // HOVER ANIMATION:
 
-const bounds = reactive({ x: -1, y: -1, w: -1, h: -1 })
-const rotation = reactive({ x: 0, y: 0, a: 0 })
+const DEF_ROTATION = { x: 0, y: 0, a: 0 }
+const DEF_GLOW = { x: "50%", y: "-20%" }
+const animation = reactive({
+  bounds: { x: -1, y: -1, w: -1, h: -1 },
+  rotation: { ...DEF_ROTATION },
+  glow: { ...DEF_GLOW }
+})
 
 function onMouseMove(e: MouseEvent) {
-  const centerX = e.clientX - bounds.x - bounds.w / 2
-  const centerY = e.clientY - bounds.y - bounds.h / 2
+  const centerX = e.clientX - animation.bounds.x - animation.bounds.w / 2
+  const centerY = e.clientY - animation.bounds.y - animation.bounds.h / 2
   const distance = Math.sqrt(centerX ** 2 + centerY ** 2)
 
-  rotation.x = centerY / 100
-  rotation.y = -centerX / 100
-  rotation.a = Math.log(distance) * 2
+  animation.rotation = {
+    x: centerY / 100,
+    y: -centerX / 100,
+    a: Math.log(distance) * 2
+  }
+
+  animation.glow = {
+    x: `${centerX * 2 + animation.bounds.w / 2}px`,
+    y: `${centerY * 2 + animation.bounds.h / 2}px`
+  }
 }
 
 function onMouseEnter(e: MouseEvent) {
   const card = e.target as HTMLDivElement
   const { x, y, width: w, height: h } = card.getBoundingClientRect()
-
-  bounds.x = x
-  bounds.y = y
-  bounds.w = w
-  bounds.h = h
+  animation.bounds = { x, y, w, h }
 }
 
 function onMouseLeave() {
-  rotation.x = 0
-  rotation.y = 0
-  rotation.a = 0
+  animation.rotation = { ...DEF_ROTATION }
+  animation.glow = { ...DEF_GLOW }
 }
 </script>
 
@@ -68,9 +76,9 @@ function onMouseLeave() {
       @mouseleave="() => (animated ? onMouseLeave() : undefined)"
       :style="{
         '--w': width ? width + 'px' : undefined,
-        '--x-rotation': rotation.x,
-        '--y-rotation': rotation.y,
-        '--a-rotation': rotation.a
+        '--x-rotation': animation.rotation.x,
+        '--y-rotation': animation.rotation.y,
+        '--a-rotation': animation.rotation.a
       }"
       class="card"
       :class="[`card--${color}`, { 'card--animated': animated }]"
@@ -97,6 +105,14 @@ function onMouseLeave() {
           </div>
         </div>
       </div>
+      <div
+        v-if="glow || animated"
+        :style="{
+          '--x': animation.glow.x,
+          '--y': animation.glow.y
+        }"
+        class="card__glow"
+      ></div>
     </div>
   </div>
 </template>
@@ -218,6 +234,20 @@ $default-card-width: 226px;
       background-color: white;
       color: black;
     }
+  }
+
+  &__glow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    background-image: radial-gradient(
+      circle at var(--x) var(--y),
+      #ffffff19,
+      #0000000f
+    );
   }
 }
 </style>

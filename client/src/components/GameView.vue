@@ -75,6 +75,7 @@ function onChangeChoice(choiceIdx: number) {
             :pick="gameState.blackCard.pick"
             color="black"
             :animated="!(gameState.pickedCards.length || activeChoice.length)"
+            glow
           />
           <PlayingCard
             v-for="card in gameState.pickedCards"
