@@ -9,6 +9,7 @@ import {
   INACTIVITY_TIME,
   StrategyIdentifier
 } from "../consts"
+import logger from "./logger"
 
 type ValueOrArray<T> = T | ValueOrArray<T>[]
 
@@ -35,7 +36,7 @@ class Database extends PrismaClient {
     try {
       if (user) await this.bumpAnonymousUser(user)
     } catch (err) {
-      console.error(err)
+      logger.error(err)
     }
 
     const now = new Date()
@@ -50,8 +51,7 @@ class Database extends PrismaClient {
   }
 
   async deleteInactiveAnonymousUsers() {
-    console.log("deleting inactive users")
-    await this.user.deleteMany({
+    const { count } = await this.user.deleteMany({
       where: {
         AND: [
           {
@@ -62,18 +62,25 @@ class Database extends PrismaClient {
         ]
       }
     })
+
+    logger.info(
+      count
+        ? `Deleted ${count} inactive anonymous users`
+        : "No inactive anonymous users found"
+    )
   }
 
   async bumpAnonymousUser(user: User, currentlyUsing = false) {
     if (user.strategyId !== StrategyIdentifier.Anonymous) return
 
     const lastUsed = currentlyUsing ? null : new Date()
-    console.log("bumbing user with id", user.id, lastUsed)
+
+    logger.info(`bumping user with id: '${user.id}' to '${lastUsed}'`)
 
     try {
       await this.user.update({ where: { id: user.id }, data: { lastUsed } })
     } catch (err) {
-      console.error(err)
+      logger.error(err)
     }
   }
 

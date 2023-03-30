@@ -4,7 +4,10 @@ import type { IncomingMessage } from "http"
 
 import { User } from "@prisma/client"
 import db from "./db"
+import logger from "./logger"
+
 import { Game, GameState, Player, WinnerData } from "../utils/game"
+
 import {
   ApiWhiteCard,
   ClientToServerSocketEvents,
@@ -155,15 +158,18 @@ export default (
     if (!user) return socket.disconnect()
 
     const { roomId } = socket.handshake.auth
-    console.log("connection to room:", roomId)
 
     const game = rooms.get(roomId)
     if (!game) return socket.disconnect()
 
+    logger.info(
+      `User with id: '${user.id}' connected to room with id: '${roomId}'`
+    )
+
     try {
       await db.bumpAnonymousUser(user, true)
     } catch (err) {
-      console.error(err)
+      logger.error(err)
     }
 
     const foundPlayer = game.players.find(p => p.metadata?.user.id === user.id)
@@ -202,7 +208,7 @@ export default (
 
         sendNewRound(roomId, game)
       } catch (err) {
-        console.error(err)
+        logger.error(err)
       }
     })
 
@@ -210,7 +216,7 @@ export default (
       try {
         player.choose(submition)
       } catch (err) {
-        console.error(err)
+        logger.error(err)
         return
       }
 
@@ -227,12 +233,15 @@ export default (
         game.newRound()
         sendNewRound(roomId, game, winnerData)
       } catch (err) {
-        console.error(err)
+        logger.error(err)
       }
     })
 
     socket.on("disconnect", () => {
-      console.log("socket disconnected")
+      logger.info(
+        `Socket with user id: '${player.metadata?.user.id}' disconnected from room with id: '${roomId}'`
+      )
+
       if (game.players.every(p => !p.metadata?.connected)) deleteRoom(roomId)
       if (player.metadata) player.metadata.connected = false
 

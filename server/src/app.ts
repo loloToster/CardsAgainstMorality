@@ -9,6 +9,7 @@ import { ClientToServerSocketEvents, ServerToClientSocketEvents } from "./types"
 
 import configurePassport from "./modules/passport"
 import db from "./modules/db"
+import logger from "./modules/logger"
 import setupGameSocketIoHandlers from "./modules/io"
 
 import { loadRoutes } from "./utils/loadRoutes"
@@ -63,6 +64,6 @@ app.use(express.static(__dirname + "/../../client/dist"))
 
 db.preHttpServerStart().then(() => {
   server.listen(port, async () => {
-    console.log(`Example app listening on port ${port}`)
+    logger.info(`Listening on port ${port}`)
   })
 })

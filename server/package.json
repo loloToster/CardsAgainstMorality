@@ -23,7 +23,8 @@
     "passport-google-oauth20": "^2.0.0",
     "prisma": "^4.11.0",
     "socket.io": "^4.6.1",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "winston": "^3.8.2"
   },
   "devDependencies": {
     "@types/cookie-session": "^2.0.44",
