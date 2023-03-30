@@ -242,10 +242,14 @@ export default (
         `Socket with user id: '${player.metadata?.user.id}' disconnected from room with id: '${roomId}'`
       )
 
-      if (game.players.every(p => !p.metadata?.connected)) deleteRoom(roomId)
       if (player.metadata) player.metadata.connected = false
 
-      sendPlayers(roomId, game)
+      if (game.players.every(p => !p.metadata?.connected)) {
+        logger.info(`Deleting room with id: '${roomId}'`)
+        deleteRoom(roomId)
+      } else {
+        sendPlayers(roomId, game)
+      }
 
       db.bumpAnonymousUser(user, false)
     })
