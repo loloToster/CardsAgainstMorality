@@ -2,12 +2,12 @@
 import { computed } from "vue"
 import Color from "color"
 
-const props = defineProps<{ color?: string }>()
+const props = defineProps<{ color?: string; outlined?: boolean }>()
 
 defineEmits(["click"])
 
 const light = computed(() => {
-  return Color(props.color).isLight()
+  return props.color ? Color(props.color).isLight() : false
 })
 </script>
 
@@ -15,7 +15,7 @@ const light = computed(() => {
   <div
     @click="$emit('click')"
     :style="{ '--chip-bg': color }"
-    :class="{ 'chip--light': light }"
+    :class="{ 'chip--light': light, 'chip--outlined': outlined }"
     class="chip"
   >
     <slot></slot>
@@ -34,9 +34,16 @@ const light = computed(() => {
   font-weight: 600;
   background-color: var(--chip-bg, gray);
   cursor: pointer;
+  transition: all 100ms;
+  border: 1px solid var(--chip-bg, gray);
 
   &--light {
     color: black;
+  }
+
+  &--outlined {
+    background-color: transparent;
+    color: var(--chip-bg, gray);
   }
 }
 </style>

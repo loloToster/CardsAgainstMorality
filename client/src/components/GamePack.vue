@@ -1,17 +1,32 @@
 <script setup lang="ts">
 import { computed } from "vue"
+import Color from "color"
 
 import { ApiCardPack } from "@backend/types"
 
 import SimpleChip from "./SimpleChip.vue"
 import defaultIcon from "../assets/white-card-icon.svg?raw"
 
-const props = defineProps<{ pack: ApiCardPack; closable?: boolean }>()
+const props = defineProps<{ pack: ApiCardPack; selected?: boolean }>()
 
 defineEmits(["click"])
 
 const packColor = computed(() => {
-  return props.pack.color || "black"
+  const color = props.pack.color
+  const selected = props.selected
+
+  if (color) {
+    if (selected) return color
+    const parsedColor = Color(color)
+
+    if (parsedColor.luminosity() < 0.1) {
+      return parsedColor.lighten(0.9).hex()
+    } else {
+      return color
+    }
+  } else {
+    return "white"
+  }
 })
 
 const packIcon = computed(() => {
@@ -24,6 +39,8 @@ const packIcon = computed(() => {
     @click="$emit('click')"
     :color="packColor"
     :style="{ '--pack-color': packColor }"
+    :class="{ selected }"
+    :outlined="!selected"
     class="pack"
   >
     <div
@@ -35,34 +52,42 @@ const packIcon = computed(() => {
       v-html="packIcon"
     ></div>
     {{ pack.name }}
-    <svg
-      v-if="closable"
-      class="pack__close"
-      xmlns="http://www.w3.org/2000/svg"
-      height="14"
-      viewBox="0 96 960 960"
-      width="14"
-    >
-      <path
-        d="m291 848-83-83 189-189-189-189 83-83 189 189 189-189 83 83-189 189 189 189-83 83-189-189-189 189Z"
-      />
-    </svg>
   </SimpleChip>
 </template>
 
 <style scoped lang="scss">
 .pack {
-  &__close {
-    fill: currentColor;
-    width: 14px;
-    height: 14px;
-  }
+  transition: all 100ms;
 
   &__icon {
     :deep(svg) {
       display: block;
       width: 16px;
       height: 16px;
+    }
+
+    &--colored-icon :deep(svg) {
+      *[fill="white"] {
+        fill: #3a3a3a;
+      }
+
+      *[fill="black"] {
+        fill: var(--pack-color);
+      }
+    }
+
+    &--only-colored :deep(svg) {
+      *[fill="white"] {
+        fill: currentColor;
+      }
+    }
+  }
+
+  &.selected &__icon {
+    :deep(svg) {
+      *[fill="white"] {
+        fill: black;
+      }
     }
 
     &--colored-icon :deep(svg) {

@@ -2,7 +2,7 @@
 import { computed, reactive } from "vue"
 
 import { ApiPlayer, ApiCardPack } from "@backend/types"
-import { moveItem, copyToClipboard } from "../utils"
+import { copyToClipboard } from "../utils"
 
 import AppButton from "./AppButton.vue"
 import AppLoader from "./AppLoader.vue"
@@ -15,42 +15,39 @@ const emit = defineEmits<{
   (e: "start", packsIds: number[]): void
 }>()
 
-const state = reactive<{
-  loading: boolean
-  unselectedPacks: ApiCardPack[]
-  selectedPacks: ApiCardPack[]
-}>({
-  loading: true,
-  unselectedPacks: [],
-  selectedPacks: []
-})
-
-const sortedUnselectedPacks = computed(() => {
-  return [...state.unselectedPacks].sort((a, b) => a.id - b.id)
-})
-
-const sortedSelectedPacks = computed(() => {
-  return [...state.selectedPacks].sort((a, b) => a.id - b.id)
-})
-
-function selectPack(packId: number) {
-  moveItem(state.unselectedPacks, state.selectedPacks, p => p.id === packId)
+interface Pack extends ApiCardPack {
+  selected: boolean
 }
 
-function unselectPack(packId: number) {
-  moveItem(state.selectedPacks, state.unselectedPacks, p => p.id === packId)
+const state = reactive<{
+  loading: boolean
+  packs: Pack[]
+}>({
+  loading: true,
+  packs: []
+})
+
+const selectedPacks = computed(() => {
+  return [...state.packs].filter(p => p.selected)
+})
+
+function togglePack(packId: number) {
+  state.packs = state.packs.map(p => ({
+    ...p,
+    selected: packId === p.id ? !p.selected : p.selected
+  }))
 }
 
 fetch("/api/packs").then(async res => {
   const { packs } = await res.json()
-  state.unselectedPacks = packs
+  state.packs = packs.map((p: ApiCardPack) => ({ ...p, selected: false }))
   state.loading = false
 })
 
 function onStart() {
   emit(
     "start",
-    state.selectedPacks.map(p => p.id)
+    selectedPacks.value.map(p => p.id)
   )
 }
 
@@ -70,22 +67,17 @@ function onCopyLink() {
       </div>
       <div v-else class="settings__panel settings__main">
         <div class="settings__main__options">
-          <h3>Select packs that you want to use:</h3>
+          <h3>
+            Card sets{{
+              selectedPacks.length ? ` (${selectedPacks.length})` : ""
+            }}:
+          </h3>
           <div class="settings__packs">
             <GamePack
-              v-for="pack in sortedUnselectedPacks"
-              @click="selectPack(pack.id)"
+              v-for="pack in state.packs"
+              @click="togglePack(pack.id)"
               :pack="pack"
-              :key="pack.id"
-            />
-          </div>
-          <h3>Selected packs:</h3>
-          <div class="settings__packs">
-            <GamePack
-              v-for="pack in sortedSelectedPacks"
-              @click="unselectPack(pack.id)"
-              :pack="pack"
-              closable
+              :selected="pack.selected"
               :key="pack.id"
             />
           </div>
@@ -93,7 +85,7 @@ function onCopyLink() {
         <div class="settings__main__btns">
           <AppButton
             @click="onStart()"
-            :disabled="!state.selectedPacks.length || players.length < 2"
+            :disabled="!selectedPacks.length || players.length < 2"
           >
             Start
           </AppButton>
