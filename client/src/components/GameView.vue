@@ -10,6 +10,7 @@ import AppButton from "./AppButton.vue"
 
 import PlayingCard from "./PlayingCard.vue"
 import GamePlayers from "./GamePlayers.vue"
+import UAreTsar from "./UAreTsar.vue"
 import GameChoices from "./GameChoices.vue"
 import WinnerModal from "./WinnerModal.vue"
 
@@ -116,9 +117,7 @@ function onChangeChoice(choiceIdx: number) {
             :choosable="gameState.imTsar"
           />
           <div v-else class="game__submit">
-            <div v-if="gameState.imTsar" class="game__ur-tsar">
-              You are the <span>Tsar</span>
-            </div>
+            <UAreTsar v-if="gameState.imTsar" />
             <AppButton
               v-else
               :disabled="
@@ -192,26 +191,6 @@ $main-gap: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-
-  &__ur-tsar {
-    font-size: 2.4rem;
-    font-weight: bold;
-    letter-spacing: 1px;
-
-    span {
-      background-image: linear-gradient(
-        70deg,
-        #c28d3e 0,
-        #f8df61 30%,
-        #f1eb95 50%,
-        #f8df61 80%,
-        #c28d3e 100%
-      );
-      color: transparent;
-      background-clip: text;
-      -webkit-background-clip: text;
-    }
   }
 
   &__hand {
