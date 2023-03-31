@@ -19,20 +19,31 @@ interface PlayerMetadata {
   connected: boolean
   socket: Socket<ClientToServerSocketEvents, ServerToClientSocketEvents>
   user: User
+  joinedAt: number
+}
+
+interface GameMetadata {
+  creator: number
+}
+
+interface Room {
+  meta: GameMetadata
+  game: Game<PlayerMetadata>
 }
 
 interface ExtendedReq extends IncomingMessage {
   session?: { passport?: { user?: number } }
 }
 
-export const rooms = new Map<string, Game<PlayerMetadata> | undefined>()
+export const rooms = new Map<string, Room | undefined>()
 
-export function createRoom() {
+export function createRoom(userId: number) {
   let roomId = ""
 
   while (rooms.has(roomId) || !roomId) roomId = nanoid(16)
 
-  rooms.set(roomId, new Game())
+  rooms.set(roomId, { meta: { creator: userId }, game: new Game() })
+
   return roomId
 }
 
@@ -43,10 +54,39 @@ export function deleteRoom(roomId: string) {
 export default (
   io: Server<ClientToServerSocketEvents, ServerToClientSocketEvents>
 ) => {
-  function sendPlayers(roomId: string, game: Game<PlayerMetadata>) {
-    const players = game.players.map(p => ({
+  function getRoomLeader(room: Room) {
+    let leader: Player<PlayerMetadata> | null = null
+
+    for (const player of room.game.players) {
+      if (
+        player.metadata?.user.id === room.meta.creator &&
+        player.metadata.connected
+      ) {
+        return player
+      }
+
+      if (!player.metadata) continue
+
+      if (
+        (!leader?.metadata ||
+          player.metadata.joinedAt > leader.metadata.joinedAt) &&
+        player.metadata.connected
+      ) {
+        leader = player
+      }
+    }
+
+    return leader
+  }
+
+  function sendPlayers(roomId: string, room: Room) {
+    const leader = getRoomLeader(room)
+
+    const players = room.game.players.map(p => ({
+      userId: p.metadata?.user.id ?? -1,
       name: p.metadata?.user.name ?? "Unknown",
       picture: p.metadata?.user.picture ?? "",
+      leader: leader === p,
       connected: p.metadata?.connected ?? false,
       tsar: p.isTsar,
       ready: p.chose,
@@ -58,9 +98,10 @@ export default (
 
   async function sendNewRound(
     roomId: string,
-    game: Game<PlayerMetadata>,
+    room: Room,
     winnerData?: WinnerData<PlayerMetadata>
   ) {
+    const { game } = room
     if (!game.curBlackCard) throw new Error("No black card")
 
     const blackCard = await db.getApiBlackCard(game.curBlackCard.id)
@@ -103,7 +144,7 @@ export default (
       })
     }
 
-    sendPlayers(roomId, game)
+    sendPlayers(roomId, room)
   }
 
   async function sendChoices(roomId: string, game: Game<PlayerMetadata>) {
@@ -159,8 +200,10 @@ export default (
 
     const { roomId } = socket.handshake.auth
 
-    const game = rooms.get(roomId)
-    if (!game) return socket.disconnect()
+    const room = rooms.get(roomId)
+    if (!room) return socket.disconnect()
+
+    const { game } = room
 
     logger.info(
       `User with id: '${user.id}' connected to room with id: '${roomId}'`
@@ -178,17 +221,29 @@ export default (
     if (foundPlayer) {
       player = foundPlayer
       player.metadata?.socket.disconnect()
-      player.metadata = { socket, user, connected: true }
+      player.metadata = {
+        socket,
+        user,
+        connected: true,
+        joinedAt: player.metadata?.joinedAt ?? Date.now()
+      }
     } else {
-      player = game.addPlayer({ socket, user, connected: true })
+      player = game.addPlayer({
+        socket,
+        user,
+        connected: true,
+        joinedAt: Date.now()
+      })
     }
 
     socket.join(roomId)
 
     sendSyncData(player)
-    sendPlayers(roomId, game)
+    sendPlayers(roomId, room)
 
     socket.on("start", async settings => {
+      if (getRoomLeader(room) !== player) return
+
       const whiteCards = await db.whiteCard.findMany({
         where: { packId: { in: settings.packs } },
         select: { id: true }
@@ -206,7 +261,7 @@ export default (
         )
         game.start()
 
-        sendNewRound(roomId, game)
+        sendNewRound(roomId, room)
       } catch (err) {
         logger.error(err)
       }
@@ -220,7 +275,7 @@ export default (
         return
       }
 
-      sendPlayers(roomId, game)
+      sendPlayers(roomId, room)
 
       if (game.state !== GameState.TSAR_VERDICT) return
 
@@ -231,7 +286,7 @@ export default (
       try {
         const winnerData = player.makeVerdict(verdict)
         game.newRound()
-        sendNewRound(roomId, game, winnerData)
+        sendNewRound(roomId, room, winnerData)
       } catch (err) {
         logger.error(err)
       }
@@ -248,7 +303,7 @@ export default (
         logger.info(`Deleting room with id: '${roomId}'`)
         deleteRoom(roomId)
       } else {
-        sendPlayers(roomId, game)
+        sendPlayers(roomId, room)
       }
 
       db.bumpAnonymousUser(user, false)

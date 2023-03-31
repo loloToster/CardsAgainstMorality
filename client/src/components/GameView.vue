@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { computed } from "vue"
+import { computed, reactive } from "vue"
 
 import { ApiPlayer } from "@backend/types"
 import { GameStage, GameState } from "../types/game"
 
 import { moveItem } from "../utils"
 
-import WinnerModal from "./WinnerModal.vue"
 import AppButton from "./AppButton.vue"
+
 import PlayingCard from "./PlayingCard.vue"
-import GamePlayer from "./GamePlayer.vue"
-import GameChoice from "./GameChoice.vue"
+import GamePlayers from "./GamePlayers.vue"
+import GameChoices from "./GameChoices.vue"
+import WinnerModal from "./WinnerModal.vue"
 
 const props = defineProps<{
   gameState: GameState
@@ -29,7 +30,18 @@ defineEmits<{
   (ev: "verdict", choiceIdx: number): void
 }>()
 
+const showedCard = reactive({ id: -1 })
+
+function onCardShow(e: TouchEvent, cardId: number) {
+  if (showedCard.id === cardId) return
+
+  showedCard.id = cardId
+  e.preventDefault()
+}
+
 function onCardPick(cardId: number) {
+  showedCard.id = -1
+
   if (
     props.gameState.pickedCards.length >= props.gameState.blackCard.pick ||
     props.gameState.stage !== GameStage.CHOOSING ||
@@ -94,22 +106,15 @@ function onChangeChoice(choiceIdx: number) {
           />
         </div>
         <div class="game__under-cards">
-          <div
+          <GameChoices
             v-if="gameState.stage === GameStage.TSAR_VERDICT"
-            class="game__choices"
-          >
-            <GameChoice
-              v-for="choice in gameState.choices.length"
-              @click="onChangeChoice(choice - 1)"
-              @choose="$emit('verdict', choice - 1)"
-              :choosable="gameState.imTsar"
-              :active="choice - 1 === gameState.activeChoiceIdx"
-              :num-of-cards="gameState.blackCard.pick"
-              :key="choice"
-            >
-              {{ choice }}
-            </GameChoice>
-          </div>
+            @change-idx="onChangeChoice"
+            @choose="i => $emit('verdict', i)"
+            :active-idx="gameState.activeChoiceIdx"
+            :num-of-choices="gameState.choices.length"
+            :num-of-cards="gameState.blackCard.pick"
+            :choosable="gameState.imTsar"
+          />
           <div v-else class="game__submit">
             <div v-if="gameState.imTsar" class="game__ur-tsar">
               You are the <span>Tsar</span>
@@ -121,18 +126,13 @@ function onChangeChoice(choiceIdx: number) {
                 gameState.submitted
               "
               @click="$emit('submit')"
-              >{{ gameState.submitted ? "Submitted" : "Submit" }}</AppButton
             >
+              {{ gameState.submitted ? "Submitted" : "Submit" }}
+            </AppButton>
           </div>
         </div>
       </div>
-      <div class="game__players">
-        <GamePlayer
-          v-for="player in players"
-          :player="player"
-          :key="player.name"
-        />
-      </div>
+      <GamePlayers :players="players" />
     </div>
     <div class="game__hand">
       <div
@@ -141,8 +141,10 @@ function onChangeChoice(choiceIdx: number) {
         :key="card.id"
       >
         <PlayingCard
+          @touchend="e => onCardShow(e, card.id)"
           @click="onCardPick(card.id)"
           class="game__hand__card"
+          :class="{ active: card.id === showedCard.id }"
           :pack="card.pack"
           color="white"
         >
@@ -182,7 +184,7 @@ $main-gap: 20px;
   }
 
   &__under-cards {
-    height: 80px;
+    height: 100px;
   }
 
   &__submit {
@@ -210,23 +212,6 @@ $main-gap: 20px;
       background-clip: text;
       -webkit-background-clip: text;
     }
-  }
-
-  &__choices {
-    display: flex;
-    position: relative;
-    justify-content: center;
-    gap: 16px;
-    width: fit-content;
-    max-width: 100%;
-    margin: auto;
-  }
-
-  &__players {
-    width: 220px;
-    max-height: 320px;
-    flex-shrink: 0;
-    overflow-y: auto;
   }
 
   &__hand {
@@ -262,10 +247,10 @@ $main-gap: 20px;
       &:hover,
       &.active {
         transform: translateY(-60%);
+      }
 
-        &::after {
-          height: 60%;
-        }
+      &:hover &::after {
+        height: 60%;
       }
     }
   }

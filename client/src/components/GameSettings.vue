@@ -3,6 +3,7 @@ import { computed, reactive } from "vue"
 
 import { ApiPlayer, ApiCardPack } from "@backend/types"
 import { copyToClipboard } from "../utils"
+import { user } from "../contexts/user"
 
 import AppButton from "./AppButton.vue"
 import AppLoader from "./AppLoader.vue"
@@ -10,6 +11,10 @@ import GamePack from "./GamePack.vue"
 import UserAvatar from "./UserAvatar.vue"
 
 const props = defineProps<{ roomId: string; players: ApiPlayer[] }>()
+
+const leader = computed(() => {
+  return props.players.find(p => p.leader)
+})
 
 const emit = defineEmits<{
   (e: "start", packsIds: number[]): void
@@ -62,8 +67,18 @@ function onCopyLink() {
 <template>
   <div class="settings">
     <div class="settings__left">
-      <div v-if="state.loading" class="settings__panel settings__loading">
+      <div
+        v-if="state.loading || !players.length"
+        class="settings__panel settings__loading"
+      >
         <AppLoader outline-color="#3a3a3a" />
+      </div>
+      <div
+        v-else-if="leader?.userId !== user.value?.id"
+        class="settings__panel settings__loading"
+      >
+        <AppLoader outline-color="#3a3a3a" />
+        <h1>Waiting for room leader to start the game</h1>
       </div>
       <div v-else class="settings__panel settings__main">
         <div class="settings__main__options">
@@ -143,7 +158,12 @@ function onCopyLink() {
           class="settings__player"
         >
           <UserAvatar :user="player" />
-          <span>{{ player.name }}</span>
+          <div>
+            <div class="settings__player__name">{{ player.name }}</div>
+            <div v-if="player.leader" class="settings__player__leader">
+              Room Leader
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -189,6 +209,8 @@ $main-gap: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+    gap: 16px;
   }
 
   &__main {
@@ -235,7 +257,9 @@ $main-gap: 16px;
     &__code {
       margin-bottom: $space;
       width: 100%;
-      font-size: 1.3rem;
+      font-family: monospace;
+      font-size: 1.7rem;
+      text-align: center;
       outline: none;
       border: none;
       border-bottom: gray 1px solid;
@@ -289,10 +313,18 @@ $main-gap: 16px;
       border-radius: 50%;
     }
 
-    span {
+    div {
+      overflow: hidden;
+    }
+
+    &__name {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+
+    &__leader {
+      font-size: 0.7rem;
     }
   }
 }
