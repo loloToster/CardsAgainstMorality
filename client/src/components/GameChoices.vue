@@ -21,7 +21,11 @@ const emit = defineEmits<{
 const choices = ref<HTMLDivElement>()
 
 function onScroll(e: WheelEvent) {
-  console.log(e)
+  e.preventDefault()
+
+  choices.value?.scrollBy({
+    left: e.deltaY
+  })
 }
 
 function onTransEnd(e: TransitionEvent, idx: number) {
@@ -45,7 +49,7 @@ function onTransEnd(e: TransitionEvent, idx: number) {
 <template>
   <div @wheel="onScroll" class="choices" ref="choices">
     <div
-      v-for="choice in 20"
+      v-for="choice in numOfChoices"
       @click="$emit('changeIdx', choice - 1)"
       class="choices__choice"
       :class="[
@@ -62,7 +66,7 @@ function onTransEnd(e: TransitionEvent, idx: number) {
       ></div>
       <div class="choices__choice__card">{{ choice }}</div>
       <div
-        v-if="(choosable || true) && activeIdx === choice - 1"
+        v-if="choosable && activeIdx === choice - 1"
         @transitionend="e => onTransEnd(e, choice - 1)"
         class="choices__choice__choose"
       >
@@ -91,7 +95,7 @@ function onTransEnd(e: TransitionEvent, idx: number) {
   max-width: 100%;
   margin: auto;
   overflow-y: auto;
-  overflow-x: hidden;
+  padding: 0 12px;
 
   &::-webkit-scrollbar {
     display: none;
@@ -110,10 +114,11 @@ function onTransEnd(e: TransitionEvent, idx: number) {
 
     font-size: 1.8rem;
     transition: font-size 150ms linear;
+    z-index: -1;
 
     &.active {
       font-size: 3.3rem;
-      z-index: 1;
+      z-index: 0;
     }
 
     &__card {
