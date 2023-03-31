@@ -17,7 +17,11 @@ const props = withDefaults(
   }>(),
   { color: "white" }
 )
-defineEmits(["click"])
+
+defineEmits<{
+  (e: "click", ev: MouseEvent): void
+  (e: "touchend", ev: TouchEvent): void
+}>()
 
 const actions = computed(() => {
   if (props.color !== "black") return []
@@ -70,7 +74,8 @@ function onMouseLeave() {
 <template>
   <div class="card-perspective">
     <div
-      @click="$emit('click')"
+      @touchend="e => $emit('touchend', e)"
+      @click="e => $emit('click', e)"
       @mouseenter="e => (animated ? onMouseEnter(e) : undefined)"
       @mousemove="e => (animated ? onMouseMove(e) : undefined)"
       @mouseleave="() => (animated ? onMouseLeave() : undefined)"
