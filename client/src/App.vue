@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { ref } from "vue"
 import { RouterView } from "vue-router"
 
-import AppHeader from "./components/AppHeader.vue"
-import type { LoggedInUser } from "./types/user"
+import { user } from "./contexts/user"
 
-const user = ref<LoggedInUser>(null)
+import AppHeader from "./components/AppHeader.vue"
 
 fetch("/auth/me").then(async res => {
   if (res.ok) {
@@ -15,7 +13,7 @@ fetch("/auth/me").then(async res => {
 </script>
 
 <template>
-  <AppHeader v-if="!$route.meta?.hideHeader" :user="user" />
+  <AppHeader v-if="!$route.meta?.hideHeader" />
   <RouterView />
 </template>
 

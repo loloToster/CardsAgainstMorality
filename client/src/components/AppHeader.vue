@@ -3,15 +3,13 @@ import { reactive, ref } from "vue"
 import { RouterLink, useRouter } from "vue-router"
 import { onClickOutside } from "@vueuse/core"
 
-import type { LoggedInUser } from "../types/user"
+import { user } from "../contexts/user"
 import { TITLE } from "../consts"
 
 import AppButton from "./AppButton.vue"
 import UserAvatar from "./UserAvatar.vue"
 
 const router = useRouter()
-
-defineProps<{ user: LoggedInUser }>()
 
 const state = reactive({ profileMenuOpen: false })
 
@@ -31,19 +29,19 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
     </RouterLink>
     <div
       @click="state.profileMenuOpen = !state.profileMenuOpen"
-      v-if="user"
+      v-if="user.value"
       class="header__profile"
       ref="target"
     >
-      <UserAvatar :user="user" class="header__avatar" />
+      <UserAvatar :user="user.value" class="header__avatar" />
       <div
         v-if="state.profileMenuOpen"
         @click="e => e.stopPropagation()"
         class="header__profile-menu"
       >
         <div class="header__profile-menu__details">
-          <UserAvatar :user="user" class="header__avatar" />
-          <span>{{ user.name }}</span>
+          <UserAvatar :user="user.value" class="header__avatar" />
+          <span>{{ user.value.name }}</span>
         </div>
         <div class="header__profile-menu__divider"></div>
         <AppButton

@@ -6,7 +6,7 @@ const router = Router()
 router.get("/", (req, res) => {
   if (!req.user) return res.status(401).send()
 
-  const roomId = createRoom()
+  const roomId = createRoom(req.user.id)
   res.json({ roomId })
 })
 

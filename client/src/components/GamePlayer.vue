@@ -51,7 +51,10 @@ defineProps<{ player: ApiPlayer }>()
       <UserAvatar :user="player" class="header__avatar" />
       <div class="player__points">{{ player.points }}</div>
     </div>
-    <span class="player__name">{{ player.name }}</span>
+    <div class="player__name-wrapper">
+      <div class="player__name">{{ player.name }}</div>
+      <div v-if="player.leader" class="player__leader">Room Leader</div>
+    </div>
     <svg
       v-if="!player.connected"
       class="player__disconnected"
@@ -121,11 +124,19 @@ defineProps<{ player: ApiPlayer }>()
     padding-top: 0.125rem;
   }
 
+  &__name-wrapper {
+    overflow: hidden;
+  }
+
   &__name {
-    display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  &__leader {
+    font-size: 0.7rem;
+    height: 0.6rem;
   }
 
   @keyframes fade {

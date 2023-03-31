@@ -1,6 +1,8 @@
 export interface ApiPlayer {
+  userId: number
   name: string
   picture: string
+  leader: boolean
   connected: boolean
   tsar: boolean
   ready: boolean
