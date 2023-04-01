@@ -1,4 +1,4 @@
-import { ApiBlackCard, ApiWhiteCard } from "@backend/types"
+import { ApiBlackCard, ApiWhiteCard, PodiumEl } from "@backend/types"
 
 export enum GameStage {
   UNKNOWN,
@@ -16,10 +16,11 @@ export interface GameState {
   submitted: boolean
   choices: ApiWhiteCard[][]
   activeChoiceIdx: number | null
-  winnerData: {
+  roundWinnerData: {
     winner: string
     blackCard: ApiBlackCard
     winningCards: ApiWhiteCard[]
     imWinner: boolean
   } | null
+  podium: PodiumEl[] | null
 }

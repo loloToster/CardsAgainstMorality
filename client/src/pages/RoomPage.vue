@@ -36,7 +36,8 @@ const gameState = reactive<GameState>({
   submitted: false,
   choices: [],
   activeChoiceIdx: null,
-  winnerData: null
+  roundWinnerData: null,
+  podium: null
 })
 
 socket.on("players", ({ players }) => {
@@ -49,7 +50,7 @@ socket.on("new-round", data => {
   gameState.blackCard = data.blackCard
   gameState.cards = data.cards
   gameState.submitted = false
-  gameState.winnerData = data.prevRound ?? null
+  gameState.roundWinnerData = data.prevRound ?? null
 })
 
 socket.on("choices", ({ choices }) => {
@@ -76,6 +77,11 @@ socket.on("sync", data => {
   } else {
     gameState.stage = GameStage.CHOOSING
   }
+})
+
+socket.on("end", ({ podium }) => {
+  gameState.stage = GameStage.NOT_STARTED
+  gameState.podium = podium
 })
 
 function onStart(packs: number[]) {
@@ -112,6 +118,7 @@ onUnmounted(() => {
   socket.off("new-round")
   socket.off("choices")
   socket.off("sync")
+  socket.off("end")
 
   socket.disconnect()
 })

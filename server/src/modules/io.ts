@@ -6,7 +6,7 @@ import { User } from "@prisma/client"
 import db from "./db"
 import logger from "./logger"
 
-import { Game, GameState, Player, WinnerData } from "../utils/game"
+import { Game, GameState, Player, Podium, WinnerData } from "../utils/game"
 
 import {
   ApiWhiteCard,
@@ -190,6 +190,17 @@ export default (
     player.metadata?.socket.emit("sync", data)
   }
 
+  function sendGameEnd(roomId: string, podium: Podium<PlayerMetadata>) {
+    io.to(roomId).emit("end", {
+      podium: podium.map((pel, i) => ({
+        place: i + 1,
+        name: pel.metadata?.user.name || "?",
+        picture: pel.metadata?.user.picture || "",
+        points: pel.points
+      }))
+    })
+  }
+
   io.on("connection", async socket => {
     const userId = (socket.request as ExtendedReq).session?.passport?.user
     if (!userId) return socket.disconnect()
@@ -210,6 +221,7 @@ export default (
     )
 
     try {
+      // dont bump users with null
       await db.bumpAnonymousUser(user, true)
     } catch (err) {
       logger.error(err)
@@ -285,8 +297,15 @@ export default (
     socket.on("verdict", ({ verdict }) => {
       try {
         const winnerData = player.makeVerdict(verdict)
-        game.newRound()
-        sendNewRound(roomId, room, winnerData)
+
+        const canContinue = game.newRound()
+
+        if (canContinue) {
+          sendNewRound(roomId, room, winnerData)
+        } else {
+          const podium = game.end()
+          sendGameEnd(roomId, podium)
+        }
       } catch (err) {
         logger.error(err)
       }

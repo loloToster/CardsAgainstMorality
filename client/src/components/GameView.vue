@@ -14,6 +14,7 @@ import GamePlayers from "./GamePlayers.vue"
 import UAreTsar from "./UAreTsar.vue"
 import GameChoices from "./GameChoices.vue"
 import RoundWinnerModal from "./RoundWinnerModal.vue"
+import PodiumModal from "./PodiumModal.vue"
 
 const props = defineProps<{
   gameState: GameState
@@ -132,12 +133,17 @@ function onCardsScroll(e: WheelEvent) {
 </script>
 <template>
   <RoundWinnerModal
-    v-if="gameState.winnerData"
-    @close="gameState.winnerData = null"
-    :winner="gameState.winnerData.winner"
-    :black-card="gameState.winnerData.blackCard"
-    :winning-cards="gameState.winnerData.winningCards"
-    :im-winner="gameState.winnerData.imWinner"
+    v-if="gameState.roundWinnerData"
+    @close="gameState.roundWinnerData = null"
+    :winner="gameState.roundWinnerData.winner"
+    :black-card="gameState.roundWinnerData.blackCard"
+    :winning-cards="gameState.roundWinnerData.winningCards"
+    :im-winner="gameState.roundWinnerData.imWinner"
+  />
+  <PodiumModal
+    v-if="gameState.podium"
+    @close="gameState.podium = null"
+    :podium="gameState.podium"
   />
   <div class="game">
     <div class="game__top">

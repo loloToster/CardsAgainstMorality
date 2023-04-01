@@ -25,6 +25,8 @@ export interface WinnerData<PM> {
   winningCards: number[]
 }
 
+export type Podium<PM> = Array<{ metadata?: PM; points: number }>
+
 export class Player<M = unknown> {
   game: Game<M>
   metadata: M | undefined
@@ -197,11 +199,14 @@ export class Game<PM = unknown> {
     }
   }
 
+  /**
+   * @returns boolean that indicates whether the game can continue
+   */
   newRound() {
     if (this.state === GameState.NOT_STARTED)
       throw new Error("Game is not started")
 
-    // end if not enough cards
+    if (!this.enoughCards()) return false
 
     this.state = GameState.CHOOSING
 
@@ -225,6 +230,8 @@ export class Game<PM = unknown> {
         draw: newBlackCard.draw ?? 1
       }
       : null
+
+    return true
   }
 
   getChoices() {
@@ -241,6 +248,13 @@ export class Game<PM = unknown> {
   }
 
   end() {
+    const podium: Podium<PM> = this.players
+      .map(p => ({
+        meta: p.metadata,
+        points: p.points
+      }))
+      .sort((a, b) => b.points - a.points)
+
     this.state = GameState.NOT_STARTED
 
     this.tsar = null
@@ -251,5 +265,7 @@ export class Game<PM = unknown> {
       player.choice = []
       player.points = 0
     }
+
+    return podium
   }
 }

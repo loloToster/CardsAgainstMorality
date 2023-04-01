@@ -17,11 +17,19 @@ export type SyncData =
   | { started: false }
   | (NewRoundData & { started: true; choices?: ApiWhiteCard[][] })
 
+export interface PodiumEl {
+  place: number
+  name: string
+  picture: string
+  points: number
+}
+
 export interface ServerToClientSocketEvents {
   players: (data: { players: ApiPlayer[] }) => void
   "new-round": (data: NewRoundData & { prevRound?: PrevRound }) => void
   choices: (data: { choices: ApiWhiteCard[][] }) => void
   sync: (data: SyncData) => void
+  end: (data: { podium: PodiumEl[] }) => void
 }
 
 export interface ClientToServerSocketEvents {
