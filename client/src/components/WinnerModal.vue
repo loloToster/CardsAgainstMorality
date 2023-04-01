@@ -51,7 +51,7 @@ defineEmits(["close"])
   height: 100vh;
   width: 100vw;
   background-color: #0e0e0edd;
-  z-index: 1;
+  z-index: 3;
 
   h1 {
     max-width: 60vw;

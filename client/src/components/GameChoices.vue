@@ -95,7 +95,7 @@ function onTransEnd(e: TransitionEvent, idx: number) {
   max-width: 100%;
   margin: auto;
   overflow-y: auto;
-  padding: 0 12px;
+  padding: 0 50px;
 
   &::-webkit-scrollbar {
     display: none;
@@ -114,11 +114,10 @@ function onTransEnd(e: TransitionEvent, idx: number) {
 
     font-size: 1.8rem;
     transition: font-size 150ms linear;
-    z-index: -1;
 
     &.active {
       font-size: 3.3rem;
-      z-index: 0;
+      z-index: 1;
     }
 
     &__card {

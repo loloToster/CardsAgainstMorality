@@ -181,7 +181,7 @@ defineProps<{ players: ApiPlayer[] }>()
     position: fixed;
     bottom: 0;
     left: 0;
-    z-index: 1;
+    z-index: 3;
     width: 100%;
     flex-direction: row;
     padding-top: 4px;

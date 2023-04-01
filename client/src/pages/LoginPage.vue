@@ -227,6 +227,14 @@ function onFallen(card: ApiRandomCard) {
     border: grey 1px solid;
     border-radius: 12px;
     background-color: #242424df;
+
+    @media (max-width: 600px) {
+      border: none;
+      border-radius: 0;
+      width: 100%;
+      height: 100%;
+      padding-top: 20vh;
+    }
   }
 
   &__logo {
@@ -243,6 +251,8 @@ function onFallen(card: ApiRandomCard) {
     display: flex;
     align-items: center;
     color: grey;
+    max-width: 235px;
+    margin: auto;
 
     &::before,
     &::after {
@@ -259,6 +269,11 @@ function onFallen(card: ApiRandomCard) {
     &::after {
       margin-left: 5px;
     }
+  }
+
+  &__btns {
+    width: fit-content;
+    margin: auto;
   }
 
   &__btn {
@@ -291,6 +306,7 @@ function onFallen(card: ApiRandomCard) {
   &__warning {
     max-width: 230px;
     font-size: 0.7rem;
+    margin: auto;
     margin-bottom: 10px;
     text-align: center;
     color: lightgrey;

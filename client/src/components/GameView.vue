@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, reactive } from "vue"
+import { computed, reactive, ref, watch } from "vue"
+import { useResizeObserver } from "@vueuse/core"
 
 import { ApiPlayer } from "@backend/types"
 import { GameStage, GameState } from "../types/game"
@@ -31,10 +32,33 @@ defineEmits<{
   (ev: "verdict", choiceIdx: number): void
 }>()
 
+const hand = ref<HTMLDivElement>()
+
 const showedCard = reactive({ id: -1 })
 
 function onCardShow(e: TouchEvent, cardId: number) {
-  if (showedCard.id === cardId) return
+  if (showedCard.id === cardId) {
+    showedCard.id = -1
+    return
+  }
+
+  // if cards are already visible
+  if (hand.value) {
+    const firstCardWrapper = hand.value.querySelector(
+      ".game__hand__card-wrapper"
+    )
+    const firstCard = firstCardWrapper?.querySelector(".card")
+
+    if (
+      firstCardWrapper &&
+      firstCard &&
+      firstCardWrapper.getBoundingClientRect().width ===
+        firstCard.getBoundingClientRect().width
+    ) {
+      showedCard.id = -1
+      return
+    }
+  }
 
   showedCard.id = cardId
   e.preventDefault()
@@ -68,6 +92,43 @@ function onPickedCardClick(cardId: number) {
 function onChangeChoice(choiceIdx: number) {
   props.gameState.activeChoiceIdx = choiceIdx
 }
+
+const TABLE_CARDS_GAP = 8
+const MAX_CARD_W = 226
+const table = ref<HTMLDivElement>()
+const tableCardsState = reactive<{ w: number | undefined }>({ w: undefined })
+
+const numOfTableCards = computed(() => {
+  return 1 + props.gameState.pickedCards.length + activeChoice.value.length
+})
+
+function resizeTableCards(w: number) {
+  const g = (numOfTableCards.value - 1) * TABLE_CARDS_GAP
+  tableCardsState.w = Math.min((w - g) / numOfTableCards.value, MAX_CARD_W)
+}
+
+useResizeObserver(table, entries => {
+  const entry = entries[0]
+  const { width } = entry.contentRect
+  resizeTableCards(width)
+})
+
+watch(
+  () => numOfTableCards.value,
+  () => {
+    if (!table.value) return
+    const { width } = table.value.getBoundingClientRect()
+    resizeTableCards(width)
+  }
+)
+
+function onCardsScroll(e: WheelEvent) {
+  e.preventDefault()
+
+  hand.value?.scrollBy({
+    left: e.deltaY
+  })
+}
 </script>
 <template>
   <WinnerModal
@@ -80,18 +141,27 @@ function onChangeChoice(choiceIdx: number) {
   />
   <div class="game">
     <div class="game__top">
-      <div class="game__table">
-        <div class="game__table__cards">
+      <div
+        class="game__table"
+        ref="table"
+        :class="{ active: numOfTableCards !== 1 }"
+      >
+        <div
+          class="game__table__cards"
+          :style="{ '--table-cards-width': TABLE_CARDS_GAP }"
+        >
           <PlayingCard
+            :width="tableCardsState.w"
             :text="gameState.blackCard.text"
             :pack="gameState.blackCard.pack"
             :pick="gameState.blackCard.pick"
             color="black"
-            :animated="!(gameState.pickedCards.length || activeChoice.length)"
+            :animated="numOfTableCards === 1"
             glow
           />
           <PlayingCard
             v-for="card in gameState.pickedCards"
+            :width="tableCardsState.w"
             @click="onPickedCardClick(card.id)"
             :text="card.text"
             :pack="card.pack"
@@ -100,6 +170,7 @@ function onChangeChoice(choiceIdx: number) {
           />
           <PlayingCard
             v-for="card in activeChoice"
+            :width="tableCardsState.w"
             :text="card.text"
             :pack="card.pack"
             color="white"
@@ -133,7 +204,7 @@ function onChangeChoice(choiceIdx: number) {
       </div>
       <GamePlayers :players="players" />
     </div>
-    <div class="game__hand">
+    <div @wheel="onCardsScroll" class="game__hand" ref="hand">
       <div
         v-for="card in gameState.cards"
         class="game__hand__card-wrapper"
@@ -144,11 +215,10 @@ function onChangeChoice(choiceIdx: number) {
           @click="onCardPick(card.id)"
           class="game__hand__card"
           :class="{ active: card.id === showedCard.id }"
+          :text="card.text"
           :pack="card.pack"
           color="white"
-        >
-          {{ card.text }}
-        </PlayingCard>
+        />
       </div>
     </div>
   </div>
@@ -168,17 +238,28 @@ $main-gap: 20px;
 
   &__table {
     display: flex;
+    align-items: center;
     flex-direction: column;
     justify-content: space-between;
     gap: $main-gap;
     flex-grow: 1;
-    min-width: 0;
+
+    &.active {
+      overflow: hidden;
+    }
 
     &__cards {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
+      gap: calc(var(--table-cards-width, 8) * 1px);
+      height: 325px;
+      width: fit-content;
+      max-width: 100%;
+      margin: auto;
+    }
+    &.active &__cards {
+      overflow-y: auto;
+      overflow-x: hidden;
     }
   }
 
@@ -208,6 +289,7 @@ $main-gap: 20px;
 
     &__card {
       position: relative;
+      z-index: 2;
       cursor: pointer;
       transition: transform ease-in-out 100ms;
 
@@ -230,6 +312,29 @@ $main-gap: 20px;
 
       &:hover &::after {
         height: 60%;
+      }
+    }
+
+    @media (max-width: 900px) {
+      gap: 8px;
+      overflow-x: scroll;
+
+      &__card-wrapper {
+        flex: unset;
+        flex-shrink: 0;
+      }
+
+      &__card {
+        --w: 150px;
+
+        &:hover,
+        &.active {
+          transform: unset;
+        }
+
+        &:hover &::after {
+          height: 0;
+        }
       }
     }
   }

@@ -74,7 +74,10 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
 .header {
   display: flex;
   align-items: center;
-  padding: 16px 13vw;
+  width: 90vw;
+  max-width: 1200px;
+  padding: 16px 0;
+  margin: auto;
   background-color: transparent;
 
   &__link {
@@ -83,7 +86,7 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
   }
 
   &__logo {
-    font-size: 1.6rem;
+    font-size: clamp(1.2rem, 2vw, 1.6rem);
     font-weight: 600;
     margin-right: auto;
   }
@@ -102,7 +105,7 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
   &__profile-menu {
     position: absolute;
     z-index: 1;
-    top: 100%;
+    top: calc(100% + 4px);
     right: 0;
     min-width: 200px;
     max-width: 300px;

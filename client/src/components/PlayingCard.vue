@@ -127,12 +127,11 @@ $default-card-height: 320px;
 $default-card-width: 226px;
 
 .card-perspective {
+  --w: #{$default-card-width};
   perspective: 1500px;
 }
 
 .card {
-  --w: #{$default-card-width};
-
   --padding: calc(var(--w) * 0.081);
   --border-radius: calc(var(--w) * 0.049);
   --main-font-size: calc(var(--w) * 0.07);
