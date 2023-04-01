@@ -13,7 +13,7 @@ import PlayingCard from "./PlayingCard.vue"
 import GamePlayers from "./GamePlayers.vue"
 import UAreTsar from "./UAreTsar.vue"
 import GameChoices from "./GameChoices.vue"
-import WinnerModal from "./WinnerModal.vue"
+import RoundWinnerModal from "./RoundWinnerModal.vue"
 
 const props = defineProps<{
   gameState: GameState
@@ -131,7 +131,7 @@ function onCardsScroll(e: WheelEvent) {
 }
 </script>
 <template>
-  <WinnerModal
+  <RoundWinnerModal
     v-if="gameState.winnerData"
     @close="gameState.winnerData = null"
     :winner="gameState.winnerData.winner"
@@ -310,7 +310,7 @@ $main-gap: 20px;
         transform: translateY(-60%);
       }
 
-      &:hover &::after {
+      &:hover::after {
         height: 60%;
       }
     }
@@ -332,7 +332,7 @@ $main-gap: 20px;
           transform: unset;
         }
 
-        &:hover &::after {
+        &:hover::after {
           height: 0;
         }
       }
