@@ -1,9 +1,16 @@
 import passport from "passport"
 
+import { verify as captcha } from "hcaptcha"
+import {
+  adjectives,
+  animals,
+  colors,
+  uniqueNamesGenerator,
+  Config as UniqueNamesConfig
+} from "unique-names-generator"
+
 import db from "./db"
 import { User } from "@prisma/client"
-
-import { verify as captcha } from "hcaptcha"
 
 import { Strategy as AnonymousStrategy } from "passport-custom"
 import { Strategy as GoogleStrategy } from "passport-google-oauth20"
@@ -11,6 +18,17 @@ import { Strategy as DiscordStrategy } from "passport-discord"
 import { Strategy as FacebookStrategy } from "passport-facebook"
 
 import { StrategyIdentifier } from "../consts"
+
+const uniqueNamesConfig: UniqueNamesConfig = {
+  dictionaries: [
+    adjectives,
+    colors,
+    animals,
+    [...Array(10000).keys()].map(n => ("0000" + n).slice(-4))
+  ],
+  separator: "",
+  style: "capital"
+}
 
 export default () => {
   const {
@@ -61,8 +79,10 @@ export default () => {
 
       const strategyId = StrategyIdentifier.Anonymous
 
+      const name = uniqueNamesGenerator(uniqueNamesConfig)
+
       const user = await db.user.create({
-        data: { name: "Anonymous", strategyId, lastUsed: new Date() }
+        data: { name, strategyId, lastUsed: new Date() }
       })
 
       done(null, user)
