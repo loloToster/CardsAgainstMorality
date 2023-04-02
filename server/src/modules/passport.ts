@@ -3,6 +3,8 @@ import passport from "passport"
 import db from "./db"
 import { User } from "@prisma/client"
 
+import { verify as captcha } from "hcaptcha"
+
 import { Strategy as AnonymousStrategy } from "passport-custom"
 import { Strategy as GoogleStrategy } from "passport-google-oauth20"
 import { Strategy as DiscordStrategy } from "passport-discord"
@@ -12,6 +14,7 @@ import { StrategyIdentifier } from "../consts"
 
 export default () => {
   const {
+    HCAPTCHA_SECRET,
     GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET,
     DISCORD_CLIENT_ID,
@@ -21,6 +24,7 @@ export default () => {
   } = process.env
 
   if (
+    !HCAPTCHA_SECRET ||
     !GOOGLE_CLIENT_ID ||
     !GOOGLE_CLIENT_SECRET ||
     !DISCORD_CLIENT_ID ||
@@ -41,6 +45,20 @@ export default () => {
 
   passport.use(
     new AnonymousStrategy(async (req, done) => {
+      const token = req.query.token?.toString()
+
+      if (!token) {
+        done(new Error("No captcha token"), null)
+        return
+      }
+
+      const { success } = await captcha(HCAPTCHA_SECRET, token)
+
+      if (!success) {
+        done(new Error("Invalid captcha token"), null)
+        return
+      }
+
       const strategyId = StrategyIdentifier.Anonymous
 
       const user = await db.user.create({
