@@ -70,15 +70,21 @@ class Database extends PrismaClient {
     )
   }
 
-  async bumpAnonymousUser(user: User, currentlyUsing = false) {
+  async bumpAnonymousUser(user: User, currentlyUsing?: boolean) {
     if (user.strategyId !== StrategyIdentifier.Anonymous) return
+
+    logger.info(`bumping user with id: '${user.id}'`)
 
     const lastUsed = currentlyUsing ? null : new Date()
 
-    logger.info(`bumping user with id: '${user.id}' to '${lastUsed}'`)
-
     try {
-      await this.user.update({ where: { id: user.id }, data: { lastUsed } })
+      await this.user.updateMany({
+        where:
+          currentlyUsing === undefined
+            ? { AND: [{ id: user.id }, { NOT: { lastUsed: null } }] }
+            : { id: user.id },
+        data: { lastUsed }
+      })
     } catch (err) {
       logger.error(err)
     }

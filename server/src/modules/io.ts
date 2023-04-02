@@ -221,7 +221,6 @@ export default (
     )
 
     try {
-      // dont bump users with null
       await db.bumpAnonymousUser(user, true)
     } catch (err) {
       logger.error(err)
