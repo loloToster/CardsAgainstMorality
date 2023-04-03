@@ -70,7 +70,6 @@ socket.on("sync", data => {
   gameState.blackCard = data.blackCard
   gameState.cards = data.cards
 
-  // todo: not started
   if (data.choices) {
     gameState.stage = GameStage.TSAR_VERDICT
     gameState.choices = data.choices

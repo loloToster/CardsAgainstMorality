@@ -28,11 +28,11 @@
     display: inline-block;
     background-image: linear-gradient(
       70deg,
-      #c98218 0,
-      #dbb809 30%,
-      #d8cf48 50%,
-      #dbb809 80%,
-      #c98218 100%
+      #dc942e 0,
+      #ecc91b 30%,
+      #f6ee74 50%,
+      #ecc91b 80%,
+      #dc942e 100%
     );
     color: transparent;
     background-clip: text;

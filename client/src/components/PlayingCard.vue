@@ -210,6 +210,7 @@ $default-card-width: 226px;
     align-items: center;
     gap: calc(var(--w) * 0.014);
     font-size: var(--pack-font-size);
+    line-height: 1.3;
   }
 
   &__actions {

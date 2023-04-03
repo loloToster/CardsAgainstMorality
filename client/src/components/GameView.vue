@@ -83,6 +83,8 @@ function onCardPick(cardId: number) {
 }
 
 function onPickedCardClick(cardId: number) {
+  if (props.gameState.submitted) return
+
   moveItem(
     props.gameState.pickedCards,
     props.gameState.cards,

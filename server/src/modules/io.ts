@@ -6,6 +6,7 @@ import { User } from "@prisma/client"
 import db from "./db"
 import logger from "./logger"
 
+import { shuffle } from "../utils"
 import { Game, GameState, Player, Podium, WinnerData } from "../utils/game"
 
 import {
@@ -151,6 +152,8 @@ export default (
     const choices = (await db.mapIdsToApiWhiteCards(
       game.getChoices()
     )) as ApiWhiteCard[][]
+
+    shuffle(choices)
 
     io.to(roomId).emit("choices", { choices })
   }
