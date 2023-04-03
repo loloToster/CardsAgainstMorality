@@ -7,6 +7,7 @@ import { user } from "../contexts/user"
 
 import AppButton from "./AppButton.vue"
 import AppLoader from "./AppLoader.vue"
+import NumericInput from "./NumericInput.vue"
 import GamePack from "./GamePack.vue"
 import UserAvatar from "./UserAvatar.vue"
 
@@ -82,10 +83,18 @@ function onCopyLink() {
       </div>
       <div v-else class="settings__panel settings__main">
         <div class="settings__main__options">
+          <div class="settings__main__options-row">
+            <h3>Score limit</h3>
+            <NumericInput :lowest="1" :highest="20" :default-val="15" />
+          </div>
+          <div class="settings__main__options-row">
+            <h3>Player limit</h3>
+            <NumericInput :lowest="2" :highest="10" :default-val="3" />
+          </div>
           <h3>
             Card sets{{
               selectedPacks.length ? ` (${selectedPacks.length})` : ""
-            }}:
+            }}
           </h3>
           <div class="settings__packs">
             <GamePack
@@ -216,14 +225,19 @@ $main-gap: 16px;
   &__main {
     display: flex;
     flex-direction: column;
+    gap: 8px;
 
     h3 {
       margin: 0;
-      margin-bottom: 8px;
     }
 
     &__options {
       flex-grow: 1;
+      overflow-y: auto;
+    }
+
+    &__options-row {
+      margin-bottom: 8px;
     }
 
     &__btns {
@@ -240,7 +254,7 @@ $main-gap: 16px;
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
-    margin-bottom: 8px;
+    margin: 8px 0;
   }
 
   &__invite {
