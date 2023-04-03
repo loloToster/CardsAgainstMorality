@@ -15,6 +15,9 @@ import AppLoader from "../components/AppLoader.vue"
 import GameView from "../components/GameView.vue"
 import GameSettings from "../components/GameSettings.vue"
 
+import NewRoundAudio from "../assets/new-round.mp3"
+import TsarChoiceAudio from "../assets/tsar-choice.mp3"
+
 const route = useRoute()
 
 const state = reactive<{
@@ -24,6 +27,7 @@ const state = reactive<{
 })
 
 const gameState = reactive<GameState>({
+  audio: window.localStorage.getItem("audio") === "on",
   stage: GameStage.UNKNOWN,
   imTsar: false,
   blackCard: { id: -1, text: "test", pack: "test pack", pick: 1 },
@@ -40,11 +44,16 @@ const gameState = reactive<GameState>({
   podium: null
 })
 
+const newRoundAudio = new Audio(NewRoundAudio)
+const tsarChoiceAudio = new Audio(TsarChoiceAudio)
+
 socket.on("players", ({ players }) => {
   state.players = players
 })
 
 socket.on("new-round", data => {
+  if (gameState.audio) newRoundAudio.play()
+
   gameState.stage = GameStage.CHOOSING
   gameState.imTsar = data.tsar
   gameState.blackCard = data.blackCard
@@ -54,6 +63,8 @@ socket.on("new-round", data => {
 })
 
 socket.on("choices", ({ choices }) => {
+  if (gameState.audio) tsarChoiceAudio.play()
+
   gameState.stage = GameStage.TSAR_VERDICT
   gameState.activeChoiceIdx = null
   gameState.choices = choices

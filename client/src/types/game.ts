@@ -8,6 +8,7 @@ export enum GameStage {
 }
 
 export interface GameState {
+  audio: boolean
   stage: GameStage
   imTsar: boolean
   blackCard: ApiBlackCard
