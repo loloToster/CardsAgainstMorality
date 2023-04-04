@@ -8,6 +8,7 @@ import { GameStage, GameState } from "../types/game"
 import { moveItem } from "../utils"
 
 import AppButton from "./AppButton.vue"
+import AppTooltip from "./AppTooltip.vue"
 
 import PlayingCard from "./PlayingCard.vue"
 import GamePlayers from "./GamePlayers.vue"
@@ -160,6 +161,9 @@ function onCardsScroll(e: WheelEvent) {
   <div class="game">
     <div class="game__menu">
       <button @click="onAudioToggle" class="game__menu__btn" v-wave>
+        <AppTooltip class="game__menu__btn__tooltip">
+          {{ gameState.audio ? "Turn off sound" : "Turn on sound" }}
+        </AppTooltip>
         <svg
           v-if="gameState.audio"
           xmlns="http://www.w3.org/2000/svg"
@@ -294,6 +298,14 @@ $main-gap: 20px;
         width: 32px;
         height: 32px;
         fill: #585858;
+      }
+
+      &__tooltip {
+        display: none;
+      }
+
+      &:hover &__tooltip {
+        display: block;
       }
     }
   }
