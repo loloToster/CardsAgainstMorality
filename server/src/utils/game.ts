@@ -163,7 +163,7 @@ export class Game<PM = unknown> {
   }
 
   removePlayer(player: Player) {
-    this.players.filter(p => p !== player)
+    this.players = this.players.filter(p => p !== player)
   }
 
   start() {

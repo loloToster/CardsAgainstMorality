@@ -324,6 +324,10 @@ export default (
         logger.info(`Deleting room with id: '${roomId}'`)
         deleteRoom(roomId)
       } else {
+        if (game.state === GameState.NOT_STARTED) {
+          game.removePlayer(player)
+        }
+
         sendPlayers(roomId, room)
       }
 
