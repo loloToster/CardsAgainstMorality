@@ -8,8 +8,12 @@ import { user } from "../contexts/user"
 import AppButton from "./AppButton.vue"
 import AppLoader from "./AppLoader.vue"
 import NumericInput from "./NumericInput.vue"
+import AnimatedNumber from "./AnimatedNumber.vue"
 import GamePack from "./GamePack.vue"
 import UserAvatar from "./UserAvatar.vue"
+
+import BlackCardIcon from "../assets/black-card-icon.svg?component"
+import WhiteCardIcon from "../assets/white-card-icon.svg?component"
 
 const props = defineProps<{ roomId: string; players: ApiPlayer[] }>()
 
@@ -36,6 +40,22 @@ const state = reactive<{
 const selectedPacks = computed(() => {
   return [...state.packs].filter(p => p.selected)
 })
+
+const numOfWhiteCards = computed(() => {
+  return selectedPacks.value.reduce((n, { numOfWhites }) => n + numOfWhites, 0)
+})
+
+const numOfBlackCards = computed(() => {
+  return selectedPacks.value.reduce((n, { numOfBlacks }) => n + numOfBlacks, 0)
+})
+
+function selectAllPacks() {
+  state.packs.forEach(p => (p.selected = true))
+}
+
+function unselectAllPacks() {
+  state.packs.forEach(p => (p.selected = false))
+}
 
 function togglePack(packId: number) {
   state.packs = state.packs.map(p => ({
@@ -91,25 +111,41 @@ function onCopyLink() {
             <h3>Player limit</h3>
             <NumericInput :lowest="2" :highest="10" :default-val="3" />
           </div>
-          <h3>
-            Card sets{{
-              selectedPacks.length ? ` (${selectedPacks.length})` : ""
-            }}
-          </h3>
-          <div class="settings__packs">
-            <GamePack
-              v-for="pack in state.packs"
-              @click="togglePack(pack.id)"
-              :pack="pack"
-              :selected="pack.selected"
-              :key="pack.id"
-            />
+          <div
+            class="settings__main__options-row settings__main__options-row--flex"
+          >
+            <h3>Card sets</h3>
+            <button @click="selectAllPacks">Select all</button>
+            <button @click="unselectAllPacks">Unselect all</button>
+          </div>
+          <div class="settings__main__options-row">
+            <div class="settings__packs">
+              <GamePack
+                v-for="pack in state.packs"
+                @click="togglePack(pack.id)"
+                :pack="pack"
+                :selected="pack.selected"
+                :key="pack.id"
+              />
+            </div>
           </div>
         </div>
-        <div class="settings__main__btns">
+        <div class="settings__main__bottom">
+          <BlackCardIcon class="settings__main__bottom__icon" />
+          <AnimatedNumber
+            :value="numOfBlackCards"
+            class="settings__main__bottom__n"
+          />
+          <WhiteCardIcon class="settings__main__bottom__icon" />
+          <AnimatedNumber
+            :value="numOfWhiteCards"
+            class="settings__main__bottom__n"
+          />
           <AppButton
             @click="onStart()"
-            :disabled="!selectedPacks.length || players.length < 2"
+            :disabled="
+              !numOfBlackCards || !numOfWhiteCards || players.length < 2
+            "
           >
             Start
           </AppButton>
@@ -238,14 +274,41 @@ $main-gap: 16px;
 
     &__options-row {
       margin-bottom: 8px;
+
+      &--flex {
+        display: flex;
+        align-items: center;
+      }
+
+      button {
+        margin-left: 8px;
+        font-size: 0.7rem;
+        cursor: pointer;
+        color: #dfdfdf;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
 
-    &__btns {
+    &__bottom {
       display: flex;
+      align-items: center;
       gap: 8px;
 
-      & > *:first-child {
+      button {
         margin-left: auto;
+      }
+
+      &__icon {
+        height: 32px;
+        width: 32px;
+      }
+
+      &__n {
+        font-size: 1.3rem;
+        min-width: 4ch;
       }
     }
   }
@@ -254,7 +317,6 @@ $main-gap: 16px;
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
-    margin: 8px 0;
   }
 
   &__invite {

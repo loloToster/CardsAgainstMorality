@@ -33,9 +33,6 @@ const hoverColor = computed(() => {
 
 <style scoped lang="scss">
 button {
-  outline: none;
-  border: none;
-  appearance: none;
   padding: 8px 16px;
   border-radius: 4px;
   font-size: 1.2rem;
