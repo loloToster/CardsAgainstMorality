@@ -42,7 +42,6 @@ export default () => {
   } = process.env
 
   if (
-    !HCAPTCHA_SECRET ||
     !GOOGLE_CLIENT_ID ||
     !GOOGLE_CLIENT_SECRET ||
     !DISCORD_CLIENT_ID ||
@@ -65,16 +64,18 @@ export default () => {
     new AnonymousStrategy(async (req, done) => {
       const token = req.query.token?.toString()
 
-      if (!token) {
-        done(new Error("No captcha token"), null)
-        return
-      }
+      if (HCAPTCHA_SECRET) {
+        if (!token) {
+          done(new Error("No captcha token"), null)
+          return
+        }
 
-      const { success } = await captcha(HCAPTCHA_SECRET, token)
+        const { success } = await captcha(HCAPTCHA_SECRET, token)
 
-      if (!success) {
-        done(new Error("Invalid captcha token"), null)
-        return
+        if (!success) {
+          done(new Error("Invalid captcha token"), null)
+          return
+        }
       }
 
       const strategyId = StrategyIdentifier.Anonymous

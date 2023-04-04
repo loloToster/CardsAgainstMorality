@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, reactive } from "vue"
-import { RouterLink, useRouter } from "vue-router"
+import { RouterLink } from "vue-router"
 import HCaptcha from "@hcaptcha/vue3-hcaptcha"
 
 import type { ApiRandomCard } from "@backend/types"
@@ -14,14 +14,20 @@ import CaptchaImg from "../assets/captcha.png"
 
 const captchaSiteKey = import.meta.env.VITE_CAPTCHA_SITEKEY
 
-const router = useRouter()
-
 function loginWith(strategy: string) {
   window.location.replace("/auth/" + strategy)
 }
 
 function onVerify(token: string) {
   loginWith(`anonymous?token=${encodeURIComponent(token)}`)
+}
+
+function onLoginAnonymously() {
+  if (captchaSiteKey) {
+    state.captchaOpen = true
+  } else {
+    loginWith("anonymous")
+  }
 }
 
 interface AnimatedCard extends ApiRandomCard {
@@ -113,7 +119,7 @@ function onFallen(card: ApiRandomCard) {
           {{ TITLE }}
         </RouterLink>
         <AppButton
-          @click="state.captchaOpen = true"
+          @click="onLoginAnonymously"
           color="#080808"
           hColor="black"
           class="login__btn login__anonymous-btn"
@@ -167,7 +173,7 @@ function onFallen(card: ApiRandomCard) {
             <div class="login__btn__text">Login with Discord</div>
           </AppButton>
           <AppButton
-            @click="router.push('/auth/facebook')"
+            @click="loginWith('facebook')"
             color="#1877f2"
             hColor="#0b5fcc"
             class="login__btn"
