@@ -40,7 +40,7 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
         class="header__profile-menu"
       >
         <div class="header__profile-menu__details">
-          <UserAvatar :user="user.value" class="header__avatar" />
+          <UserAvatar :user="user.value" />
           <span>{{ user.value.name }}</span>
         </div>
         <div class="header__profile-menu__divider"></div>
@@ -92,8 +92,10 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
   }
 
   &__avatar {
-    height: 52px;
-    width: 52px;
+    min-width: 36px;
+    width: 4vw;
+    max-width: 52px;
+    aspect-ratio: 1;
     border-radius: 50%;
     cursor: pointer;
   }
@@ -108,7 +110,7 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
     top: calc(100% + 4px);
     right: 0;
     min-width: 200px;
-    max-width: 300px;
+    max-width: min(90vw, 300px);
     padding: 12px;
     background-color: #0f0f0f;
     border-radius: 6px;

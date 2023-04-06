@@ -8,10 +8,9 @@ import { GameStage, GameState } from "../types/game"
 import { moveItem } from "../utils"
 
 import AppButton from "./AppButton.vue"
-import AppTooltip from "./AppTooltip.vue"
 
 import PlayingCard from "./PlayingCard.vue"
-import GamePlayers from "./GamePlayers.vue"
+import GameMeta from "./GameMeta.vue"
 import UAreTsar from "./UAreTsar.vue"
 import GameChoices from "./GameChoices.vue"
 import RoundWinnerModal from "./RoundWinnerModal.vue"
@@ -34,18 +33,29 @@ defineEmits<{
   (ev: "verdict", choiceIdx: number): void
 }>()
 
+enum MAX_CARD_WIDTH {
+  SMALL = 160,
+  BIG = 226
+}
+
+enum CARD_HEIGHT {
+  SMALL = 228,
+  BIG = 325
+}
+
+const SMALLER_CARDS_BOUNDARY = 500
+
 const state = reactive<{
+  maxTableCardWidth: MAX_CARD_WIDTH
+  tableCardHeight: number | undefined
   tableCardWidth: number | undefined
   showedCard: number
 }>({
+  maxTableCardWidth: MAX_CARD_WIDTH.BIG,
+  tableCardHeight: undefined,
   tableCardWidth: undefined,
   showedCard: -1
 })
-
-function onAudioToggle() {
-  props.gameState.audio = !props.gameState.audio
-  window.localStorage.setItem("audio", props.gameState.audio ? "on" : "off")
-}
 
 const hand = ref<HTMLDivElement>()
 
@@ -109,7 +119,6 @@ function onChangeChoice(choiceIdx: number) {
 }
 
 const TABLE_CARDS_GAP = 8
-const MAX_CARD_W = 226
 const table = ref<HTMLDivElement>()
 
 const numOfTableCards = computed(() => {
@@ -118,12 +127,24 @@ const numOfTableCards = computed(() => {
 
 function resizeTableCards(w: number) {
   const g = (numOfTableCards.value - 1) * TABLE_CARDS_GAP
-  state.tableCardWidth = Math.min((w - g) / numOfTableCards.value, MAX_CARD_W)
+  state.tableCardWidth = Math.min(
+    (w - g) / numOfTableCards.value,
+    state.maxTableCardWidth
+  )
 }
 
 useResizeObserver(table, entries => {
   const entry = entries[0]
   const { width } = entry.contentRect
+
+  if (width < SMALLER_CARDS_BOUNDARY) {
+    state.maxTableCardWidth = MAX_CARD_WIDTH.SMALL
+    state.tableCardHeight = CARD_HEIGHT.SMALL
+  } else {
+    state.maxTableCardWidth = MAX_CARD_WIDTH.BIG
+    state.tableCardHeight = CARD_HEIGHT.BIG
+  }
+
   resizeTableCards(width)
 })
 
@@ -159,27 +180,6 @@ function onCardsScroll(e: WheelEvent) {
     :podium="gameState.podium"
   />
   <div class="game">
-    <div class="game__menu">
-      <button @click="onAudioToggle" class="game__menu__btn" v-wave>
-        <AppTooltip class="game__menu__btn__tooltip">
-          {{ gameState.audio ? "Turn off sound" : "Turn on sound" }}
-        </AppTooltip>
-        <svg
-          v-if="gameState.audio"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 96 960 960"
-        >
-          <path
-            d="M561.539 900.383v-61.999q86.538-27.538 139.422-100Q753.846 665.923 753.846 575q0-90.923-52.885-163.384-52.884-72.462-139.422-100v-61.999Q673.23 279.54 743.537 369.54q70.307 89.999 70.307 205.46 0 115.461-70.307 205.46-70.307 90-181.998 119.923ZM146.156 675.999V476.001h148.46l171.537-171.536v543.07L294.616 675.999h-148.46Zm415.383 46.154V427.847q40.461 22 62.537 61.961Q646.153 529.77 646.153 576q0 45.615-22.269 84.884t-62.345 61.269Z"
-          />
-        </svg>
-        <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
-          <path
-            d="M778.922 981.537 658.307 860.922q-20.769 13.307-43.769 23.076-22.999 9.769-47.614 16.385v-61.999q12.846-4.615 24.999-9.423 12.154-4.807 23-11.423L471.538 674.153v173.382L300.001 675.999h-148.46V476.001h121.845L79.848 282.463 122 240.31l699.074 699.074-42.153 42.153Zm-19.539-216.23-42.999-42.998q20.846-32.539 31.847-69.808 11-37.27 11-77.501 0-90.923-52.885-163.384-52.884-72.462-139.422-100v-61.999Q679 279.54 749.114 369.54q70.115 89.999 70.115 205.46 0 52.615-15.654 101.038-15.654 48.423-44.192 89.269Zm-122.461-122.46-69.998-69.999V427.847q40.461 22 62.537 61.961Q651.538 529.77 651.538 576q0 17.693-3.654 34.5-3.654 16.808-10.962 32.347ZM471.538 477.463l-86.307-86.692 86.307-86.306v172.998Z"
-          />
-        </svg>
-      </button>
-    </div>
     <div class="game__top">
       <div
         class="game__table"
@@ -188,7 +188,10 @@ function onCardsScroll(e: WheelEvent) {
       >
         <div
           class="game__table__cards"
-          :style="{ '--table-cards-width': TABLE_CARDS_GAP }"
+          :style="{
+            '--table-cards-height': state.tableCardHeight,
+            '--table-cards-gap': TABLE_CARDS_GAP
+          }"
         >
           <PlayingCard
             :width="state.tableCardWidth"
@@ -242,7 +245,7 @@ function onCardsScroll(e: WheelEvent) {
           </div>
         </div>
       </div>
-      <GamePlayers :players="players" />
+      <GameMeta :game-state="gameState" :players="players" />
     </div>
     <div @wheel="onCardsScroll" class="game__hand" ref="hand">
       <div
@@ -271,49 +274,15 @@ $main-gap: 20px;
   max-width: 1100px;
   margin: auto;
 
-  &__menu {
-    position: absolute;
-    top: 0;
-    right: 0;
-    transform: translateX(calc(100% + 10px));
-
-    // TODO: find a good placefor menu on mobile
-    @media (max-width: 900px) {
-      display: none;
-    }
-
-    &__btn {
-      width: 36px;
-      height: 36px;
-      appearance: none;
-      margin: 0;
-      padding: 0;
-      border: 0;
-      outline: 0;
-      background-color: transparent;
-      cursor: pointer;
-      border-radius: 50%;
-
-      svg {
-        width: 32px;
-        height: 32px;
-        fill: #585858;
-      }
-
-      &__tooltip {
-        display: none;
-      }
-
-      &:hover &__tooltip {
-        display: block;
-      }
-    }
-  }
-
   &__top {
     display: flex;
     gap: $main-gap;
     margin-bottom: $main-gap * 2;
+
+    @media (max-width: 800px) {
+      gap: $main-gap * 0.5;
+      margin-bottom: $main-gap;
+    }
   }
 
   &__table {
@@ -324,6 +293,10 @@ $main-gap: 20px;
     gap: $main-gap;
     flex-grow: 1;
 
+    @media (max-width: 800px) {
+      gap: $main-gap * 0.5;
+    }
+
     &.active {
       overflow: hidden;
     }
@@ -331,8 +304,8 @@ $main-gap: 20px;
     &__cards {
       display: flex;
       align-items: center;
-      gap: calc(var(--table-cards-width, 8) * 1px);
-      height: 325px;
+      gap: calc(var(--table-cards-gap, 8) * 1px);
+      height: calc(var(--table-cards-height, 325) * 1px);
       width: fit-content;
       max-width: 100%;
       margin: auto;
@@ -357,6 +330,7 @@ $main-gap: 20px;
   &__hand {
     display: flex;
     margin: auto;
+    margin-bottom: 60px;
 
     &__card-wrapper {
       flex: 1 1 0;
