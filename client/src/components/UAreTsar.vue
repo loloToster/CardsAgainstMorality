@@ -9,7 +9,7 @@
 
 <style scoped lang="scss">
 .tsar {
-  font-size: 2.4rem;
+  font-size: clamp(1.6rem, 5.5vw, 2.4rem);
   font-weight: bold;
   letter-spacing: 1px;
 

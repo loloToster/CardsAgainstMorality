@@ -29,13 +29,13 @@ withDefaults(defineProps<{ position?: Position }>(), { position: "top" })
   }
 
   &--top {
-    top: -var(--gap);
+    top: calc(-1 * var(--gap));
     left: 50%;
     transform: translate(-50%, -100%);
   }
 
   &--left {
-    left: -var(--gap);
+    left: calc(-1 * var(--gap));
     top: 50%;
     transform: translate(-100%, -50%);
   }

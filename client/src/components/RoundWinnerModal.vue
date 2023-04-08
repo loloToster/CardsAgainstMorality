@@ -72,6 +72,7 @@ defineEmits(["close"])
     max-width: 60vw;
     margin: 0;
     margin-bottom: 16px;
+    font-size: clamp(1.2rem, 5vw, 2.4rem);
 
     span {
       display: inline-block;
