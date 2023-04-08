@@ -5,12 +5,10 @@ import { Server as SocketIoServer } from "socket.io"
 import cookieSession from "cookie-session"
 import passport from "passport"
 
-import { ClientToServerSocketEvents, ServerToClientSocketEvents } from "./types"
-
 import configurePassport from "./modules/passport"
 import db from "./modules/db"
 import logger from "./modules/logger"
-import setupGameSocketIoHandlers from "./modules/io"
+import { Rooms } from "./modules/rooms"
 
 import { loadRoutes } from "./utils/loadRoutes"
 
@@ -40,10 +38,7 @@ configurePassport()
 app.use(passport.initialize())
 app.use(passport.session())
 
-const io = new SocketIoServer<
-  ClientToServerSocketEvents,
-  ServerToClientSocketEvents
->(server, { cors: { origin: "*" } })
+const io = new SocketIoServer(server, { cors: { origin: "*" } })
 
 io.use((s, next) =>
   sessionMw(
@@ -53,7 +48,8 @@ io.use((s, next) =>
   )
 )
 
-setupGameSocketIoHandlers(io)
+const rooms = new Rooms(io)
+app.set("rooms", rooms)
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))

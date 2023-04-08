@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue"
-import AppTooltip from "./AppTooltip.vue"
+import AppTooltip from "../../AppTooltip.vue"
 
 withDefaults(
   defineProps<{

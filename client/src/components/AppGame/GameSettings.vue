@@ -1,24 +1,25 @@
 <script setup lang="ts">
 import { computed, reactive } from "vue"
 
-import { ApiPlayer, ApiCardPack } from "@backend/types"
-import { copyToClipboard } from "../utils"
-import { user } from "../contexts/user"
+import { ApiCardPack } from "@backend/types"
+import { copyToClipboard } from "../../utils"
+import { user } from "../../contexts/user"
+import { gameState } from "./contexts/gamestate"
 
-import AppButton from "./AppButton.vue"
-import AppLoader from "./AppLoader.vue"
-import NumericInput from "./NumericInput.vue"
-import AnimatedNumber from "./AnimatedNumber.vue"
-import GamePack from "./GamePack.vue"
-import UserAvatar from "./UserAvatar.vue"
+import AppButton from "../AppButton.vue"
+import AppLoader from "../AppLoader.vue"
+import NumericInput from "../NumericInput.vue"
+import AnimatedNumber from "../AnimatedNumber.vue"
+import UserAvatar from "../UserAvatar.vue"
+import GamePack from "./game-components/GamePack.vue"
 
-import BlackCardIcon from "../assets/black-card-icon.svg?component"
-import WhiteCardIcon from "../assets/white-card-icon.svg?component"
+import BlackCardIcon from "../../assets/black-card-icon.svg?component"
+import WhiteCardIcon from "../../assets/white-card-icon.svg?component"
 
-const props = defineProps<{ roomId: string; players: ApiPlayer[] }>()
+const props = defineProps<{ roomId: string }>()
 
 const leader = computed(() => {
-  return props.players.find(p => p.leader)
+  return gameState.players.find(p => p.leader)
 })
 
 const emit = defineEmits<{
@@ -89,7 +90,7 @@ function onCopyLink() {
   <div class="settings">
     <div class="settings__left">
       <div
-        v-if="state.loading || !players.length"
+        v-if="state.loading || !gameState.players.length"
         class="settings__panel settings__loading"
       >
         <AppLoader outline-color="#3a3a3a" />
@@ -144,7 +145,9 @@ function onCopyLink() {
           <AppButton
             @click="onStart()"
             :disabled="
-              !numOfBlackCards || !numOfWhiteCards || players.length < 2
+              !numOfBlackCards ||
+              !numOfWhiteCards ||
+              gameState.players.length < 2
             "
           >
             Start
@@ -191,14 +194,14 @@ function onCopyLink() {
         </div>
       </div>
       <div
-        v-if="!players.length"
+        v-if="!gameState.players.length"
         class="settings__players settings__panel settings__loading"
       >
         <AppLoader outline-color="#3a3a3a" />
       </div>
       <div v-else class="settings__players settings__panel">
         <div
-          v-for="player in players"
+          v-for="player in gameState.players"
           :key="player.name"
           class="settings__player"
         >

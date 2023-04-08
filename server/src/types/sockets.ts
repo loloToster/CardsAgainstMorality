@@ -1,4 +1,6 @@
-import { ApiBlackCard, ApiPlayer, ApiWhiteCard } from "./api"
+import type { IncomingMessage } from "http"
+import type { Server, Socket } from "socket.io"
+import type { ApiBlackCard, ApiPlayer, ApiWhiteCard } from "./api"
 
 export interface NewRoundData {
   tsar: boolean
@@ -36,4 +38,18 @@ export interface ClientToServerSocketEvents {
   start: (data: { packs: number[] }) => void
   submit: (data: { submition: number[] }) => void
   verdict: (data: { verdict: number[] }) => void
+}
+
+export type SocketServer = Server<
+  ClientToServerSocketEvents,
+  ServerToClientSocketEvents
+>
+
+export type SocketClient = Socket<
+  ClientToServerSocketEvents,
+  ServerToClientSocketEvents
+>
+
+export interface ExtendedReq extends IncomingMessage {
+  session?: { passport?: { user?: number } }
 }

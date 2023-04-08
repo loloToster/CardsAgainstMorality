@@ -4,8 +4,8 @@ import Color from "color"
 
 import { ApiCardPack } from "@backend/types"
 
-import SimpleChip from "./SimpleChip.vue"
-import defaultIcon from "../assets/white-card-icon.svg?raw"
+import AppChip from "../../AppChip.vue"
+import defaultIcon from "../../../assets/white-card-icon.svg?raw"
 
 const props = defineProps<{ pack: ApiCardPack; selected?: boolean }>()
 
@@ -35,7 +35,7 @@ const packIcon = computed(() => {
 </script>
 
 <template>
-  <SimpleChip
+  <AppChip
     @click="$emit('click')"
     :color="packColor"
     :style="{ '--pack-color': packColor }"
@@ -52,7 +52,7 @@ const packIcon = computed(() => {
       v-html="packIcon"
     ></div>
     {{ pack.name }}
-  </SimpleChip>
+  </AppChip>
 </template>
 
 <style scoped lang="scss">

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import confetti from "../contexts/confetti"
-import { ApiBlackCard, ApiWhiteCard } from "@backend/types"
-import PlayingCard from "./PlayingCard.vue"
 import { onMounted } from "vue"
+import confetti from "../../../contexts/confetti"
+import { ApiBlackCard, ApiWhiteCard } from "@backend/types"
+import PlayingCard from "../../PlayingCard.vue"
 
 const props = defineProps<{
   winner: string

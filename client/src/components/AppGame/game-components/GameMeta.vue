@@ -1,26 +1,15 @@
 <script setup lang="ts">
 import { reactive, computed } from "vue"
 
-import { ApiPlayer } from "@backend/types"
-import { GameState } from "../types/game"
+import { gameState, toggleAudio } from "../contexts/gamestate"
 
-import AppTooltip from "./AppTooltip.vue"
-import UserAvatar from "./UserAvatar.vue"
-
-const props = defineProps<{
-  gameState: GameState
-  players: ApiPlayer[]
-}>()
+import AppTooltip from "../../AppTooltip.vue"
+import UserAvatar from "../../UserAvatar.vue"
 
 const state = reactive({ gameMenuActive: false })
 
-function onAudioToggle() {
-  props.gameState.audio = !props.gameState.audio
-  window.localStorage.setItem("audio", props.gameState.audio ? "on" : "off")
-}
-
 const audioTooltip = computed(() => {
-  return props.gameState.audio ? "Turn off sound" : "Turn on sound"
+  return gameState.audio ? "Turn off sound" : "Turn on sound"
 })
 </script>
 <template>
@@ -28,7 +17,7 @@ const audioTooltip = computed(() => {
     <div class="game-menu-wrapper">
       <div class="game-menu" :class="{ active: state.gameMenuActive }">
         <button
-          @click="onAudioToggle"
+          @click="toggleAudio"
           class="game-menu__btn game-menu__item"
           v-wave
         >
@@ -97,7 +86,7 @@ const audioTooltip = computed(() => {
     <div class="game-meta__sep"></div>
     <div class="players">
       <div
-        v-for="player in players"
+        v-for="player in gameState.players"
         class="players__player"
         :key="player.userId"
       >

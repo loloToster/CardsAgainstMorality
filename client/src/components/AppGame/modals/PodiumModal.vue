@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue"
 import { PodiumEl } from "@backend/types"
-import UserAvatar from "./UserAvatar.vue"
+import UserAvatar from "../../UserAvatar.vue"
 
 const props = defineProps<{ podium: PodiumEl[] }>()
 

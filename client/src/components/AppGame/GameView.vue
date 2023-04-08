@@ -2,29 +2,24 @@
 import { computed, reactive, ref, watch } from "vue"
 import { useResizeObserver } from "@vueuse/core"
 
-import { ApiPlayer } from "@backend/types"
-import { GameStage, GameState } from "../types/game"
+import { GameStage } from "../../types/game"
+import { gameState } from "./contexts/gamestate"
+import { moveItem } from "../../utils"
 
-import { moveItem } from "../utils"
+import AppButton from "../AppButton.vue"
+import PlayingCard from "../PlayingCard.vue"
 
-import AppButton from "./AppButton.vue"
+import RoundWinnerModal from "./modals/RoundWinnerModal.vue"
+import PodiumModal from "./modals/PodiumModal.vue"
 
-import PlayingCard from "./PlayingCard.vue"
-import GameMeta from "./GameMeta.vue"
-import UAreTsar from "./UAreTsar.vue"
-import GameChoices from "./GameChoices.vue"
-import RoundWinnerModal from "./RoundWinnerModal.vue"
-import PodiumModal from "./PodiumModal.vue"
-
-const props = defineProps<{
-  gameState: GameState
-  players: ApiPlayer[]
-}>()
+import GameMeta from "./game-components/GameMeta.vue"
+import UAreTsar from "./game-components/UAreTsar.vue"
+import GameChoices from "./game-components/GameChoices.vue"
 
 const activeChoice = computed(() => {
-  return props.gameState.activeChoiceIdx !== null &&
-    props.gameState.stage === GameStage.TSAR_VERDICT
-    ? props.gameState.choices[props.gameState.activeChoiceIdx]
+  return gameState.activeChoiceIdx !== null &&
+    gameState.stage === GameStage.TSAR_VERDICT
+    ? gameState.choices[gameState.activeChoiceIdx]
     : []
 })
 
@@ -91,38 +86,30 @@ function onCardPick(cardId: number) {
   state.showedCard = -1
 
   if (
-    props.gameState.pickedCards.length >= props.gameState.blackCard.pick ||
-    props.gameState.stage !== GameStage.CHOOSING ||
-    props.gameState.imTsar
+    gameState.pickedCards.length >= gameState.blackCard.pick ||
+    gameState.stage !== GameStage.CHOOSING ||
+    gameState.imTsar
   )
     return
 
-  moveItem(
-    props.gameState.cards,
-    props.gameState.pickedCards,
-    c => c.id === cardId
-  )
+  moveItem(gameState.cards, gameState.pickedCards, c => c.id === cardId)
 }
 
 function onPickedCardClick(cardId: number) {
-  if (props.gameState.submitted) return
+  if (gameState.submitted) return
 
-  moveItem(
-    props.gameState.pickedCards,
-    props.gameState.cards,
-    c => c.id === cardId
-  )
+  moveItem(gameState.pickedCards, gameState.cards, c => c.id === cardId)
 }
 
 function onChangeChoice(choiceIdx: number) {
-  props.gameState.activeChoiceIdx = choiceIdx
+  gameState.activeChoiceIdx = choiceIdx
 }
 
 const TABLE_CARDS_GAP = 8
 const table = ref<HTMLDivElement>()
 
 const numOfTableCards = computed(() => {
-  return 1 + props.gameState.pickedCards.length + activeChoice.value.length
+  return 1 + gameState.pickedCards.length + activeChoice.value.length
 })
 
 function resizeTableCards(w: number) {
@@ -245,7 +232,7 @@ function onCardsScroll(e: WheelEvent) {
           </div>
         </div>
       </div>
-      <GameMeta :game-state="gameState" :players="players" />
+      <GameMeta />
     </div>
     <div @wheel="onCardsScroll" class="game__hand" ref="hand">
       <div
