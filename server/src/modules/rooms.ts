@@ -1,39 +1,53 @@
 import { nanoid } from "nanoid"
 import db from "./db"
+import logger from "./logger"
+
+import { VOTING_TIME } from "../consts"
 
 import { shuffle } from "../utils"
 import { Game, GameState, Player, Podium, WinnerData } from "../utils/game"
 
-import type { Socket } from "socket.io"
 import type { User } from "@prisma/client"
-import type {
+import {
   ApiWhiteCard,
-  ClientToServerSocketEvents,
   ExtendedReq,
   PrevRound,
-  ServerToClientSocketEvents,
   SocketClient,
-  SocketServer
+  SocketServer,
+  SyncData,
+  VotingData,
+  VotingMeta
 } from "../types"
-import logger from "./logger"
 
 export interface PlayerMetadata {
   connected: boolean
-  socket: Socket<ClientToServerSocketEvents, ServerToClientSocketEvents>
+  socket: SocketClient
   user: User
   joinedAt: number
 }
 
 type EmptyRoomCallback = () => void
 
+interface Voting {
+  meta: VotingMeta
+  for: Player<PlayerMetadata>[]
+  against: Player<PlayerMetadata>[]
+  createdAt: number
+  createdBy: string
+}
+
 export class Room {
+  currentVoting: Voting | null
+
   constructor(
     public id: string,
     public creator: number,
     public game: Game<PlayerMetadata>,
     public io: SocketServer,
     public onEmpty: EmptyRoomCallback
-  ) {}
+  ) {
+    this.currentVoting = null
+  }
 
   newConnection(socket: SocketClient, user: User) {
     const foundPlayer = this.game.players.find(
@@ -120,6 +134,87 @@ export class Room {
       } catch (err) {
         logger.error(err)
       }
+    })
+
+    socket.on("vote", data => {
+      if (this.game.state === GameState.NOT_STARTED) return
+
+      if (
+        this.currentVoting &&
+        Date.now() - this.currentVoting.createdAt > VOTING_TIME
+      ) {
+        this.currentVoting = null
+      }
+
+      if (typeof data === "boolean") {
+        if (
+          this.currentVoting === null ||
+          [...this.currentVoting.for, ...this.currentVoting.against].includes(
+            player
+          )
+        )
+          return
+
+        if (data) {
+          this.currentVoting.for.push(player)
+        } else {
+          this.currentVoting.against.push(player)
+        }
+
+        if (
+          this.currentVoting.for.length + this.currentVoting.against.length >=
+          this.game.players.filter(p => p.metadata?.connected).length
+        ) {
+          if (
+            this.currentVoting.for.length > this.currentVoting.against.length
+          ) {
+            switch (this.currentVoting.meta.type) {
+              case "end": {
+                const podium = this.game.end()
+                this.sendGameEnd(podium)
+                break
+              }
+
+              case "kick": {
+                break
+              }
+
+              default: {
+                break
+              }
+            }
+          }
+
+          this.currentVoting = null
+          this.sendVoting()
+          return
+        }
+      } else {
+        let validatedMeta: VotingMeta
+
+        if (data.type === "end") {
+          validatedMeta = { type: data.type }
+        } else if (data.type === "kick") {
+          if (
+            !this.game.players.some(p => p.metadata?.user.id === data.playerId)
+          )
+            return
+
+          validatedMeta = { type: data.type, playerId: data.playerId }
+        } else {
+          return
+        }
+
+        this.currentVoting = {
+          meta: validatedMeta,
+          for: [player],
+          against: [],
+          createdAt: Date.now(),
+          createdBy: player.metadata?.user.name ?? ""
+        }
+      }
+
+      this.sendVoting()
     })
 
     socket.on("disconnect", () => {
@@ -266,12 +361,24 @@ export class Room {
       )) as ApiWhiteCard[][]
     }
 
-    const data = {
+    let voting: VotingData | null
+
+    if (
+      !this.currentVoting ||
+      Date.now() - this.currentVoting.createdAt > VOTING_TIME
+    ) {
+      voting = null
+    } else {
+      voting = this.parseVoting(player)
+    }
+
+    const data: SyncData = {
       started: true,
       tsar: player.isTsar,
       blackCard,
       cards,
-      choices
+      choices,
+      voting
     }
 
     player.metadata?.socket.emit("sync", data)
@@ -286,6 +393,32 @@ export class Room {
         points: pel.points
       }))
     })
+  }
+
+  parseVoting(player: Player<PlayerMetadata>): VotingData {
+    if (!this.currentVoting) throw new Error("Invalid usage of parseVoting")
+
+    let vote: null | boolean = null
+
+    if (this.currentVoting.for.includes(player)) vote = true
+    if (this.currentVoting.against.includes(player)) vote = false
+
+    return {
+      endsInMs: VOTING_TIME - (Date.now() - this.currentVoting.createdAt),
+      by: this.currentVoting.createdBy,
+      voting: this.currentVoting.meta,
+      for: this.currentVoting.for.length,
+      against: this.currentVoting.against.length,
+      vote
+    }
+  }
+
+  sendVoting() {
+    if (!this.currentVoting) return this.io.to(this.id).emit("voting", null)
+
+    for (const player of this.game.players) {
+      player.metadata?.socket.emit("voting", this.parseVoting(player))
+    }
   }
 }
 

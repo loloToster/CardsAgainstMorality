@@ -15,10 +15,6 @@ export interface PrevRound {
   imWinner: boolean
 }
 
-export type SyncData =
-  | { started: false }
-  | (NewRoundData & { started: true; choices?: ApiWhiteCard[][] })
-
 export interface PodiumEl {
   place: number
   name: string
@@ -26,18 +22,50 @@ export interface PodiumEl {
   points: number
 }
 
+export const VOTE_TYPES = ["end", "kick"] as const
+
+export type VoteType = (typeof VOTE_TYPES)[number]
+
+export type VotingMeta =
+  | {
+      type: (typeof VOTE_TYPES)[0]
+    }
+  | {
+      type: (typeof VOTE_TYPES)[1]
+      playerId: number
+    }
+
+export interface VotingData {
+  endsInMs: number
+  by: string
+  voting: VotingMeta
+  for: number
+  against: number
+  vote: null | boolean
+}
+
+export type SyncData =
+  | { started: false }
+  | (NewRoundData & {
+      started: true
+      choices?: ApiWhiteCard[][]
+      voting: VotingData | null
+    })
+
 export interface ServerToClientSocketEvents {
   players: (data: { players: ApiPlayer[] }) => void
   "new-round": (data: NewRoundData & { prevRound?: PrevRound }) => void
   choices: (data: { choices: ApiWhiteCard[][] }) => void
   sync: (data: SyncData) => void
   end: (data: { podium: PodiumEl[] }) => void
+  voting: (data: VotingData | null) => void
 }
 
 export interface ClientToServerSocketEvents {
   start: (data: { packs: number[] }) => void
   submit: (data: { submition: number[] }) => void
   verdict: (data: { verdict: number[] }) => void
+  vote: (data: boolean | VotingMeta) => void
 }
 
 export type SocketServer = Server<

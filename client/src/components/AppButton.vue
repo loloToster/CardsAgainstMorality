@@ -10,16 +10,19 @@ const props = withDefaults(
   }
 )
 
-defineEmits(["click"])
+defineEmits<{
+  (ev: "click", e: MouseEvent): void
+}>()
 
 const hoverColor = computed(() => {
+  if (props.color === "transparent") return undefined
   return props.hColor || Color(props.color).darken(0.2).hex()
 })
 </script>
 
 <template>
   <button
-    @click="() => !disabled && $emit('click')"
+    @click="e => !disabled && $emit('click', e)"
     :style="{
       '--color': color,
       '--h-color': hoverColor

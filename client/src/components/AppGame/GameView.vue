@@ -2,8 +2,11 @@
 import { computed, reactive, ref, watch } from "vue"
 import { useResizeObserver } from "@vueuse/core"
 
+import { VotingMeta } from "@backend/types"
 import { GameStage } from "../../types/game"
+
 import { gameState } from "./contexts/gamestate"
+
 import { moveItem } from "../../utils"
 
 import AppButton from "../AppButton.vue"
@@ -12,6 +15,7 @@ import PlayingCard from "../PlayingCard.vue"
 import RoundWinnerModal from "./modals/RoundWinnerModal.vue"
 import PodiumModal from "./modals/PodiumModal.vue"
 
+import GameVoting from "./game-components/GameVoting.vue"
 import GameMeta from "./game-components/GameMeta.vue"
 import UAreTsar from "./game-components/UAreTsar.vue"
 import GameChoices from "./game-components/GameChoices.vue"
@@ -26,6 +30,8 @@ const activeChoice = computed(() => {
 defineEmits<{
   (ev: "submit"): void
   (ev: "verdict", choiceIdx: number): void
+  (ev: "new-voting", data: VotingMeta): void
+  (ev: "vote", data: boolean): void
 }>()
 
 enum MAX_CARD_WIDTH {
@@ -153,6 +159,12 @@ function onCardsScroll(e: WheelEvent) {
 }
 </script>
 <template>
+  <GameVoting
+    v-if="gameState.voting"
+    :voting-data="gameState.voting"
+    @vote="d => $emit('vote', d)"
+    @counter-end="gameState.voting = null"
+  />
   <RoundWinnerModal
     v-if="gameState.roundWinnerData"
     @close="gameState.roundWinnerData = null"
@@ -232,7 +244,7 @@ function onCardsScroll(e: WheelEvent) {
           </div>
         </div>
       </div>
-      <GameMeta />
+      <GameMeta @new-voting="d => $emit('new-voting', d)" />
     </div>
     <div @wheel="onCardsScroll" class="game__hand" ref="hand">
       <div

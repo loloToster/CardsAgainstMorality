@@ -10,6 +10,7 @@ const defaultGameState: GameState = {
   audio: window.localStorage.getItem("audio") === AudioState.ON,
   stage: GameStage.UNKNOWN,
   players: [],
+  voting: null,
   imTsar: false,
   blackCard: { id: -1, text: "test", pack: "test pack", pick: 1 },
   cards: new Array(10).fill(null).map((_, i) => ({

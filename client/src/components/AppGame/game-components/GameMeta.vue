@@ -1,21 +1,44 @@
 <script setup lang="ts">
-import { reactive, computed } from "vue"
+import { reactive, computed, ref } from "vue"
+import { onClickOutside } from "@vueuse/core"
+
+import { VotingMeta } from "@backend/types"
 
 import { gameState, toggleAudio } from "../contexts/gamestate"
 
+import AppButton from "../../AppButton.vue"
 import AppTooltip from "../../AppTooltip.vue"
 import UserAvatar from "../../UserAvatar.vue"
 
-const state = reactive({ gameMenuActive: false })
+const emit = defineEmits<{
+  (e: "new-voting", data: VotingMeta): void
+}>()
+
+const state = reactive({ gameMenuActive: false, votingMenuActive: false })
 
 const audioTooltip = computed(() => {
   return gameState.audio ? "Turn off sound" : "Turn on sound"
 })
+
+const gameMenu = ref(null)
+onClickOutside(gameMenu, () => (state.gameMenuActive = false))
+
+const votingMenu = ref(null)
+onClickOutside(votingMenu, () => (state.votingMenuActive = false))
+
+function onVoteToEnd(e: MouseEvent) {
+  e.stopPropagation()
+  emit("new-voting", { type: "end" })
+}
 </script>
 <template>
   <div class="game-meta">
     <div class="game-menu-wrapper">
-      <div class="game-menu" :class="{ active: state.gameMenuActive }">
+      <div
+        class="game-menu"
+        :class="{ active: state.gameMenuActive }"
+        ref="gameMenu"
+      >
         <button
           @click="toggleAudio"
           class="game-menu__btn game-menu__item"
@@ -48,14 +71,49 @@ const audioTooltip = computed(() => {
             />
           </svg>
         </button>
-        <button class="game-menu__btn game-menu__item" v-wave>
+        <button
+          @click="state.votingMenuActive = !state.votingMenuActive"
+          class="game-menu__btn game-menu__item"
+          ref="votingMenu"
+          v-wave
+        >
+          <div v-if="state.votingMenuActive" class="game-menu__voting">
+            <AppButton
+              @click="onVoteToEnd"
+              class="game-menu__voting__btn"
+              color="transparent"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                <path
+                  d="M320 736h320V416H320v320Zm160 240q-83 0-156-31.5T197 859q-54-54-85.5-127T80 576q0-83 31.5-156T197 293q54-54 127-85.5T480 176q83 0 156 31.5T763 293q54 54 85.5 127T880 576q0 83-31.5 156T763 859q-54 54-127 85.5T480 976Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"
+                />
+              </svg>
+              <span>End the game</span>
+            </AppButton>
+            <div class="game-menu__voting__sep"></div>
+            <AppButton
+              @click="e => e.stopPropagation()"
+              class="game-menu__voting__btn"
+              color="transparent"
+            >
+              <svg viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M15,14C17.67,14 23,15.33 23,18V20H7V18C7,15.33 12.33,14 15,14M15,12A4,4 0 0,1 11,8A4,4 0 0,1 15,4A4,4 0 0,1 19,8A4,4 0 0,1 15,12M5,9.59L7.12,7.46L8.54,8.88L6.41,11L8.54,13.12L7.12,14.54L5,12.41L2.88,14.54L1.46,13.12L3.59,11L1.46,8.88L2.88,7.46L5,9.59Z"
+                ></path>
+              </svg>
+              <span>Kick a player</span>
+            </AppButton>
+          </div>
           <AppTooltip
+            v-if="!state.votingMenuActive"
             position="left"
             class="game-menu__btn__tooltip game-menu__btn__tooltip--desktop"
           >
             Start a new voting
           </AppTooltip>
           <AppTooltip
+            v-if="!state.votingMenuActive"
             position="right"
             class="game-menu__btn__tooltip game-menu__btn__tooltip--mobile"
           >
@@ -378,6 +436,44 @@ const audioTooltip = computed(() => {
     }
   }
 
+  &__voting {
+    position: absolute;
+    top: 0;
+    right: 100%;
+    background-color: #1c1c1c;
+    padding: 8px;
+    border-radius: 4px;
+
+    &__btn {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-size: 1.1rem;
+      white-space: nowrap;
+      padding: 4px;
+      width: 100%;
+      color: #eeeeee;
+
+      svg {
+        fill: currentColor;
+        width: 1.1em;
+        height: 1.1em;
+      }
+
+      span {
+        flex-grow: 1;
+        text-align: right;
+      }
+    }
+
+    &__sep {
+      width: 100%;
+      height: 1px;
+      margin: 4px 0;
+      background-color: gray;
+    }
+  }
+
   @include mobile() {
     position: absolute;
     gap: 8px;
@@ -426,6 +522,14 @@ const audioTooltip = computed(() => {
 
     &.active &__item {
       display: block;
+    }
+
+    &__voting {
+      top: unset;
+      right: unset;
+      bottom: 0;
+      left: 100%;
+      transform: translateX(10px);
     }
   }
 }

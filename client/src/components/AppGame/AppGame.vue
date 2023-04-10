@@ -2,6 +2,7 @@
 import { onMounted, onUnmounted, watch } from "vue"
 import { useRoute } from "vue-router"
 
+import { VotingMeta } from "@backend/types"
 import { GameStage } from "../../types/game"
 
 import {
@@ -56,6 +57,7 @@ socket.on("sync", data => {
   gameState.imTsar = data.tsar
   gameState.blackCard = data.blackCard
   gameState.cards = data.cards
+  gameState.voting = data.voting
 
   if (data.choices) {
     gameState.stage = GameStage.TSAR_VERDICT
@@ -68,6 +70,10 @@ socket.on("sync", data => {
 socket.on("end", ({ podium }) => {
   gameState.stage = GameStage.NOT_STARTED
   gameState.podium = podium
+})
+
+socket.on("voting", data => {
+  gameState.voting = data
 })
 
 function onStart(packs: number[]) {
@@ -83,6 +89,14 @@ function onVerdict(choiceIdx: number) {
   socket.emit("verdict", {
     verdict: gameState.choices[choiceIdx].map(c => c.id)
   })
+}
+
+function onNewVoting(data: VotingMeta) {
+  socket.emit("vote", data)
+}
+
+function onVote(data: boolean) {
+  socket.emit("vote", data)
 }
 
 watch(
@@ -124,6 +138,8 @@ onUnmounted(() => {
     v-else-if="gameState.stage !== GameStage.NOT_STARTED"
     @submit="onSubmit"
     @verdict="onVerdict"
+    @new-voting="onNewVoting"
+    @vote="onVote"
   />
   <GameSettings v-else :room-id="roomId.toString()" @start="onStart" />
 </template>

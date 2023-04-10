@@ -1,4 +1,10 @@
-import { ApiBlackCard, ApiPlayer, ApiWhiteCard, PodiumEl } from "@backend/types"
+import {
+  ApiBlackCard,
+  ApiPlayer,
+  ApiWhiteCard,
+  PodiumEl,
+  VotingData
+} from "@backend/types"
 
 export enum GameStage {
   UNKNOWN,
@@ -11,6 +17,7 @@ export interface GameState {
   audio: boolean
   stage: GameStage
   players: ApiPlayer[]
+  voting: VotingData | null
   imTsar: boolean
   blackCard: ApiBlackCard
   cards: ApiWhiteCard[]

@@ -9,3 +9,5 @@ export enum StrategyIdentifier {
   Discord = "dsc",
   Facebook = "fcb"
 }
+
+export const VOTING_TIME = 2 * 60 * 1000
