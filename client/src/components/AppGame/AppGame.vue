@@ -15,6 +15,7 @@ import { gameState, resetGameState } from "./contexts/gamestate"
 import AppLoader from "../AppLoader.vue"
 import GameView from "./GameView.vue"
 import GameSettings from "./GameSettings.vue"
+import PodiumModal from "./modals/PodiumModal.vue"
 
 import NewRoundAudio from "../../assets/new-round.mp3"
 import TsarChoiceAudio from "../../assets/tsar-choice.mp3"
@@ -127,6 +128,11 @@ onUnmounted(() => {
 </script>
 
 <template>
+  <PodiumModal
+    v-if="gameState.podium"
+    @close="gameState.podium = null"
+    :podium="gameState.podium"
+  />
   <div
     v-if="gameState.stage === GameStage.UNKNOWN || !socketState.connected"
     class="connecting"

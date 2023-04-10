@@ -13,7 +13,6 @@ import AppButton from "../AppButton.vue"
 import PlayingCard from "../PlayingCard.vue"
 
 import RoundWinnerModal from "./modals/RoundWinnerModal.vue"
-import PodiumModal from "./modals/PodiumModal.vue"
 
 import GameVoting from "./game-components/GameVoting.vue"
 import GameMeta from "./game-components/GameMeta.vue"
@@ -172,11 +171,6 @@ function onCardsScroll(e: WheelEvent) {
     :black-card="gameState.roundWinnerData.blackCard"
     :winning-cards="gameState.roundWinnerData.winningCards"
     :im-winner="gameState.roundWinnerData.imWinner"
-  />
-  <PodiumModal
-    v-if="gameState.podium"
-    @close="gameState.podium = null"
-    :podium="gameState.podium"
   />
   <div class="game">
     <div class="game__top">

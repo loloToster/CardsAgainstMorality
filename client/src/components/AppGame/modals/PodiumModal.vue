@@ -1,11 +1,18 @@
 <script setup lang="ts">
-import { computed } from "vue"
+import { computed, onMounted } from "vue"
 import { PodiumEl } from "@backend/types"
+import confetti from "../../../contexts/confetti"
+import { user } from "../../../contexts/user"
 import UserAvatar from "../../UserAvatar.vue"
 
 const props = defineProps<{ podium: PodiumEl[] }>()
 
 defineEmits(["close"])
+
+onMounted(() => {
+  // todo: more reliable way then username
+  if (props.podium[0].name === user.value?.name) confetti.addConfetti()
+})
 
 const top = computed(() => {
   return [3, 1, 2]

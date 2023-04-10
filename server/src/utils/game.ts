@@ -250,7 +250,7 @@ export class Game<PM = unknown> {
   end() {
     const podium: Podium<PM> = this.players
       .map(p => ({
-        meta: p.metadata,
+        metadata: p.metadata,
         points: p.points
       }))
       .sort((a, b) => b.points - a.points)
