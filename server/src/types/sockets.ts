@@ -61,8 +61,16 @@ export interface ServerToClientSocketEvents {
   voting: (data: VotingData | null) => void
 }
 
+export interface StartData {
+  playersLimit: number
+  timeLimit: number | null
+  scoreLimit: number | null
+  roundLimit: number | null
+  packs: number[]
+}
+
 export interface ClientToServerSocketEvents {
-  start: (data: { packs: number[] }) => void
+  start: (data: StartData) => void
   submit: (data: { submition: number[] }) => void
   verdict: (data: { verdict: number[] }) => void
   vote: (data: boolean | VotingMeta) => void

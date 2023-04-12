@@ -2,7 +2,7 @@
 import { computed, reactive, ref } from "vue"
 import { onClickOutside } from "@vueuse/core"
 
-import { ApiCardPack } from "@backend/types"
+import { ApiCardPack, StartData } from "@backend/types"
 
 import { copyToClipboard } from "../../utils"
 
@@ -28,7 +28,7 @@ const leader = computed(() => {
 })
 
 const emit = defineEmits<{
-  (e: "start", packsIds: number[]): void
+  (e: "start", data: StartData): void
 }>()
 
 interface Pack extends ApiCardPack {
@@ -39,15 +39,25 @@ const state = reactive<{
   loading: boolean
   inviteOpen: boolean
   roomName: string
-  scoreLimitEnabled: boolean
+  playerLimit: number
   timeLimitEnabled: boolean
+  timeLimit: number
+  scoreLimitEnabled: boolean
+  scoreLimit: number
+  roundLimitEnabled: boolean
+  roundLimit: number
   packs: Pack[]
 }>({
   loading: true,
   inviteOpen: false,
   roomName: "",
-  scoreLimitEnabled: false,
+  playerLimit: 10,
   timeLimitEnabled: false,
+  timeLimit: 120,
+  scoreLimitEnabled: false,
+  scoreLimit: 15,
+  roundLimitEnabled: false,
+  roundLimit: 30,
   packs: []
 })
 
@@ -85,10 +95,13 @@ fetch("/api/packs").then(async res => {
 })
 
 function onStart() {
-  emit(
-    "start",
-    selectedPacks.value.map(p => p.id)
-  )
+  emit("start", {
+    playersLimit: state.playerLimit,
+    timeLimit: state.timeLimitEnabled ? state.timeLimit : null,
+    scoreLimit: state.scoreLimitEnabled ? state.scoreLimit : null,
+    roundLimit: state.roundLimitEnabled ? state.roundLimit : null,
+    packs: selectedPacks.value.map(p => p.id)
+  })
 }
 
 function onCopyCode() {
@@ -149,35 +162,9 @@ onClickOutside(invitePlayersContent, () => {
               </div>
             </div>
             <NumericInput
+              v-model="state.playerLimit"
               :lowest="2"
               :highest="21"
-              :default-val="10"
-              class="settings__main__optional"
-            />
-          </div>
-          <div class="settings__main__options-row">
-            <div class="settings__main__option-title">
-              <AppSwitch @new-value="v => (state.scoreLimitEnabled = v)" />
-              <h3>Score limit</h3>
-              <div class="settings__main__option-title__tooltip">
-                <AppTooltip
-                  class="settings__main__option-title__tooltip__box"
-                  position="right"
-                >
-                  test
-                </AppTooltip>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
-                  <path
-                    d="M480 816q20 0 34-14t14-34q0-20-14-34t-34-14q-20 0-34 14t-14 34q0 20 14 34t34 14Zm-36-153h73q0-37 6.5-52.5T555 571q35-34 48.5-58t13.5-53q0-55-37.5-89.5T484 336q-51 0-88.5 27T343 436l65 27q9-28 28.5-43.5T482 404q28 0 46 16t18 42q0 23-15.5 41T496 538q-35 32-43.5 52.5T444 663Zm36 297q-79 0-149-30t-122.5-82.5Q156 795 126 725T96 576q0-80 30-149.5t82.5-122Q261 252 331 222t149-30q80 0 149.5 30t122 82.5Q804 357 834 426.5T864 576q0 79-30 149t-82.5 122.5Q699 900 629.5 930T480 960Zm0-72q130 0 221-91t91-221q0-130-91-221t-221-91q-130 0-221 91t-91 221q0 130 91 221t221 91Zm0-312Z"
-                  />
-                </svg>
-              </div>
-            </div>
-            <NumericInput
-              v-if="state.scoreLimitEnabled"
-              :lowest="0"
-              :highest="1000"
-              :default-val="15"
               class="settings__main__optional"
             />
           </div>
@@ -201,9 +188,61 @@ onClickOutside(invitePlayersContent, () => {
             </div>
             <NumericInput
               v-if="state.timeLimitEnabled"
+              v-model="state.timeLimit"
               :lowest="5"
               :highest="360"
-              :default-val="120"
+              class="settings__main__optional"
+            />
+          </div>
+          <div class="settings__main__options-row">
+            <div class="settings__main__option-title">
+              <AppSwitch @new-value="v => (state.scoreLimitEnabled = v)" />
+              <h3>Score limit</h3>
+              <div class="settings__main__option-title__tooltip">
+                <AppTooltip
+                  class="settings__main__option-title__tooltip__box"
+                  position="right"
+                >
+                  test
+                </AppTooltip>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                  <path
+                    d="M480 816q20 0 34-14t14-34q0-20-14-34t-34-14q-20 0-34 14t-14 34q0 20 14 34t34 14Zm-36-153h73q0-37 6.5-52.5T555 571q35-34 48.5-58t13.5-53q0-55-37.5-89.5T484 336q-51 0-88.5 27T343 436l65 27q9-28 28.5-43.5T482 404q28 0 46 16t18 42q0 23-15.5 41T496 538q-35 32-43.5 52.5T444 663Zm36 297q-79 0-149-30t-122.5-82.5Q156 795 126 725T96 576q0-80 30-149.5t82.5-122Q261 252 331 222t149-30q80 0 149.5 30t122 82.5Q804 357 834 426.5T864 576q0 79-30 149t-82.5 122.5Q699 900 629.5 930T480 960Zm0-72q130 0 221-91t91-221q0-130-91-221t-221-91q-130 0-221 91t-91 221q0 130 91 221t221 91Zm0-312Z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <NumericInput
+              v-if="state.scoreLimitEnabled"
+              v-model="state.scoreLimit"
+              :lowest="0"
+              :highest="Infinity"
+              class="settings__main__optional"
+            />
+          </div>
+          <div class="settings__main__options-row">
+            <div class="settings__main__option-title">
+              <AppSwitch @new-value="v => (state.roundLimitEnabled = v)" />
+              <h3>Round limit</h3>
+              <div class="settings__main__option-title__tooltip">
+                <AppTooltip
+                  class="settings__main__option-title__tooltip__box"
+                  position="right"
+                >
+                  test
+                </AppTooltip>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                  <path
+                    d="M480 816q20 0 34-14t14-34q0-20-14-34t-34-14q-20 0-34 14t-14 34q0 20 14 34t34 14Zm-36-153h73q0-37 6.5-52.5T555 571q35-34 48.5-58t13.5-53q0-55-37.5-89.5T484 336q-51 0-88.5 27T343 436l65 27q9-28 28.5-43.5T482 404q28 0 46 16t18 42q0 23-15.5 41T496 538q-35 32-43.5 52.5T444 663Zm36 297q-79 0-149-30t-122.5-82.5Q156 795 126 725T96 576q0-80 30-149.5t82.5-122Q261 252 331 222t149-30q80 0 149.5 30t122 82.5Q804 357 834 426.5T864 576q0 79-30 149t-82.5 122.5Q699 900 629.5 930T480 960Zm0-72q130 0 221-91t91-221q0-130-91-221t-221-91q-130 0-221 91t-91 221q0 130 91 221t221 91Zm0-312Z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <NumericInput
+              v-if="state.roundLimitEnabled"
+              v-model="state.roundLimit"
+              :lowest="0"
+              :highest="Infinity"
               class="settings__main__optional"
             />
           </div>

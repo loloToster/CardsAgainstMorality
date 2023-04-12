@@ -3,7 +3,7 @@ import { reactive, watch } from "vue"
 
 const props = withDefaults(
   defineProps<{
-    defaultVal?: number
+    modelValue: number
     lowest?: number
     highest?: number
     step?: number
@@ -11,9 +11,13 @@ const props = withDefaults(
   { step: 1 }
 )
 
+const emit = defineEmits<{
+  (ev: "update:modelValue", newVal: number): void
+}>()
+
 const state = reactive({
-  val: props.defaultVal,
-  invalid: props.defaultVal === undefined,
+  val: props.modelValue,
+  invalid: props.modelValue === undefined,
   toLow: false,
   toBig: false
 })
@@ -21,13 +25,17 @@ const state = reactive({
 watch(
   () => state.val,
   newVal => {
-    if (typeof newVal !== "number") return (state.invalid = true)
-
-    if (newVal % props.step) return (state.invalid = true)
+    if (typeof newVal !== "number" || newVal % props.step) {
+      state.invalid = true
+      emit("update:modelValue", NaN)
+      return
+    }
 
     state.invalid = false
     if (props.lowest !== undefined) state.toLow = props.lowest >= newVal
     if (props.highest !== undefined) state.toBig = props.highest <= newVal
+
+    emit("update:modelValue", state.toLow || state.toBig ? NaN : newVal)
   }
 )
 </script>

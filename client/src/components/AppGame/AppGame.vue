@@ -2,7 +2,7 @@
 import { onMounted, onUnmounted, watch } from "vue"
 import { useRoute } from "vue-router"
 
-import { VotingMeta } from "@backend/types"
+import { StartData, VotingMeta } from "@backend/types"
 import { GameStage } from "../../types/game"
 
 import {
@@ -77,8 +77,8 @@ socket.on("voting", data => {
   gameState.voting = data
 })
 
-function onStart(packs: number[]) {
-  socket.emit("start", { packs })
+function onStart(data: StartData) {
+  socket.emit("start", data)
 }
 
 function onSubmit() {

@@ -37,6 +37,11 @@ interface Voting {
 }
 
 export class Room {
+  playersLimit: number
+  timeLimit: number | null
+  scoreLimit: number | null
+  roundLimit: number | null
+
   currentVoting: Voting | null
 
   constructor(
@@ -46,6 +51,11 @@ export class Room {
     public io: SocketServer,
     public onEmpty: EmptyRoomCallback
   ) {
+    this.playersLimit = Infinity
+    this.timeLimit = null
+    this.scoreLimit = null
+    this.roundLimit = null
+
     this.currentVoting = null
   }
 
@@ -55,6 +65,7 @@ export class Room {
     )
 
     let player: Player<PlayerMetadata>
+
     if (foundPlayer) {
       player = foundPlayer
       player.metadata?.socket.disconnect()
@@ -65,6 +76,11 @@ export class Room {
         joinedAt: player.metadata?.joinedAt ?? Date.now()
       }
     } else {
+      // todo: connection before game start
+      if (this.game.players.length >= this.playersLimit) {
+        return socket.disconnect()
+      }
+
       player = this.game.addPlayer({
         socket,
         user,
@@ -80,6 +96,10 @@ export class Room {
 
     socket.on("start", async settings => {
       if (this.getLeader() !== player) return
+
+      this.playersLimit = settings.playersLimit
+      this.scoreLimit = settings.scoreLimit
+      this.timeLimit = settings.timeLimit
 
       const whiteCards = await db.whiteCard.findMany({
         where: { packId: { in: settings.packs } },
@@ -122,6 +142,15 @@ export class Room {
     socket.on("verdict", ({ verdict }) => {
       try {
         const winnerData = player.makeVerdict(verdict)
+
+        if (
+          this.scoreLimit !== null &&
+          winnerData.winner.points >= this.scoreLimit
+        ) {
+          const podium = this.game.end()
+          this.sendGameEnd(podium)
+          return
+        }
 
         const canContinue = this.game.newRound()
 
