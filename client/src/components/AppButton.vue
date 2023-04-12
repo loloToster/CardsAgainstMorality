@@ -28,7 +28,7 @@ const hoverColor = computed(() => {
       '--h-color': hoverColor
     }"
     :disabled="disabled"
-    v-wave
+    v-wave="!disabled"
   >
     <slot></slot>
   </button>

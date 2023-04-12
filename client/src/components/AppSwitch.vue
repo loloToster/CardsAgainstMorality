@@ -37,7 +37,7 @@ $hover-size: 34px;
   height: $h;
   width: $w;
   border-radius: 100vh;
-  background-color: #222222cc;
+  background-color: #2f2f2f;
   cursor: pointer;
   transition: background-color 100ms;
 

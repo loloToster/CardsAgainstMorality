@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { computed, reactive } from "vue"
+import { computed, reactive, ref } from "vue"
+import { onClickOutside } from "@vueuse/core"
 
 import { ApiCardPack } from "@backend/types"
+
 import { copyToClipboard } from "../../utils"
+
 import { user } from "../../contexts/user"
 import { gameState } from "./contexts/gamestate"
 
@@ -34,12 +37,14 @@ interface Pack extends ApiCardPack {
 
 const state = reactive<{
   loading: boolean
+  inviteOpen: boolean
   roomName: string
   scoreLimitEnabled: boolean
   timeLimitEnabled: boolean
   packs: Pack[]
 }>({
   loading: true,
+  inviteOpen: false,
   roomName: "",
   scoreLimitEnabled: false,
   timeLimitEnabled: false,
@@ -93,6 +98,12 @@ function onCopyCode() {
 function onCopyLink() {
   copyToClipboard(window.location.href)
 }
+
+const invitePlayersContent = ref<HTMLDivElement>()
+
+onClickOutside(invitePlayersContent, () => {
+  state.inviteOpen = false
+})
 </script>
 <template>
   <div class="settings">
@@ -253,41 +264,57 @@ function onCopyLink() {
       </div>
     </div>
     <div class="settings__right">
-      <div class="settings__invite settings__panel">
-        <h2>Invite Players</h2>
-        <h5>Room code:</h5>
-        <input
-          class="settings__invite__code"
-          type="text"
-          readonly
-          :value="roomId"
-          @click="e => (e.target as HTMLInputElement).select()"
-        />
-        <div class="settings__invite__btns">
-          <AppButton
-            @click="onCopyCode"
-            color="#15b041"
-            class="settings__invite__btn"
+      <div
+        class="settings__invite settings__panel"
+        :class="{ active: state.inviteOpen }"
+      >
+        <div ref="invitePlayersContent" class="settings__invite__content">
+          <button
+            @click="state.inviteOpen = false"
+            class="settings__invite__close"
+            v-wave
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
               <path
-                d="M200 976q-33 0-56.5-23.5T120 896V336h80v560h440v80H200Zm160-160q-33 0-56.5-23.5T280 736V256q0-33 23.5-56.5T360 176h360q33 0 56.5 23.5T800 256v480q0 33-23.5 56.5T720 816H360Zm0-80h360V256H360v480Zm0 0V256v480Z"
+                d="m249 873-66-66 231-231-231-231 66-66 231 231 231-231 66 66-231 231 231 231-66 66-231-231-231 231Z"
               />
             </svg>
-            <div>Code</div>
-          </AppButton>
-          <AppButton
-            color="#1869cc"
-            @click="onCopyLink"
-            class="settings__invite__btn"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
-              <path
-                d="M200 976q-33 0-56.5-23.5T120 896V336h80v560h440v80H200Zm160-160q-33 0-56.5-23.5T280 736V256q0-33 23.5-56.5T360 176h360q33 0 56.5 23.5T800 256v480q0 33-23.5 56.5T720 816H360Zm0-80h360V256H360v480Zm0 0V256v480Z"
-              />
-            </svg>
-            <div>Link</div>
-          </AppButton>
+          </button>
+          <h2>Invite Players</h2>
+          <h5>Room code:</h5>
+          <input
+            class="settings__invite__code"
+            type="text"
+            readonly
+            :value="roomId"
+            @click="e => (e.target as HTMLInputElement).select()"
+          />
+          <div class="settings__invite__btns">
+            <AppButton
+              @click="onCopyCode"
+              color="#15b041"
+              class="settings__invite__btn"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                <path
+                  d="M200 976q-33 0-56.5-23.5T120 896V336h80v560h440v80H200Zm160-160q-33 0-56.5-23.5T280 736V256q0-33 23.5-56.5T360 176h360q33 0 56.5 23.5T800 256v480q0 33-23.5 56.5T720 816H360Zm0-80h360V256H360v480Zm0 0V256v480Z"
+                />
+              </svg>
+              <div>Code</div>
+            </AppButton>
+            <AppButton
+              color="#1869cc"
+              @click="onCopyLink"
+              class="settings__invite__btn"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                <path
+                  d="M200 976q-33 0-56.5-23.5T120 896V336h80v560h440v80H200Zm160-160q-33 0-56.5-23.5T280 736V256q0-33 23.5-56.5T360 176h360q33 0 56.5 23.5T800 256v480q0 33-23.5 56.5T720 816H360Zm0-80h360V256H360v480Zm0 0V256v480Z"
+                />
+              </svg>
+              <div>Link</div>
+            </AppButton>
+          </div>
         </div>
       </div>
       <div
@@ -297,6 +324,15 @@ function onCopyLink() {
         <AppLoader outline-color="#3a3a3a" />
       </div>
       <div v-else class="settings__players settings__panel">
+        <button
+          @click="state.inviteOpen = true"
+          class="settings__players__invite-btn"
+          v-wave
+        >
+          <svg viewBox="0 0 24 24">
+            <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"></path>
+          </svg>
+        </button>
         <div
           v-for="player in gameState.players"
           :key="player.name"
@@ -309,6 +345,16 @@ function onCopyLink() {
               Room Leader
             </div>
           </div>
+          <svg
+            v-if="player.leader"
+            class="settings__player__leader-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 96 960 960"
+          >
+            <path
+              d="m243 960 63-266L96 515l276-24 108-251 108 252 276 23-210 179 63 266-237-141-237 141Z"
+            />
+          </svg>
         </div>
       </div>
     </div>
@@ -316,6 +362,12 @@ function onCopyLink() {
 </template>
 <style scoped lang="scss">
 @use "sass:math" as math;
+
+@mixin mobile {
+  @media (max-width: 980px) {
+    @content;
+  }
+}
 
 $main-gap: 16px;
 .settings {
@@ -326,8 +378,14 @@ $main-gap: 16px;
   height: 80vh;
   margin: auto;
 
+  @include mobile() {
+    gap: 0;
+    flex-direction: column;
+  }
+
   &__left {
     height: 100%;
+    min-height: 0;
     flex-grow: 1;
     flex-basis: 0;
   }
@@ -339,6 +397,12 @@ $main-gap: 16px;
     width: 20vw;
     max-width: 300px;
     min-width: 250px;
+
+    @include mobile() {
+      flex-direction: row;
+      width: 100%;
+      max-width: 100%;
+    }
   }
 
   &__panel {
@@ -347,6 +411,12 @@ $main-gap: 16px;
     height: 100%;
     border-radius: $main-gap;
     padding: 14px;
+
+    @include mobile() {
+      padding: 6px;
+      background-color: transparent;
+      border-radius: 0;
+    }
   }
 
   &__loading {
@@ -356,12 +426,17 @@ $main-gap: 16px;
     justify-content: center;
     flex-direction: column;
     gap: 16px;
+    text-align: center;
   }
 
   &__main {
     display: flex;
     flex-direction: column;
     gap: 8px;
+
+    @include mobile() {
+      padding-bottom: 12px;
+    }
 
     h3 {
       margin: 0;
@@ -393,6 +468,10 @@ $main-gap: 16px;
       font-size: 1.6rem;
       border-radius: 4px;
       transition: background-color 200ms;
+
+      @include mobile() {
+        width: 100%;
+      }
 
       &::placeholder {
         color: inherit;
@@ -454,7 +533,11 @@ $main-gap: 16px;
 
       &__n {
         font-size: 1.3rem;
-        min-width: 4ch;
+        min-width: 3ch;
+
+        @include mobile() {
+          min-width: 2ch;
+        }
       }
     }
   }
@@ -463,12 +546,58 @@ $main-gap: 16px;
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
+
+    @include mobile() {
+      justify-content: center;
+    }
   }
 
   &__invite {
     $space: 14px;
 
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: fit-content;
+
+    @include mobile() {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-color: #080808e3;
+      z-index: 1;
+
+      &.active {
+        display: flex;
+      }
+    }
+
+    &__content {
+      position: relative;
+      max-width: 80vw;
+    }
+
+    &__close {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: -4px;
+      padding: 4px;
+      border-radius: 50%;
+
+      @include mobile() {
+        display: block;
+      }
+
+      svg {
+        width: 20px;
+        height: 20px;
+        fill: #929292;
+      }
+    }
 
     h2,
     h5 {
@@ -517,17 +646,43 @@ $main-gap: 16px;
   &__players {
     flex-grow: 1;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    @include mobile() {
+      padding-top: 12px;
+      flex-direction: row;
+      border-radius: 0;
+      border-top: 1px gray solid;
+    }
+
+    &__invite-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background-color: darkcyan;
+      border-radius: 50%;
+
+      @include mobile() {
+        display: flex;
+      }
+
+      svg {
+        fill: currentColor;
+        width: 20px;
+        height: 20px;
+      }
+    }
   }
 
   &__player {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 6px;
-    margin-bottom: 6px;
-
-    &:last-child {
-      padding-bottom: 0;
-    }
 
     :deep(img) {
       width: 36px;
@@ -537,6 +692,10 @@ $main-gap: 16px;
 
     div {
       overflow: hidden;
+
+      @include mobile() {
+        display: none;
+      }
     }
 
     &__name {
@@ -547,6 +706,20 @@ $main-gap: 16px;
 
     &__leader {
       font-size: 0.7rem;
+    }
+
+    &__leader-icon {
+      display: none;
+      position: absolute;
+      bottom: -3px;
+      right: -6px;
+      width: 22px;
+      height: 22px;
+      fill: goldenrod;
+
+      @include mobile() {
+        display: block;
+      }
     }
   }
 }
