@@ -6,6 +6,8 @@ import { copyToClipboard } from "../../utils"
 import { user } from "../../contexts/user"
 import { gameState } from "./contexts/gamestate"
 
+import AppSwitch from "../AppSwitch.vue"
+import AppTooltip from "../AppTooltip.vue"
 import AppButton from "../AppButton.vue"
 import AppLoader from "../AppLoader.vue"
 import NumericInput from "../NumericInput.vue"
@@ -32,9 +34,15 @@ interface Pack extends ApiCardPack {
 
 const state = reactive<{
   loading: boolean
+  roomName: string
+  scoreLimitEnabled: boolean
+  timeLimitEnabled: boolean
   packs: Pack[]
 }>({
   loading: true,
+  roomName: "",
+  scoreLimitEnabled: false,
+  timeLimitEnabled: false,
   packs: []
 })
 
@@ -105,19 +113,108 @@ function onCopyLink() {
       <div v-else class="settings__panel settings__main">
         <div class="settings__main__options">
           <div class="settings__main__options-row">
-            <h3>Score limit</h3>
-            <NumericInput :lowest="1" :highest="20" :default-val="15" />
+            <input
+              v-model="state.roomName"
+              placeholder="User's Room"
+              class="settings__main__room-name"
+              type="text"
+            />
           </div>
           <div class="settings__main__options-row">
-            <h3>Player limit</h3>
-            <NumericInput :lowest="2" :highest="10" :default-val="3" />
+            <div class="settings__main__option-title">
+              <h3>Player limit</h3>
+              <div class="settings__main__option-title__tooltip">
+                <AppTooltip
+                  class="settings__main__option-title__tooltip__box"
+                  position="right"
+                >
+                  test
+                </AppTooltip>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                  <path
+                    d="M480 816q20 0 34-14t14-34q0-20-14-34t-34-14q-20 0-34 14t-14 34q0 20 14 34t34 14Zm-36-153h73q0-37 6.5-52.5T555 571q35-34 48.5-58t13.5-53q0-55-37.5-89.5T484 336q-51 0-88.5 27T343 436l65 27q9-28 28.5-43.5T482 404q28 0 46 16t18 42q0 23-15.5 41T496 538q-35 32-43.5 52.5T444 663Zm36 297q-79 0-149-30t-122.5-82.5Q156 795 126 725T96 576q0-80 30-149.5t82.5-122Q261 252 331 222t149-30q80 0 149.5 30t122 82.5Q804 357 834 426.5T864 576q0 79-30 149t-82.5 122.5Q699 900 629.5 930T480 960Zm0-72q130 0 221-91t91-221q0-130-91-221t-221-91q-130 0-221 91t-91 221q0 130 91 221t221 91Zm0-312Z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <NumericInput
+              :lowest="2"
+              :highest="21"
+              :default-val="10"
+              class="settings__main__optional"
+            />
           </div>
-          <div
-            class="settings__main__options-row settings__main__options-row--flex"
-          >
-            <h3>Card sets</h3>
-            <button @click="selectAllPacks">Select all</button>
-            <button @click="unselectAllPacks">Unselect all</button>
+          <div class="settings__main__options-row">
+            <div class="settings__main__option-title">
+              <AppSwitch @new-value="v => (state.scoreLimitEnabled = v)" />
+              <h3>Score limit</h3>
+              <div class="settings__main__option-title__tooltip">
+                <AppTooltip
+                  class="settings__main__option-title__tooltip__box"
+                  position="right"
+                >
+                  test
+                </AppTooltip>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                  <path
+                    d="M480 816q20 0 34-14t14-34q0-20-14-34t-34-14q-20 0-34 14t-14 34q0 20 14 34t34 14Zm-36-153h73q0-37 6.5-52.5T555 571q35-34 48.5-58t13.5-53q0-55-37.5-89.5T484 336q-51 0-88.5 27T343 436l65 27q9-28 28.5-43.5T482 404q28 0 46 16t18 42q0 23-15.5 41T496 538q-35 32-43.5 52.5T444 663Zm36 297q-79 0-149-30t-122.5-82.5Q156 795 126 725T96 576q0-80 30-149.5t82.5-122Q261 252 331 222t149-30q80 0 149.5 30t122 82.5Q804 357 834 426.5T864 576q0 79-30 149t-82.5 122.5Q699 900 629.5 930T480 960Zm0-72q130 0 221-91t91-221q0-130-91-221t-221-91q-130 0-221 91t-91 221q0 130 91 221t221 91Zm0-312Z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <NumericInput
+              v-if="state.scoreLimitEnabled"
+              :lowest="0"
+              :highest="1000"
+              :default-val="15"
+              class="settings__main__optional"
+            />
+          </div>
+          <div class="settings__main__options-row">
+            <div class="settings__main__option-title">
+              <AppSwitch @new-value="v => (state.timeLimitEnabled = v)" />
+              <h3>Time limit</h3>
+              <div class="settings__main__option-title__tooltip">
+                <AppTooltip
+                  class="settings__main__option-title__tooltip__box"
+                  position="right"
+                >
+                  test
+                </AppTooltip>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                  <path
+                    d="M480 816q20 0 34-14t14-34q0-20-14-34t-34-14q-20 0-34 14t-14 34q0 20 14 34t34 14Zm-36-153h73q0-37 6.5-52.5T555 571q35-34 48.5-58t13.5-53q0-55-37.5-89.5T484 336q-51 0-88.5 27T343 436l65 27q9-28 28.5-43.5T482 404q28 0 46 16t18 42q0 23-15.5 41T496 538q-35 32-43.5 52.5T444 663Zm36 297q-79 0-149-30t-122.5-82.5Q156 795 126 725T96 576q0-80 30-149.5t82.5-122Q261 252 331 222t149-30q80 0 149.5 30t122 82.5Q804 357 834 426.5T864 576q0 79-30 149t-82.5 122.5Q699 900 629.5 930T480 960Zm0-72q130 0 221-91t91-221q0-130-91-221t-221-91q-130 0-221 91t-91 221q0 130 91 221t221 91Zm0-312Z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <NumericInput
+              v-if="state.timeLimitEnabled"
+              :lowest="5"
+              :highest="360"
+              :default-val="120"
+              class="settings__main__optional"
+            />
+          </div>
+          <div class="settings__main__options-row">
+            <div class="settings__main__option-title">
+              <h3>Card sets</h3>
+              <div class="settings__main__option-title__tooltip">
+                <AppTooltip
+                  class="settings__main__option-title__tooltip__box"
+                  position="right"
+                >
+                  test
+                </AppTooltip>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                  <path
+                    d="M480 816q20 0 34-14t14-34q0-20-14-34t-34-14q-20 0-34 14t-14 34q0 20 14 34t34 14Zm-36-153h73q0-37 6.5-52.5T555 571q35-34 48.5-58t13.5-53q0-55-37.5-89.5T484 336q-51 0-88.5 27T343 436l65 27q9-28 28.5-43.5T482 404q28 0 46 16t18 42q0 23-15.5 41T496 538q-35 32-43.5 52.5T444 663Zm36 297q-79 0-149-30t-122.5-82.5Q156 795 126 725T96 576q0-80 30-149.5t82.5-122Q261 252 331 222t149-30q80 0 149.5 30t122 82.5Q804 357 834 426.5T864 576q0 79-30 149t-82.5 122.5Q699 900 629.5 930T480 960Zm0-72q130 0 221-91t91-221q0-130-91-221t-221-91q-130 0-221 91t-91 221q0 130 91 221t221 91Zm0-312Z"
+                  />
+                </svg>
+              </div>
+              <button @click="selectAllPacks">Select all</button>
+              <button @click="unselectAllPacks">Unselect all</button>
+            </div>
           </div>
           <div class="settings__main__options-row">
             <div class="settings__packs">
@@ -268,23 +365,18 @@ $main-gap: 16px;
 
     h3 {
       margin: 0;
+      letter-spacing: 0.5px;
     }
 
     &__options {
       flex-grow: 1;
-      overflow-y: auto;
+      overflow-y: scroll;
     }
 
     &__options-row {
       margin-bottom: 8px;
 
-      &--flex {
-        display: flex;
-        align-items: center;
-      }
-
       button {
-        margin-left: 8px;
         font-size: 0.7rem;
         cursor: pointer;
         color: #dfdfdf;
@@ -293,6 +385,57 @@ $main-gap: 16px;
           text-decoration: underline;
         }
       }
+    }
+
+    &__room-name {
+      width: 45%;
+      padding: 8px;
+      font-size: 1.6rem;
+      border-radius: 4px;
+      transition: background-color 200ms;
+
+      &::placeholder {
+        color: inherit;
+        transition: color 200ms;
+      }
+
+      &:focus::placeholder {
+        color: #757575;
+      }
+
+      &:focus {
+        background-color: #2f2f2f;
+      }
+    }
+
+    &__option-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      &__tooltip {
+        position: relative;
+        top: -1px;
+
+        &__box {
+          display: none;
+        }
+
+        &:hover &__box {
+          display: block;
+        }
+
+        svg {
+          height: 16px;
+          width: 16px;
+          fill: currentColor;
+        }
+      }
+    }
+
+    &__optional {
+      margin-top: 6px;
+      margin-left: 8px;
     }
 
     &__bottom {
