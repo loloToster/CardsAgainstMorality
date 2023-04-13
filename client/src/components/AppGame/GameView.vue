@@ -14,6 +14,7 @@ import PlayingCard from "../PlayingCard.vue"
 
 import RoundWinnerModal from "./modals/RoundWinnerModal.vue"
 
+import GameTimer from "./game-components/GameTimer.vue"
 import GameVoting from "./game-components/GameVoting.vue"
 import GameMeta from "./game-components/GameMeta.vue"
 import UAreTsar from "./game-components/UAreTsar.vue"
@@ -44,6 +45,7 @@ enum CARD_HEIGHT {
 }
 
 const SMALLER_CARDS_BOUNDARY = 500
+const CARDS_HORIZONTAL_PADDING = 40 * 2
 
 const state = reactive<{
   maxTableCardWidth: MAX_CARD_WIDTH
@@ -117,12 +119,21 @@ const numOfTableCards = computed(() => {
   return 1 + gameState.pickedCards.length + activeChoice.value.length
 })
 
-function resizeTableCards(w: number) {
+function resizeTableCards(tableWidth: number) {
   const g = (numOfTableCards.value - 1) * TABLE_CARDS_GAP
-  state.tableCardWidth = Math.min(
-    (w - g) / numOfTableCards.value,
+  const cardWidth = Math.min(
+    (tableWidth - g) / numOfTableCards.value,
     state.maxTableCardWidth
   )
+
+  const exisitingPadding = tableWidth - numOfTableCards.value * cardWidth - g
+
+  let additionalPadding = 0
+  if (exisitingPadding < CARDS_HORIZONTAL_PADDING) {
+    additionalPadding = CARDS_HORIZONTAL_PADDING - exisitingPadding
+  }
+
+  state.tableCardWidth = cardWidth - additionalPadding / numOfTableCards.value
 }
 
 useResizeObserver(table, entries => {
@@ -186,15 +197,23 @@ function onCardsScroll(e: WheelEvent) {
             '--table-cards-gap': TABLE_CARDS_GAP
           }"
         >
-          <PlayingCard
-            :width="state.tableCardWidth"
-            :text="gameState.blackCard.text"
-            :pack="gameState.blackCard.pack"
-            :pick="gameState.blackCard.pick"
-            color="black"
-            :animated="numOfTableCards === 1"
-            glow
-          />
+          <div class="game__table__timer-wrapper">
+            <GameTimer
+              class="game__table__timer"
+              :from="110"
+              :shake-boundry="100"
+              :warning-boundry="60"
+            />
+            <PlayingCard
+              :width="state.tableCardWidth"
+              :text="gameState.blackCard.text"
+              :pack="gameState.blackCard.pack"
+              :pick="gameState.blackCard.pick"
+              color="black"
+              :animated="numOfTableCards === 1"
+              glow
+            />
+          </div>
           <PlayingCard
             v-for="card in gameState.pickedCards"
             :width="state.tableCardWidth"
@@ -297,15 +316,27 @@ $main-gap: 20px;
     &__cards {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: calc(var(--table-cards-gap, 8) * 1px);
       height: calc(var(--table-cards-height, 325) * 1px);
-      width: fit-content;
-      max-width: 100%;
+      width: 100%;
       margin: auto;
     }
+
     &.active &__cards {
       overflow-y: auto;
       overflow-x: hidden;
+    }
+
+    &__timer-wrapper {
+      position: relative;
+    }
+
+    &__timer {
+      position: absolute;
+      top: 8px;
+      left: 0;
+      transform: translateX(calc(-100% - 10px));
     }
   }
 
