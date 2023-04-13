@@ -45,7 +45,6 @@ enum CARD_HEIGHT {
 }
 
 const SMALLER_CARDS_BOUNDARY = 500
-const CARDS_HORIZONTAL_PADDING = 40 * 2
 
 const state = reactive<{
   maxTableCardWidth: MAX_CARD_WIDTH
@@ -114,6 +113,8 @@ function onChangeChoice(choiceIdx: number) {
 
 const TABLE_CARDS_GAP = 8
 const table = ref<HTMLDivElement>()
+const timer = ref<HTMLDivElement>()
+const timerWrapper = ref<HTMLDivElement>()
 
 const numOfTableCards = computed(() => {
   return 1 + gameState.pickedCards.length + activeChoice.value.length
@@ -126,11 +127,16 @@ function resizeTableCards(tableWidth: number) {
     state.maxTableCardWidth
   )
 
-  const exisitingPadding = tableWidth - numOfTableCards.value * cardWidth - g
-
   let additionalPadding = 0
-  if (exisitingPadding < CARDS_HORIZONTAL_PADDING) {
-    additionalPadding = CARDS_HORIZONTAL_PADDING - exisitingPadding
+
+  if (timer.value) {
+    const timerWrapperX = timerWrapper.value?.getBoundingClientRect().x || 0
+    const timerX = timer.value?.getBoundingClientRect().x || 0
+    const neededPadding = (timerWrapperX - timerX) * 2
+    const exisitingPadding = tableWidth - numOfTableCards.value * cardWidth - g
+
+    if (exisitingPadding < neededPadding)
+      additionalPadding = neededPadding - exisitingPadding
   }
 
   state.tableCardWidth = cardWidth - additionalPadding / numOfTableCards.value
@@ -197,13 +203,21 @@ function onCardsScroll(e: WheelEvent) {
             '--table-cards-gap': TABLE_CARDS_GAP
           }"
         >
-          <div class="game__table__timer-wrapper">
-            <GameTimer
-              class="game__table__timer"
-              :from="110"
-              :shake-boundry="100"
-              :warning-boundry="60"
-            />
+          <div ref="timerWrapper" class="game__table__timer-wrapper">
+            <div ref="timer" class="game__table__timer">
+              <GameTimer
+                v-if="
+                  gameState.timeLimit && gameState.stage === GameStage.CHOOSING
+                "
+                :from="gameState.timeLimit"
+                :shake-boundry="
+                  gameState.imTsar || gameState.submitted ? 0 : 30
+                "
+                :warning-boundry="
+                  gameState.imTsar || gameState.submitted ? 0 : 10
+                "
+              />
+            </div>
             <PlayingCard
               :width="state.tableCardWidth"
               :text="gameState.blackCard.text"
@@ -336,7 +350,7 @@ $main-gap: 20px;
       position: absolute;
       top: 8px;
       left: 0;
-      transform: translateX(calc(-100% - 10px));
+      transform: translateX(calc(-100% - min(0.8vw, 10px)));
     }
   }
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, computed, onUnmounted } from "vue"
+import { reactive, ref, computed, onUnmounted, watch } from "vue"
 
 const INTERVAL = 1000
 
@@ -25,9 +25,9 @@ function runShakeAnimation() {
   timer.value.classList.add("shake")
 }
 
-function turnRed() {
+function handleWarning() {
   if (!wrapper.value) return
-  wrapper.value.classList.add("red")
+  wrapper.value.classList.toggle("red", state.counter < props.warningBoundry)
 }
 
 let timeout: ReturnType<typeof setTimeout> | undefined
@@ -36,20 +36,34 @@ function tickTack() {
 
   if (state.counter === 0) return
 
-  state.counter--
+  handleWarning()
 
-  if (state.counter < props.warningBoundry) turnRed()
   if (
     state.counter < props.shakeBoundry &&
     !(state.counter % props.shakeInterval)
   )
     runShakeAnimation()
 
+  state.counter--
+
   timeout = setTimeout(tickTack, INTERVAL)
 }
 
 tickTack()
 onUnmounted(() => clearTimeout(timeout))
+
+watch(
+  () => props.from,
+  newVal => {
+    state.counter = newVal
+    tickTack()
+  }
+)
+
+watch(
+  () => props.warningBoundry,
+  () => handleWarning()
+)
 
 const handRotation = computed(() => {
   return (props.from - state.counter) * 90
@@ -74,19 +88,14 @@ const handRotation = computed(() => {
 <style scoped lang="scss">
 @use "sass:math" as math;
 
-@keyframes warn {
-  to {
-    color: #f22951;
-  }
-}
-
 .wrapper {
   display: flex;
   align-items: center;
   flex-direction: column;
 
   &.red {
-    animation: warn 3s linear forwards;
+    color: #f22951;
+    transition: color 2s linear;
   }
 }
 
@@ -94,7 +103,7 @@ const handRotation = computed(() => {
   min-width: 3ch;
   text-align: center;
   font-family: monospace;
-  font-size: 19px;
+  font-size: clamp(12px, 3vw, 19px);
   line-height: 1.1;
 }
 
@@ -136,14 +145,17 @@ const handRotation = computed(() => {
 }
 
 .timer {
-  $size: 29px;
-
+  --size: 31px;
   --rotation: 0;
   --scale: 1;
 
   position: relative;
-  width: $size;
-  height: $size;
+  width: var(--size);
+  height: var(--size);
+
+  @media (max-width: 600px) {
+    --size: 20px;
+  }
 
   &.shake {
     animation: shake 820ms cubic-bezier(0.36, 0.07, 0.19, 0.97) both,
@@ -152,21 +164,23 @@ const handRotation = computed(() => {
 
   svg {
     fill: currentColor;
-    width: $size;
-    height: $size;
+    width: var(--size);
+    height: var(--size);
   }
 
   &__hand {
-    $w: math.div($size, 10);
-    $len: math.div($size, 4);
+    --w: calc(var(--size) / 10);
+    --len: calc(var(--size) / 4);
 
     position: absolute;
-    left: math.div($size, 2) - math.div($w, 2);
-    top: math.div($size, 2) - $size * 0.02 - ($len - $w);
-    height: $len;
-    width: $w;
+    left: calc((var(--size) / 2) - (var(--w) / 2));
+    top: calc(
+      (var(--size) / 2) - (var(--size) * 0.02) - (var(--len) - var(--w))
+    );
+    width: var(--w);
+    height: var(--len);
     background-color: currentColor;
-    transform-origin: center ($len - math.div($w, 2));
+    transform-origin: center calc(var(--len) - (var(--w) / 2));
     transform: rotate(calc(var(--hand-rotation, 0) * 1deg));
     transition: transform 1000ms;
   }

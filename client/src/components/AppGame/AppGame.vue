@@ -32,6 +32,8 @@ socket.on("players", data => {
 socket.on("new-round", data => {
   if (gameState.audio) newRoundAudio.play()
 
+  gameState.timeLimit = data.timeLimit
+
   gameState.stage = GameStage.CHOOSING
   gameState.imTsar = data.tsar
   gameState.blackCard = data.blackCard
@@ -55,10 +57,12 @@ socket.on("sync", data => {
     return
   }
 
+  gameState.timeLimit = data.timeLimit
+  gameState.voting = data.voting
+
   gameState.imTsar = data.tsar
   gameState.blackCard = data.blackCard
   gameState.cards = data.cards
-  gameState.voting = data.voting
 
   if (data.choices) {
     gameState.stage = GameStage.TSAR_VERDICT

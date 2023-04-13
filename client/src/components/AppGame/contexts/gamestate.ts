@@ -11,6 +11,7 @@ const defaultGameState: GameState = {
   stage: GameStage.UNKNOWN,
   players: [],
   voting: null,
+  timeLimit: null,
   imTsar: false,
   blackCard: { id: -1, text: "test", pack: "test pack", pick: 1 },
   cards: new Array(10).fill(null).map((_, i) => ({

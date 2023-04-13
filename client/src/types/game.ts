@@ -18,6 +18,7 @@ export interface GameState {
   stage: GameStage
   players: ApiPlayer[]
   voting: VotingData | null
+  timeLimit: number | null
   imTsar: boolean
   blackCard: ApiBlackCard
   cards: ApiWhiteCard[]

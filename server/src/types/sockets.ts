@@ -6,6 +6,7 @@ export interface NewRoundData {
   tsar: boolean
   blackCard: ApiBlackCard
   cards: ApiWhiteCard[]
+  timeLimit: number | null
 }
 
 export interface PrevRound {

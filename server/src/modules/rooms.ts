@@ -353,7 +353,8 @@ export class Room {
         blackCard,
         cards,
         tsar: player.isTsar,
-        prevRound
+        prevRound,
+        timeLimit: this.timeLimit
       })
     }
 
@@ -411,7 +412,8 @@ export class Room {
       blackCard,
       cards,
       choices,
-      voting
+      voting,
+      timeLimit: this.timeLimit
     }
 
     player.metadata?.socket.emit("sync", data)
