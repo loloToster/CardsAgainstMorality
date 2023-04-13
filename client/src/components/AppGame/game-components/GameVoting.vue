@@ -8,13 +8,13 @@ const INTERVAL = 1000
 const props = defineProps<{ votingData: VotingData }>()
 
 const emit = defineEmits<{
-  (e: "vote", vote: boolean): void
-  (e: "counter-end"): void
+  (ev: "vote", vote: boolean): void
+  (ev: "counter-end"): void
 }>()
 
 const state = reactive({ active: false, counter: props.votingData.endsInMs })
 
-let timeout: number | undefined
+let timeout: ReturnType<typeof setTimeout> | undefined
 
 function countdown() {
   clearTimeout(timeout)
@@ -25,7 +25,7 @@ function countdown() {
 
   state.counter -= INTERVAL
 
-  timeout = setTimeout(countdown, INTERVAL) as unknown as number
+  timeout = setTimeout(countdown, INTERVAL)
 }
 
 watch(

@@ -4,14 +4,13 @@ import { onClickOutside } from "@vueuse/core"
 
 import { ApiCardPack, StartData } from "@backend/types"
 
-import { copyToClipboard } from "../../utils"
-
 import { user } from "../../contexts/user"
 import { gameState } from "./contexts/gamestate"
 
 import AppSwitch from "../AppSwitch.vue"
 import AppTooltip from "../AppTooltip.vue"
 import AppButton from "../AppButton.vue"
+import CopyButton from "../CopyButton.vue"
 import AppLoader from "../AppLoader.vue"
 import NumericInput from "../NumericInput.vue"
 import AnimatedNumber from "../AnimatedNumber.vue"
@@ -21,7 +20,7 @@ import GamePack from "./game-components/GamePack.vue"
 import BlackCardIcon from "../../assets/black-card-icon.svg?component"
 import WhiteCardIcon from "../../assets/white-card-icon.svg?component"
 
-const props = defineProps<{ roomId: string }>()
+defineProps<{ roomId: string }>()
 
 const leader = computed(() => {
   return gameState.players.find(p => p.leader)
@@ -94,6 +93,18 @@ fetch("/api/packs").then(async res => {
   state.loading = false
 })
 
+const canStart = computed(() => {
+  return (
+    numOfBlackCards.value &&
+    numOfWhiteCards.value &&
+    gameState.players.length > 1 &&
+    !isNaN(state.playerLimit) &&
+    (state.timeLimitEnabled ? !isNaN(state.timeLimit) : true) &&
+    (state.scoreLimitEnabled ? !isNaN(state.scoreLimit) : true) &&
+    (state.roundLimitEnabled ? !isNaN(state.roundLimit) : true)
+  )
+})
+
 function onStart() {
   emit("start", {
     playersLimit: state.playerLimit,
@@ -104,13 +115,9 @@ function onStart() {
   })
 }
 
-function onCopyCode() {
-  copyToClipboard(props.roomId)
-}
-
-function onCopyLink() {
-  copyToClipboard(window.location.href)
-}
+const windowLocation = computed(() => {
+  return window.location.href
+})
 
 const invitePlayersContent = ref<HTMLDivElement>()
 
@@ -161,16 +168,17 @@ onClickOutside(invitePlayersContent, () => {
                 </svg>
               </div>
             </div>
-            <NumericInput
-              v-model="state.playerLimit"
-              :lowest="2"
-              :highest="21"
-              class="settings__main__optional"
-            />
+            <div class="settings__main__optional active">
+              <NumericInput
+                v-model="state.playerLimit"
+                :lowest="2"
+                :highest="21"
+              />
+            </div>
           </div>
           <div class="settings__main__options-row">
             <div class="settings__main__option-title">
-              <AppSwitch @new-value="v => (state.timeLimitEnabled = v)" />
+              <AppSwitch v-model="state.timeLimitEnabled" />
               <h3>Time limit</h3>
               <div class="settings__main__option-title__tooltip">
                 <AppTooltip
@@ -186,17 +194,20 @@ onClickOutside(invitePlayersContent, () => {
                 </svg>
               </div>
             </div>
-            <NumericInput
-              v-if="state.timeLimitEnabled"
-              v-model="state.timeLimit"
-              :lowest="5"
-              :highest="360"
+            <div
               class="settings__main__optional"
-            />
+              :class="{ active: state.timeLimitEnabled }"
+            >
+              <NumericInput
+                v-model="state.timeLimit"
+                :lowest="5"
+                :highest="360"
+              />
+            </div>
           </div>
           <div class="settings__main__options-row">
             <div class="settings__main__option-title">
-              <AppSwitch @new-value="v => (state.scoreLimitEnabled = v)" />
+              <AppSwitch v-model="state.scoreLimitEnabled" />
               <h3>Score limit</h3>
               <div class="settings__main__option-title__tooltip">
                 <AppTooltip
@@ -212,17 +223,20 @@ onClickOutside(invitePlayersContent, () => {
                 </svg>
               </div>
             </div>
-            <NumericInput
-              v-if="state.scoreLimitEnabled"
-              v-model="state.scoreLimit"
-              :lowest="0"
-              :highest="Infinity"
+            <div
               class="settings__main__optional"
-            />
+              :class="{ active: state.scoreLimitEnabled }"
+            >
+              <NumericInput
+                v-model="state.scoreLimit"
+                :lowest="0"
+                :highest="Infinity"
+              />
+            </div>
           </div>
           <div class="settings__main__options-row">
             <div class="settings__main__option-title">
-              <AppSwitch @new-value="v => (state.roundLimitEnabled = v)" />
+              <AppSwitch v-model="state.roundLimitEnabled" />
               <h3>Round limit</h3>
               <div class="settings__main__option-title__tooltip">
                 <AppTooltip
@@ -238,13 +252,16 @@ onClickOutside(invitePlayersContent, () => {
                 </svg>
               </div>
             </div>
-            <NumericInput
-              v-if="state.roundLimitEnabled"
-              v-model="state.roundLimit"
-              :lowest="0"
-              :highest="Infinity"
+            <div
               class="settings__main__optional"
-            />
+              :class="{ active: state.roundLimitEnabled }"
+            >
+              <NumericInput
+                v-model="state.roundLimit"
+                :lowest="0"
+                :highest="Infinity"
+              />
+            </div>
           </div>
           <div class="settings__main__options-row">
             <div class="settings__main__option-title">
@@ -289,14 +306,7 @@ onClickOutside(invitePlayersContent, () => {
             :value="numOfWhiteCards"
             class="settings__main__bottom__n"
           />
-          <AppButton
-            @click="onStart()"
-            :disabled="
-              !numOfBlackCards ||
-              !numOfWhiteCards ||
-              gameState.players.length < 2
-            "
-          >
+          <AppButton @click="onStart()" :disabled="!canStart">
             Start
           </AppButton>
         </div>
@@ -329,30 +339,20 @@ onClickOutside(invitePlayersContent, () => {
             @click="e => (e.target as HTMLInputElement).select()"
           />
           <div class="settings__invite__btns">
-            <AppButton
-              @click="onCopyCode"
+            <CopyButton
+              :text="roomId"
               color="#15b041"
               class="settings__invite__btn"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
-                <path
-                  d="M200 976q-33 0-56.5-23.5T120 896V336h80v560h440v80H200Zm160-160q-33 0-56.5-23.5T280 736V256q0-33 23.5-56.5T360 176h360q33 0 56.5 23.5T800 256v480q0 33-23.5 56.5T720 816H360Zm0-80h360V256H360v480Zm0 0V256v480Z"
-                />
-              </svg>
-              <div>Code</div>
-            </AppButton>
-            <AppButton
+              Code
+            </CopyButton>
+            <CopyButton
+              :text="windowLocation"
               color="#1869cc"
-              @click="onCopyLink"
               class="settings__invite__btn"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
-                <path
-                  d="M200 976q-33 0-56.5-23.5T120 896V336h80v560h440v80H200Zm160-160q-33 0-56.5-23.5T280 736V256q0-33 23.5-56.5T360 176h360q33 0 56.5 23.5T800 256v480q0 33-23.5 56.5T720 816H360Zm0-80h360V256H360v480Zm0 0V256v480Z"
-                />
-              </svg>
-              <div>Link</div>
-            </AppButton>
+              Link
+            </CopyButton>
           </div>
         </div>
       </div>
@@ -552,8 +552,13 @@ $main-gap: 16px;
     }
 
     &__optional {
+      display: none;
       margin-top: 6px;
       margin-left: 8px;
+
+      &.active {
+        display: block;
+      }
     }
 
     &__bottom {
@@ -665,20 +670,6 @@ $main-gap: 16px;
 
     &__btn {
       flex-grow: 1;
-      display: flex;
-      align-items: center;
-      padding: 8px;
-
-      svg {
-        fill: currentColor;
-        height: 20px;
-        width: 20px;
-      }
-
-      div {
-        flex-grow: 1;
-        font-size: 1rem;
-      }
     }
   }
 

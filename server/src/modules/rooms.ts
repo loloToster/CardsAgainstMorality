@@ -97,9 +97,10 @@ export class Room {
     socket.on("start", async settings => {
       if (this.getLeader() !== player) return
 
+      this.timeLimit = settings.timeLimit
       this.playersLimit = settings.playersLimit
       this.scoreLimit = settings.scoreLimit
-      this.timeLimit = settings.timeLimit
+      this.roundLimit = settings.roundLimit
 
       const whiteCards = await db.whiteCard.findMany({
         where: { packId: { in: settings.packs } },
@@ -144,8 +145,11 @@ export class Room {
         const winnerData = player.makeVerdict(verdict)
 
         if (
-          this.scoreLimit !== null &&
-          winnerData.winner.points >= this.scoreLimit
+          (this.scoreLimit !== null &&
+            winnerData.winner.points >= this.scoreLimit) ||
+          (this.roundLimit !== null &&
+            this.game.players.reduce((acc, p) => acc + p.points, 0) >=
+              this.roundLimit)
         ) {
           const podium = this.game.end()
           this.sendGameEnd(podium)

@@ -1,20 +1,27 @@
 <script setup lang="ts">
-import { reactive, watch } from "vue"
+import { reactive } from "vue"
 
-const state = reactive({ val: false })
-const emit = defineEmits<{
-  (ev: "new-value", val: boolean): void
+defineProps<{
+  modelValue: boolean
 }>()
 
-watch(
-  () => state.val,
-  newVal => emit("new-value", newVal)
-)
+const state = reactive({
+  val: false
+})
+
+const emit = defineEmits<{
+  (ev: "update:modelValue", newVal: boolean): void
+}>()
+
+function onChange() {
+  state.val = !state.val
+  emit("update:modelValue", state.val)
+}
 </script>
 
 <template>
   <div
-    @click="state.val = !state.val"
+    @click="onChange"
     :class="{ active: state.val }"
     class="switch"
     role="checkbox"

@@ -5,7 +5,7 @@ const props = defineProps<{ value: number }>()
 
 const state = reactive({ number: props.value })
 
-let timeout: number | undefined
+let timeout: ReturnType<typeof setTimeout> | undefined
 
 function animate() {
   clearTimeout(timeout)
