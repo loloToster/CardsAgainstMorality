@@ -49,3 +49,7 @@ export async function copyToClipboard(text: string) {
     document.body.removeChild(textArea)
   }
 }
+
+export function deepclone<T>(x: T): T {
+  return JSON.parse(JSON.stringify(x))
+}

@@ -13,19 +13,22 @@ export enum GameStage {
   TSAR_VERDICT
 }
 
-export interface GameState {
+export interface PlayerState {
+  imTsar: boolean
+  cards: ApiWhiteCard[]
+  submitted: boolean
+  pickedCards: ApiWhiteCard[]
+  choices: ApiWhiteCard[][]
+  activeChoiceIdx: number | null
+}
+
+export interface GameState extends PlayerState {
   audio: boolean
   stage: GameStage
   players: ApiPlayer[]
   voting: VotingData | null
   timeLimit: number | null
-  imTsar: boolean
   blackCard: ApiBlackCard
-  cards: ApiWhiteCard[]
-  pickedCards: ApiWhiteCard[]
-  submitted: boolean
-  choices: ApiWhiteCard[][]
-  activeChoiceIdx: number | null
   roundWinnerData: {
     winner: string
     blackCard: ApiBlackCard

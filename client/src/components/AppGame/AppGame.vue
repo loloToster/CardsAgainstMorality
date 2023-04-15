@@ -10,7 +10,11 @@ import {
   socket,
   socketState
 } from "../../contexts/socket"
-import { gameState, resetGameState } from "./contexts/gamestate"
+import {
+  gameState,
+  resetGameState,
+  resetPlayerState
+} from "./contexts/gamestate"
 
 import AppLoader from "../AppLoader.vue"
 import GameView from "./GameView.vue"
@@ -75,6 +79,8 @@ socket.on("sync", data => {
 socket.on("end", ({ podium }) => {
   gameState.stage = GameStage.NOT_STARTED
   gameState.podium = podium
+
+  resetPlayerState()
 })
 
 socket.on("voting", data => {

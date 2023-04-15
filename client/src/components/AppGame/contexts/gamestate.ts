@@ -1,36 +1,52 @@
 import { reactive } from "vue"
-import { GameStage, GameState } from "../../../types/game"
+import { deepclone } from "../../../utils"
+import { GameStage, GameState, PlayerState } from "../../../types/game"
 
 enum AudioState {
   ON = "on",
   OFF = "off"
 }
 
-const defaultGameState: GameState = {
-  audio: window.localStorage.getItem("audio") === AudioState.ON,
-  stage: GameStage.UNKNOWN,
-  players: [],
-  voting: null,
-  timeLimit: null,
+const defaultPlayerState: PlayerState = {
   imTsar: false,
-  blackCard: { id: -1, text: "test", pack: "test pack", pick: 1 },
   cards: new Array(10).fill(null).map((_, i) => ({
     id: i,
     text: i.toString(),
     pack: "testpack"
   })),
-  pickedCards: [],
   submitted: false,
+  pickedCards: [],
   choices: [],
-  activeChoiceIdx: null,
-  roundWinnerData: null,
-  podium: null
+  activeChoiceIdx: null
 }
 
-export const gameState = reactive<GameState>({ ...defaultGameState })
+const defaultGameState: GameState = {
+  audio: false,
+  stage: GameStage.UNKNOWN,
+  players: [],
+  voting: null,
+  timeLimit: null,
+  blackCard: { id: -1, text: "test", pack: "test pack", pick: 1 },
+  roundWinnerData: null,
+  podium: null,
+  ...defaultPlayerState
+}
+
+export const gameState = reactive<GameState>(deepclone(defaultGameState))
+
+function syncAudio() {
+  gameState.audio = window.localStorage.getItem("audio") === AudioState.ON
+}
+
+syncAudio()
+
+export function resetPlayerState() {
+  Object.assign(gameState, deepclone(defaultPlayerState))
+}
 
 export function resetGameState() {
-  Object.assign(gameState, defaultGameState)
+  Object.assign(gameState, deepclone(defaultGameState))
+  syncAudio()
 }
 
 export function toggleAudio() {
