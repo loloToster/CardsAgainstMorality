@@ -5,6 +5,7 @@ import { syncRefs, useResizeObserver } from "@vueuse/core"
 import { VotingMeta } from "@backend/types"
 import { GameStage } from "../../types/game"
 
+import { playAudio } from "../../contexts/audio"
 import { gameState } from "./contexts/gamestate"
 import { target as pictureTarget, onPictureTake } from "./contexts/screenshot"
 
@@ -20,8 +21,6 @@ import GameVoting from "./game-components/GameVoting.vue"
 import GameMeta from "./game-components/GameMeta.vue"
 import UAreTsar from "./game-components/UAreTsar.vue"
 import GameChoices from "./game-components/GameChoices.vue"
-
-import CameraAudio from "../../assets/camera.mp3"
 
 const activeChoice = computed(() => {
   return gameState.activeChoiceIdx !== null &&
@@ -174,10 +173,8 @@ const flash = ref<HTMLDivElement>()
 const tableCards = ref<HTMLDivElement>()
 syncRefs(tableCards, pictureTarget)
 
-const cameraAudio = new Audio(CameraAudio)
-
 function runFlashAnimation() {
-  if (gameState.audio) cameraAudio.play()
+  playAudio("camera")
   flash.value?.classList.remove("flash")
   void flash.value?.offsetHeight
   flash.value?.classList.add("flash")

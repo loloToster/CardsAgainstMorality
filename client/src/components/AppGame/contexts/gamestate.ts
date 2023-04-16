@@ -2,11 +2,6 @@ import { reactive } from "vue"
 import { deepclone } from "../../../utils"
 import { GameStage, GameState, PlayerState } from "../../../types/game"
 
-enum AudioState {
-  ON = "on",
-  OFF = "off"
-}
-
 const defaultPlayerState: PlayerState = {
   imTsar: false,
   cards: new Array(10).fill(null).map((_, i) => ({
@@ -21,7 +16,6 @@ const defaultPlayerState: PlayerState = {
 }
 
 const defaultGameState: GameState = {
-  audio: false,
   stage: GameStage.UNKNOWN,
   players: [],
   voting: null,
@@ -34,25 +28,10 @@ const defaultGameState: GameState = {
 
 export const gameState = reactive<GameState>(deepclone(defaultGameState))
 
-function syncAudio() {
-  gameState.audio = window.localStorage.getItem("audio") === AudioState.ON
-}
-
-syncAudio()
-
 export function resetPlayerState() {
   Object.assign(gameState, deepclone(defaultPlayerState))
 }
 
 export function resetGameState() {
   Object.assign(gameState, deepclone(defaultGameState))
-  syncAudio()
-}
-
-export function toggleAudio() {
-  gameState.audio = !gameState.audio
-  window.localStorage.setItem(
-    "audio",
-    gameState.audio ? AudioState.ON : AudioState.OFF
-  )
 }

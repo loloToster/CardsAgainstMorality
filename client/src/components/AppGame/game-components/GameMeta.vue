@@ -4,7 +4,8 @@ import { onClickOutside } from "@vueuse/core"
 
 import { VotingMeta } from "@backend/types"
 
-import { gameState, toggleAudio } from "../contexts/gamestate"
+import { audioState, toggleAudio } from "../../../contexts/audio"
+import { gameState } from "../contexts/gamestate"
 import { takePicture } from "../contexts/screenshot"
 
 import AppButton from "../../AppButton.vue"
@@ -18,7 +19,7 @@ const emit = defineEmits<{
 const state = reactive({ gameMenuActive: false, votingMenuActive: false })
 
 const audioTooltip = computed(() => {
-  return gameState.audio ? "Turn off sound" : "Turn on sound"
+  return audioState.on ? "Turn off sound" : "Turn on sound"
 })
 
 const gameMenu = ref(null)
@@ -41,7 +42,7 @@ function onVoteToEnd(e: MouseEvent) {
         ref="gameMenu"
       >
         <button
-          @click="toggleAudio"
+          @click="toggleAudio()"
           class="game-menu__btn game-menu__item"
           v-wave
         >
@@ -58,7 +59,7 @@ function onVoteToEnd(e: MouseEvent) {
             {{ audioTooltip }}
           </AppTooltip>
           <svg
-            v-if="gameState.audio"
+            v-if="audioState.on"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 96 960 960"
           >

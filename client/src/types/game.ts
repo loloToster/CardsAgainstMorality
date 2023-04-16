@@ -23,7 +23,6 @@ export interface PlayerState {
 }
 
 export interface GameState extends PlayerState {
-  audio: boolean
   stage: GameStage
   players: ApiPlayer[]
   voting: VotingData | null

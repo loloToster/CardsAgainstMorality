@@ -10,6 +10,7 @@ import {
   socket,
   socketState
 } from "../../contexts/socket"
+import { playAudio } from "../../contexts/audio"
 import {
   gameState,
   resetGameState,
@@ -21,20 +22,14 @@ import GameView from "./GameView.vue"
 import GameSettings from "./GameSettings.vue"
 import PodiumModal from "./modals/PodiumModal.vue"
 
-import NewRoundAudio from "../../assets/new-round.mp3"
-import TsarChoiceAudio from "../../assets/tsar-choice.mp3"
-
 const route = useRoute()
-
-const newRoundAudio = new Audio(NewRoundAudio)
-const tsarChoiceAudio = new Audio(TsarChoiceAudio)
 
 socket.on("players", data => {
   gameState.players = data.players
 })
 
 socket.on("new-round", data => {
-  if (gameState.audio) newRoundAudio.play()
+  playAudio("new-round")
 
   gameState.timeLimit = data.timeLimit
 
@@ -47,7 +42,7 @@ socket.on("new-round", data => {
 })
 
 socket.on("choices", data => {
-  if (gameState.audio) tsarChoiceAudio.play()
+  playAudio("tsar-choice")
 
   gameState.stage = GameStage.TSAR_VERDICT
   gameState.activeChoiceIdx = null
