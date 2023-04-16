@@ -2,7 +2,7 @@ import { nanoid } from "nanoid"
 import db from "./db"
 import logger from "./logger"
 
-import { VOTING_TIME } from "../consts"
+import { TIME_LIMIT_OFFSET, VOTING_TIME } from "../consts"
 
 import { shuffle } from "../utils"
 import { Game, GameState, Player, Podium, WinnerData } from "../utils/game"
@@ -42,6 +42,9 @@ export class Room {
   scoreLimit: number | null
   roundLimit: number | null
 
+  timeLimitStart: number | null
+  timeLimitTimeout: ReturnType<typeof setTimeout> | undefined
+
   currentVoting: Voting | null
 
   constructor(
@@ -56,7 +59,18 @@ export class Room {
     this.scoreLimit = null
     this.roundLimit = null
 
+    this.timeLimitStart = null
+    this.timeLimitTimeout = undefined
+
     this.currentVoting = null
+  }
+
+  getTimeLimitSeconds() {
+    if (this.timeLimit === null || !this.timeLimitStart) return null
+
+    return Math.round(
+      (this.timeLimit - (Date.now() - this.timeLimitStart)) / 1000
+    )
   }
 
   newConnection(socket: SocketClient, user: User) {
@@ -97,7 +111,8 @@ export class Room {
     socket.on("start", async settings => {
       if (this.getLeader() !== player) return
 
-      this.timeLimit = settings.timeLimit
+      this.timeLimit =
+        settings.timeLimit === null ? null : settings.timeLimit * 1000
       this.playersLimit = settings.playersLimit
       this.scoreLimit = settings.scoreLimit
       this.roundLimit = settings.roundLimit
@@ -341,6 +356,17 @@ export class Room {
       }
     }
 
+    this.timeLimitStart = Date.now()
+    const timeLimitSeconds = this.getTimeLimitSeconds()
+
+    if (this.timeLimit) {
+      clearTimeout(this.timeLimitTimeout)
+      this.timeLimitTimeout = setTimeout(
+        this.onChoiceTimeout.bind(this),
+        this.timeLimit + TIME_LIMIT_OFFSET
+      )
+    }
+
     for (let i = 0; i < game.players.length; i++) {
       const player = game.players[i]
       const cards = allPlayersCards[i]
@@ -354,21 +380,53 @@ export class Room {
         cards,
         tsar: player.isTsar,
         prevRound,
-        timeLimit: this.timeLimit
+        timeLimit: timeLimitSeconds
       })
     }
 
     this.sendPlayers()
   }
 
-  async sendChoices() {
+  onChoiceTimeout() {
+    if (!this.game.curBlackCard || this.game.state !== GameState.CHOOSING)
+      return
+
+    const afkPlayers: Player<PlayerMetadata>[] = []
+
+    for (const player of this.game.players) {
+      if (player.chose || player.isTsar) continue
+
+      const randomChoice = shuffle([...player.cards]).slice(
+        0,
+        this.game.curBlackCard.pick
+      )
+
+      player.choose(randomChoice)
+      afkPlayers.push(player)
+    }
+
+    this.sendChoices(afkPlayers)
+  }
+
+  async sendChoices(afkPlayers?: Player<PlayerMetadata>[]) {
+    clearTimeout(this.timeLimitTimeout)
+
     const choices = (await db.mapIdsToApiWhiteCards(
       this.game.getChoices()
     )) as ApiWhiteCard[][]
 
     shuffle(choices)
 
-    this.io.to(this.id).emit("choices", { choices })
+    if (afkPlayers) {
+      for (const player of this.game.players) {
+        player.metadata?.socket.emit("choices", {
+          choices,
+          pickedCards: afkPlayers.includes(player) ? player.choice : undefined
+        })
+      }
+    } else {
+      this.io.to(this.id).emit("choices", { choices })
+    }
   }
 
   async sendSyncData(player: Player<PlayerMetadata>) {
@@ -406,6 +464,8 @@ export class Room {
       voting = this.parseVoting(player)
     }
 
+    const timeLimitSeconds = this.getTimeLimitSeconds()
+
     const data: SyncData = {
       started: true,
       tsar: player.isTsar,
@@ -413,7 +473,7 @@ export class Room {
       cards,
       choices,
       voting,
-      timeLimit: this.timeLimit
+      timeLimit: timeLimitSeconds
     }
 
     player.metadata?.socket.emit("sync", data)
@@ -454,6 +514,11 @@ export class Room {
     for (const player of this.game.players) {
       player.metadata?.socket.emit("voting", this.parseVoting(player))
     }
+  }
+
+  cleanup() {
+    this.game.players.forEach(p => p.metadata?.socket.disconnect())
+    clearTimeout(this.timeLimitTimeout)
   }
 }
 
@@ -507,6 +572,9 @@ export class Rooms {
   }
 
   deleteRoom(roomId: string) {
+    const room = this.rooms.get(roomId)
+    if (!room) return
+    room.cleanup()
     this.rooms.delete(roomId)
   }
 }

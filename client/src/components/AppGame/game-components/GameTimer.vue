@@ -34,8 +34,6 @@ let timeout: ReturnType<typeof setTimeout> | undefined
 function tickTack() {
   clearTimeout(timeout)
 
-  if (state.counter === 0) return
-
   handleWarning()
 
   if (
@@ -44,7 +42,7 @@ function tickTack() {
   )
     runShakeAnimation()
 
-  state.counter--
+  state.counter = Math.max(state.counter - 1, 0)
 
   timeout = setTimeout(tickTack, INTERVAL)
 }

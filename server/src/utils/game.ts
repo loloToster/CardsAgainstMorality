@@ -12,7 +12,8 @@ export interface BlackCard {
   draw?: number | null
 }
 
-export type CurBlackCard = Required<BlackCard>
+type NonNullableObj<T extends object> = { [K in keyof T]: NonNullable<T[K]> }
+export type CurBlackCard = NonNullableObj<Required<BlackCard>>
 
 export interface PlayerOpts<M> {
   game: Game<M>

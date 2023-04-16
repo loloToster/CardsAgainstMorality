@@ -46,13 +46,19 @@ socket.on("new-round", data => {
   gameState.roundWinnerData = data.prevRound ?? null
 })
 
-socket.on("choices", ({ choices }) => {
+socket.on("choices", data => {
   if (gameState.audio) tsarChoiceAudio.play()
 
   gameState.stage = GameStage.TSAR_VERDICT
   gameState.activeChoiceIdx = null
-  gameState.choices = choices
+  gameState.choices = data.choices
   gameState.pickedCards = []
+
+  if (data.pickedCards) {
+    gameState.cards = gameState.cards.filter(
+      c => !data.pickedCards?.includes(c.id)
+    )
+  }
 })
 
 socket.on("sync", data => {

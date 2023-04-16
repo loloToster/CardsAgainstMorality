@@ -45,6 +45,11 @@ export interface VotingData {
   vote: null | boolean
 }
 
+export interface ChoicesData {
+  choices: ApiWhiteCard[][]
+  pickedCards?: number[]
+}
+
 export type SyncData =
   | { started: false }
   | (NewRoundData & {
@@ -56,7 +61,7 @@ export type SyncData =
 export interface ServerToClientSocketEvents {
   players: (data: { players: ApiPlayer[] }) => void
   "new-round": (data: NewRoundData & { prevRound?: PrevRound }) => void
-  choices: (data: { choices: ApiWhiteCard[][] }) => void
+  choices: (data: ChoicesData) => void
   sync: (data: SyncData) => void
   end: (data: { podium: PodiumEl[] }) => void
   voting: (data: VotingData | null) => void

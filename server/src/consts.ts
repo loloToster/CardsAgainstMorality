@@ -10,4 +10,6 @@ export enum StrategyIdentifier {
   Facebook = "fcb"
 }
 
+export const TIME_LIMIT_OFFSET = 500
+
 export const VOTING_TIME = 2 * 60 * 1000
