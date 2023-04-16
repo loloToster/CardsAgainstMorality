@@ -53,3 +53,13 @@ export async function copyToClipboard(text: string) {
 export function deepclone<T>(x: T): T {
   return JSON.parse(JSON.stringify(x))
 }
+
+export function loopThroughChildren(el: Element, cb: (el: Element) => void) {
+  cb(el)
+
+  const children = el.children
+  for (let i = 0; i < children.length; i++) {
+    const child = children[i]
+    loopThroughChildren(child, cb)
+  }
+}

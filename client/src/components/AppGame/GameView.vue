@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from "vue"
-import { useResizeObserver } from "@vueuse/core"
+import { computed, onUnmounted, reactive, ref, watch } from "vue"
+import { syncRefs, useResizeObserver } from "@vueuse/core"
 
 import { VotingMeta } from "@backend/types"
 import { GameStage } from "../../types/game"
 
 import { gameState } from "./contexts/gamestate"
+import { target as pictureTarget, onPictureTake } from "./contexts/screenshot"
 
 import { moveItem } from "../../utils"
 
@@ -19,6 +20,8 @@ import GameVoting from "./game-components/GameVoting.vue"
 import GameMeta from "./game-components/GameMeta.vue"
 import UAreTsar from "./game-components/UAreTsar.vue"
 import GameChoices from "./game-components/GameChoices.vue"
+
+import CameraAudio from "../../assets/camera.mp3"
 
 const activeChoice = computed(() => {
   return gameState.activeChoiceIdx !== null &&
@@ -166,6 +169,31 @@ watch(
   }
 )
 
+let flashTimeout: ReturnType<typeof setTimeout> | undefined
+const flash = ref<HTMLDivElement>()
+const tableCards = ref<HTMLDivElement>()
+syncRefs(tableCards, pictureTarget)
+
+const cameraAudio = new Audio(CameraAudio)
+
+function runFlashAnimation() {
+  if (gameState.audio) cameraAudio.play()
+  flash.value?.classList.remove("flash")
+  void flash.value?.offsetHeight
+  flash.value?.classList.add("flash")
+}
+
+onPictureTake(canvas => {
+  console.log(canvas)
+  runFlashAnimation()
+
+  flashTimeout = setTimeout(() => {
+    // open modal
+  }, 800)
+})
+
+onUnmounted(() => clearTimeout(flashTimeout))
+
 function onCardsScroll(e: WheelEvent) {
   e.preventDefault()
 
@@ -196,55 +224,60 @@ function onCardsScroll(e: WheelEvent) {
         ref="table"
         :class="{ active: numOfTableCards !== 1 }"
       >
-        <div
-          class="game__table__cards"
-          :style="{
-            '--table-cards-height': state.tableCardHeight,
-            '--table-cards-gap': TABLE_CARDS_GAP
-          }"
-        >
-          <div ref="timerWrapper" class="game__table__timer-wrapper">
-            <div ref="timer" class="game__table__timer">
-              <GameTimer
-                v-if="
-                  gameState.timeLimit && gameState.stage === GameStage.CHOOSING
-                "
-                :from="gameState.timeLimit"
-                :shake-boundry="
-                  gameState.imTsar || gameState.submitted ? 0 : 30
-                "
-                :warning-boundry="
-                  gameState.imTsar || gameState.submitted ? 0 : 10
-                "
+        <div class="game__table__flash-wrapper">
+          <div
+            class="game__table__cards"
+            ref="tableCards"
+            :style="{
+              '--table-cards-height': state.tableCardHeight,
+              '--table-cards-gap': TABLE_CARDS_GAP
+            }"
+          >
+            <div ref="timerWrapper" class="game__table__timer-wrapper">
+              <div ref="timer" class="game__table__timer">
+                <GameTimer
+                  v-if="
+                    gameState.timeLimit &&
+                    gameState.stage === GameStage.CHOOSING
+                  "
+                  :from="gameState.timeLimit"
+                  :shake-boundry="
+                    gameState.imTsar || gameState.submitted ? 0 : 30
+                  "
+                  :warning-boundry="
+                    gameState.imTsar || gameState.submitted ? 0 : 10
+                  "
+                />
+              </div>
+              <PlayingCard
+                :width="state.tableCardWidth"
+                :text="gameState.blackCard.text"
+                :pack="gameState.blackCard.pack"
+                :pick="gameState.blackCard.pick"
+                color="black"
+                :animated="numOfTableCards === 1"
+                glow
               />
             </div>
             <PlayingCard
+              v-for="card in gameState.pickedCards"
               :width="state.tableCardWidth"
-              :text="gameState.blackCard.text"
-              :pack="gameState.blackCard.pack"
-              :pick="gameState.blackCard.pick"
-              color="black"
-              :animated="numOfTableCards === 1"
-              glow
+              @click="onPickedCardClick(card.id)"
+              :text="card.text"
+              :pack="card.pack"
+              color="white"
+              :key="card.id"
+            />
+            <PlayingCard
+              v-for="card in activeChoice"
+              :width="state.tableCardWidth"
+              :text="card.text"
+              :pack="card.pack"
+              color="white"
+              :key="card.id"
             />
           </div>
-          <PlayingCard
-            v-for="card in gameState.pickedCards"
-            :width="state.tableCardWidth"
-            @click="onPickedCardClick(card.id)"
-            :text="card.text"
-            :pack="card.pack"
-            color="white"
-            :key="card.id"
-          />
-          <PlayingCard
-            v-for="card in activeChoice"
-            :width="state.tableCardWidth"
-            :text="card.text"
-            :pack="card.pack"
-            color="white"
-            :key="card.id"
-          />
+          <div ref="flash" class="game__table__flash"></div>
         </div>
         <div class="game__under-cards">
           <GameChoices
@@ -327,13 +360,51 @@ $main-gap: 20px;
       overflow: hidden;
     }
 
+    @keyframes flash {
+      from {
+        opacity: 0.8;
+      }
+
+      15% {
+        opacity: 1;
+      }
+
+      20% {
+        opacity: 1;
+      }
+
+      to {
+        opacity: 0;
+      }
+    }
+
+    &__flash-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    &__flash {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      pointer-events: none;
+      background-color: white;
+      opacity: 0;
+
+      &.flash {
+        animation: flash 1000ms ease-out;
+      }
+    }
+
     &__cards {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: calc(var(--table-cards-gap, 8) * 1px);
       height: calc(var(--table-cards-height, 325) * 1px);
-      width: 100%;
+      width: fit-content;
       margin: auto;
     }
 

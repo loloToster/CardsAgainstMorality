@@ -5,6 +5,7 @@ import { onClickOutside } from "@vueuse/core"
 import { VotingMeta } from "@backend/types"
 
 import { gameState, toggleAudio } from "../contexts/gamestate"
+import { takePicture } from "../contexts/screenshot"
 
 import AppButton from "../../AppButton.vue"
 import AppTooltip from "../../AppTooltip.vue"
@@ -122,6 +123,29 @@ function onVoteToEnd(e: MouseEvent) {
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
             <path
               d="M180 976q-24 0-42-18t-18-42V718l135-149 43 43-118 129h600L669 615l43-43 128 146v198q0 24-18 42t-42 18H180Zm262-305L283 512q-19-19-17-42.5t20-41.5l212-212q17-17 42-17.5t43 17.5l159 159q17 17 17.5 40.5T740 459L528 671q-17 17-42 18t-44-18Zm249-257L541 264 333 472l150 150 208-208Z"
+            />
+          </svg>
+        </button>
+        <button
+          @click="takePicture"
+          class="game-menu__btn game-menu__item"
+          v-wave
+        >
+          <AppTooltip
+            position="left"
+            class="game-menu__btn__tooltip game-menu__btn__tooltip--desktop"
+          >
+            Picture of the table
+          </AppTooltip>
+          <AppTooltip
+            position="right"
+            class="game-menu__btn__tooltip game-menu__btn__tooltip--mobile"
+          >
+            Picture of the table
+          </AppTooltip>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+            <path
+              d="M479.667 792q73.333 0 123.5-50.167 50.166-50.166 50.166-123.5 0-73.333-50.166-123.166-50.167-49.833-123.5-49.833-73.334 0-123.167 49.833t-49.833 123.166q0 73.334 49.833 123.5Q406.333 792 479.667 792Zm0-66.666q-45.667 0-76-30.667-30.334-30.667-30.334-76.334 0-45.666 30.334-76Q434 512 479.667 512q45.666 0 76.333 30.333 30.667 30.334 30.667 76 0 45.667-30.667 76.334t-76.333 30.667ZM146.666 936q-27 0-46.833-19.833T80 869.334V367.333q0-26.333 19.833-46.5 19.833-20.166 46.833-20.166h140.001L360 216h240l73.333 84.667h140.001q26.333 0 46.499 20.166Q880 341 880 367.333v502.001q0 27-20.167 46.833Q839.667 936 813.334 936H146.666Zm666.668-66.666V367.333H642.667l-73-84.667H390.333l-73 84.667H146.666v502.001h666.668ZM480 618.667Z"
             />
           </svg>
         </button>
