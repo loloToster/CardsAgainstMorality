@@ -10,6 +10,7 @@ import {
   socket,
   socketState
 } from "../../contexts/socket"
+import { notify } from "../../contexts/notifications"
 import { playAudio } from "../../contexts/audio"
 import {
   gameState,
@@ -50,6 +51,11 @@ socket.on("choices", data => {
   gameState.pickedCards = []
 
   if (data.pickedCards) {
+    notify({
+      type: "warn",
+      text: "The time expired and your cards where picked randomly"
+    })
+
     gameState.cards = gameState.cards.filter(
       c => !data.pickedCards?.includes(c.id)
     )

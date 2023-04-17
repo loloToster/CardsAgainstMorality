@@ -63,3 +63,15 @@ export function loopThroughChildren(el: Element, cb: (el: Element) => void) {
     loopThroughChildren(child, cb)
   }
 }
+
+export function findFreeId(usedIds: number[]) {
+  usedIds.sort((a, b) => a - b)
+
+  const highestId = usedIds.at(-1) ?? 0
+
+  for (let i = 0; i < highestId; i++) {
+    if (!usedIds.includes(i)) return i
+  }
+
+  return highestId + 1
+}

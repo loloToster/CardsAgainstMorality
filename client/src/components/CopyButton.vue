@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onUnmounted, reactive } from "vue"
+import { notify } from "../contexts/notifications"
 import { copyToClipboard } from "../utils"
 import AppButton from "./AppButton.vue"
 
@@ -21,6 +22,11 @@ async function onCopy() {
     const item = new ClipboardItem({ "image/png": props.content })
     await navigator.clipboard.write([item])
   }
+
+  notify({
+    type: "success",
+    text: "Copied successfully"
+  })
 
   state.success = true
   timeout = setTimeout(() => (state.success = false), SUCCESS_TIMEOUT)

@@ -4,6 +4,7 @@ import { RouterView } from "vue-router"
 import { user } from "./contexts/user"
 
 import AppHeader from "./components/AppHeader.vue"
+import AppNotifications from "./components/AppNotifications/AppNotifications.vue"
 
 fetch("/auth/me").then(async res => {
   if (res.ok) {
@@ -15,6 +16,7 @@ fetch("/auth/me").then(async res => {
 <template>
   <AppHeader v-if="!$route.meta?.hideHeader" />
   <RouterView />
+  <AppNotifications />
 </template>
 
 <style scoped lang="scss"></style>
