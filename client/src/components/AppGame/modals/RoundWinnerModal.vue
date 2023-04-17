@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { onMounted } from "vue"
-import confetti from "../../../contexts/confetti"
+
 import { ApiBlackCard, ApiWhiteCard } from "@backend/types"
+
+import confetti from "../../../contexts/confetti"
+
+import AppModal from "../../AppModal.vue"
 import PlayingCard from "../../PlayingCard.vue"
 
 const props = defineProps<{
@@ -19,8 +23,8 @@ defineEmits(["close"])
 </script>
 
 <template>
-  <div @click="$emit('close')" class="round-winner-modal">
-    <div class="round-winner-modal__container">
+  <AppModal @close="$emit('close')">
+    <div class="round-winner-modal">
       <h1>
         <span>{{ winner }}</span> <span>won the round!</span>
       </h1>
@@ -51,23 +55,11 @@ defineEmits(["close"])
         class="round-winner-modal__timer"
       ></div>
     </div>
-  </div>
+  </AppModal>
 </template>
 
 <style scoped lang="scss">
 .round-winner-modal {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  width: 100vw;
-  background-color: #0e0e0edd;
-  z-index: 4;
-  overflow: hidden;
-
   h1 {
     max-width: 60vw;
     margin: 0;

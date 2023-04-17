@@ -340,14 +340,14 @@ onClickOutside(invitePlayersContent, () => {
           />
           <div class="settings__invite__btns">
             <CopyButton
-              :text="roomId"
+              :content="roomId"
               color="#15b041"
               class="settings__invite__btn"
             >
               Code
             </CopyButton>
             <CopyButton
-              :text="windowLocation"
+              :content="windowLocation"
               color="#1869cc"
               class="settings__invite__btn"
             >

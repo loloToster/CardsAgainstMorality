@@ -5,7 +5,7 @@ import AppButton from "./AppButton.vue"
 
 const SUCCESS_TIMEOUT = 2000
 
-const props = defineProps<{ text: string; color?: string }>()
+const props = defineProps<{ content?: string | Blob | null; color?: string }>()
 
 const state = reactive({ success: false })
 
@@ -13,7 +13,15 @@ let timeout: ReturnType<typeof setTimeout> | undefined
 onUnmounted(() => clearTimeout(timeout))
 
 async function onCopy() {
-  await copyToClipboard(props.text)
+  if (!props.content) return
+
+  if (typeof props.content === "string") {
+    await copyToClipboard(props.content)
+  } else {
+    const item = new ClipboardItem({ "image/png": props.content })
+    await navigator.clipboard.write([item])
+  }
+
   state.success = true
   timeout = setTimeout(() => (state.success = false), SUCCESS_TIMEOUT)
 }

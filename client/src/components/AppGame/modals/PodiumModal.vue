@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue"
+
 import { PodiumEl } from "@backend/types"
+
 import confetti from "../../../contexts/confetti"
 import { user } from "../../../contexts/user"
+
+import AppModal from "../../AppModal.vue"
 import UserAvatar from "../../UserAvatar.vue"
 
 const props = defineProps<{ podium: PodiumEl[] }>()
@@ -26,8 +30,8 @@ const bottom = computed(() => {
 </script>
 
 <template>
-  <div @click="$emit('close')" class="podium">
-    <div class="podium__container">
+  <AppModal @close="$emit('close')">
+    <div class="podium">
       <div class="podium__cols">
         <div
           v-for="player in top"
@@ -92,22 +96,11 @@ const bottom = computed(() => {
         </div>
       </div>
     </div>
-  </div>
+  </AppModal>
 </template>
 
 <style scoped lang="scss">
 .podium {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 100%;
-  background-color: #0e0e0edd;
-  z-index: 4;
-
   &__cols {
     display: flex;
     align-items: end;

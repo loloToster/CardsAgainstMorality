@@ -15,6 +15,7 @@ import AppButton from "../AppButton.vue"
 import PlayingCard from "../PlayingCard.vue"
 
 import RoundWinnerModal from "./modals/RoundWinnerModal.vue"
+import TablePictureModal from "./modals/TablePictureModal.vue"
 
 import GameTimer from "./game-components/GameTimer.vue"
 import GameVoting from "./game-components/GameVoting.vue"
@@ -53,11 +54,13 @@ const state = reactive<{
   tableCardHeight: number | undefined
   tableCardWidth: number | undefined
   showedCard: number
+  tablePicture: HTMLCanvasElement | null
 }>({
   maxTableCardWidth: MAX_CARD_WIDTH.BIG,
   tableCardHeight: undefined,
   tableCardWidth: undefined,
-  showedCard: -1
+  showedCard: -1,
+  tablePicture: null
 })
 
 const hand = ref<HTMLDivElement>()
@@ -181,11 +184,10 @@ function runFlashAnimation() {
 }
 
 onPictureTake(canvas => {
-  console.log(canvas)
   runFlashAnimation()
 
   flashTimeout = setTimeout(() => {
-    // open modal
+    state.tablePicture = canvas
   }, 800)
 })
 
@@ -206,8 +208,13 @@ function onCardsScroll(e: WheelEvent) {
     @vote="d => $emit('vote', d)"
     @counter-end="gameState.voting = null"
   />
+  <TablePictureModal
+    v-if="state.tablePicture"
+    @close="state.tablePicture = null"
+    :canvas="state.tablePicture"
+  />
   <RoundWinnerModal
-    v-if="gameState.roundWinnerData"
+    v-else-if="gameState.roundWinnerData"
     @close="gameState.roundWinnerData = null"
     :winner="gameState.roundWinnerData.winner"
     :black-card="gameState.roundWinnerData.blackCard"
