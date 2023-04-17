@@ -3,16 +3,16 @@ import { computed, onUnmounted, reactive, ref, watch } from "vue"
 import { syncRefs, useResizeObserver } from "@vueuse/core"
 
 import { VotingMeta } from "@backend/types"
-import { GameStage } from "../../types/game"
+import { GameStage } from "@/types/game"
 
-import { playAudio } from "../../contexts/audio"
+import { playAudio } from "@/contexts/audio"
 import { gameState } from "./contexts/gamestate"
 import { target as pictureTarget, onPictureTake } from "./contexts/screenshot"
 
-import { moveItem } from "../../utils"
+import { moveItem } from "@/utils"
 
-import AppButton from "../AppButton.vue"
-import PlayingCard from "../PlayingCard.vue"
+import AppButton from "@/components/AppButton.vue"
+import PlayingCard from "@/components/PlayingCard.vue"
 
 import RoundWinnerModal from "./modals/RoundWinnerModal.vue"
 import TablePictureModal from "./modals/TablePictureModal.vue"
@@ -223,11 +223,7 @@ function onCardsScroll(e: WheelEvent) {
   />
   <div class="game">
     <div class="game__top">
-      <div
-        class="game__table"
-        ref="table"
-        :class="{ active: numOfTableCards !== 1 }"
-      >
+      <div class="game__table" ref="table">
         <div class="game__table__flash-wrapper">
           <div
             class="game__table__cards"
@@ -330,7 +326,10 @@ function onCardsScroll(e: WheelEvent) {
   </div>
 </template>
 <style scoped lang="scss">
+@use "@/styles/mixins" as mixins;
+
 $main-gap: 20px;
+
 .game {
   position: relative;
   width: 90vw;
@@ -342,7 +341,7 @@ $main-gap: 20px;
     gap: $main-gap;
     margin-bottom: $main-gap * 2;
 
-    @media (max-width: 800px) {
+    @include mixins.xs {
       gap: $main-gap * 0.5;
       margin-bottom: $main-gap;
     }
@@ -356,12 +355,8 @@ $main-gap: 20px;
     gap: $main-gap;
     flex-grow: 1;
 
-    @media (max-width: 800px) {
+    @include mixins.xs {
       gap: $main-gap * 0.5;
-    }
-
-    &.active {
-      overflow: hidden;
     }
 
     @keyframes flash {
@@ -410,11 +405,6 @@ $main-gap: 20px;
       height: calc(var(--table-cards-height, 325) * 1px);
       width: fit-content;
       margin: auto;
-    }
-
-    &.active &__cards {
-      overflow-y: auto;
-      overflow-x: hidden;
     }
 
     &__timer-wrapper {
@@ -482,7 +472,7 @@ $main-gap: 20px;
       }
     }
 
-    @media (max-width: 900px) {
+    @include mixins.sm {
       gap: 8px;
       overflow-x: scroll;
 

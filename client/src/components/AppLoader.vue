@@ -1,9 +1,7 @@
-<script setup lang="ts">
-defineProps<{ outlineColor?: string }>()
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <div :style="{ '--outline': outlineColor }" class="loader">
+  <div class="loader">
     <div class="loader__card"></div>
     <div class="loader__card"></div>
   </div>

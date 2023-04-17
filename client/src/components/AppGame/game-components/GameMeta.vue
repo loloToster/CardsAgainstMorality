@@ -4,13 +4,13 @@ import { onClickOutside } from "@vueuse/core"
 
 import { VotingMeta } from "@backend/types"
 
-import { audioState, toggleAudio } from "../../../contexts/audio"
+import { audioState, toggleAudio } from "@/contexts/audio"
 import { gameState } from "../contexts/gamestate"
 import { takePicture } from "../contexts/screenshot"
 
-import AppButton from "../../AppButton.vue"
-import AppTooltip from "../../AppTooltip.vue"
-import UserAvatar from "../../UserAvatar.vue"
+import AppButton from "@/components/AppButton.vue"
+import AppTooltip from "@/components/AppTooltip.vue"
+import UserAvatar from "@/components/UserAvatar.vue"
 
 const emit = defineEmits<{
   (e: "new-voting", data: VotingMeta): void
@@ -83,7 +83,6 @@ function onVoteToEnd(e: MouseEvent) {
             <AppButton
               @click="onVoteToEnd"
               class="game-menu__voting__btn"
-              color="transparent"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                 <path
@@ -96,7 +95,6 @@ function onVoteToEnd(e: MouseEvent) {
             <AppButton
               @click="e => e.stopPropagation()"
               class="game-menu__voting__btn"
-              color="transparent"
             >
               <svg viewBox="0 0 24 24">
                 <path
@@ -247,18 +245,16 @@ function onVoteToEnd(e: MouseEvent) {
   </div>
 </template>
 <style scoped lang="scss">
-@mixin mobile {
-  @media (max-width: 900px) {
-    @content;
-  }
-}
+@use "@/styles/mixins" as mixins;
+@use "@/styles/colors" as colors;
+
 .game-meta {
   &__sep {
     display: none;
     height: 25px;
     width: 2px;
     margin: 0 6px;
-    background-color: #afafaf;
+    background-color: colors.$lightgray;
 
     &--horizontal {
       height: 2px;
@@ -267,7 +263,7 @@ function onVoteToEnd(e: MouseEvent) {
     }
   }
 
-  @include mobile() {
+  @include mixins.sm() {
     position: fixed;
     display: flex;
     align-items: center;
@@ -276,9 +272,9 @@ function onVoteToEnd(e: MouseEvent) {
     z-index: 3;
     width: 100%;
     padding-top: 4px;
-    background-color: #4c4c4cdd;
+    background-color: rgba(colors.$darkgray, 85%);
     backdrop-filter: blur(8px);
-    border-top: solid 1px gray;
+    border-top: solid 1px colors.$lightgray;
 
     &__sep {
       display: block;
@@ -299,7 +295,7 @@ function onVoteToEnd(e: MouseEvent) {
     display: flex;
     align-items: center;
     padding: 8px;
-    background-color: #4c4c4c;
+    background-color: colors.$darkgray;
     border-radius: 8px;
 
     &__crown {
@@ -332,7 +328,7 @@ function onVoteToEnd(e: MouseEvent) {
       justify-content: center;
       right: -0.3rem;
       bottom: -0.1rem;
-      background-color: darkcyan;
+      background-color: colors.$primary;
       border-radius: 100vh;
       font-size: 0.75rem;
       font-weight: bold;
@@ -367,7 +363,7 @@ function onVoteToEnd(e: MouseEvent) {
     }
 
     &__disconnected {
-      fill: crimson;
+      fill: colors.$danger;
       animation: fade infinite alternate 1.5s ease-in;
       height: 16px;
       width: 16px;
@@ -379,11 +375,11 @@ function onVoteToEnd(e: MouseEvent) {
       height: 16px;
       width: 16px;
       margin-left: 4px;
-      fill: limegreen;
+      fill: colors.$lime;
     }
   }
 
-  @include mobile() {
+  @include mixins.sm() {
     flex-grow: 1;
     flex-direction: row;
 
@@ -411,7 +407,7 @@ function onVoteToEnd(e: MouseEvent) {
   right: 0;
   transform: translateX(calc(100% + 10px));
 
-  @include mobile() {
+  @include mixins.sm() {
     height: 48px;
     width: 48px;
     transform: unset;
@@ -465,7 +461,7 @@ function onVoteToEnd(e: MouseEvent) {
     position: absolute;
     top: 0;
     right: 100%;
-    background-color: #1c1c1c;
+    background-color: colors.$dark-surface;
     padding: 8px;
     border-radius: 4px;
 
@@ -477,7 +473,9 @@ function onVoteToEnd(e: MouseEvent) {
       white-space: nowrap;
       padding: 4px;
       width: 100%;
-      color: #eeeeee;
+      color: colors.$subtext;
+
+      --color: transparent;
 
       svg {
         fill: currentColor;
@@ -495,11 +493,11 @@ function onVoteToEnd(e: MouseEvent) {
       width: 100%;
       height: 1px;
       margin: 4px 0;
-      background-color: gray;
+      background-color: colors.$lightgray;
     }
   }
 
-  @include mobile() {
+  @include mixins.sm() {
     position: absolute;
     gap: 8px;
     bottom: 2px;
@@ -516,7 +514,7 @@ function onVoteToEnd(e: MouseEvent) {
       height: 32px;
 
       svg {
-        fill: #afafaf;
+        fill: colors.$lightgray;
       }
 
       &__tooltip--mobile {
@@ -542,7 +540,7 @@ function onVoteToEnd(e: MouseEvent) {
     }
 
     &.active {
-      background-color: #161616;
+      background-color: colors.$dark-surface;
     }
 
     &.active &__item {

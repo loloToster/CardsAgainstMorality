@@ -9,6 +9,8 @@ defineEmits(["close"])
 </template>
 
 <style scoped lang="scss">
+@use "@/styles/colors" as colors;
+
 .modal {
   position: fixed;
   display: flex;
@@ -18,8 +20,8 @@ defineEmits(["close"])
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: #0e0e0edd;
   z-index: 4;
   overflow: hidden;
+  background-color: colors.$modal-bg;
 }
 </style>

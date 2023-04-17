@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { notifications } from "../../contexts/notifications"
+import { notifications } from "@/contexts/notifications"
 import AppNotification from "./AppNotification.vue"
 </script>
 
@@ -15,6 +15,8 @@ import AppNotification from "./AppNotification.vue"
 </template>
 
 <style scoped lang="scss">
+@use "@/styles/mixins" as mixins;
+
 $spacing: 6px;
 
 .notifications {
@@ -26,7 +28,7 @@ $spacing: 6px;
   flex-direction: column;
   z-index: 5;
 
-  @media (max-width: 900px) {
+  @include mixins.sm {
     bottom: unset;
     top: $spacing * 2;
     left: $spacing * 2;

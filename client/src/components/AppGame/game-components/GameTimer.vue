@@ -85,6 +85,7 @@ const handRotation = computed(() => {
 </template>
 <style scoped lang="scss">
 @use "sass:math" as math;
+@use "@/styles/mixins" as mixins;
 
 .wrapper {
   display: flex;
@@ -151,7 +152,7 @@ const handRotation = computed(() => {
   width: var(--size);
   height: var(--size);
 
-  @media (max-width: 600px) {
+  @include mixins.xxs {
     --size: 20px;
   }
 

@@ -13,7 +13,8 @@
     "skipLibCheck": true,
     "noEmit": true,
     "rootDirs": ["./", "../server/src"],
-    "paths": { "@backend/*": ["../server/src/*"] }
+    "baseUrl": ".",
+    "paths": { "@backend/*": ["../server/src/*"], "@/*": ["./src/*"] }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "references": [{ "path": "./tsconfig.node.json" }]

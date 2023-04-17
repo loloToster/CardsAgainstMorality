@@ -23,6 +23,8 @@ const light = computed(() => {
 </template>
 
 <style scoped lang="scss">
+@use "@/styles/colors" as colors;
+
 .chip {
   display: flex;
   gap: 4px;
@@ -32,10 +34,10 @@ const light = computed(() => {
   border-radius: 100vh;
   font-size: 0.875rem;
   font-weight: 600;
-  background-color: var(--chip-bg, gray);
+  background-color: var(--chip-bg, colors.$lightgray);
   cursor: pointer;
   transition: all 100ms;
-  border: 1px solid var(--chip-bg, gray);
+  border: 1px solid var(--chip-bg, colors.$lightgray);
 
   &--light {
     color: black;
@@ -43,7 +45,7 @@ const light = computed(() => {
 
   &--outlined {
     background-color: transparent;
-    color: var(--chip-bg, gray);
+    color: var(--chip-bg, colors.$lightgray);
   }
 }
 </style>

@@ -11,13 +11,15 @@ withDefaults(defineProps<{ position?: Position }>(), { position: "top" })
 </template>
 
 <style scoped lang="scss">
+@use "@/styles/colors" as colors;
+
 .tooltip {
   --gap: 3px;
 
   position: absolute;
   font-size: 0.875rem;
   white-space: nowrap;
-  background-color: #505050;
+  background-color: colors.$tooltip;
   padding: 3px 6px;
   border-radius: 3px;
   box-shadow: 0px 0px 2px 0px #0e0e0e;

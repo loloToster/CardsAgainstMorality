@@ -74,7 +74,7 @@ watch(
 </template>
 
 <style scoped lang="scss">
-$invalid-color: #dc0833;
+@use "@/styles/colors" as colors;
 
 .inp {
   display: flex;
@@ -97,12 +97,12 @@ $invalid-color: #dc0833;
     }
 
     &.invalid {
-      color: $invalid-color;
+      color: colors.$danger;
       font-weight: bold;
     }
 
     &.inactive {
-      color: #6a6a6a;
+      color: colors.$inp;
     }
   }
 
@@ -114,7 +114,7 @@ $invalid-color: #dc0833;
     margin: 0;
     outline: none;
     border: none;
-    border-bottom: 2px gray solid;
+    border-bottom: 2px colors.$lightgray solid;
     font-size: inherit;
     width: 6ch;
     text-align: center;
@@ -128,7 +128,7 @@ $invalid-color: #dc0833;
     }
 
     &.invalid {
-      border-color: $invalid-color;
+      border-color: colors.$danger;
     }
   }
 }

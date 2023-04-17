@@ -3,8 +3,8 @@ import { reactive, ref } from "vue"
 import { RouterLink, useRouter } from "vue-router"
 import { onClickOutside } from "@vueuse/core"
 
-import { user } from "../contexts/user"
-import { TITLE } from "../consts"
+import { user } from "@/contexts/user"
+import { TITLE } from "@/consts"
 
 import AppButton from "./AppButton.vue"
 import UserAvatar from "./UserAvatar.vue"
@@ -44,12 +44,7 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
           <span>{{ user.value.name }}</span>
         </div>
         <div class="header__profile-menu__divider"></div>
-        <AppButton
-          @click="logout"
-          color="transparent"
-          hColor="#7b7b7b"
-          class="header__profile-menu__btn"
-        >
+        <AppButton @click="logout" class="header__profile-menu__btn">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
             <path
               d="M179 961q-39.462 0-67.231-27.475Q84 906.05 84 867V285q0-39.463 27.769-67.231Q139.538 190 179 190h298v95H179v582h298v94H179Zm488-174-68-66 98-98H362v-94h333l-98-98 68-66 211 212-209 210Z"
@@ -59,18 +54,15 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
         </AppButton>
       </div>
     </div>
-    <AppButton
-      v-else
-      @click="router.push('/login')"
-      class="header__link"
-      color="darkcyan"
-    >
+    <AppButton v-else @click="router.push('/login')" class="header__link">
       Login
     </AppButton>
   </header>
 </template>
 
 <style scoped lang="scss">
+@use "@/styles/colors" as colors;
+
 .header {
   display: flex;
   align-items: center;
@@ -83,6 +75,8 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
   &__link {
     text-decoration: none;
     color: white;
+
+    @include colors.app-button(colors.$primary);
   }
 
   &__logo {
@@ -112,14 +106,14 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
     min-width: 200px;
     max-width: min(90vw, 300px);
     padding: 12px;
-    background-color: #0f0f0f;
+    background-color: colors.$dark-surface;
     border-radius: 6px;
 
     &__divider {
       width: 100%;
       height: 1px;
       margin: 8px 0;
-      background-color: #4e4e4e;
+      background-color: colors.$darkgray;
     }
 
     &__details {
@@ -148,6 +142,8 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
       font-size: 0.8rem;
       font-weight: bold;
       padding: 8px;
+
+      --color: transparent;
 
       svg {
         width: 16px;

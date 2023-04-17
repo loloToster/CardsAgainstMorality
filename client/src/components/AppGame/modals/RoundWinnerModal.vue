@@ -3,10 +3,10 @@ import { onMounted } from "vue"
 
 import { ApiBlackCard, ApiWhiteCard } from "@backend/types"
 
-import confetti from "../../../contexts/confetti"
+import confetti from "@/contexts/confetti"
 
-import AppModal from "../../AppModal.vue"
-import PlayingCard from "../../PlayingCard.vue"
+import AppModal from "@/components/AppModal.vue"
+import PlayingCard from "@/components/PlayingCard.vue"
 
 const props = defineProps<{
   winner: string
@@ -59,6 +59,9 @@ defineEmits(["close"])
 </template>
 
 <style scoped lang="scss">
+@use "@/styles/mixins" as mixins;
+@use "@/styles/colors" as colors;
+
 .round-winner-modal {
   h1 {
     max-width: 60vw;
@@ -70,7 +73,7 @@ defineEmits(["close"])
       display: inline-block;
     }
 
-    @media (max-width: 775px) {
+    @include mixins.xs {
       text-align: center;
       margin-left: auto;
       margin-right: auto;
@@ -84,7 +87,7 @@ defineEmits(["close"])
     max-width: 90vw;
     overflow-x: auto;
 
-    @media (max-width: 775px) {
+    @include mixins.xs {
       flex-direction: column;
       align-items: center;
     }
@@ -102,7 +105,7 @@ defineEmits(["close"])
     display: flex;
     gap: 16px;
 
-    @media (max-width: 775px) {
+    @include mixins.xs {
       gap: 8px;
     }
   }
@@ -120,7 +123,7 @@ defineEmits(["close"])
   &__timer {
     height: 3px;
     width: 100px;
-    background-color: darkcyan;
+    background-color: colors.$primary;
 
     animation: timer 10s linear;
   }

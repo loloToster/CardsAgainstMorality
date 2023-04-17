@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Notification, removeNotification } from "../../contexts/notifications"
+import { Notification, removeNotification } from "@/contexts/notifications"
 
 const props = defineProps<{ notification: Notification }>()
 
@@ -23,11 +23,14 @@ function remove() {
 </template>
 
 <style scoped lang="scss">
+@use "@/styles/mixins" as mixins;
+@use "@/styles/colors" as colors;
+
 $colors: (
-  "info": #0b6bab,
-  "success": #31a755,
-  "warn": #dbaf00,
-  "error": #e54d42
+  "info": colors.$blue,
+  "success": colors.$lime,
+  "warn": colors.$warn,
+  "error": colors.$error
 );
 
 .notification {
@@ -40,7 +43,7 @@ $colors: (
   border-radius: 4px;
   overflow: hidden;
 
-  @media (max-width: 900px) {
+  @include mixins.sm {
     width: 100%;
   }
 

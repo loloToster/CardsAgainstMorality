@@ -1,6 +1,6 @@
 import { reactive } from "vue"
-import { deepclone } from "../../../utils"
-import { GameStage, GameState, PlayerState } from "../../../types/game"
+import { deepclone } from "@/utils"
+import { GameStage, GameState, PlayerState } from "@/types/game"
 
 const defaultPlayerState: PlayerState = {
   imTsar: false,

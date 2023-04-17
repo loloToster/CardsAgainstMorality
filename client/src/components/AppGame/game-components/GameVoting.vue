@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, computed, watch, onMounted, onUnmounted } from "vue"
 import { VotingData } from "@backend/types"
-import AppButton from "../../AppButton.vue"
+import AppButton from "@/components/AppButton.vue"
 
 const INTERVAL = 1000
 
@@ -91,10 +91,16 @@ const description = computed(() => {
         </div>
         <div class="voting__vote">
           <div v-if="votingData.vote === null" class="voting__btns">
-            <AppButton @click="$emit('vote', true)" color="#15b041">
+            <AppButton
+              @click="$emit('vote', true)"
+              class="voting__btns__btn voting__btns__btn--yes"
+            >
               YES
             </AppButton>
-            <AppButton @click="$emit('vote', false)" color="crimson">
+            <AppButton
+              @click="$emit('vote', false)"
+              class="voting__btns__btn voting__btns__btn--no"
+            >
               NO
             </AppButton>
           </div>
@@ -111,7 +117,7 @@ const description = computed(() => {
       <div class="voting__mobile__by" :class="{ active: !state.active }">
         Vote by: {{ votingData.by }}
       </div>
-      <AppButton @click="state.active = !state.active" color="transparent">
+      <AppButton @click="state.active = !state.active" class="voting__mobile__open">
         {{ state.active ? "Hide" : "Vote" }}
       </AppButton>
     </div>
@@ -119,14 +125,8 @@ const description = computed(() => {
 </template>
 
 <style scoped lang="scss">
-$green: #15b041;
-$red: crimson;
-
-@mixin mobile {
-  @media (max-width: 900px) {
-    @content;
-  }
-}
+@use "@/styles/mixins" as mixins;
+@use "@/styles/colors" as colors;
 
 .voting {
   position: fixed;
@@ -137,7 +137,7 @@ $red: crimson;
   z-index: 3;
   border-radius: 8px;
   overflow: hidden;
-  background-color: #1c1c1c;
+  background-color: colors.$dark-surface;
 
   &__mobile {
     display: none;
@@ -155,8 +155,10 @@ $red: crimson;
       }
     }
 
-    button {
-      color: #06a6d6;
+    &__open {
+      color: colors.$blue;
+      --color: transparent;
+      --h-color: transparent;
     }
   }
 
@@ -165,7 +167,7 @@ $red: crimson;
     transition: max-height 200ms;
   }
 
-  @include mobile() {
+  @include mixins.sm {
     height: fit-content;
     max-width: unset;
     width: calc(100vw - 16px);
@@ -189,7 +191,7 @@ $red: crimson;
     display: flex;
     gap: 4px;
     padding: 9px;
-    background-color: #4a4a4a;
+    background-color: colors.$darkgray;
   }
 
   &__by {
@@ -201,7 +203,7 @@ $red: crimson;
   }
 
   &__time {
-    color: #9a9a9a;
+    color: colors.$lightgray;
     font-size: 0.9rem;
   }
 
@@ -226,12 +228,12 @@ $red: crimson;
       font-size: 1.3rem;
 
       &--yes {
-        color: $green;
+        color: colors.$lime;
         margin-bottom: 2px;
       }
 
       &--no {
-        color: $red;
+        color: colors.$danger;
       }
 
       svg {
@@ -253,10 +255,10 @@ $red: crimson;
 
       span {
         &.yes {
-          color: $green;
+          color: colors.$lime;
         }
         &.no {
-          color: $red;
+          color: colors.$danger;
         }
       }
     }
@@ -266,10 +268,18 @@ $red: crimson;
     display: flex;
     gap: 9px;
 
-    button {
+    &__btn {
       min-width: 0;
       flex-basis: 0;
       flex-grow: 1;
+
+      &--yes {
+        @include colors.app-button(colors.$lime);
+      }
+
+      &--no {
+        @include colors.app-button(colors.$danger);
+      }
     }
   }
 }

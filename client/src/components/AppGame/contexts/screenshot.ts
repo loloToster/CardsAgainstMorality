@@ -2,7 +2,7 @@ import { ref } from "vue"
 import html2canvas from "html2canvas"
 import trimCanvas from "trim-canvas"
 
-import { loopThroughChildren } from "../../../utils"
+import { loopThroughChildren } from "@/utils"
 
 const H_PADDING_PERCENTAGE = 0.06
 const FOOTER_HEIGHT_PERCENTAGE = 0.07

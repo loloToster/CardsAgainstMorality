@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from "vue"
 
-import AppModal from "../../AppModal.vue"
-import AppButton from "../../AppButton.vue"
-import CopyButton from "../../CopyButton.vue"
+import AppModal from "@/components/AppModal.vue"
+import AppButton from "@/components/AppButton.vue"
+import CopyButton from "@/components/CopyButton.vue"
 
 const props = defineProps<{
   canvas: HTMLCanvasElement
@@ -80,13 +80,16 @@ function handleShare() {
 </template>
 
 <style scoped lang="scss">
+@use "@/styles/mixins" as mixins;
+@use "@/styles/colors" as colors;
+
 .table-picture-modal {
   max-width: 96vw;
   padding: 22px;
   border-radius: 12px;
-  background-color: #3f3f3f;
+  background-color: colors.$light-surface;
 
-  @media (max-width: 760px) {
+  @include mixins.xs {
     background-color: transparent;
   }
 

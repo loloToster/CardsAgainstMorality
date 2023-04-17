@@ -1,32 +1,14 @@
 <script setup lang="ts">
-import { computed } from "vue"
-import Color from "color"
-
-const props = withDefaults(
-  defineProps<{ color?: string; hColor?: string; disabled?: boolean }>(),
-  {
-    color: "#6b6b6b",
-    disabled: false
-  }
-)
+defineProps<{ disabled?: boolean }>()
 
 defineEmits<{
   (ev: "click", e: MouseEvent): void
 }>()
-
-const hoverColor = computed(() => {
-  if (props.color === "transparent") return undefined
-  return props.hColor || Color(props.color).darken(0.2).hex()
-})
 </script>
 
 <template>
   <button
     @click="e => !disabled && $emit('click', e)"
-    :style="{
-      '--color': color,
-      '--h-color': hoverColor
-    }"
     :disabled="disabled"
     v-wave="!disabled"
   >
@@ -35,20 +17,22 @@ const hoverColor = computed(() => {
 </template>
 
 <style scoped lang="scss">
+@use "@/styles/colors" as colors;
+
 button {
   padding: 8px 16px;
   border-radius: 4px;
   font-size: 1.2rem;
   cursor: pointer;
-  background-color: var(--color);
+  background-color: var(--color, colors.$inp);
   transition: all 50ms;
 
   &:hover {
-    background-color: var(--h-color);
+    background-color: var(--h-color, darken(colors.$inp, 6%));
   }
 
   &:disabled {
-    background-color: var(--color);
+    background-color: var(--color, colors.$inp);
     opacity: 0.7;
     cursor: not-allowed;
   }

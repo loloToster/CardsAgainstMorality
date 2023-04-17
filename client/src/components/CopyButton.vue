@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { onUnmounted, reactive } from "vue"
-import { notify } from "../contexts/notifications"
-import { copyToClipboard } from "../utils"
+import { notify } from "@/contexts/notifications"
+import { copyToClipboard } from "@/utils"
 import AppButton from "./AppButton.vue"
 
 const SUCCESS_TIMEOUT = 2000
 
-const props = defineProps<{ content?: string | Blob | null; color?: string }>()
+const props = defineProps<{ content?: string | Blob | null }>()
 
 const state = reactive({ success: false })
 
@@ -33,7 +33,7 @@ async function onCopy() {
 }
 </script>
 <template>
-  <AppButton @click="onCopy" :color="color" class="copy-btn">
+  <AppButton @click="onCopy" class="copy-btn">
     <svg
       v-if="state.success"
       xmlns="http://www.w3.org/2000/svg"

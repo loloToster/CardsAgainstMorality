@@ -33,6 +33,7 @@ function onChange() {
 
 <style scoped lang="scss">
 @use "sass:math" as math;
+@use "@/styles/colors" as colors;
 
 $h: 24px;
 $w: 48px;
@@ -44,12 +45,12 @@ $hover-size: 34px;
   height: $h;
   width: $w;
   border-radius: 100vh;
-  background-color: #2f2f2f;
+  background-color: colors.$inp-bg;
   cursor: pointer;
   transition: background-color 100ms;
 
   &.active {
-    background-color: #2eaa55;
+    background-color: colors.$lime;
   }
 
   &__thumb {
@@ -60,7 +61,7 @@ $hover-size: 34px;
     left: $inset;
     height: $size;
     width: $size;
-    background-color: #949494;
+    background-color: colors.$lightgray;
     transition: inherit;
     border-radius: 50%;
     transition: left 100ms, outline-color 100ms;
@@ -68,15 +69,15 @@ $hover-size: 34px;
   }
 
   &:hover &__thumb {
-    outline-color: #27272732;
+    outline-color: colors.$inp-hover;
   }
 
   &:active &__thumb {
-    outline-color: #2727276a;
+    outline-color: colors.$inp-active;
   }
 
   &.active &__thumb {
-    background-color: #f5f5f5;
+    background-color: colors.$subtext;
     left: calc(100% - $h + $inset);
   }
 }

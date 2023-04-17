@@ -4,8 +4,8 @@ import Color from "color"
 
 import { ApiCardPack } from "@backend/types"
 
-import AppChip from "../../AppChip.vue"
-import defaultIcon from "../../../assets/white-card-icon.svg?raw"
+import AppChip from "@/components/AppChip.vue"
+import defaultIcon from "@/assets/white-card-icon.svg?raw"
 
 const props = defineProps<{ pack: ApiCardPack; selected?: boolean }>()
 
@@ -56,6 +56,8 @@ const packIcon = computed(() => {
 </template>
 
 <style scoped lang="scss">
+@use "@/styles/colors" as colors;
+
 .pack {
   transition: all 100ms;
 
@@ -68,7 +70,7 @@ const packIcon = computed(() => {
 
     &--colored-icon :deep(svg) {
       *[fill="white"] {
-        fill: #3a3a3a;
+        fill: colors.$light-surface;
       }
 
       *[fill="black"] {

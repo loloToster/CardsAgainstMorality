@@ -3,11 +3,11 @@ import { computed, onMounted } from "vue"
 
 import { PodiumEl } from "@backend/types"
 
-import confetti from "../../../contexts/confetti"
-import { user } from "../../../contexts/user"
+import confetti from "@/contexts/confetti"
+import { user } from "@/contexts/user"
 
-import AppModal from "../../AppModal.vue"
-import UserAvatar from "../../UserAvatar.vue"
+import AppModal from "@/components/AppModal.vue"
+import UserAvatar from "@/components/UserAvatar.vue"
 
 const props = defineProps<{ podium: PodiumEl[] }>()
 
@@ -100,6 +100,8 @@ const bottom = computed(() => {
 </template>
 
 <style scoped lang="scss">
+@use "@/styles/colors" as colors;
+
 .podium {
   &__cols {
     display: flex;
@@ -137,7 +139,6 @@ const bottom = computed(() => {
       width: 50%;
       aspect-ratio: 1;
       border-radius: 50%;
-      background-color: green;
     }
 
     &__name-points {
@@ -160,7 +161,7 @@ const bottom = computed(() => {
       height: var(--h);
       width: 100%;
       overflow: hidden;
-      background-color: #454545;
+      background-color: colors.$light-surface;
       text-align: center;
       padding-top: 16px;
       font-size: 2.2rem;
@@ -171,7 +172,7 @@ const bottom = computed(() => {
   &__table {
     width: 100%;
     padding: 10px;
-    color: #c6c6c6;
+    color: colors.$subtext;
     font-size: 1.2rem;
 
     &__row {

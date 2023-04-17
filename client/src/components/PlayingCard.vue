@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, reactive } from "vue"
 
-import BlackCardIcon from "../assets/black-card-icon.svg?component"
-import WhiteCardIcon from "../assets/white-card-icon.svg?component"
+import BlackCardIcon from "@/assets/black-card-icon.svg?component"
+import WhiteCardIcon from "@/assets/white-card-icon.svg?component"
 
 const props = withDefaults(
   defineProps<{
@@ -123,6 +123,8 @@ function onMouseLeave() {
 </template>
 
 <style scoped lang="scss">
+@use "@/styles/colors" as colors;
+
 $default-card-height: 320px;
 $default-card-width: 226px;
 
@@ -154,7 +156,7 @@ $default-card-width: 226px;
   font-size: var(--main-font-size);
   line-height: 140%;
   font-weight: bold;
-  box-shadow: -3px 3px 10px -2px #242424;
+  box-shadow: -3px 3px 10px -2px colors.$main-bg;
 
   &--animated {
     --scale: 1;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import DefaultAvatar from "../assets/default-avatar.png"
-import { User } from "../types/user"
+import DefaultAvatar from "@/assets/default-avatar.png"
+import { User } from "@/types/user"
 
 defineProps<{ user?: Partial<User> }>()
 defineEmits(["click"])

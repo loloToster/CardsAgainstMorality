@@ -2,7 +2,7 @@ import { createApp, nextTick } from "vue"
 import { createRouter, createWebHistory } from "vue-router"
 import VWave from "v-wave"
 
-import "./style.scss"
+import "./styles/style.scss"
 
 import App from "./App.vue"
 

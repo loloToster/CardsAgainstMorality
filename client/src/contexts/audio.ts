@@ -1,8 +1,8 @@
 import { reactive } from "vue"
 
-import NewRoundAudio from "../assets/new-round.mp3"
-import TsarChoiceAudio from "../assets/tsar-choice.mp3"
-import CameraAudio from "../assets/camera.mp3"
+import NewRoundAudio from "@/assets/new-round.mp3"
+import TsarChoiceAudio from "@/assets/tsar-choice.mp3"
+import CameraAudio from "@/assets/camera.mp3"
 
 const audios = {
   "new-round": NewRoundAudio,

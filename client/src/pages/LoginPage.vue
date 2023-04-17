@@ -4,13 +4,13 @@ import { RouterLink } from "vue-router"
 import HCaptcha from "@hcaptcha/vue3-hcaptcha"
 
 import type { ApiRandomCard } from "@backend/types"
-import { TITLE } from "../consts"
-import { getRandomInt } from "../utils"
+import { TITLE } from "@/consts"
+import { getRandomInt } from "@/utils"
 
-import AppButton from "../components/AppButton.vue"
-import PlayingCard from "../components/PlayingCard.vue"
+import AppButton from "@/components/AppButton.vue"
+import PlayingCard from "@/components/PlayingCard.vue"
 
-import CaptchaImg from "../assets/captcha.png"
+import CaptchaImg from "@/assets/captcha.png"
 
 const captchaSiteKey = import.meta.env.VITE_CAPTCHA_SITEKEY
 
@@ -65,7 +65,7 @@ async function fetchNewCards() {
   addCards(cards)
 }
 
-let newCardsInterval: number | undefined
+let newCardsInterval: ReturnType<typeof setTimeout> | undefined
 
 onMounted(() => {
   fetchNewCards()
@@ -122,7 +122,7 @@ function onFallen(card: ApiRandomCard) {
           @click="onLoginAnonymously"
           color="#080808"
           hColor="black"
-          class="login__btn login__anonymous-btn"
+          class="login__btn login__btn--anonymous login__anonymous-btn"
         >
           <svg viewBox="0 0 24 24">
             <path
@@ -140,7 +140,7 @@ function onFallen(card: ApiRandomCard) {
             @click="loginWith('google')"
             color="#ee4134"
             hColor="#dd2112"
-            class="login__btn"
+            class="login__btn login__btn--google"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -158,7 +158,7 @@ function onFallen(card: ApiRandomCard) {
             @click="loginWith('discord')"
             color="#7285d1"
             hColor="#4c64c4"
-            class="login__btn"
+            class="login__btn login__btn--discord"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -176,7 +176,7 @@ function onFallen(card: ApiRandomCard) {
             @click="loginWith('facebook')"
             color="#1877f2"
             hColor="#0b5fcc"
-            class="login__btn"
+            class="login__btn login__btn--facebook"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -197,6 +197,16 @@ function onFallen(card: ApiRandomCard) {
 </template>
 
 <style scoped lang="scss">
+@use "@/styles/mixins" as mixins;
+@use "@/styles/colors" as colors;
+
+$colors: (
+  "anonymous": #080808,
+  "google": #ee4134,
+  "discord": #7285d1,
+  "facebook": #1877f2,
+);
+
 .login {
   position: relative;
   display: flex;
@@ -253,11 +263,11 @@ function onFallen(card: ApiRandomCard) {
 
   &__container {
     padding: 24px;
-    border: grey 1px solid;
+    border: colors.$lightgray 1px solid;
     border-radius: 12px;
-    background-color: #242424df;
+    background-color: rgba(colors.$main-bg, 85%);
 
-    @media (max-width: 600px) {
+    @include mixins.xs {
       border: none;
       border-radius: 0;
       width: 100%;
@@ -301,13 +311,13 @@ function onFallen(card: ApiRandomCard) {
     font-size: 1.2rem;
     text-align: center;
     text-decoration: none;
-    color: inherit;
+    color: white;
   }
 
   &__or {
     display: flex;
     align-items: center;
-    color: grey;
+    color: colors.$lightgray;
     max-width: 235px;
     margin: auto;
 
@@ -340,6 +350,12 @@ function onFallen(card: ApiRandomCard) {
     margin-top: 14px;
     cursor: pointer;
     transition: all 100ms;
+
+    @each $strategy, $color in $colors {
+      &--#{$strategy} {
+        @include colors.app-button($color);
+      }
+    }
 
     svg {
       fill: currentColor;

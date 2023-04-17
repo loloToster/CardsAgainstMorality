@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue"
-import AppTooltip from "../../AppTooltip.vue"
+import AppTooltip from "@/components/AppTooltip.vue"
 
 withDefaults(
   defineProps<{
@@ -84,6 +84,8 @@ function onTransEnd(e: TransitionEvent, idx: number) {
 </template>
 
 <style scoped lang="scss">
+@use "@/styles/colors" as colors;
+
 .choices {
   $card-w: 56px;
   $card-h: 80px;
@@ -185,7 +187,7 @@ function onTransEnd(e: TransitionEvent, idx: number) {
       right: 0;
       width: 36px;
       height: 36px;
-      background-color: #15b041;
+      background-color: colors.$lime;
       border-radius: 50%;
       cursor: pointer;
       transform: translate(20%, 20%);
@@ -200,7 +202,7 @@ function onTransEnd(e: TransitionEvent, idx: number) {
 
       &__progress {
         position: absolute;
-        background-color: green;
+        background-color: colors.$green;
         border-radius: 50%;
         opacity: 0.6;
         width: 0;

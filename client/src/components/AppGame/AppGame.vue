@@ -3,22 +3,22 @@ import { onMounted, onUnmounted, watch } from "vue"
 import { useRoute } from "vue-router"
 
 import { StartData, VotingMeta } from "@backend/types"
-import { GameStage } from "../../types/game"
+import { GameStage } from "@/types/game"
 
 import {
   setAuth as setSocketAuth,
   socket,
   socketState
-} from "../../contexts/socket"
-import { notify } from "../../contexts/notifications"
-import { playAudio } from "../../contexts/audio"
+} from "@/contexts/socket"
+import { notify } from "@/contexts/notifications"
+import { playAudio } from "@/contexts/audio"
 import {
   gameState,
   resetGameState,
   resetPlayerState
 } from "./contexts/gamestate"
 
-import AppLoader from "../AppLoader.vue"
+import AppLoader from "@/components/AppLoader.vue"
 import GameView from "./GameView.vue"
 import GameSettings from "./GameSettings.vue"
 import PodiumModal from "./modals/PodiumModal.vue"
@@ -154,7 +154,7 @@ onUnmounted(() => {
     v-if="gameState.stage === GameStage.UNKNOWN || !socketState.connected"
     class="connecting"
   >
-    <AppLoader outline-color="#242424" />
+    <AppLoader class="connecting__loader" />
     <span>Connecting to the game</span>
   </div>
   <GameView
@@ -168,6 +168,8 @@ onUnmounted(() => {
 </template>
 
 <style scoped lang="scss">
+@use "@/styles/colors" as colors;
+
 .connecting {
   display: flex;
   flex-direction: column;
@@ -182,6 +184,10 @@ onUnmounted(() => {
   span {
     margin-top: 30px;
     font-size: 1.6rem;
+  }
+
+  &__loader {
+    --outline: #{colors.$main-bg};
   }
 }
 </style>

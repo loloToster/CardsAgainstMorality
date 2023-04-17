@@ -4,21 +4,21 @@ import { onClickOutside } from "@vueuse/core"
 
 import { ApiCardPack, StartData } from "@backend/types"
 
-import { user } from "../../contexts/user"
+import { user } from "@/contexts/user"
 import { gameState } from "./contexts/gamestate"
 
-import AppSwitch from "../AppSwitch.vue"
-import AppTooltip from "../AppTooltip.vue"
-import AppButton from "../AppButton.vue"
-import CopyButton from "../CopyButton.vue"
-import AppLoader from "../AppLoader.vue"
-import NumericInput from "../NumericInput.vue"
-import AnimatedNumber from "../AnimatedNumber.vue"
-import UserAvatar from "../UserAvatar.vue"
+import AppSwitch from "@/components/AppSwitch.vue"
+import AppTooltip from "@/components/AppTooltip.vue"
+import AppButton from "@/components/AppButton.vue"
+import CopyButton from "@/components/CopyButton.vue"
+import AppLoader from "@/components/AppLoader.vue"
+import NumericInput from "@/components/NumericInput.vue"
+import AnimatedNumber from "@/components/AnimatedNumber.vue"
+import UserAvatar from "@/components/UserAvatar.vue"
 import GamePack from "./game-components/GamePack.vue"
 
-import BlackCardIcon from "../../assets/black-card-icon.svg?component"
-import WhiteCardIcon from "../../assets/white-card-icon.svg?component"
+import BlackCardIcon from "@/assets/black-card-icon.svg?component"
+import WhiteCardIcon from "@/assets/white-card-icon.svg?component"
 
 defineProps<{ roomId: string }>()
 
@@ -132,13 +132,13 @@ onClickOutside(invitePlayersContent, () => {
         v-if="state.loading || !gameState.players.length"
         class="settings__panel settings__loading"
       >
-        <AppLoader outline-color="#3a3a3a" />
+        <AppLoader class="settings__loader" />
       </div>
       <div
         v-else-if="leader?.userId !== user.value?.id"
         class="settings__panel settings__loading"
       >
-        <AppLoader outline-color="#3a3a3a" />
+        <AppLoader class="settings__loader" />
         <h1>Waiting for room leader to start the game</h1>
       </div>
       <div v-else class="settings__panel settings__main">
@@ -341,15 +341,13 @@ onClickOutside(invitePlayersContent, () => {
           <div class="settings__invite__btns">
             <CopyButton
               :content="roomId"
-              color="#15b041"
-              class="settings__invite__btn"
+              class="settings__invite__btn settings__invite__btn--code"
             >
               Code
             </CopyButton>
             <CopyButton
               :content="windowLocation"
-              color="#1869cc"
-              class="settings__invite__btn"
+              class="settings__invite__btn settings__invite__btn--link"
             >
               Link
             </CopyButton>
@@ -360,7 +358,7 @@ onClickOutside(invitePlayersContent, () => {
         v-if="!gameState.players.length"
         class="settings__players settings__panel settings__loading"
       >
-        <AppLoader outline-color="#3a3a3a" />
+        <AppLoader class="settings__loader" />
       </div>
       <div v-else class="settings__players settings__panel">
         <button
@@ -401,12 +399,8 @@ onClickOutside(invitePlayersContent, () => {
 </template>
 <style scoped lang="scss">
 @use "sass:math" as math;
-
-@mixin mobile {
-  @media (max-width: 980px) {
-    @content;
-  }
-}
+@use "@/styles/mixins" as mixins;
+@use "@/styles/colors" as colors;
 
 $main-gap: 16px;
 .settings {
@@ -417,9 +411,17 @@ $main-gap: 16px;
   height: 80vh;
   margin: auto;
 
-  @include mobile() {
+  &__loader {
+    --outline: #{colors.$light-surface};
+  }
+
+  @include mixins.sm() {
     gap: 0;
     flex-direction: column;
+
+    &__loader {
+      --outline: #{colors.$main-bg};
+    }
   }
 
   &__left {
@@ -437,7 +439,7 @@ $main-gap: 16px;
     max-width: 300px;
     min-width: 250px;
 
-    @include mobile() {
+    @include mixins.sm() {
       flex-direction: row;
       width: 100%;
       max-width: 100%;
@@ -445,13 +447,13 @@ $main-gap: 16px;
   }
 
   &__panel {
-    background-color: #3a3a3a;
+    background-color: colors.$light-surface;
     width: 100%;
     height: 100%;
     border-radius: $main-gap;
     padding: 14px;
 
-    @include mobile() {
+    @include mixins.sm() {
       padding: 6px;
       background-color: transparent;
       border-radius: 0;
@@ -473,7 +475,7 @@ $main-gap: 16px;
     flex-direction: column;
     gap: 8px;
 
-    @include mobile() {
+    @include mixins.sm() {
       padding-bottom: 12px;
     }
 
@@ -493,7 +495,7 @@ $main-gap: 16px;
       button {
         font-size: 0.7rem;
         cursor: pointer;
-        color: #dfdfdf;
+        color: colors.$subtext;
 
         &:hover {
           text-decoration: underline;
@@ -508,7 +510,7 @@ $main-gap: 16px;
       border-radius: 4px;
       transition: background-color 200ms;
 
-      @include mobile() {
+      @include mixins.sm() {
         width: 100%;
       }
 
@@ -522,7 +524,7 @@ $main-gap: 16px;
       }
 
       &:focus {
-        background-color: #2f2f2f;
+        background-color: colors.$inp-bg;
       }
     }
 
@@ -579,7 +581,7 @@ $main-gap: 16px;
         font-size: 1.3rem;
         min-width: 3ch;
 
-        @include mobile() {
+        @include mixins.sm() {
           min-width: 2ch;
         }
       }
@@ -591,7 +593,7 @@ $main-gap: 16px;
     flex-wrap: wrap;
     gap: 4px;
 
-    @include mobile() {
+    @include mixins.sm() {
       justify-content: center;
     }
   }
@@ -604,14 +606,14 @@ $main-gap: 16px;
     justify-content: center;
     height: fit-content;
 
-    @include mobile() {
+    @include mixins.sm() {
       display: none;
       position: fixed;
       top: 0;
       left: 0;
       height: 100%;
       width: 100%;
-      background-color: #080808e3;
+      background-color: colors.$modal-bg;
       z-index: 1;
 
       &.active {
@@ -632,7 +634,7 @@ $main-gap: 16px;
       padding: 4px;
       border-radius: 50%;
 
-      @include mobile() {
+      @include mixins.sm() {
         display: block;
       }
 
@@ -657,8 +659,8 @@ $main-gap: 16px;
       text-align: center;
       outline: none;
       border: none;
-      border-bottom: gray 1px solid;
-      background-color: #2f2f2f;
+      border-bottom: colors.$lightgray 1px solid;
+      background-color: colors.$inp-bg;
       padding: 12px;
       border-radius: 4px 4px 0 0;
     }
@@ -670,6 +672,14 @@ $main-gap: 16px;
 
     &__btn {
       flex-grow: 1;
+
+      &--code {
+        @include colors.app-button(colors.$lime);
+      }
+
+      &--link {
+        @include colors.app-button(colors.$blue);
+      }
     }
   }
 
@@ -680,11 +690,11 @@ $main-gap: 16px;
     flex-direction: column;
     gap: 6px;
 
-    @include mobile() {
+    @include mixins.sm() {
       padding-top: 12px;
       flex-direction: row;
       border-radius: 0;
-      border-top: 1px gray solid;
+      border-top: 1px colors.$lightgray solid;
     }
 
     &__invite-btn {
@@ -693,10 +703,10 @@ $main-gap: 16px;
       justify-content: center;
       width: 36px;
       height: 36px;
-      background-color: darkcyan;
+      background-color: colors.$primary;
       border-radius: 50%;
 
-      @include mobile() {
+      @include mixins.sm() {
         display: flex;
       }
 
@@ -723,7 +733,7 @@ $main-gap: 16px;
     div {
       overflow: hidden;
 
-      @include mobile() {
+      @include mixins.sm() {
         display: none;
       }
     }
@@ -747,7 +757,7 @@ $main-gap: 16px;
       height: 22px;
       fill: goldenrod;
 
-      @include mobile() {
+      @include mixins.sm() {
         display: block;
       }
     }
