@@ -1,9 +1,17 @@
 <script setup lang="ts">
-defineEmits(["close"])
+import { ref } from "vue"
+
+const emit = defineEmits(["close"])
+
+const modal = ref<HTMLDivElement>()
+
+function handleClose(e: MouseEvent) {
+  if (e.target === modal.value) emit("close")
+}
 </script>
 
 <template>
-  <div @click="$emit('close')" class="modal">
+  <div ref="modal" @click="handleClose" class="modal">
     <slot></slot>
   </div>
 </template>

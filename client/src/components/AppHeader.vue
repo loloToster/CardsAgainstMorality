@@ -74,7 +74,7 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
 
   &__link {
     text-decoration: none;
-    color: white;
+    color: colors.$text;
 
     @include colors.app-button(colors.$primary);
   }

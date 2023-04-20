@@ -711,7 +711,7 @@ $main-gap: 16px;
       }
 
       svg {
-        fill: currentColor;
+        fill: colors.$text;
         width: 20px;
         height: 20px;
       }

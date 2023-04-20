@@ -204,7 +204,7 @@ $colors: (
   "anonymous": #080808,
   "google": #ee4134,
   "discord": #7285d1,
-  "facebook": #1877f2,
+  "facebook": #1877f2
 );
 
 .login {
@@ -311,7 +311,7 @@ $colors: (
     font-size: 1.2rem;
     text-align: center;
     text-decoration: none;
-    color: white;
+    color: colors.$text;
   }
 
   &__or {

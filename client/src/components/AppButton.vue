@@ -26,6 +26,7 @@ button {
   cursor: pointer;
   background-color: var(--color, colors.$inp);
   transition: all 50ms;
+  color: colors.$text;
 
   &:hover {
     background-color: var(--h-color, darken(colors.$inp, 6%));
