@@ -55,7 +55,14 @@ function handleShare() {
 
 <template>
   <AppModal @close="$emit('close')">
-    <div @click="e => e.stopPropagation()" class="table-picture-modal">
+    <div class="table-picture-modal">
+      <button @click="$emit('close')" class="table-picture-modal__close">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+          <path
+            d="m249 873-66-66 231-231-231-231 66-66 231 231 231-231 66 66-231 231 231 231-66 66-231-231-231 231Z"
+          />
+        </svg>
+      </button>
       <img :src="canvas.toDataURL()" />
       <div class="table-picture-modal__actions">
         <AppButton
@@ -84,6 +91,7 @@ function handleShare() {
 @use "@/styles/colors" as colors;
 
 .table-picture-modal {
+  position: relative;
   max-width: 96vw;
   padding: 22px;
   border-radius: 12px;
@@ -93,9 +101,28 @@ function handleShare() {
     background-color: transparent;
   }
 
+  &__close {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    cursor: pointer;
+
+    @include mixins.xs {
+      top: 34px;
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+  }
+
   img {
     margin-bottom: 12px;
     width: 100%;
+    max-height: 50vh;
+    object-fit: contain;
   }
 
   &__actions {

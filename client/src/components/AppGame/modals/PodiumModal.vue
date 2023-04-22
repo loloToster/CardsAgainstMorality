@@ -142,7 +142,7 @@ const bottom = computed(() => {
     }
 
     &__name-points {
-      font-size: 1.3rem;
+      font-size: clamp(0.85rem, 3vw, 1.3rem);
       max-width: 100%;
       text-align: center;
 
