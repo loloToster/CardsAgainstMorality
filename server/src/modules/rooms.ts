@@ -46,6 +46,7 @@ export class Room {
   timeLimitTimeout: ReturnType<typeof setTimeout> | undefined
 
   currentVoting: Voting | null
+  votingTimeout: ReturnType<typeof setTimeout> | undefined
 
   constructor(
     public id: string,
@@ -63,6 +64,7 @@ export class Room {
     this.timeLimitTimeout = undefined
 
     this.currentVoting = null
+    this.votingTimeout = undefined
   }
 
   getTimeLimitSeconds() {
@@ -192,31 +194,11 @@ export class Room {
           this.currentVoting.for.length + this.currentVoting.against.length >=
           this.game.players.filter(p => p.metadata?.connected).length
         ) {
-          if (
-            this.currentVoting.for.length > this.currentVoting.against.length
-          ) {
-            switch (this.currentVoting.meta.type) {
-              case "end": {
-                const podium = this.game.end()
-                this.sendGameEnd(podium)
-                break
-              }
-
-              case "kick": {
-                break
-              }
-
-              default: {
-                break
-              }
-            }
-          }
-
-          this.currentVoting = null
-          this.sendVoting()
-          return
+          return this.resolveVoting()
         }
       } else {
+        if (this.currentVoting) return
+
         let validatedMeta: VotingMeta
 
         if (data.type === "end") {
@@ -239,6 +221,12 @@ export class Room {
           createdAt: Date.now(),
           createdBy: player.metadata?.user.name ?? ""
         }
+
+        clearTimeout(this.votingTimeout)
+        this.votingTimeout = setTimeout(
+          this.onVotingTimeout.bind(this),
+          VOTING_TIME // todo: set with game settings
+        )
       }
 
       this.sendVoting()
@@ -525,6 +513,38 @@ export class Room {
         points: pel.points
       }))
     })
+  }
+
+  onVotingTimeout() {
+    if (this.currentVoting) this.resolveVoting()
+  }
+
+  resolveVoting() {
+    clearTimeout(this.votingTimeout)
+
+    if (
+      this.currentVoting &&
+      this.currentVoting.for.length > this.currentVoting.against.length
+    ) {
+      switch (this.currentVoting.meta.type) {
+        case "end": {
+          const podium = this.game.end()
+          this.sendGameEnd(podium)
+          break
+        }
+
+        case "kick": {
+          break
+        }
+
+        default: {
+          break
+        }
+      }
+    }
+
+    this.currentVoting = null
+    this.sendVoting()
   }
 
   parseVoting(player: Player<PlayerMetadata>): VotingData {

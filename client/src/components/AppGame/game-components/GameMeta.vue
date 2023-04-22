@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, computed, ref } from "vue"
+import { reactive, computed, ref, watch } from "vue"
 import { onClickOutside } from "@vueuse/core"
 
 import { VotingMeta } from "@backend/types"
@@ -22,11 +22,27 @@ const audioTooltip = computed(() => {
   return audioState.on ? "Turn off sound" : "Turn on sound"
 })
 
+const votingTooltip = computed(() => {
+  return gameState.voting ? "Cannot start a new voting" : "Start a new voting"
+})
+
 const gameMenu = ref(null)
 onClickOutside(gameMenu, () => (state.gameMenuActive = false))
 
 const votingMenu = ref(null)
 onClickOutside(votingMenu, () => (state.votingMenuActive = false))
+
+function toggleVotingMenu() {
+  if (gameState.voting) return
+  state.votingMenuActive = !state.votingMenuActive
+}
+
+watch(
+  () => gameState.voting,
+  newVal => {
+    if (newVal) state.votingMenuActive = false
+  }
+)
 
 function onVoteToEnd(e: MouseEvent) {
   e.stopPropagation()
@@ -74,7 +90,8 @@ function onVoteToEnd(e: MouseEvent) {
           </svg>
         </button>
         <button
-          @click="state.votingMenuActive = !state.votingMenuActive"
+          @click="toggleVotingMenu"
+          :disabled="Boolean(gameState.voting)"
           class="game-menu__btn game-menu__item"
           ref="votingMenu"
           v-wave
@@ -107,14 +124,14 @@ function onVoteToEnd(e: MouseEvent) {
             position="left"
             class="game-menu__btn__tooltip game-menu__btn__tooltip--desktop"
           >
-            Start a new voting
+            {{ votingTooltip }}
           </AppTooltip>
           <AppTooltip
             v-if="!state.votingMenuActive"
             position="right"
             class="game-menu__btn__tooltip game-menu__btn__tooltip--mobile"
           >
-            Start a new voting
+            {{ votingTooltip }}
           </AppTooltip>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
             <path
@@ -440,7 +457,11 @@ function onVoteToEnd(e: MouseEvent) {
     svg {
       width: 32px;
       height: 32px;
-      fill: #585858;
+      fill: colors.$inp;
+    }
+
+    &:disabled svg {
+      fill: darken(colors.$inp, 20%);
     }
 
     &__tooltip {
