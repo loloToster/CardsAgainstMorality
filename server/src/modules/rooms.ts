@@ -4,7 +4,7 @@ import logger from "./logger"
 
 import { TIME_LIMIT_OFFSET, VOTING_TIME } from "../consts"
 
-import { shuffle } from "../utils"
+import { randomElement, shuffle } from "../utils/random"
 import { Game, GameState, Player, Podium, WinnerData } from "../utils/game"
 
 import type { User } from "@prisma/client"
@@ -157,28 +157,7 @@ export class Room {
 
     socket.on("verdict", ({ verdict }) => {
       try {
-        const winnerData = player.makeVerdict(verdict)
-
-        if (
-          (this.scoreLimit !== null &&
-            winnerData.winner.points >= this.scoreLimit) ||
-          (this.roundLimit !== null &&
-            this.game.players.reduce((acc, p) => acc + p.points, 0) >=
-              this.roundLimit)
-        ) {
-          const podium = this.game.end()
-          this.sendGameEnd(podium)
-          return
-        }
-
-        const canContinue = this.game.newRound()
-
-        if (canContinue) {
-          this.sendNewRound(winnerData)
-        } else {
-          const podium = this.game.end()
-          this.sendGameEnd(podium)
-        }
+        this.onMakeVerdict(player, verdict)
       } catch (err) {
         logger.error(err)
       }
@@ -286,6 +265,21 @@ export class Room {
     })
   }
 
+  startTimeout(func: () => void) {
+    this.timeLimitStart = Date.now()
+    const timeLimitSeconds = this.getTimeLimitSeconds()
+
+    if (this.timeLimit) {
+      clearTimeout(this.timeLimitTimeout)
+      this.timeLimitTimeout = setTimeout(
+        func.bind(this),
+        this.timeLimit + TIME_LIMIT_OFFSET
+      )
+    }
+
+    return timeLimitSeconds
+  }
+
   getLeader() {
     let leader: Player<PlayerMetadata> | null = null
 
@@ -328,7 +322,53 @@ export class Room {
     this.io.to(this.id).emit("players", { players })
   }
 
-  async sendNewRound(winnerData?: WinnerData<PlayerMetadata>) {
+  onMakeVerdict(
+    player: Player<PlayerMetadata>,
+    verdict: number[],
+    timedOut = false
+  ) {
+    const winnerData = player.makeVerdict(verdict)
+
+    clearTimeout(this.timeLimitTimeout)
+
+    if (
+      (this.scoreLimit !== null &&
+        winnerData.winner.points >= this.scoreLimit) ||
+      (this.roundLimit !== null &&
+        this.game.players.reduce((acc, p) => acc + p.points, 0) >=
+          this.roundLimit)
+    ) {
+      const podium = this.game.end()
+      this.sendGameEnd(podium)
+      return
+    }
+
+    const canContinue = this.game.newRound()
+
+    if (canContinue) {
+      this.sendNewRound(winnerData, timedOut)
+    } else {
+      const podium = this.game.end()
+      this.sendGameEnd(podium)
+    }
+  }
+
+  onVerdictTimeout() {
+    if (!this.game.tsar) return
+
+    this.onMakeVerdict(
+      this.game.tsar,
+      randomElement(
+        this.game.players.filter(p => !p.isTsar).map(p => p.choice)
+      ),
+      true
+    )
+  }
+
+  async sendNewRound(
+    winnerData?: WinnerData<PlayerMetadata>,
+    winnerRandomlyPicked = false
+  ) {
     const { game } = this
     if (!game.curBlackCard) throw new Error("No black card")
 
@@ -352,20 +392,12 @@ export class Room {
         winner: winnerData.winner.metadata?.user.name ?? "Unknown",
         blackCard: prevRoundBlack,
         winningCards,
-        imWinner: false
+        imWinner: false,
+        randomlyPicked: winnerRandomlyPicked
       }
     }
 
-    this.timeLimitStart = Date.now()
-    const timeLimitSeconds = this.getTimeLimitSeconds()
-
-    if (this.timeLimit) {
-      clearTimeout(this.timeLimitTimeout)
-      this.timeLimitTimeout = setTimeout(
-        this.onChoiceTimeout.bind(this),
-        this.timeLimit + TIME_LIMIT_OFFSET
-      )
-    }
+    const timeLimitSeconds = this.startTimeout(this.onChoiceTimeout)
 
     for (let i = 0; i < game.players.length; i++) {
       const player = game.players[i]
@@ -417,15 +449,20 @@ export class Room {
 
     shuffle(choices)
 
+    const timeLimitSeconds = this.startTimeout(this.onVerdictTimeout)
+
     if (afkPlayers) {
       for (const player of this.game.players) {
         player.metadata?.socket.emit("choices", {
           choices,
-          pickedCards: afkPlayers.includes(player) ? player.choice : undefined
+          pickedCards: afkPlayers.includes(player) ? player.choice : undefined,
+          timeLimit: timeLimitSeconds
         })
       }
     } else {
-      this.io.to(this.id).emit("choices", { choices })
+      this.io
+        .to(this.id)
+        .emit("choices", { choices, timeLimit: timeLimitSeconds })
     }
   }
 

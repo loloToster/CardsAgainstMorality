@@ -40,10 +40,19 @@ socket.on("new-round", data => {
   gameState.cards = data.cards
   gameState.submitted = false
   gameState.roundWinnerData = data.prevRound ?? null
+
+  if (data.prevRound?.randomlyPicked) {
+    notify({
+      type: "info",
+      text: "The winner was chosen randomly due to Tsar inactivity"
+    })
+  }
 })
 
 socket.on("choices", data => {
   playAudio("tsar-choice")
+
+  gameState.timeLimit = data.timeLimit
 
   gameState.stage = GameStage.TSAR_VERDICT
   gameState.activeChoiceIdx = null

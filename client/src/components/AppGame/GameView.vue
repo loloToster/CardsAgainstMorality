@@ -125,6 +125,15 @@ const numOfTableCards = computed(() => {
   return 1 + gameState.pickedCards.length + activeChoice.value.length
 })
 
+const timerWarn = computed(() => {
+  return (
+    (gameState.stage === GameStage.TSAR_VERDICT && gameState.imTsar) ||
+    (gameState.stage === GameStage.CHOOSING &&
+      !gameState.imTsar &&
+      !gameState.submitted)
+  )
+})
+
 function resizeTableCards(tableWidth: number) {
   const g = (numOfTableCards.value - 1) * TABLE_CARDS_GAP
   const cardWidth = Math.min(
@@ -236,18 +245,13 @@ function onCardsScroll(e: WheelEvent) {
             <div ref="timerWrapper" class="game__table__timer-wrapper">
               <div ref="timer" class="game__table__timer">
                 <GameTimer
-                  v-if="
-                    gameState.timeLimit &&
-                    gameState.stage === GameStage.CHOOSING
-                  "
+                  v-if="gameState.timeLimit"
                   :from="gameState.timeLimit"
-                  :shake-boundry="
-                    gameState.imTsar || gameState.submitted ? 0 : 30
-                  "
-                  :warning-boundry="
-                    gameState.imTsar || gameState.submitted ? 0 : 10
-                  "
+                  :shake-boundry="timerWarn ? 30 : 0"
+                  :warning-boundry="timerWarn ? 10 : 0"
+                  :key="gameState.stage"
                 />
+                <!-- :key prop is used to reset the time everytime the stage of the game is changed -->
               </div>
               <PlayingCard
                 :width="state.tableCardWidth"
@@ -354,8 +358,8 @@ $main-gap: 20px;
     justify-content: space-between;
     gap: $main-gap;
     flex-grow: 1;
+    min-width: 0;
     max-width: 100%;
-    overflow: hidden;
 
     @include mixins.xs {
       gap: $main-gap * 0.5;

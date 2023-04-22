@@ -5,7 +5,7 @@ import db from "../../modules/db"
 
 import { ApiCardPack } from "../../types"
 
-import { getRandomInt } from "../../utils"
+import { getRandomInt } from "../../utils/random"
 
 const router = Router()
 

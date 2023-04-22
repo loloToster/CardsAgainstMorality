@@ -1,4 +1,4 @@
-import { shuffle } from "."
+import { shuffle } from "./random"
 
 export enum GameState {
   NOT_STARTED,

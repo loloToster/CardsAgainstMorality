@@ -14,6 +14,7 @@ export interface PrevRound {
   blackCard: ApiBlackCard
   winningCards: ApiWhiteCard[]
   imWinner: boolean
+  randomlyPicked: boolean
 }
 
 export interface PodiumEl {
@@ -48,6 +49,7 @@ export interface VotingData {
 export interface ChoicesData {
   choices: ApiWhiteCard[][]
   pickedCards?: number[]
+  timeLimit: number | null
 }
 
 export type SyncData =
