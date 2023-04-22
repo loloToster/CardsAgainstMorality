@@ -53,7 +53,7 @@ socket.on("choices", data => {
   if (data.pickedCards) {
     notify({
       type: "warn",
-      text: "The time expired and your cards where picked randomly"
+      text: "The time expired and your cards were picked randomly"
     })
 
     gameState.cards = gameState.cards.filter(

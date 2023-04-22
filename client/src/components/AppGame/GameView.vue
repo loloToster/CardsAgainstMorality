@@ -354,6 +354,8 @@ $main-gap: 20px;
     justify-content: space-between;
     gap: $main-gap;
     flex-grow: 1;
+    max-width: 100%;
+    overflow: hidden;
 
     @include mixins.xs {
       gap: $main-gap * 0.5;
@@ -420,7 +422,8 @@ $main-gap: 20px;
   }
 
   &__under-cards {
-    height: 100px;
+    height: 110px;
+    width: 100%;
   }
 
   &__submit {

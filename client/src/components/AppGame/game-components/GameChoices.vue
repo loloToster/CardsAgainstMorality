@@ -99,15 +99,35 @@ function onTransEnd(e: TransitionEvent, idx: number) {
   width: fit-content;
   max-width: 100%;
   margin: auto;
-  overflow-y: auto;
+  overflow-y: hidden;
+  overflow-x: auto;
   padding: 0 50px;
 
   &::-webkit-scrollbar {
-    display: none;
+    height: 8px;
+
+    @media (hover: none) {
+      height: 0;
+    }
+
+    &-track {
+      background: #424242;
+    }
+
+    &-thumb {
+      background: #686868;
+
+      &:hover {
+        background: #7b7b7b;
+      }
+    }
   }
 
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  scrollbar-width: thin;
+
+  @media (hover: none) {
+    scrollbar-width: none;
+  }
 
   &__choice {
     --n-of-cards: 1;

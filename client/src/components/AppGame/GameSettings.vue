@@ -705,6 +705,8 @@ $main-gap: 16px;
       height: 36px;
       background-color: colors.$primary;
       border-radius: 50%;
+      flex-shrink: 0;
+      min-width: 0;
 
       @include mixins.sm() {
         display: flex;
