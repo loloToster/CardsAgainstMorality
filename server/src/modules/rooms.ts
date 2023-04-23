@@ -19,6 +19,8 @@ import {
   VotingMeta
 } from "../types"
 
+import { validate as validateSocketMessage } from "../dtos/sockets"
+
 export interface PlayerMetadata {
   connected: boolean
   socket: SocketClient
@@ -110,6 +112,19 @@ export class Room {
     this.sendSyncData(player)
     this.sendPlayers()
 
+    socket.use(async ([ev, data], next) => {
+      // ! this does not validate everything
+      // it only validates types and predefined limits
+      try {
+        await validateSocketMessage(ev, data)
+        next()
+      } catch {
+        logger.warn(
+          `user with id: '${user.id}' sent a message that could not be validated`
+        )
+      }
+    })
+
     socket.on("start", async settings => {
       if (this.getLeader() !== player) return
 
@@ -165,6 +180,48 @@ export class Room {
       }
     })
 
+    socket.on("vote-start", data => {
+      if (this.game.state === GameState.NOT_STARTED) return
+
+      if (
+        this.currentVoting &&
+        Date.now() - this.currentVoting.createdAt > VOTING_TIME
+      ) {
+        this.currentVoting = null
+      }
+
+      if (this.currentVoting) return
+
+      let validatedMeta: VotingMeta
+
+      if (data.type === "end") {
+        validatedMeta = { type: data.type }
+      } else if (data.type === "kick") {
+        if (!this.game.players.some(p => p.metadata?.user.id === data.playerId))
+          return
+
+        validatedMeta = { type: data.type, playerId: data.playerId }
+      } else {
+        return
+      }
+
+      this.currentVoting = {
+        meta: validatedMeta,
+        for: [player],
+        against: [],
+        createdAt: Date.now(),
+        createdBy: player.metadata?.user.name ?? ""
+      }
+
+      clearTimeout(this.votingTimeout)
+      this.votingTimeout = setTimeout(
+        this.onVotingTimeout.bind(this),
+        VOTING_TIME // todo: set with game settings
+      )
+
+      this.sendVoting()
+    })
+
     socket.on("vote", data => {
       if (this.game.state === GameState.NOT_STARTED) return
 
@@ -175,58 +232,25 @@ export class Room {
         this.currentVoting = null
       }
 
-      if (typeof data === "boolean") {
-        if (
-          this.currentVoting === null ||
-          [...this.currentVoting.for, ...this.currentVoting.against].includes(
-            player
-          )
+      if (
+        this.currentVoting === null ||
+        [...this.currentVoting.for, ...this.currentVoting.against].includes(
+          player
         )
-          return
+      )
+        return
 
-        if (data) {
-          this.currentVoting.for.push(player)
-        } else {
-          this.currentVoting.against.push(player)
-        }
-
-        if (
-          this.currentVoting.for.length + this.currentVoting.against.length >=
-          this.game.players.filter(p => p.metadata?.connected).length
-        ) {
-          return this.resolveVoting()
-        }
+      if (data) {
+        this.currentVoting.for.push(player)
       } else {
-        if (this.currentVoting) return
+        this.currentVoting.against.push(player)
+      }
 
-        let validatedMeta: VotingMeta
-
-        if (data.type === "end") {
-          validatedMeta = { type: data.type }
-        } else if (data.type === "kick") {
-          if (
-            !this.game.players.some(p => p.metadata?.user.id === data.playerId)
-          )
-            return
-
-          validatedMeta = { type: data.type, playerId: data.playerId }
-        } else {
-          return
-        }
-
-        this.currentVoting = {
-          meta: validatedMeta,
-          for: [player],
-          against: [],
-          createdAt: Date.now(),
-          createdBy: player.metadata?.user.name ?? ""
-        }
-
-        clearTimeout(this.votingTimeout)
-        this.votingTimeout = setTimeout(
-          this.onVotingTimeout.bind(this),
-          VOTING_TIME // todo: set with game settings
-        )
+      if (
+        this.currentVoting.for.length + this.currentVoting.against.length >=
+        this.game.players.filter(p => p.metadata?.connected).length
+      ) {
+        return this.resolveVoting()
       }
 
       this.sendVoting()

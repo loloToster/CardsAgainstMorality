@@ -119,11 +119,11 @@ function onVerdict(choiceIdx: number) {
 }
 
 function onNewVoting(data: VotingMeta) {
-  socket.emit("vote", data)
+  socket.emit("vote-start", data)
 }
 
 function onVote(data: boolean) {
-  socket.emit("vote", data)
+  socket.emit("vote", { vote: data })
 }
 
 watch(

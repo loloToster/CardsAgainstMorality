@@ -77,11 +77,24 @@ export interface StartData {
   packs: number[]
 }
 
+export interface Submition {
+  submition: number[]
+}
+
+export interface Verdict {
+  verdict: number[]
+}
+
+export interface Vote {
+  vote: boolean
+}
+
 export interface ClientToServerSocketEvents {
   start: (data: StartData) => void
-  submit: (data: { submition: number[] }) => void
-  verdict: (data: { verdict: number[] }) => void
-  vote: (data: boolean | VotingMeta) => void
+  submit: (data: Submition) => void
+  verdict: (data: Verdict) => void
+  "vote-start": (data: VotingMeta) => void
+  vote: (data: Vote) => void
 }
 
 export type SocketServer = Server<
