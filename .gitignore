@@ -1,20 +1,16 @@
-venv/
+logs
+*.log
+npm-debug.log*
 
-*.pyc
-__pycache__/
+/package-lock.json
 
-instance/
+node_modules
+dist
+dist-ssr
+*.local
 
-.pytest_cache/
-.coverage
-htmlcov/
+.vscode/
 
-dist/
-build/
-*.egg-info/
-
-.webassets-cache/
-db.json
-custom.json
-*.css
-temp.py
+.env
+*/prisma/*.db
+*/prisma/*.db-journal

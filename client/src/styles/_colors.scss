@@ -1,0 +1,39 @@
+$modal-bg: #0e0e0edd;
+$dark-surface: #121212;
+$main-bg: #242424;
+
+$inp-hover: #27272732;
+$inp-active: #2727276a;
+$inp-bg: #2f2f2f;
+
+$light-surface: #3a3a3a;
+
+$darkgray: #4e4e4e;
+$tooltip: #505050;
+
+$inp: #6b6b6b;
+$lightgray: #9a9a9a;
+$subtext: #e3e3e3;
+$text: #f1f1f1;
+
+$green: green;
+$lime: #15b041;
+$danger: #dc0833;
+$error: #dc3c31;
+$warn: #dbaf00;
+$primary: darkcyan;
+$blue: #0b6bab;
+
+$anonymous: #080808;
+$google-hover: black;
+$google: #ee4134;
+$google-hover: #dd2112;
+$discord: #7285d1;
+$discord-hover: #4c64c4;
+$facebook: #1877f2;
+$facebook-hover: #0b5fcc;
+
+@mixin app-button($c) {
+  --color: #{$c};
+  --h-color: #{darken($c, 6%)};
+}

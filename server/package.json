@@ -1,0 +1,42 @@
+{
+  "name": "server",
+  "private": true,
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "ts-node ./src/app.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.11.0",
+    "@types/express": "^4.17.17",
+    "@types/passport": "^1.0.7",
+    "@types/uuid": "^9.0.1",
+    "class-transformer": "^0.5.1",
+    "class-transformer-validator": "^0.9.1",
+    "class-validator": "^0.14.0",
+    "cookie-session": "^2.0.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "hcaptcha": "^0.1.1",
+    "nanoid": "^3.3.4",
+    "passport": "^0.5.3",
+    "passport-custom": "^1.1.1",
+    "passport-discord": "^0.1.4",
+    "passport-facebook": "^3.0.0",
+    "passport-google-oauth20": "^2.0.0",
+    "prisma": "^4.11.0",
+    "socket.io": "^4.6.1",
+    "unique-names-generator": "^4.7.1",
+    "uuid": "^9.0.0",
+    "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "@types/cookie-session": "^2.0.44",
+    "@types/passport-discord": "^0.1.6",
+    "@types/passport-facebook": "^2.1.11",
+    "@types/passport-google-oauth20": "^2.0.11",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  }
+}

@@ -1,0 +1,49 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "sqlite"
+    url      = "file:./dev.db"
+}
+
+model User {
+    id         Int       @id @default(autoincrement())
+    name       String
+    picture    String?
+    lastUsed   DateTime? @map("last_used")
+    strategyId String    @map("strategy_id")
+
+    @@map("users")
+}
+
+model CardPack {
+    id         Int         @id @default(autoincrement())
+    name       String
+    icon       String?
+    color      String?
+    blackCards BlackCard[]
+    whiteCards WhiteCard[]
+
+    @@map("card_packs")
+}
+
+model BlackCard {
+    id     Int      @id @default(autoincrement())
+    text   String
+    pick   Int?
+    draw   Int?
+    packId Int      @map("pack_id")
+    pack   CardPack @relation(fields: [packId], references: [id])
+
+    @@map("black_cards")
+}
+
+model WhiteCard {
+    id     Int      @id @default(autoincrement())
+    text   String
+    packId Int      @map("pack_id")
+    pack   CardPack @relation(fields: [packId], references: [id])
+
+    @@map("white_cards")
+}
