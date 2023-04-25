@@ -14,6 +14,7 @@ import { moveItem } from "@/utils"
 import AppButton from "@/components/AppButton.vue"
 import PlayingCard from "@/components/PlayingCard.vue"
 
+import KickPlayerModal from "./modals/KickPlayerModal.vue"
 import RoundWinnerModal from "./modals/RoundWinnerModal.vue"
 import TablePictureModal from "./modals/TablePictureModal.vue"
 
@@ -50,12 +51,14 @@ enum CARD_HEIGHT {
 const SMALLER_CARDS_BOUNDARY = 500
 
 const state = reactive<{
+  kickPlayerModalActive: boolean
   maxTableCardWidth: MAX_CARD_WIDTH
   tableCardHeight: number | undefined
   tableCardWidth: number | undefined
   showedCard: number
   tablePicture: HTMLCanvasElement | null
 }>({
+  kickPlayerModalActive: false,
   maxTableCardWidth: MAX_CARD_WIDTH.BIG,
   tableCardHeight: undefined,
   tableCardWidth: undefined,
@@ -211,6 +214,11 @@ function onCardsScroll(e: WheelEvent) {
 }
 </script>
 <template>
+  <KickPlayerModal
+    v-if="state.kickPlayerModalActive"
+    :players="gameState.players"
+    @close="state.kickPlayerModalActive = false"
+  />
   <GameVoting
     v-if="gameState.voting"
     :voting-data="gameState.voting"
@@ -308,7 +316,10 @@ function onCardsScroll(e: WheelEvent) {
           </div>
         </div>
       </div>
-      <GameMeta @new-voting="d => $emit('new-voting', d)" />
+      <GameMeta
+        @new-voting="d => $emit('new-voting', d)"
+        @open-kick="state.kickPlayerModalActive = true"
+      />
     </div>
     <div @wheel="onCardsScroll" class="game__hand" ref="hand">
       <div

@@ -14,6 +14,7 @@ import UserAvatar from "@/components/UserAvatar.vue"
 
 const emit = defineEmits<{
   (e: "new-voting", data: VotingMeta): void
+  (e: "open-kick"): void
 }>()
 
 const state = reactive({ gameMenuActive: false, votingMenuActive: false })
@@ -47,6 +48,12 @@ watch(
 function onVoteToEnd(e: MouseEvent) {
   e.stopPropagation()
   emit("new-voting", { type: "end" })
+}
+
+function openKick(e: MouseEvent) {
+  e.stopPropagation()
+  state.votingMenuActive = false
+  emit("open-kick")
 }
 </script>
 <template>
@@ -106,10 +113,7 @@ function onVoteToEnd(e: MouseEvent) {
               <span>End the game</span>
             </AppButton>
             <div class="game-menu__voting__sep"></div>
-            <AppButton
-              @click="e => e.stopPropagation()"
-              class="game-menu__voting__btn"
-            >
+            <AppButton @click="openKick" class="game-menu__voting__btn">
               <svg viewBox="0 0 24 24">
                 <path
                   fill="currentColor"
