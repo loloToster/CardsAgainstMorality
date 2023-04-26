@@ -1,4 +1,4 @@
-import { Router } from "express"
+import { RequestHandler, Router } from "express"
 import passport from "passport"
 
 const router = Router()
@@ -12,37 +12,46 @@ router.get("/logout", (req, res) => {
   res.redirect("/")
 })
 
+const returnToMiddleware: RequestHandler = (req, res, next) => {
+  if (req.session) {
+    req.session.returnTo = req.query.returnTo?.toString() ?? null
+  }
+
+  next()
+}
+
 router.get(
   "/anonymous",
-  passport.authenticate("custom", { successRedirect: "/" })
+  returnToMiddleware,
+  passport.authenticate("custom", { successReturnToOrRedirect: "/" })
 )
 
-router.get("/google", passport.authenticate("google"))
+router.get("/google", returnToMiddleware, passport.authenticate("google"))
 
 router.get(
   "/google/callback",
   passport.authenticate("google", {
     prompt: "select_account",
-    successRedirect: "/"
+    successReturnToOrRedirect: "/"
   })
 )
 
-router.get("/discord", passport.authenticate("discord"))
+router.get("/discord", returnToMiddleware, passport.authenticate("discord"))
 
 router.get(
   "/discord/callback",
   passport.authenticate("discord", {
     prompt: "consent",
-    successRedirect: "/"
+    successReturnToOrRedirect: "/"
   })
 )
 
-router.get("/facebook", passport.authenticate("facebook"))
+router.get("/facebook", returnToMiddleware, passport.authenticate("facebook"))
 
 router.get(
   "/facebook/callback",
   passport.authenticate("facebook", {
-    successRedirect: "/"
+    successReturnToOrRedirect: "/"
   })
 )
 

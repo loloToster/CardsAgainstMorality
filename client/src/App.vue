@@ -10,6 +10,8 @@ fetch("/auth/me").then(async res => {
   if (res.ok) {
     user.value = await res.json()
   }
+
+  user.fetching = false
 })
 </script>
 

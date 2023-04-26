@@ -2,6 +2,7 @@
 import { useRouter } from "vue-router"
 
 import { TITLE } from "@/consts"
+import { user } from "@/contexts/user"
 
 import AppButton from "@/components/AppButton.vue"
 import PlayingCard from "@/components/PlayingCard.vue"
@@ -9,6 +10,11 @@ import PlayingCard from "@/components/PlayingCard.vue"
 const router = useRouter()
 
 async function onRoomCreate() {
+  if (!user.value && !user.fetching) {
+    router.push("/login")
+    return
+  }
+
   const res = await fetch("/api/room")
   const json = await res.json()
 

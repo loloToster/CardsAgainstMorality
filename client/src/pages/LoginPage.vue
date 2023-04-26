@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, reactive } from "vue"
-import { RouterLink } from "vue-router"
+import { RouterLink, useRoute } from "vue-router"
 import HCaptcha from "@hcaptcha/vue3-hcaptcha"
 
 import type { ApiRandomCard } from "@backend/types"
@@ -12,18 +12,29 @@ import PlayingCard from "@/components/PlayingCard.vue"
 
 import CaptchaImg from "@/assets/captcha.png"
 
-const captchaSiteKey = import.meta.env.VITE_CAPTCHA_SITEKEY
+const CAPTCHA_SITEKEY = import.meta.env.VITE_CAPTCHA_SITEKEY
 
-function loginWith(strategy: string) {
-  window.location.replace("/auth/" + strategy)
+const route = useRoute()
+
+function loginWith(strategy: string, query: Record<string, string> = {}) {
+  const room = route.query.room
+  if (room) query.returnTo = `/room/${room}`
+
+  let queryString = Object.keys(query)
+    .map(k => `${k}=${encodeURIComponent(query[k])}`)
+    .join("&")
+
+  queryString = queryString ? `?${queryString}` : ""
+
+  window.location.replace(`/auth/${strategy}${queryString}`)
 }
 
 function onVerify(token: string) {
-  loginWith(`anonymous?token=${encodeURIComponent(token)}`)
+  loginWith("anonymous", { token })
 }
 
 function onLoginAnonymously() {
-  if (captchaSiteKey) {
+  if (CAPTCHA_SITEKEY) {
     state.captchaOpen = true
   } else {
     loginWith("anonymous")
@@ -109,7 +120,7 @@ function onFallen(card: ApiRandomCard) {
         <h1>Create an anonymous account</h1>
         <HCaptcha
           class="login__captcha__btn"
-          :sitekey="captchaSiteKey"
+          :sitekey="CAPTCHA_SITEKEY"
           theme="dark"
           @verify="onVerify"
         />
