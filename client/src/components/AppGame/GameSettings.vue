@@ -410,6 +410,7 @@ $main-gap: 16px;
   max-width: 1100px;
   height: 80vh;
   margin: auto;
+  margin-top: 5vh;
 
   &__loader {
     --outline: #{colors.$light-surface};

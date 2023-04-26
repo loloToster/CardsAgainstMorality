@@ -24,39 +24,41 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
 
 <template>
   <header class="header">
-    <RouterLink class="header__logo header__link" to="/">
-      {{ TITLE }}
-    </RouterLink>
-    <div
-      @click="state.profileMenuOpen = !state.profileMenuOpen"
-      v-if="user.value"
-      class="header__profile"
-      ref="target"
-    >
-      <UserAvatar :user="user.value" class="header__avatar" />
+    <div class="header__content">
+      <RouterLink class="header__logo header__link" to="/">
+        {{ TITLE }}
+      </RouterLink>
       <div
-        v-if="state.profileMenuOpen"
-        @click="e => e.stopPropagation()"
-        class="header__profile-menu"
+        @click="state.profileMenuOpen = !state.profileMenuOpen"
+        v-if="user.value"
+        class="header__profile"
+        ref="target"
       >
-        <div class="header__profile-menu__details">
-          <UserAvatar :user="user.value" />
-          <span>{{ user.value.name }}</span>
+        <UserAvatar :user="user.value" class="header__avatar" />
+        <div
+          v-if="state.profileMenuOpen"
+          @click="e => e.stopPropagation()"
+          class="header__profile-menu"
+        >
+          <div class="header__profile-menu__details">
+            <UserAvatar :user="user.value" />
+            <span>{{ user.value.name }}</span>
+          </div>
+          <div class="header__profile-menu__divider"></div>
+          <AppButton @click="logout" class="header__profile-menu__btn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+              <path
+                d="M179 961q-39.462 0-67.231-27.475Q84 906.05 84 867V285q0-39.463 27.769-67.231Q139.538 190 179 190h298v95H179v582h298v94H179Zm488-174-68-66 98-98H362v-94h333l-98-98 68-66 211 212-209 210Z"
+              />
+            </svg>
+            <span>Log Out</span>
+          </AppButton>
         </div>
-        <div class="header__profile-menu__divider"></div>
-        <AppButton @click="logout" class="header__profile-menu__btn">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
-            <path
-              d="M179 961q-39.462 0-67.231-27.475Q84 906.05 84 867V285q0-39.463 27.769-67.231Q139.538 190 179 190h298v95H179v582h298v94H179Zm488-174-68-66 98-98H362v-94h333l-98-98 68-66 211 212-209 210Z"
-            />
-          </svg>
-          <span>Log Out</span>
-        </AppButton>
       </div>
+      <AppButton v-else @click="router.push('/login')" class="header__link">
+        Login
+      </AppButton>
     </div>
-    <AppButton v-else @click="router.push('/login')" class="header__link">
-      Login
-    </AppButton>
   </header>
 </template>
 
@@ -64,13 +66,20 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
 @use "@/styles/colors" as colors;
 
 .header {
-  display: flex;
-  align-items: center;
-  width: 90vw;
-  max-width: 1200px;
-  padding: 16px 0;
-  margin: auto;
-  background-color: transparent;
+  position: sticky;
+  top: 0;
+  background-color: colors.$main-bg;
+  border-bottom: 1px solid colors.$darkgray;
+  z-index: 1;
+
+  &__content {
+    display: flex;
+    align-items: center;
+    width: 90vw;
+    max-width: 1200px;
+    padding: 16px 0;
+    margin: auto;
+  }
 
   &__link {
     text-decoration: none;
@@ -86,9 +95,9 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
   }
 
   &__avatar {
-    min-width: 36px;
+    min-width: 24px;
     width: 4vw;
-    max-width: 52px;
+    max-width: 42px;
     aspect-ratio: 1;
     border-radius: 50%;
     cursor: pointer;
@@ -100,7 +109,6 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
 
   &__profile-menu {
     position: absolute;
-    z-index: 1;
     top: calc(100% + 4px);
     right: 0;
     min-width: 200px;

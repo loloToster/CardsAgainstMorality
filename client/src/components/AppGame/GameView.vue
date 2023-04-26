@@ -350,6 +350,7 @@ $main-gap: 20px;
   width: 90vw;
   max-width: 1100px;
   margin: auto;
+  margin-top: 2vh;
 
   &__top {
     display: flex;
