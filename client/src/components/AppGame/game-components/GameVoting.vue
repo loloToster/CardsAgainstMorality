@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { reactive, computed, watch, onMounted, onUnmounted } from "vue"
-import { VotingData } from "@backend/types"
+import { VotingData, ApiPlayer } from "@backend/types"
 import AppButton from "@/components/AppButton.vue"
 
 const INTERVAL = 1000
 
-const props = defineProps<{ votingData: VotingData }>()
+const props = defineProps<{ votingData: VotingData; players: ApiPlayer[] }>()
 
 const emit = defineEmits<{
   (ev: "vote", vote: boolean): void
@@ -39,6 +39,10 @@ watch(
 onMounted(countdown)
 onUnmounted(() => clearTimeout(timeout))
 
+const voteBy = computed(() => {
+  return `Vote by: ${props.votingData.by}`
+})
+
 const endsInSeconds = computed(() => {
   return Math.round(state.counter / INTERVAL)
 })
@@ -50,7 +54,11 @@ const description = computed(() => {
     }
 
     case "kick": {
-      return "Kick player:" // todo add player name
+      const playerId = props.votingData.voting.playerId
+      const playerName =
+        props.players.find(p => p.userId === playerId)?.name || "Unknown"
+
+      return `Kick player: ${playerName}`
     }
 
     default: {
@@ -63,13 +71,13 @@ const description = computed(() => {
 <template>
   <div class="voting">
     <div class="voting__main" :class="{ active: state.active }">
-      <div class="voting__top">
-        <div class="voting__by">Vote by: {{ votingData.by }}</div>
+      <div class="voting__top" :title="voteBy">
+        <div class="voting__by">{{ voteBy }}</div>
         <div class="voting__time">{{ endsInSeconds }}</div>
       </div>
       <div class="voting__bottom">
         <div class="voting__data">
-          <div class="voting__desc">{{ description }}</div>
+          <div class="voting__desc" :title="description">{{ description }}</div>
           <div class="voting__state">
             <div class="voting__state__n voting__state__n--yes">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
@@ -117,7 +125,10 @@ const description = computed(() => {
       <div class="voting__mobile__by" :class="{ active: !state.active }">
         Vote by: {{ votingData.by }}
       </div>
-      <AppButton @click="state.active = !state.active" class="voting__mobile__open">
+      <AppButton
+        @click="state.active = !state.active"
+        class="voting__mobile__open"
+      >
         {{ state.active ? "Hide" : "Vote" }}
       </AppButton>
     </div>
@@ -218,6 +229,8 @@ const description = computed(() => {
 
   &__desc {
     margin-right: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &__state {

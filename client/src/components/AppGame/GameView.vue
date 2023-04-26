@@ -66,6 +66,13 @@ const state = reactive<{
   tablePicture: null
 })
 
+watch(
+  () => gameState.voting,
+  newVal => {
+    if (newVal) state.kickPlayerModalActive = false
+  }
+)
+
 const hand = ref<HTMLDivElement>()
 
 function onCardShow(e: TouchEvent, cardId: number) {
@@ -218,10 +225,12 @@ function onCardsScroll(e: WheelEvent) {
     v-if="state.kickPlayerModalActive"
     :players="gameState.players"
     @close="state.kickPlayerModalActive = false"
+    @kick="pId => $emit('new-voting', { type: 'kick', playerId: pId })"
   />
   <GameVoting
     v-if="gameState.voting"
     :voting-data="gameState.voting"
+    :players="gameState.players"
     @vote="d => $emit('vote', d)"
     @counter-end="gameState.voting = null"
   />

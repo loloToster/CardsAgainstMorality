@@ -558,6 +558,16 @@ export class Room {
         }
 
         case "kick": {
+          const kickedPlayerId = this.currentVoting.meta.playerId
+          const kickedPlayer = this.game.players.find(
+            p => p.metadata?.user.id === kickedPlayerId
+          )
+
+          if (!kickedPlayer) break
+
+          this.game.removePlayer(kickedPlayer)
+          kickedPlayer.metadata?.socket.disconnect()
+          this.sendPlayers()
           break
         }
 

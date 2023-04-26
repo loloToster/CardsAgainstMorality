@@ -11,15 +11,14 @@ import UserAvatar from "@/components/UserAvatar.vue"
 
 const props = defineProps<{ players: ApiPlayer[] }>()
 
-defineEmits(["close"])
+defineEmits<{
+  (ev: "close"): void
+  (ev:"kick", playerId: number): void
+}>()
 
 const filteredPlayers = computed(() => {
   return props.players.filter(p => p.userId !== user.value?.id)
 })
-
-function handleClick(playerId: number) {
-  console.log(playerId)
-}
 </script>
 
 <template>
@@ -36,7 +35,7 @@ function handleClick(playerId: number) {
       <div class="kick-modal__players">
         <AppButton
           v-for="player in filteredPlayers"
-          @click="handleClick(player.userId)"
+          @click="$emit('kick', player.userId)"
           class="kick-modal__player"
           :key="player.userId"
           v-wave
