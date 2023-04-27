@@ -213,17 +213,13 @@ export class Game<PM = unknown> {
   start() {
     if (this.state !== GameState.NOT_STARTED)
       throw new Error("The game has already started")
-
     if (this.players.length < 2) throw new Error("Not enough players")
 
     this.whiteCards = shuffle(this.whiteCards)
     this.blackCards = shuffle(this.blackCards)
-
     this.players = shuffle(this.players)
-    this.dealCards()
 
-    this.state = GameState.CHOOSING
-    this.newRound()
+    if (!this.newRound()) throw new Error("Not enough cards")
   }
 
   // TODO: make sure to deal evenly
@@ -247,9 +243,6 @@ export class Game<PM = unknown> {
    * @returns boolean that indicates whether the game can continue
    */
   newRound() {
-    if (this.state === GameState.NOT_STARTED)
-      throw new Error("Game is not started")
-
     if (!this.enoughCards()) return false
 
     this.state = GameState.CHOOSING
