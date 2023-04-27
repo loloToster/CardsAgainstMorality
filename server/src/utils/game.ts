@@ -51,6 +51,10 @@ export class Player<M = unknown> {
     return this.game.curBlackCard?.pick === this.choice.length
   }
 
+  remove() {
+    this.game.removePlayer(this)
+  }
+
   removeCards(cards: number[]) {
     const removed: Array<number | null> = new Array(cards.length).fill(null)
     const filteredCards: number[] = []
@@ -156,6 +160,26 @@ export class Game<PM = unknown> {
     )
   }
 
+  newBlackCard() {
+    const newBlackCard = this.blackCards.pop() ?? null
+    this.curBlackCard = newBlackCard
+      ? {
+        id: newBlackCard.id,
+        pick: newBlackCard.pick ?? 1,
+        draw: newBlackCard.draw ?? 1
+      }
+      : null
+  }
+
+  chooseNewTsar() {
+    if (this.tsar) {
+      const curTsarIdx = this.players.indexOf(this.tsar)
+      this.tsar = this.players[(curTsarIdx + 1) % this.players.length]
+    } else {
+      this.tsar = this.players[0]
+    }
+  }
+
   addPlayer(metadata?: PM): Player<PM> {
     const player = new Player({ game: this, metadata })
     this.players.push(player)
@@ -164,6 +188,25 @@ export class Game<PM = unknown> {
   }
 
   removePlayer(player: Player) {
+    if (player.isTsar) {
+      // give back white cards
+      for (const player of this.players) {
+        if (!player.chose) continue
+
+        player.cards = player.cards.concat(player.choice)
+        player.choice = []
+      }
+
+      this.chooseNewTsar()
+
+      if (this.state === GameState.TSAR_VERDICT) {
+        this.blackCards.push(this.curBlackCard as CurBlackCard)
+        this.blackCards = shuffle(this.blackCards)
+        this.newBlackCard()
+        this.state = GameState.CHOOSING
+      }
+    }
+
     this.players = this.players.filter(p => p !== player)
   }
 
@@ -214,23 +257,8 @@ export class Game<PM = unknown> {
     this.players.forEach(p => (p.choice = []))
 
     this.dealCards()
-
-    // choose new tsar
-    if (this.tsar) {
-      const curTsarIdx = this.players.indexOf(this.tsar)
-      this.tsar = this.players[(curTsarIdx + 1) % this.players.length]
-    } else {
-      this.tsar = this.players[0]
-    }
-
-    const newBlackCard = this.blackCards.pop() ?? null
-    this.curBlackCard = newBlackCard
-      ? {
-        id: newBlackCard.id,
-        pick: newBlackCard.pick ?? 1,
-        draw: newBlackCard.draw ?? 1
-      }
-      : null
+    this.chooseNewTsar()
+    this.newBlackCard()
 
     return true
   }

@@ -50,6 +50,8 @@ export class Room {
   currentVoting: Voting | null
   votingTimeout: ReturnType<typeof setTimeout> | undefined
 
+  kickedPlayers: number[]
+
   constructor(
     public id: string,
     public creator: number,
@@ -67,6 +69,8 @@ export class Room {
 
     this.currentVoting = null
     this.votingTimeout = undefined
+
+    this.kickedPlayers = []
   }
 
   getTimeLimitSeconds() {
@@ -95,7 +99,10 @@ export class Room {
       }
     } else {
       // todo: connection before game start
-      if (this.game.players.length >= this.playersLimit) {
+      if (
+        this.game.players.length >= this.playersLimit ||
+        this.kickedPlayers.includes(user.id)
+      ) {
         return socket.disconnect()
       }
 
@@ -193,13 +200,18 @@ export class Room {
       if (this.currentVoting) return
 
       let validatedMeta: VotingMeta
+      const against: Player<PlayerMetadata>[] = []
 
       if (data.type === "end") {
         validatedMeta = { type: data.type }
       } else if (data.type === "kick") {
-        if (!this.game.players.some(p => p.metadata?.user.id === data.playerId))
-          return
+        const playerToKick = this.game.players.find(
+          p => p.metadata?.user.id === data.playerId
+        )
 
+        if (!playerToKick || this.game.players.length < 3) return
+
+        against.push(playerToKick)
         validatedMeta = { type: data.type, playerId: data.playerId }
       } else {
         return
@@ -208,7 +220,7 @@ export class Room {
       this.currentVoting = {
         meta: validatedMeta,
         for: [player],
-        against: [],
+        against,
         createdAt: Date.now(),
         createdBy: player.metadata?.user.name ?? ""
       }
@@ -317,7 +329,7 @@ export class Room {
     return leader
   }
 
-  sendPlayers() {
+  sendPlayers(kickedPlayer?: Player) {
     const leader = this.getLeader()
 
     const players = this.game.players.map(p => ({
@@ -331,7 +343,10 @@ export class Room {
       points: p.points
     }))
 
-    this.io.to(this.id).emit("players", { players })
+    this.io.to(this.id).emit("players", {
+      players,
+      kickedChoice: kickedPlayer?.choice
+    })
   }
 
   onMakeVerdict(
@@ -358,7 +373,7 @@ export class Room {
     const canContinue = this.game.newRound()
 
     if (canContinue) {
-      this.sendNewRound(winnerData, timedOut)
+      this.sendNewRound({ ...winnerData, randomlyPicked: timedOut })
     } else {
       const podium = this.game.end()
       this.sendGameEnd(podium)
@@ -378,8 +393,8 @@ export class Room {
   }
 
   async sendNewRound(
-    winnerData?: WinnerData<PlayerMetadata>,
-    winnerRandomlyPicked = false
+    winnerData?: WinnerData<PlayerMetadata> & { randomlyPicked: boolean },
+    roundRestart = false
   ) {
     const { game } = this
     if (!game.curBlackCard) throw new Error("No black card")
@@ -405,7 +420,7 @@ export class Room {
         blackCard: prevRoundBlack,
         winningCards,
         imWinner: false,
-        randomlyPicked: winnerRandomlyPicked
+        randomlyPicked: winnerData.randomlyPicked
       }
     }
 
@@ -424,7 +439,8 @@ export class Room {
         cards,
         tsar: player.isTsar,
         prevRound,
-        timeLimit: timeLimitSeconds
+        timeLimit: timeLimitSeconds,
+        roundRestart
       })
     }
 
@@ -565,9 +581,16 @@ export class Room {
 
           if (!kickedPlayer) break
 
+          const playerWasTsar = kickedPlayer.isTsar
+          this.kickedPlayers.push(kickedPlayerId)
           this.game.removePlayer(kickedPlayer)
           kickedPlayer.metadata?.socket.disconnect()
-          this.sendPlayers()
+
+          if (playerWasTsar) {
+            this.sendNewRound(undefined, true)
+          } else {
+            this.sendPlayers(kickedPlayer)
+          }
           break
         }
 

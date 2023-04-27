@@ -25,8 +25,25 @@ import PodiumModal from "./modals/PodiumModal.vue"
 
 const route = useRoute()
 
+function hashChoice(ch: number[]) {
+  return [...ch].sort((a, b) => a - b).join("-")
+}
+
 socket.on("players", data => {
   gameState.players = data.players
+
+  if (data.kickedChoice) {
+    const hashedKickedChoice = hashChoice(data.kickedChoice)
+    gameState.choices = gameState.choices.filter(
+      ch => hashChoice(ch.map(c => c.id)) !== hashedKickedChoice
+    )
+
+    if (gameState.stage === GameStage.TSAR_VERDICT)
+      notify({
+        type: "info",
+        text: "The player that was kicked has already submitted his choice so it was removed"
+      })
+  }
 })
 
 socket.on("new-round", data => {
@@ -39,12 +56,20 @@ socket.on("new-round", data => {
   gameState.blackCard = data.blackCard
   gameState.cards = data.cards
   gameState.submitted = false
+  gameState.pickedCards = []
   gameState.roundWinnerData = data.prevRound ?? null
 
   if (data.prevRound?.randomlyPicked) {
     notify({
       type: "info",
       text: "The winner was chosen randomly due to Tsar inactivity"
+    })
+  }
+
+  if (data.roundRestart) {
+    notify({
+      type: "info",
+      text: "The round was restarted due to disappearance of the Tsar"
     })
   }
 })
@@ -110,6 +135,7 @@ function onStart(data: StartData) {
 function onSubmit() {
   gameState.submitted = true
   socket.emit("submit", { submition: gameState.pickedCards.map(c => c.id) })
+  gameState.pickedCards = []
 }
 
 function onVerdict(choiceIdx: number) {

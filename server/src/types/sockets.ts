@@ -61,8 +61,10 @@ export type SyncData =
     })
 
 export interface ServerToClientSocketEvents {
-  players: (data: { players: ApiPlayer[] }) => void
-  "new-round": (data: NewRoundData & { prevRound?: PrevRound }) => void
+  players: (data: { players: ApiPlayer[]; kickedChoice?: number[] }) => void
+  "new-round": (
+    data: NewRoundData & { prevRound?: PrevRound; roundRestart?: boolean }
+  ) => void
   choices: (data: ChoicesData) => void
   sync: (data: SyncData) => void
   end: (data: { podium: PodiumEl[] }) => void
