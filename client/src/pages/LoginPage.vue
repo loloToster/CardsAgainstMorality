@@ -17,8 +17,8 @@ const CAPTCHA_SITEKEY = import.meta.env.VITE_CAPTCHA_SITEKEY
 const route = useRoute()
 
 function loginWith(strategy: string, query: Record<string, string> = {}) {
-  const room = route.query.room
-  if (room) query.returnTo = `/room/${room}`
+  const returnTo = route.query.returnTo
+  if (returnTo) query.returnTo = returnTo.toString()
 
   let queryString = Object.keys(query)
     .map(k => `${k}=${encodeURIComponent(query[k])}`)

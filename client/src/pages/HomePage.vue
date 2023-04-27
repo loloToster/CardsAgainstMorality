@@ -1,25 +1,8 @@
 <script setup lang="ts">
-import { useRouter } from "vue-router"
-
 import { TITLE } from "@/consts"
-import { user } from "@/contexts/user"
 
 import AppButton from "@/components/AppButton.vue"
 import PlayingCard from "@/components/PlayingCard.vue"
-
-const router = useRouter()
-
-async function onRoomCreate() {
-  if (!user.value && !user.fetching) {
-    router.push("/login")
-    return
-  }
-
-  const res = await fetch("/api/room")
-  const json = await res.json()
-
-  router.push("/room/" + json.roomId)
-}
 </script>
 
 <template>
@@ -44,14 +27,15 @@ async function onRoomCreate() {
         >
           I would like to ____.
         </PlayingCard>
-        <PlayingCard
-          @click="onRoomCreate"
-          class="home__landing__card home__landing__card--create"
-          pack=""
-          color="white"
-        >
-          Create a room.
-        </PlayingCard>
+        <RouterLink to="/room">
+          <PlayingCard
+            class="home__landing__card home__landing__card--create"
+            pack=""
+            color="white"
+          >
+            Create a room.
+          </PlayingCard>
+        </RouterLink>
         <PlayingCard
           pack=""
           color="white"

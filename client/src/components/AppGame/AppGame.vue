@@ -18,7 +18,7 @@ import {
   resetPlayerState
 } from "./contexts/gamestate"
 
-import AppLoader from "@/components/AppLoader.vue"
+import AppLoading from "@/components/AppLoading.vue"
 import GameView from "./GameView.vue"
 import GameSettings from "./GameSettings.vue"
 import PodiumModal from "./modals/PodiumModal.vue"
@@ -185,13 +185,12 @@ onUnmounted(() => {
     @close="gameState.podium = null"
     :podium="gameState.podium"
   />
-  <div
+
+  <AppLoading
     v-if="gameState.stage === GameStage.UNKNOWN || !socketState.connected"
-    class="connecting"
   >
-    <AppLoader class="connecting__loader" />
-    <span>Connecting to the game</span>
-  </div>
+    Connecting to the game
+  </AppLoading>
   <GameView
     v-else-if="gameState.stage !== GameStage.NOT_STARTED"
     @submit="onSubmit"
@@ -202,27 +201,4 @@ onUnmounted(() => {
   <GameSettings v-else :room-id="roomId.toString()" @start="onStart" />
 </template>
 
-<style scoped lang="scss">
-@use "@/styles/colors" as colors;
-
-.connecting {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: fit-content;
-  margin: auto;
-  margin-top: 20vh;
-  padding: 48px;
-  border: #c0c0c0 3px solid;
-  border-radius: 12px;
-
-  span {
-    margin-top: 30px;
-    font-size: 1.6rem;
-  }
-
-  &__loader {
-    --outline: #{colors.$main-bg};
-  }
-}
-</style>
+<style scoped lang="scss"></style>
