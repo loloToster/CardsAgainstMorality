@@ -1,5 +1,6 @@
 import dotenv from "dotenv"
-import express from "express"
+import express, { ErrorRequestHandler } from "express"
+import "express-async-errors"
 import { createServer as createHttpServer } from "http"
 import { Server as SocketIoServer } from "socket.io"
 import cookieSession from "cookie-session"
@@ -57,6 +58,12 @@ app.use(express.urlencoded({ extended: false }))
 loadRoutes(app, __dirname + "/routes")
 
 app.use(express.static(__dirname + "/../../client/dist"))
+
+app.use(((err, req, res, next) => {
+  logger.error(err?.message ?? err)
+  res.status(500).send()
+  next()
+}) as ErrorRequestHandler)
 
 db.preHttpServerStart().then(() => {
   server.listen(port, async () => {

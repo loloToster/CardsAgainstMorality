@@ -38,6 +38,20 @@ interface Voting {
   createdBy: string
 }
 
+const errWrapper = <T extends (...args: any[]) => any>(cb: T): T => {
+  return ((...args: Parameters<T>) => {
+    try {
+      const returnedVal = cb(...args)
+
+      if (!(returnedVal instanceof Promise)) return returnedVal
+
+      return returnedVal.catch(err => logger.error(err?.message ?? err))
+    } catch (err: any) {
+      logger.error(err?.message ?? err)
+    }
+  }) as T
+}
+
 export class Room {
   playersLimit: number
   timeLimit: number | null
@@ -81,7 +95,7 @@ export class Room {
     )
   }
 
-  newConnection(socket: SocketClient, user: User) {
+  async newConnection(socket: SocketClient, user: User) {
     const foundPlayer = this.game.players.find(
       p => p.metadata?.user.id === user.id
     )
@@ -116,7 +130,7 @@ export class Room {
 
     socket.join(this.id)
 
-    this.sendSyncData(player)
+    await this.sendSyncData(player)
     this.sendPlayers()
 
     socket.use(async ([ev, data], next) => {
@@ -132,161 +146,170 @@ export class Room {
       }
     })
 
-    socket.on("start", async settings => {
-      if (this.getLeader() !== player) return
+    socket.on(
+      "start",
+      errWrapper(async settings => {
+        if (this.getLeader() !== player) return
 
-      this.timeLimit =
-        settings.timeLimit === null ? null : settings.timeLimit * 1000
-      this.playersLimit = settings.playersLimit
-      this.scoreLimit = settings.scoreLimit
-      this.roundLimit = settings.roundLimit
+        this.timeLimit =
+          settings.timeLimit === null ? null : settings.timeLimit * 1000
+        this.playersLimit = settings.playersLimit
+        this.scoreLimit = settings.scoreLimit
+        this.roundLimit = settings.roundLimit
 
-      const whiteCards = await db.whiteCard.findMany({
-        where: { packId: { in: settings.packs } },
-        select: { id: true }
+        const whiteCards = await db.whiteCard.findMany({
+          where: { packId: { in: settings.packs } },
+          select: { id: true }
+        })
+
+        const blackCards = await db.blackCard.findMany({
+          where: { packId: { in: settings.packs } },
+          select: { id: true, pick: true }
+        })
+
+        try {
+          this.game.setCards(
+            whiteCards.map(c => c.id),
+            blackCards
+          )
+
+          this.game.start()
+
+          await this.sendNewRound()
+        } catch (err) {
+          logger.error(err)
+        }
       })
+    )
 
-      const blackCards = await db.blackCard.findMany({
-        where: { packId: { in: settings.packs } },
-        select: { id: true, pick: true }
-      })
-
-      try {
-        this.game.setCards(
-          whiteCards.map(c => c.id),
-          blackCards
-        )
-        this.game.start()
-
-        this.sendNewRound()
-      } catch (err) {
-        logger.error(err)
-      }
-    })
-
-    socket.on("submit", async ({ submition }) => {
-      try {
+    socket.on(
+      "submit",
+      errWrapper(async ({ submition }) => {
         player.choose(submition)
-      } catch (err) {
-        logger.error(err)
-        return
-      }
+        this.sendPlayers()
 
-      this.sendPlayers()
+        if (this.game.state !== GameState.TSAR_VERDICT) return
 
-      if (this.game.state !== GameState.TSAR_VERDICT) return
+        await this.sendChoices()
+      })
+    )
 
-      this.sendChoices()
-    })
+    socket.on(
+      "verdict",
+      errWrapper(async ({ verdict }) => {
+        await this.onMakeVerdict(player, verdict)
+      })
+    )
 
-    socket.on("verdict", ({ verdict }) => {
-      try {
-        this.onMakeVerdict(player, verdict)
-      } catch (err) {
-        logger.error(err)
-      }
-    })
+    socket.on(
+      "vote-start",
+      errWrapper(data => {
+        if (this.game.state === GameState.NOT_STARTED) return
 
-    socket.on("vote-start", data => {
-      if (this.game.state === GameState.NOT_STARTED) return
-
-      if (
-        this.currentVoting &&
-        Date.now() - this.currentVoting.createdAt > VOTING_TIME
-      ) {
-        this.currentVoting = null
-      }
-
-      if (this.currentVoting) return
-
-      let validatedMeta: VotingMeta
-      const against: Player<PlayerMetadata>[] = []
-
-      if (data.type === "end") {
-        validatedMeta = { type: data.type }
-      } else if (data.type === "kick") {
-        const playerToKick = this.game.players.find(
-          p => p.metadata?.user.id === data.playerId
-        )
-
-        if (!playerToKick || this.game.players.length < 3) return
-
-        against.push(playerToKick)
-        validatedMeta = { type: data.type, playerId: data.playerId }
-      } else {
-        return
-      }
-
-      this.currentVoting = {
-        meta: validatedMeta,
-        for: [player],
-        against,
-        createdAt: Date.now(),
-        createdBy: player.metadata?.user.name ?? ""
-      }
-
-      clearTimeout(this.votingTimeout)
-      this.votingTimeout = setTimeout(
-        this.onVotingTimeout.bind(this),
-        VOTING_TIME // todo: set with game settings
-      )
-
-      this.sendVoting()
-    })
-
-    socket.on("vote", data => {
-      if (this.game.state === GameState.NOT_STARTED) return
-
-      if (
-        this.currentVoting &&
-        Date.now() - this.currentVoting.createdAt > VOTING_TIME
-      ) {
-        this.currentVoting = null
-      }
-
-      if (
-        this.currentVoting === null ||
-        [...this.currentVoting.for, ...this.currentVoting.against].includes(
-          player
-        )
-      )
-        return
-
-      if (data) {
-        this.currentVoting.for.push(player)
-      } else {
-        this.currentVoting.against.push(player)
-      }
-
-      if (
-        this.currentVoting.for.length + this.currentVoting.against.length >=
-        this.game.players.filter(p => p.metadata?.connected).length
-      ) {
-        return this.resolveVoting()
-      }
-
-      this.sendVoting()
-    })
-
-    socket.on("disconnect", () => {
-      logger.info(
-        `Socket with user id: '${player.metadata?.user.id}' disconnected from room with id: '${this.id}'`
-      )
-
-      if (player.metadata) player.metadata.connected = false
-
-      if (this.game.players.every(p => !p.metadata?.connected)) {
-        this.onEmpty()
-      } else {
-        if (this.game.state === GameState.NOT_STARTED) {
-          this.game.removePlayer(player)
+        if (
+          this.currentVoting &&
+          Date.now() - this.currentVoting.createdAt > VOTING_TIME
+        ) {
+          this.currentVoting = null
         }
 
-        this.sendPlayers()
-      }
+        if (this.currentVoting) return
 
-      db.bumpAnonymousUser(user, false)
-    })
+        let validatedMeta: VotingMeta
+        const against: Player<PlayerMetadata>[] = []
+
+        if (data.type === "end") {
+          validatedMeta = { type: data.type }
+        } else if (data.type === "kick") {
+          const playerToKick = this.game.players.find(
+            p => p.metadata?.user.id === data.playerId
+          )
+
+          if (!playerToKick || this.game.players.length < 3) return
+
+          against.push(playerToKick)
+          validatedMeta = { type: data.type, playerId: data.playerId }
+        } else {
+          return
+        }
+
+        this.currentVoting = {
+          meta: validatedMeta,
+          for: [player],
+          against,
+          createdAt: Date.now(),
+          createdBy: player.metadata?.user.name ?? ""
+        }
+
+        clearTimeout(this.votingTimeout)
+        this.votingTimeout = setTimeout(
+          errWrapper(this.onVotingTimeout.bind(this)),
+          VOTING_TIME // todo: set with game settings
+        )
+
+        this.sendVoting()
+      })
+    )
+
+    socket.on(
+      "vote",
+      errWrapper(async data => {
+        if (this.game.state === GameState.NOT_STARTED) return
+
+        if (
+          this.currentVoting &&
+          Date.now() - this.currentVoting.createdAt > VOTING_TIME
+        ) {
+          this.currentVoting = null
+        }
+
+        if (
+          this.currentVoting === null ||
+          [...this.currentVoting.for, ...this.currentVoting.against].includes(
+            player
+          )
+        )
+          return
+
+        if (data) {
+          this.currentVoting.for.push(player)
+        } else {
+          this.currentVoting.against.push(player)
+        }
+
+        if (
+          this.currentVoting.for.length + this.currentVoting.against.length >=
+          this.game.players.filter(p => p.metadata?.connected).length
+        ) {
+          return await this.resolveVoting()
+        }
+
+        this.sendVoting()
+      })
+    )
+
+    socket.on(
+      "disconnect",
+      errWrapper(async () => {
+        logger.info(
+          `Socket with user id: '${player.metadata?.user.id}' disconnected from room with id: '${this.id}'`
+        )
+
+        if (player.metadata) player.metadata.connected = false
+
+        if (this.game.players.every(p => !p.metadata?.connected)) {
+          this.onEmpty()
+        } else {
+          if (this.game.state === GameState.NOT_STARTED) {
+            this.game.removePlayer(player)
+          }
+
+          this.sendPlayers()
+        }
+
+        await db.bumpAnonymousUser(user, false)
+      })
+    )
   }
 
   startTimeout(func: () => void) {
@@ -296,7 +319,7 @@ export class Room {
     if (this.timeLimit) {
       clearTimeout(this.timeLimitTimeout)
       this.timeLimitTimeout = setTimeout(
-        func.bind(this),
+        errWrapper(func.bind(this)),
         this.timeLimit + TIME_LIMIT_OFFSET
       )
     }
@@ -349,7 +372,7 @@ export class Room {
     })
   }
 
-  onMakeVerdict(
+  async onMakeVerdict(
     player: Player<PlayerMetadata>,
     verdict: number[],
     timedOut = false
@@ -373,17 +396,17 @@ export class Room {
     const canContinue = this.game.newRound()
 
     if (canContinue) {
-      this.sendNewRound({ ...winnerData, randomlyPicked: timedOut })
+      await this.sendNewRound({ ...winnerData, randomlyPicked: timedOut })
     } else {
       const podium = this.game.end()
       this.sendGameEnd(podium)
     }
   }
 
-  onVerdictTimeout() {
+  async onVerdictTimeout() {
     if (!this.game.tsar) return
 
-    this.onMakeVerdict(
+    await this.onMakeVerdict(
       this.game.tsar,
       randomElement(
         this.game.players.filter(p => !p.isTsar).map(p => p.choice)
@@ -447,7 +470,7 @@ export class Room {
     this.sendPlayers()
   }
 
-  onChoiceTimeout() {
+  async onChoiceTimeout() {
     if (!this.game.curBlackCard || this.game.state !== GameState.CHOOSING)
       return
 
@@ -465,7 +488,7 @@ export class Room {
       afkPlayers.push(player)
     }
 
-    this.sendChoices(afkPlayers)
+    await this.sendChoices(afkPlayers)
   }
 
   async sendChoices(afkPlayers?: Player<PlayerMetadata>[]) {
@@ -555,11 +578,11 @@ export class Room {
     })
   }
 
-  onVotingTimeout() {
-    if (this.currentVoting) this.resolveVoting()
+  async onVotingTimeout() {
+    if (this.currentVoting) await this.resolveVoting()
   }
 
-  resolveVoting() {
+  async resolveVoting() {
     clearTimeout(this.votingTimeout)
 
     if (
@@ -587,7 +610,7 @@ export class Room {
           kickedPlayer.metadata?.socket.disconnect()
 
           if (playerWasTsar) {
-            this.sendNewRound(undefined, true)
+            await this.sendNewRound(undefined, true)
           } else {
             this.sendPlayers(kickedPlayer)
           }
@@ -633,6 +656,7 @@ export class Room {
   cleanup() {
     this.game.players.forEach(p => p.metadata?.socket.disconnect())
     clearTimeout(this.timeLimitTimeout)
+    clearTimeout(this.votingTimeout)
   }
 }
 
@@ -642,31 +666,34 @@ export class Rooms {
   constructor(public io: SocketServer) {
     this.rooms = new Map()
 
-    this.io.on("connection", async socket => {
-      const userId = (socket.request as ExtendedReq).session?.passport?.user
-      if (!userId) return socket.disconnect()
+    this.io.on(
+      "connection",
+      errWrapper(async socket => {
+        const userId = (socket.request as ExtendedReq).session?.passport?.user
+        if (!userId) return socket.disconnect()
 
-      const user = await db.user.findUnique({ where: { id: userId } })
+        const user = await db.user.findUnique({ where: { id: userId } })
 
-      if (!user) return socket.disconnect()
+        if (!user) return socket.disconnect()
 
-      const { roomId } = socket.handshake.auth as { roomId?: string }
-      if (!roomId) return socket.disconnect()
-      const room = this.rooms.get(roomId)
-      if (!room) return socket.disconnect()
+        const { roomId } = socket.handshake.auth as { roomId?: string }
+        if (!roomId) return socket.disconnect()
+        const room = this.rooms.get(roomId)
+        if (!room) return socket.disconnect()
 
-      logger.info(
-        `User with id: '${user.id}' connected to room with id: '${roomId}'`
-      )
+        logger.info(
+          `User with id: '${user.id}' connected to room with id: '${roomId}'`
+        )
 
-      try {
-        await db.bumpAnonymousUser(user, true)
-      } catch (err) {
-        logger.error(err)
-      }
+        try {
+          await db.bumpAnonymousUser(user, true)
+        } catch (err) {
+          logger.error(err)
+        }
 
-      room.newConnection(socket, user)
-    })
+        await room.newConnection(socket, user)
+      })
+    )
   }
 
   createRoom(creatorId: number) {
