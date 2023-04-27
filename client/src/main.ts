@@ -9,6 +9,7 @@ import App from "./App.vue"
 import HomePage from "./pages/HomePage.vue"
 import LoginPage from "./pages/LoginPage.vue"
 import RoomPage from "./pages/RoomPage.vue"
+import NotFoundPage from "./pages/NotFoundPage.vue"
 
 import { TITLE } from "./consts"
 
@@ -22,7 +23,8 @@ const router = createRouter({
       name: "Login",
       meta: { hideHeader: true }
     },
-    { path: "/room/:id?", component: RoomPage, name: "Room" }
+    { path: "/room/:id?", component: RoomPage, name: "Room" },
+    { path: "/:pathMatch(.*)*", component: NotFoundPage, name: "404" }
   ]
 })
 
