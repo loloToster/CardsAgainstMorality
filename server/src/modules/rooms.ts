@@ -271,7 +271,7 @@ export class Room {
         )
           return
 
-        if (data) {
+        if (data.vote) {
           this.currentVoting.for.push(player)
         } else {
           this.currentVoting.against.push(player)
