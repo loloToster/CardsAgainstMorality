@@ -2,6 +2,7 @@ $xxs: 600px;
 $xs: 768px;
 $sm: 992px;
 $md: 1200px;
+$lg: 1600px;
 
 @mixin xxs {
   @media (max-width: $xxs) {
@@ -23,6 +24,12 @@ $md: 1200px;
 
 @mixin md {
   @media (max-width: $md) {
+    @content;
+  }
+}
+
+@mixin lg {
+  @media (max-width: $lg) {
     @content;
   }
 }
