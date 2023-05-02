@@ -26,7 +26,7 @@ const router = createRouter({
     },
     { path: "/room/:id?", component: RoomPage, name: "Room" },
     {
-      path: "/pack/:id?",
+      path: "/pack/:id",
       component: PackPage,
       name: "Card Pack"
     },

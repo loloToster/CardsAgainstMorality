@@ -1,19 +1,49 @@
 <script setup lang="ts">
 import { computed, reactive } from "vue"
+import { useRoute } from "vue-router"
 import Color from "color"
 
-import { ApiCardPack } from "@backend/types"
+import { ApiCardPack, ApiBlackCard, ApiWhiteCard } from "@backend/types"
 
+import AppLoading from "@/components/AppLoading.vue"
 import AppChip from "@/components/AppChip.vue"
 import PlayingCard from "@/components/PlayingCard.vue"
 import defaultPackIcon from "@/assets/black-card-icon.svg?raw"
 
-const pack = reactive<ApiCardPack>({
-  id: 0,
-  name: "Some Card Pack",
-  numOfBlacks: 30,
-  numOfWhites: 30
+const route = useRoute()
+
+const state = reactive<{
+  pack: ApiCardPack | null
+  loading: boolean
+  fetchedBlackCards: ApiBlackCard[]
+  fetchedWhiteCards: ApiWhiteCard[]
+}>({
+  pack: null,
+  loading: true,
+  fetchedBlackCards: [],
+  fetchedWhiteCards: []
 })
+
+// TODO: add pagination
+async function fetchCards(id: number) {
+  const res = await fetch(`/api/pack/${id}/cards`)
+  if (!res.ok) return
+
+  const { cards } = await res.json()
+  state.fetchedBlackCards = cards.blackCards
+  state.fetchedWhiteCards = cards.whiteCards
+}
+
+fetch("/api/pack/" + encodeURIComponent(route.params.id.toString())).then(
+  async res => {
+    if (res.ok) {
+      const { pack } = await res.json()
+      state.pack = pack
+      state.loading = false
+      fetchCards(pack.id)
+    }
+  }
+)
 
 const BG_ICONS = [
   {
@@ -49,23 +79,35 @@ const BG_ICONS = [
 ]
 
 const light = computed(() => {
-  return pack.color ? Color(pack.color).isLight() : true
+  return state.pack?.color ? Color(state.pack.color).isLight() : true
 })
 
 const longName = computed(() => {
-  return pack.name.length > 12
+  return (state.pack?.name.length || 0) > 12
 })
 
 const packIcon = computed(() => {
-  return pack.icon || defaultPackIcon
+  return state.pack?.icon || defaultPackIcon
+})
+
+const numOfBlackDummies = computed(() => {
+  if (!state.pack) return 0
+  return state.pack.numOfBlacks - state.fetchedBlackCards.length
+})
+
+const numOfWhiteDummies = computed(() => {
+  if (!state.pack) return 0
+  return state.pack.numOfWhites - state.fetchedWhiteCards.length
 })
 </script>
 
 <template>
+  <AppLoading v-if="state.loading">Loading the Pack</AppLoading>
   <div
+    v-else-if="state.pack"
     class="pack"
     :style="{
-      '--theme-color': pack.color ?? undefined
+      '--theme-color': state.pack.color ?? undefined
     }"
   >
     <div class="pack__top">
@@ -85,7 +127,9 @@ const packIcon = computed(() => {
       </div>
       <div class="pack__top__content">
         <div class="pack__image">
-          <div class="pack__image__name">{{ pack.name }}</div>
+          <div class="pack__image__name">
+            {{ state.pack.name }}
+          </div>
           <div v-html="packIcon" class="pack__image__icon"></div>
         </div>
         <div class="pack__meta" :class="{ 'pack__meta--light': !light }">
@@ -94,7 +138,7 @@ const packIcon = computed(() => {
             class="pack__meta__name"
             :class="{ 'pack__meta__name--small': longName }"
           >
-            {{ pack.name }}
+            {{ state.pack.name }}
           </h1>
           <div class="pack__meta__tags">
             <AppChip class="pack__meta__tag pack__meta__tag--bundle">
@@ -106,25 +150,47 @@ const packIcon = computed(() => {
           <div class="pack__meta__row">
             <div class="pack__meta__author">Cards Against Humanity</div>
             <div class="pack__meta__likes">100 likes</div>
-            <div v-if="pack.numOfBlacks" class="pack__meta__black">
-              {{ pack.numOfBlacks }} black cards
+            <div v-if="state.pack.numOfBlacks" class="pack__meta__black">
+              {{ state.pack.numOfBlacks }} black cards
             </div>
-            <div v-if="pack.numOfWhites" class="pack__meta__white">
-              {{ pack.numOfWhites }} white cards
+            <div v-if="state.pack.numOfWhites" class="pack__meta__white">
+              {{ state.pack.numOfWhites }} white cards
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="pack__cards">
-      <PlayingCard
-        v-for="i in 60"
-        class="pack__cards__card"
-        :pack="pack.name"
-        :key="i"
-      >
-        {{ i }}
-      </PlayingCard>
+    <div class="pack__cards-wrapper">
+      <div class="pack__cards pack__cards--black">
+        <div
+          class="pack__cards__dummy"
+          v-for="i in numOfBlackDummies"
+          :key="i"
+        ></div>
+        <PlayingCard
+          v-for="card in state.fetchedBlackCards"
+          class="pack__cards__card"
+          color="black"
+          :text="card.text"
+          :pick="card.pick"
+          :pack="state.pack.name"
+          :key="card.id"
+        />
+      </div>
+      <div class="pack__cards pack__cards--white">
+        <div
+          class="pack__cards__dummy"
+          v-for="i in numOfWhiteDummies"
+          :key="i"
+        ></div>
+        <PlayingCard
+          v-for="card in state.fetchedWhiteCards"
+          class="pack__cards__card"
+          :text="card.text"
+          :pack="state.pack.name"
+          :key="card.id"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -303,6 +369,10 @@ const packIcon = computed(() => {
     }
   }
 
+  &__cards-wrapper {
+    padding: 14vh 0;
+  }
+
   &__cards {
     $gap: 12px;
 
@@ -331,15 +401,26 @@ const packIcon = computed(() => {
     gap: $gap;
     width: var(--width);
     margin: auto;
-    padding: 15vh 0;
 
     --size-of-item: calc(
       (var(--width) / var(--items-in-row)) -
         (#{$gap} * (var(--items-in-row) - 1) / var(--items-in-row))
     );
 
+    &--black {
+      margin-bottom: 5vh;
+    }
+
     &__card {
       --w: var(--size-of-item);
+    }
+
+    &__dummy {
+      width: var(--size-of-item);
+      aspect-ratio: 12/ 17;
+      background-color: colors.$light-surface;
+      // todo: move dummies to Card Component
+      border-radius: calc(var(--size-of-item) * 0.049);
     }
   }
 }

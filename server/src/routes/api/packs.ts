@@ -1,30 +1,21 @@
 import { Router } from "express"
-import { CardPack } from "@prisma/client"
-
 import db from "../../modules/db"
-
 import { ApiCardPack } from "../../types"
-
 import { getRandomInt } from "../../utils/random"
 
 const router = Router()
 
-interface CardPackWithNumOfCards extends CardPack {
-  num_of_whites: bigint
-  num_of_blacks: bigint
-}
-
 router.get("/", async (req, res) => {
-  const packs = await db.$queryRaw<CardPackWithNumOfCards[]>`
-    SELECT 
-      card_packs.*,
-      COUNT(DISTINCT white_cards.id) as num_of_whites,
-      COUNT(DISTINCT black_cards.id) as num_of_blacks
-    FROM card_packs
-      LEFT JOIN white_cards ON card_packs.id=white_cards.pack_id 
-      LEFT JOIN black_cards ON card_packs.id=black_cards.pack_id 
-    GROUP BY card_packs.id;
-  `
+  const packs = await db.cardPack.findMany({
+    include: {
+      _count: {
+        select: {
+          blackCards: true,
+          whiteCards: true
+        }
+      }
+    }
+  })
 
   res.json({
     packs: packs.map(
@@ -34,8 +25,8 @@ router.get("/", async (req, res) => {
           name: p.name,
           color: p.color,
           icon: p.icon,
-          numOfBlacks: Number(p.num_of_blacks),
-          numOfWhites: Number(p.num_of_whites)
+          numOfBlacks: p._count.blackCards,
+          numOfWhites: p._count.whiteCards
         } satisfies ApiCardPack)
     )
   })
