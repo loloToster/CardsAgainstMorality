@@ -63,6 +63,7 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
 </template>
 
 <style scoped lang="scss">
+@use "@/styles/variables" as vars;
 @use "@/styles/colors" as colors;
 
 .header {
@@ -70,6 +71,7 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
   top: 0;
   background-color: colors.$main-bg;
   border-bottom: 1px solid colors.$darkgray;
+  height: vars.$header-height;
   z-index: 1;
 
   &__content {
@@ -79,6 +81,7 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
     max-width: 1200px;
     padding: 16px 0;
     margin: auto;
+    height: 100%;
   }
 
   &__link {

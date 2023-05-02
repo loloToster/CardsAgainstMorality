@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, reactive } from "vue"
+import { computed, reactive, ref } from "vue"
 import { useRoute } from "vue-router"
+import { useScroll } from "@vueuse/core"
 import Color from "color"
 
 import { ApiCardPack, ApiBlackCard, ApiWhiteCard } from "@backend/types"
@@ -8,7 +9,10 @@ import { ApiCardPack, ApiBlackCard, ApiWhiteCard } from "@backend/types"
 import AppLoading from "@/components/AppLoading.vue"
 import AppChip from "@/components/AppChip.vue"
 import PlayingCard from "@/components/PlayingCard.vue"
+
 import defaultPackIcon from "@/assets/black-card-icon.svg?raw"
+import BlackCardIcon from "@/assets/black-card-icon.svg?component"
+import WhiteCardIcon from "@/assets/white-card-icon.svg?component"
 
 const route = useRoute()
 
@@ -17,11 +21,13 @@ const state = reactive<{
   loading: boolean
   fetchedBlackCards: ApiBlackCard[]
   fetchedWhiteCards: ApiWhiteCard[]
+  showMiniTop: boolean
 }>({
   pack: null,
   loading: true,
   fetchedBlackCards: [],
-  fetchedWhiteCards: []
+  fetchedWhiteCards: [],
+  showMiniTop: false
 })
 
 // TODO: add pagination
@@ -78,6 +84,16 @@ const BG_ICONS = [
   }
 ]
 
+const top = ref<HTMLElement>()
+
+useScroll(window, {
+  onScroll() {
+    if (!top.value) return
+    const { y, height } = top.value.getBoundingClientRect()
+    state.showMiniTop = y + height < 0
+  }
+})
+
 const light = computed(() => {
   return state.pack?.color ? Color(state.pack.color).isLight() : true
 })
@@ -106,17 +122,23 @@ const numOfWhiteDummies = computed(() => {
   <div
     v-else-if="state.pack"
     class="pack"
+    :class="{ 'pack--light': light }"
     :style="{
       '--theme-color': state.pack.color ?? undefined
     }"
   >
-    <div class="pack__top">
+    <div class="pack__mini-top" :class="{ active: state.showMiniTop }">
+      <div class="pack__mini-top__content">
+        <div v-html="packIcon" class="pack__mini-top__icon"></div>
+        <div class="pack__mini-top__name">{{ state.pack.name }}</div>
+      </div>
+    </div>
+    <div class="pack__top" ref="top">
       <div class="pack__top__icons">
         <div
           v-for="icon in BG_ICONS"
           v-html="packIcon"
           class="pack__top__icon"
-          :class="{ 'pack__top__icon--light': !light }"
           :style="{
             '--top': icon.top,
             '--left': icon.left,
@@ -132,7 +154,7 @@ const numOfWhiteDummies = computed(() => {
           </div>
           <div v-html="packIcon" class="pack__image__icon"></div>
         </div>
-        <div class="pack__meta" :class="{ 'pack__meta--light': !light }">
+        <div class="pack__meta">
           <div class="pack__meta__type">Card Pack</div>
           <h1
             class="pack__meta__name"
@@ -161,7 +183,7 @@ const numOfWhiteDummies = computed(() => {
       </div>
     </div>
     <div class="pack__cards-wrapper">
-      <div class="pack__cards pack__cards--black">
+      <div id="black-cards" class="pack__cards pack__cards--black">
         <div
           class="pack__cards__dummy"
           v-for="i in numOfBlackDummies"
@@ -177,7 +199,7 @@ const numOfWhiteDummies = computed(() => {
           :key="card.id"
         />
       </div>
-      <div class="pack__cards pack__cards--white">
+      <div id="white-cards" class="pack__cards pack__cards--white">
         <div
           class="pack__cards__dummy"
           v-for="i in numOfWhiteDummies"
@@ -191,11 +213,28 @@ const numOfWhiteDummies = computed(() => {
           :key="card.id"
         />
       </div>
+      <div class="pack__goto-wrapper">
+        <a
+          class="pack__goto pack__goto--black"
+          href="#black-cards"
+          title="Scroll to Black Cards"
+        >
+          <WhiteCardIcon />
+        </a>
+        <a
+          class="pack__goto pack__goto--white"
+          href="#white-cards"
+          title="Scroll to White Cards"
+        >
+          <BlackCardIcon />
+        </a>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
+@use "@/styles/variables" as vars;
 @use "@/styles/mixins" as mixins;
 @use "@/styles/colors" as colors;
 
@@ -204,6 +243,67 @@ const numOfWhiteDummies = computed(() => {
   --r: 255;
   --g: 255;
   --b: 255;
+
+  --bg-icon-color: white;
+  --meta-content-color: white;
+
+  &--light {
+    --bg-icon-color: black;
+    --meta-content-color: #202020;
+  }
+
+  $mini-top-height: 30px;
+
+  &__mini-top {
+    position: fixed;
+    top: vars.$header-height;
+    left: 0;
+    z-index: 1;
+    height: 0;
+    width: 100%;
+    overflow: hidden;
+    background-color: var(--theme-color);
+    transition: height 50ms ease-out;
+
+    &.active {
+      height: $mini-top-height;
+      transition: height 200ms ease-out;
+    }
+
+    &__content {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 90%;
+      max-width: 1100px;
+      height: 100%;
+      margin: auto;
+    }
+
+    &__icon {
+      height: 20px;
+      width: 20px;
+
+      :deep(svg) {
+        width: 100%;
+        height: 100%;
+
+        *[fill="white"] {
+          fill: var(--theme-color);
+        }
+
+        *[fill="black"] {
+          fill: var(--meta-content-color);
+        }
+      }
+    }
+
+    &__name {
+      color: var(--meta-content-color);
+      font-weight: bold;
+      font-size: 0.875rem;
+    }
+  }
 
   &__top {
     position: relative;
@@ -219,10 +319,8 @@ const numOfWhiteDummies = computed(() => {
       height: 20px;
       transform: rotate(calc(var(--rotate) * 1deg));
 
-      --color: black;
-
-      &--light {
-        --color: white;
+      @include mixins.sm {
+        display: none;
       }
 
       :deep(svg) {
@@ -234,7 +332,7 @@ const numOfWhiteDummies = computed(() => {
         }
 
         *[fill="black"] {
-          fill: var(--color);
+          fill: var(--bg-icon-color);
         }
       }
     }
@@ -258,6 +356,10 @@ const numOfWhiteDummies = computed(() => {
     rotate: -3deg;
     padding: 16px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+
+    @include mixins.sm {
+      display: none;
+    }
 
     @keyframes wiggle {
       0%,
@@ -306,13 +408,7 @@ const numOfWhiteDummies = computed(() => {
   }
 
   &__meta {
-    --color: #202020;
-
-    &--light {
-      --color: white;
-    }
-
-    color: var(--color);
+    color: var(--meta-content-color);
     align-self: flex-end;
     flex-grow: 1;
     margin-bottom: 24px;
@@ -338,7 +434,7 @@ const numOfWhiteDummies = computed(() => {
     }
 
     &__tag {
-      --chip-bg: var(--color);
+      --chip-bg: var(--meta-content-color);
       padding: 0 8px;
       height: 26px;
 
@@ -369,9 +465,7 @@ const numOfWhiteDummies = computed(() => {
     }
   }
 
-  &__cards-wrapper {
-    padding: 14vh 0;
-  }
+  $cards-gap: 12px;
 
   &__cards {
     $gap: 12px;
@@ -392,23 +486,33 @@ const numOfWhiteDummies = computed(() => {
       --items-in-row: 2;
     }
 
-    @include mixins.xxs {
-      --items-in-row: 1;
-    }
-
     display: flex;
     flex-wrap: wrap;
     gap: $gap;
     width: var(--width);
     margin: auto;
+    scroll-margin-top: calc(
+      vars.$header-height + $mini-top-height + $cards-gap
+    );
 
     --size-of-item: calc(
       (var(--width) / var(--items-in-row)) -
         (#{$gap} * (var(--items-in-row) - 1) / var(--items-in-row))
     );
 
+    $big-card-gap: $cards-gap * 4;
+
     &--black {
-      margin-bottom: 5vh;
+      margin-top: 130px;
+      margin-bottom: $big-card-gap;
+
+      @include mixins.sm {
+        margin-top: $big-card-gap;
+      }
+    }
+
+    &--white {
+      margin-bottom: $big-card-gap;
     }
 
     &__card {
@@ -421,6 +525,46 @@ const numOfWhiteDummies = computed(() => {
       background-color: colors.$light-surface;
       // todo: move dummies to Card Component
       border-radius: calc(var(--size-of-item) * 0.049);
+    }
+  }
+
+  &__goto-wrapper {
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+    display: flex;
+    gap: 8px;
+  }
+
+  &__goto {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    transition: scale 100ms;
+    outline: solid 2px colors.$main-bg;
+
+    &:hover {
+      scale: 1.1;
+    }
+
+    &:active {
+      scale: 0.95;
+    }
+
+    &--black {
+      background-color: black;
+    }
+
+    &--white {
+      background-color: white;
+    }
+
+    svg {
+      width: 50%;
+      height: 50%;
     }
   }
 }
