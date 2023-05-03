@@ -92,7 +92,7 @@
     },
     {
       "name": "Weed Pack",
-      "icon": "<svg viewBox=\"0 0 80 80\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<g clip-path=\"url(#clip0)\">\n<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M64.0438 48.1528C67.2824 48.4167 72.8724 49.0764 77.8412 50.7917C80.4143 51.6713 80.7692 55.0579 78.4623 56.5973C75.4011 58.4006 70.2549 60.4237 61.9587 61.1714C61.1158 61.2154 60.7165 62.183 61.2045 62.8427C62.5354 64.558 64.5762 67.7687 65.5966 71.947C66.0403 73.6623 64.5762 75.2457 62.8016 75.1137C58.3652 74.7619 50.424 73.0466 44.4348 66.0095C44.3904 65.9215 44.3017 65.8335 44.213 65.7896L43.37 64.8659C43.1208 64.5929 42.8367 64.3544 42.5269 64.1539V78.1923C42.5269 78.808 42.0389 79.2918 41.4178 79.2918H38.5784C37.9573 79.2918 37.4693 78.808 37.4693 78.1923V64.1267C37.1416 64.3327 36.8429 64.5804 36.5823 64.8659L34.0979 67.5488C28.3305 73.2665 21.3209 74.7179 17.2394 75.0698C15.4648 75.2457 14.0008 73.6184 14.4444 71.9031C15.4648 67.7248 17.5056 64.558 18.8365 62.7988C19.3245 62.139 18.9253 61.2154 18.0823 61.1275C9.74183 60.3798 4.55118 58.3126 1.49004 56.4653C-0.772544 55.1019 -0.373254 51.7593 2.11115 50.8796C7.07997 49.1643 12.6699 48.4606 15.9528 48.1967C16.8845 48.1088 17.2838 46.9212 16.5296 46.3055C8.23344 39.4443 3.3977 32.0113 0.868928 27.1293C-0.373276 24.7103 1.80057 21.9394 4.46243 22.5112C14.3557 24.6223 22.8737 29.9442 26.3341 32.3192C27.0439 32.803 27.9756 32.3192 28.02 31.4835C28.2418 26.0298 29.5284 10.812 37.3365 1.1799C38.6674 -0.491418 41.2406 -0.359472 42.4384 1.39981C45.4552 5.79802 50.3796 15.2981 51.888 31.5715C51.9767 32.4072 52.9084 32.847 53.5739 32.3632C56.9456 30.0321 65.5523 24.6663 75.4899 22.5112C78.1961 21.9394 80.37 24.7543 79.0834 27.1733C76.5546 32.0553 71.7189 39.4443 63.4671 46.2615C62.7129 46.8773 63.0678 48.0648 64.0438 48.1528Z\" fill=\"white\"></path>\n<path d=\"M40.5304 68.912L42.5268 71.0671V78.1921C42.5268 78.8079 42.0388 79.2917 41.4177 79.2917H38.5783C37.9572 79.2917 37.4692 78.8079 37.4692 78.1921V71.0231L39.4213 68.912C39.7318 68.6041 40.2198 68.6041 40.5304 68.912Z\" fill=\"black\"></path>\n<path d=\"M77.8412 50.7917C72.8724 49.0764 67.2824 48.4167 64.0438 48.1528C63.0678 48.0648 62.7129 46.8773 63.4671 46.2615C71.7189 39.4443 76.5546 32.0553 79.0834 27.1733C80.37 24.7543 78.1961 21.9394 75.4899 22.5112C65.5523 24.6663 56.9456 30.0321 53.5739 32.3632C52.9084 32.847 51.9767 32.4072 51.888 31.5715C50.3796 15.2981 45.4552 5.79802 42.4384 1.39981C41.2406 -0.359472 38.6674 -0.491418 37.3365 1.1799C29.5284 10.812 28.2418 26.0298 28.02 31.4835C27.9756 32.3192 27.0439 32.803 26.3341 32.3192C22.8737 29.9442 14.3557 24.6223 4.46243 22.5112C1.80057 21.9394 -0.373276 24.7103 0.868928 27.1293C3.3977 32.0113 8.23344 39.4443 16.5296 46.3055C17.2838 46.9212 16.8845 48.1088 15.9528 48.1967C12.6699 48.4606 7.07997 49.1643 2.11115 50.8796C-0.373254 51.7593 -0.772544 55.1019 1.49004 56.4653C4.55118 58.3126 9.74183 60.3798 18.0823 61.1275C18.9253 61.2154 19.3245 62.139 18.8365 62.7988C17.5056 64.558 15.4648 67.7248 14.4444 71.9031C14.0008 73.6184 15.4648 75.2457 17.2394 75.0698C21.3209 74.7179 28.3305 73.2665 34.0979 67.5488L36.5823 64.8659C37.4252 63.9423 38.6674 63.4145 39.9984 63.4145C41.2849 63.4145 42.5271 63.9423 43.37 64.8659L44.213 65.7896C44.3017 65.8335 44.3904 65.9215 44.4348 66.0095C50.424 73.0466 58.3652 74.7619 62.8016 75.1137C64.5762 75.2457 66.0402 73.6623 65.5966 71.947C64.5762 67.7687 62.5354 64.558 61.2045 62.8427C60.7165 62.183 61.1158 61.2154 61.9587 61.1714C70.2549 60.4237 75.4011 58.4006 78.4623 56.5973C80.7692 55.0579 80.4143 51.6713 77.8412 50.7917ZM29.1291 40.9837C29.1291 38.8725 30.8593 37.1572 32.9888 37.1572C35.1183 37.1572 36.8484 38.8725 36.8484 40.9837C36.8484 43.0948 35.1183 44.8101 32.9888 44.8101C30.8593 44.8101 29.1291 43.0948 29.1291 40.9837ZM49.1818 53.4746C47.3628 56.8172 43.8581 58.8843 40.0427 58.8843C36.183 58.8843 32.6782 56.7732 30.8593 53.4306C30.2382 52.2431 30.6818 50.7917 31.8353 50.1759C33.0331 49.5602 34.4972 50 35.1183 51.1435C36.0943 52.9468 37.9576 54.0463 39.9984 54.0463C42.0391 54.0463 43.9024 52.9468 44.8784 51.1875C45.4995 50 47.0079 49.6041 48.2058 50.2199C49.3593 50.8356 49.8029 52.331 49.1818 53.4746ZM47.0079 44.8101C44.8784 44.8101 43.1482 43.0948 43.1482 40.9837C43.1482 38.8725 44.8784 37.1572 47.0079 37.1572C49.1374 37.1572 50.8676 38.8725 50.8676 40.9837C50.8676 43.0948 49.1374 44.8101 47.0079 44.8101Z\" fill=\"black\"></path>\n</g>\n<defs>\n<clipPath id=\"clip0\">\n<rect  height=\"79.292\" fill=\"black\"></rect>\n</clipPath>\n</defs>\n</svg>",
+      "icon": "<svg viewBox=\"0 0 80 80\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M64.0438 48.1528C67.2824 48.4167 72.8724 49.0764 77.8412 50.7917C80.4143 51.6713 80.7692 55.0579 78.4623 56.5973C75.4011 58.4006 70.2549 60.4237 61.9587 61.1714C61.1158 61.2154 60.7165 62.183 61.2045 62.8427C62.5354 64.558 64.5762 67.7687 65.5966 71.947C66.0403 73.6623 64.5762 75.2457 62.8016 75.1137C58.3652 74.7619 50.424 73.0466 44.4348 66.0095C44.3904 65.9215 44.3017 65.8335 44.213 65.7896L43.37 64.8659C43.1208 64.5929 42.8367 64.3544 42.5269 64.1539V78.1923C42.5269 78.808 42.0389 79.2918 41.4178 79.2918H38.5784C37.9573 79.2918 37.4693 78.808 37.4693 78.1923V64.1267C37.1416 64.3327 36.8429 64.5804 36.5823 64.8659L34.0979 67.5488C28.3305 73.2665 21.3209 74.7179 17.2394 75.0698C15.4648 75.2457 14.0008 73.6184 14.4444 71.9031C15.4648 67.7248 17.5056 64.558 18.8365 62.7988C19.3245 62.139 18.9253 61.2154 18.0823 61.1275C9.74183 60.3798 4.55118 58.3126 1.49004 56.4653C-0.772544 55.1019 -0.373254 51.7593 2.11115 50.8796C7.07997 49.1643 12.6699 48.4606 15.9528 48.1967C16.8845 48.1088 17.2838 46.9212 16.5296 46.3055C8.23344 39.4443 3.3977 32.0113 0.868928 27.1293C-0.373276 24.7103 1.80057 21.9394 4.46243 22.5112C14.3557 24.6223 22.8737 29.9442 26.3341 32.3192C27.0439 32.803 27.9756 32.3192 28.02 31.4835C28.2418 26.0298 29.5284 10.812 37.3365 1.1799C38.6674 -0.491418 41.2406 -0.359472 42.4384 1.39981C45.4552 5.79802 50.3796 15.2981 51.888 31.5715C51.9767 32.4072 52.9084 32.847 53.5739 32.3632C56.9456 30.0321 65.5523 24.6663 75.4899 22.5112C78.1961 21.9394 80.37 24.7543 79.0834 27.1733C76.5546 32.0553 71.7189 39.4443 63.4671 46.2615C62.7129 46.8773 63.0678 48.0648 64.0438 48.1528Z\" fill=\"white\"></path>\n<path d=\"M40.5304 68.912L42.5268 71.0671V78.1921C42.5268 78.8079 42.0388 79.2917 41.4177 79.2917H38.5783C37.9572 79.2917 37.4692 78.8079 37.4692 78.1921V71.0231L39.4213 68.912C39.7318 68.6041 40.2198 68.6041 40.5304 68.912Z\" fill=\"black\"></path>\n<path d=\"M77.8412 50.7917C72.8724 49.0764 67.2824 48.4167 64.0438 48.1528C63.0678 48.0648 62.7129 46.8773 63.4671 46.2615C71.7189 39.4443 76.5546 32.0553 79.0834 27.1733C80.37 24.7543 78.1961 21.9394 75.4899 22.5112C65.5523 24.6663 56.9456 30.0321 53.5739 32.3632C52.9084 32.847 51.9767 32.4072 51.888 31.5715C50.3796 15.2981 45.4552 5.79802 42.4384 1.39981C41.2406 -0.359472 38.6674 -0.491418 37.3365 1.1799C29.5284 10.812 28.2418 26.0298 28.02 31.4835C27.9756 32.3192 27.0439 32.803 26.3341 32.3192C22.8737 29.9442 14.3557 24.6223 4.46243 22.5112C1.80057 21.9394 -0.373276 24.7103 0.868928 27.1293C3.3977 32.0113 8.23344 39.4443 16.5296 46.3055C17.2838 46.9212 16.8845 48.1088 15.9528 48.1967C12.6699 48.4606 7.07997 49.1643 2.11115 50.8796C-0.373254 51.7593 -0.772544 55.1019 1.49004 56.4653C4.55118 58.3126 9.74183 60.3798 18.0823 61.1275C18.9253 61.2154 19.3245 62.139 18.8365 62.7988C17.5056 64.558 15.4648 67.7248 14.4444 71.9031C14.0008 73.6184 15.4648 75.2457 17.2394 75.0698C21.3209 74.7179 28.3305 73.2665 34.0979 67.5488L36.5823 64.8659C37.4252 63.9423 38.6674 63.4145 39.9984 63.4145C41.2849 63.4145 42.5271 63.9423 43.37 64.8659L44.213 65.7896C44.3017 65.8335 44.3904 65.9215 44.4348 66.0095C50.424 73.0466 58.3652 74.7619 62.8016 75.1137C64.5762 75.2457 66.0402 73.6623 65.5966 71.947C64.5762 67.7687 62.5354 64.558 61.2045 62.8427C60.7165 62.183 61.1158 61.2154 61.9587 61.1714C70.2549 60.4237 75.4011 58.4006 78.4623 56.5973C80.7692 55.0579 80.4143 51.6713 77.8412 50.7917ZM29.1291 40.9837C29.1291 38.8725 30.8593 37.1572 32.9888 37.1572C35.1183 37.1572 36.8484 38.8725 36.8484 40.9837C36.8484 43.0948 35.1183 44.8101 32.9888 44.8101C30.8593 44.8101 29.1291 43.0948 29.1291 40.9837ZM49.1818 53.4746C47.3628 56.8172 43.8581 58.8843 40.0427 58.8843C36.183 58.8843 32.6782 56.7732 30.8593 53.4306C30.2382 52.2431 30.6818 50.7917 31.8353 50.1759C33.0331 49.5602 34.4972 50 35.1183 51.1435C36.0943 52.9468 37.9576 54.0463 39.9984 54.0463C42.0391 54.0463 43.9024 52.9468 44.8784 51.1875C45.4995 50 47.0079 49.6041 48.2058 50.2199C49.3593 50.8356 49.8029 52.331 49.1818 53.4746ZM47.0079 44.8101C44.8784 44.8101 43.1482 43.0948 43.1482 40.9837C43.1482 38.8725 44.8784 37.1572 47.0079 37.1572C49.1374 37.1572 50.8676 38.8725 50.8676 40.9837C50.8676 43.0948 49.1374 44.8101 47.0079 44.8101Z\" fill=\"black\"></path></svg>",
       "color": "#1CD154",
       "id": 17
     },
@@ -458,7 +458,7 @@
       "pack": 0
     },
     {
-      "text": "Do teatr\u00f3w wchodzi musical o",
+      "text": "Do teatr\u00f3w wchodzi musical o <span class='pick'>____</span>.",
       "pack": 0
     },
     {
@@ -619,14 +619,15 @@
     },
     {
       "text": "Stw\u00f3rz Haiku.",
-      "pack": 0
+      "pack": 0,
+      "pick": 3
     },
     {
       "text": "W swoim nowym albumie w\u0142asnej produkcji, Tede rapuje na d\u017awi\u0119ki <span class='pick'>____</span>.",
       "pack": 0
     },
     {
-      "text": "W przysz\u0142ym sezonie na Szko\u0142y Przetrwania, Bear Grylls musi prze\u017cy\u0107 w g\u0142\u0119bokiej Amazonii tylko z <span class='pick'>____</span>  i jego rozumem.",
+      "text": "W przysz\u0142ym sezonie na Szko\u0142y Przetrwania, Bear Grylls musi prze\u017cy\u0107 w g\u0142\u0119bokiej Amazonii tylko z <span class='pick'>____</span> i jego rozumem.",
       "pack": 0
     },
     {
@@ -638,7 +639,7 @@
       "pack": 0
     },
     {
-      "text": "W odleg\u0142ej przysz\u0142o\u015bci, historycy zgodz\u0105 si\u0119, \u017ce <span class='pick'>____</span>  to pocz\u0105tek upadku Ameryki.",
+      "text": "W odleg\u0142ej przysz\u0142o\u015bci, historycy zgodz\u0105 si\u0119, \u017ce <span class='pick'>____</span> to pocz\u0105tek upadku Ameryki.",
       "pack": 0
     },
     {
@@ -646,7 +647,7 @@
       "pack": 0
     },
     {
-      "text": "Socjalistyczne rz\u0105dy Skandynawii zadeklarowa\u0142y, \u017ce dost\u0119p do <span class='pick'>____</span>  jest podstawowym prawem cz\u0142owieka.",
+      "text": "Socjalistyczne rz\u0105dy Skandynawii zadeklarowa\u0142y, \u017ce dost\u0119p do <span class='pick'>____</span> jest podstawowym prawem cz\u0142owieka.",
       "pack": 0
     },
     {
@@ -662,11 +663,11 @@
       "pack": 0
     },
     {
-      "text": "Dowiedzia\u0142em si\u0119 na w\u0142asnej sk\u00f3rze, \u017ce <span class='pick'>____</span>  nie pocieszy przyjaciela w \u017ca\u0142obie.",
+      "text": "Dowiedzia\u0142em si\u0119 na w\u0142asnej sk\u00f3rze, \u017ce <span class='pick'>____</span> nie pocieszy przyjaciela w \u017ca\u0142obie.",
       "pack": 0
     },
     {
-      "text": "W ci\u0119\u017ckiej sytuacji <span class='pick'>____</span>  mo\u017ce by\u0107 odpowiednim zamiennikiem dla <span class='pick'>____</span>.",
+      "text": "W ci\u0119\u017ckiej sytuacji <span class='pick'>____</span> mo\u017ce by\u0107 odpowiednim zamiennikiem dla <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 2
     },
@@ -675,7 +676,7 @@
       "pack": 0
     },
     {
-      "text": "Mi\u0119dzynarodowy Trybuna\u0142 uzna\u0142 <span class='pick'>____</span>  za winnego <span class='pick'>____</span>.",
+      "text": "Mi\u0119dzynarodowy Trybuna\u0142 uzna\u0142 <span class='pick'>____</span> za winnego <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 2
     },
@@ -684,7 +685,7 @@
       "pack": 0
     },
     {
-      "text": "Szanowni Pa\u0144stwo, z przykro\u015bci\u0105 informujemy, \u017ce urz\u0105d <span class='pick'>____</span>  odrzuci\u0142 Wasz\u0105 pro\u015bb\u0119 o <span class='pick'>____</span>.",
+      "text": "Szanowni Pa\u0144stwo, z przykro\u015bci\u0105 informujemy, \u017ce urz\u0105d <span class='pick'>____</span> odrzuci\u0142 Wasz\u0105 pro\u015bb\u0119 o <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 2
     },
@@ -697,7 +698,7 @@
       "pack": 0
     },
     {
-      "text": "Nowy, zajebisty, trzy godzinny film Michaela Baya stawia <span class='pick'>____</span>  do walki przeciw <span class='pick'>____</span>.",
+      "text": "Nowy, zajebisty, trzy godzinny film Michaela Baya stawia <span class='pick'>____</span> do walki przeciw <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 2
     },
@@ -718,12 +719,12 @@
       "pack": 0
     },
     {
-      "text": "Przed pojawieniem si\u0119 <span class='pick'>____</span>  wszytko co mieli\u015bmy to <span class='pick'>____</span>.",
+      "text": "Przed pojawieniem si\u0119 <span class='pick'>____</span> wszystko co mieli\u015bmy to <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 2
     },
     {
-      "text": "Zanim wystartuj\u0119 w wyborach,  musz\u0119 zniszczy\u0107 wszystkie dowody mojego zaanga\u017cowania w <span class='pick'>____</span>.",
+      "text": "Zanim wystartuj\u0119 w wyborach, musz\u0119 zniszczy\u0107 wszystkie dowody mojego zaanga\u017cowania w <span class='pick'>____</span>.",
       "pack": 0
     },
     {
@@ -743,7 +744,7 @@
       "pack": 0
     },
     {
-      "text": "Dzisiaj w Faktach: Czego nie wiesz o <span class='pick'>____</span>  a mog\u0142o by ci\u0119 zabi\u0107.",
+      "text": "Dzisiaj w Faktach: Czego nie wiesz o <span class='pick'>____</span> a mog\u0142o by ci\u0119 zabi\u0107.",
       "pack": 0
     },
     {
@@ -755,12 +756,12 @@
       "pack": 0
     },
     {
-      "text": "Przeszed\u0142em drog\u0119 z <span class='pick'>____</span>  do <span class='pick'>____</span>. Wszystko dzi\u0119ki <span class='pick'>____</span>.",
+      "text": "Przeszed\u0142em drog\u0119 z <span class='pick'>____</span> do <span class='pick'>____</span>. Wszystko dzi\u0119ki <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 3
     },
     {
-      "text": "\"W tym miesi\u0105cu w Cosmopolitan: \"\"Urozmai\u0107 swoje \u017cycie seksualne, przynie\u015b <span class='pick'>____</span>  do sypialni.\"\"\"",
+      "text": "\"W tym miesi\u0105cu w Cosmopolitan: \"\"Urozmai\u0107 swoje \u017cycie seksualne, przynie\u015b <span class='pick'>____</span> do sypialni.\"\"\"",
       "pack": 0
     },
     {
@@ -768,15 +769,15 @@
       "pack": 0
     },
     {
-      "text": "Pi\u0119\u0107 etap\u00f3w \u017ca\u0142oby: zaprzeczenie, gniew, bezradno\u015b\u0107, <span class='pick'>____</span>  , akceptacja.",
+      "text": "Pi\u0119\u0107 etap\u00f3w \u017ca\u0142oby: zaprzeczenie, gniew, bezradno\u015b\u0107, <span class='pick'>____</span>, akceptacja.",
       "pack": 0
     },
     {
-      "text": "M\u00f3wi wasz kapitan. Zapnijcie pasy i przygotuje si\u0119 na <span class='pick'>____</span>.",
+      "text": "M\u00f3wi wasz kapitan. Zapnijcie pasy i przygotujcie si\u0119 na <span class='pick'>____</span>.",
       "pack": 0
     },
     {
-      "text": "Gdyby B\u00f3g nie chcia\u0142 aby\u015bmy si\u0119 cieszyli z <span class='pick'>____</span>  , nie dawa\u0142by nam <span class='pick'>____</span>.",
+      "text": "Gdyby B\u00f3g nie chcia\u0142 aby\u015bmy si\u0119 cieszyli z <span class='pick'>____</span>, nie dawa\u0142by nam <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 2
     },
@@ -793,12 +794,12 @@
       "pack": 0
     },
     {
-      "text": "<span class='pick'>____</span>  by\u0142oby \u017ca\u0142o\u015bnie niekompletne bez <span class='pick'>____</span>.",
+      "text": "<span class='pick'>____</span> by\u0142oby \u017ca\u0142o\u015bnie niekompletne bez <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 2
     },
     {
-      "text": "Nie b\u0119dziesz \u017cy\u0142 na prawd\u0119 dop\u00f3ki nie do\u015bwiadczysz <span class='pick'>____</span>  i <span class='pick'>____</span>  w tym samym momencie.",
+      "text": "Nie b\u0119dziesz \u017cy\u0142 na prawd\u0119 dop\u00f3ki nie do\u015bwiadczysz <span class='pick'>____</span> i <span class='pick'>____</span> w tym samym momencie.",
       "pack": 0,
       "pick": 2
     },
@@ -820,7 +821,7 @@
       "pick": 2
     },
     {
-      "text": "Sp\u0119dzi\u0142em ca\u0142e moje \u017cycie d\u0105\u017c\u0105c do <span class='pick'>____</span>  , i wszystko leg\u0142o w gruzach przez <span class='pick'>____</span>.",
+      "text": "Sp\u0119dzi\u0142em ca\u0142e moje \u017cycie d\u0105\u017c\u0105c do <span class='pick'>____</span>, i wszystko leg\u0142o w gruzach przez <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 2
     },
@@ -833,20 +834,20 @@
       "pack": 0
     },
     {
-      "text": "Hej, kotku, chod\u017amy do mnie,  poka\u017c\u0119 ci <span class='pick'>____</span>.",
+      "text": "Hej, kotku, chod\u017amy do mnie, poka\u017c\u0119 ci <span class='pick'>____</span>.",
       "pack": 0
     },
     {
-      "text": "S\u0142uchaj, synu. Je\u015bli chcesz zaanga\u017cowa\u0107 si\u0119 w <span class='pick'>____</span>  ,nie b\u0119d\u0119 ci\u0119 zatrzymywa\u0142. Po prostu trzymaj si\u0119 z daleka od <span class='pick'>____</span>.",
+      "text": "S\u0142uchaj, synu. Je\u015bli chcesz zaanga\u017cowa\u0107 si\u0119 w <span class='pick'>____</span>, nie b\u0119d\u0119 ci\u0119 zatrzymywa\u0142. Po prostu trzymaj si\u0119 z daleka od <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 2
     },
     {
-      "text": "Nareszcie! Us\u0142uga, kt\u00f3ra dostarcza <span class='pick'>____</span>  prosto pod twoje drzwi.",
+      "text": "Nareszcie! Us\u0142uga, kt\u00f3ra dostarcza <span class='pick'>____</span> prosto pod twoje drzwi.",
       "pack": 0
     },
     {
-      "text": "M\u00f3j nauczyciel wuefu zosta\u0142 wylany ze szko\u0142y za dodanie <span class='pick'>____</span>  do toru przeszk\u00f3d.",
+      "text": "M\u00f3j nauczyciel wuefu zosta\u0142 wylany ze szko\u0142y za dodanie <span class='pick'>____</span> do toru przeszk\u00f3d.",
       "pack": 0
     },
     {
@@ -854,17 +855,17 @@
       "pack": 0
     },
     {
-      "text": "Jak do tego odpowiednio podejdziesz, <span class='pick'>____</span>  to po prostu <span class='pick'>____</span>.",
+      "text": "Jak do tego odpowiednio podejdziesz, <span class='pick'>____</span> to po prostu <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 2
     },
     {
-      "text": "Po miesi\u0105cach \u0107wicze\u0144 z <span class='pick'>____</span>  , my\u015bl\u0119, \u017ce jestem gotowy do <span class='pick'>____</span>.",
+      "text": "Po miesi\u0105cach \u0107wicze\u0144 z <span class='pick'>____</span>, my\u015bl\u0119, \u017ce jestem gotowy do <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 2
     },
     {
-      "text": "Dzwo\u0144 do kancelarii prawniczej, poniewa\u017c nikt nie powinien tolerowa\u0107 <span class='pick'>____</span>  w miejscu pracy.",
+      "text": "Dzwo\u0144 do kancelarii prawniczej, poniewa\u017c nikt nie powinien tolerowa\u0107 <span class='pick'>____</span> w miejscu pracy.",
       "pack": 0
     },
     {
@@ -872,11 +873,11 @@
       "pack": 0
     },
     {
-      "text": "W ramach zawartej z nim umowy, Micha\u0142 Wi\u015bniewski nie za\u015bpiewa bez <span class='pick'>____</span>  w jego garderobie.",
+      "text": "W ramach zawartej z nim umowy, Micha\u0142 Wi\u015bniewski nie za\u015bpiewa bez <span class='pick'>____</span> w jego garderobie.",
       "pack": 0
     },
     {
-      "text": "W si\u00f3dmym kr\u0119gu piek\u0142a, grzesznicy musz\u0105 znosi\u0107 <span class='pick'>____</span>  przez ca\u0142\u0105 wieczno\u015b\u0107.",
+      "text": "W si\u00f3dmym kr\u0119gu piek\u0142a, grzesznicy musz\u0105 znosi\u0107 <span class='pick'>____</span> przez ca\u0142\u0105 wieczno\u015b\u0107.",
       "pack": 0
     },
     {
@@ -900,7 +901,7 @@
       "pack": 0
     },
     {
-      "text": "Z biegiem czasu i przy odpowiednich \u015brodkach, <span class='pick'>____</span>  zmieni si\u0119 w <span class='pick'>____</span>.",
+      "text": "Z biegiem czasu i przy odpowiednich \u015brodkach, <span class='pick'>____</span> zmieni si\u0119 w <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 2
     },
@@ -917,7 +918,7 @@
       "pack": 0
     },
     {
-      "text": "<span class='pick'>____</span>  : Godziny zabawy. \u0141atwe w u\u017cyciu. Perfekcyjne dla <span class='pick'>____</span>.",
+      "text": "<span class='pick'>____</span>: Godziny zabawy. \u0141atwe w u\u017cyciu. Perfekcyjne dla <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 2
     },
@@ -931,7 +932,7 @@
       "pick": 2
     },
     {
-      "text": "Moje \u017cycie to b\u0142\u0119dne ko\u0142o <span class='pick'>____</span>  oraz <span class='pick'>____</span>.",
+      "text": "Moje \u017cycie to b\u0142\u0119dne ko\u0142o <span class='pick'>____</span> oraz <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 2
     },
@@ -945,47 +946,47 @@
       "pack": 0
     },
     {
-      "text": "Zapomnij wszystko co wiedzia\u0142e\u015b o <span class='pick'>____</span>  , poniewa\u017c teraz po\u0142\u0105czyli\u015bmy to z <span class='pick'>____</span> !",
+      "text": "Zapomnij wszystko co wiedzia\u0142e\u015b o <span class='pick'>____</span>, poniewa\u017c teraz po\u0142\u0105czyli\u015bmy to z <span class='pick'>____</span> !",
       "pack": 0,
       "pick": 2
     },
     {
-      "text": "Je\u015bli nie mo\u017cesz sobie poradzi\u0107 z <span class='pick'>____</span>  , lepiej trzymaj si\u0119 z dala od <span class='pick'>____</span>.",
+      "text": "Je\u015bli nie mo\u017cesz sobie poradzi\u0107 z <span class='pick'>____</span>, lepiej trzymaj si\u0119 z dala od <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 2
     },
     {
-      "text": "W zamian za moj\u0105 dusz\u0119, Diabe\u0142 obieca\u0142 mi <span class='pick'>____</span>  , ale wszystko, co dosta\u0142em to <span class='pick'>____</span>.",
+      "text": "W zamian za moj\u0105 dusz\u0119, Diabe\u0142 obieca\u0142 mi <span class='pick'>____</span>, ale wszystko, co dosta\u0142em to <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 2
     },
     {
-      "text": "Kochanie, wymy\u015bli\u0142em now\u0105 scenk\u0119 do wypr\u00f3bowana dzi\u015b wieczorem! Mo\u017cesz by\u0107 <span class='pick'>____</span>  , a ja b\u0119d\u0119 <span class='pick'>____</span>.",
+      "text": "Kochanie, wymy\u015bli\u0142em now\u0105 scenk\u0119 do wypr\u00f3bowana dzi\u015b wieczorem! Mo\u017cesz by\u0107 <span class='pick'>____</span>, a ja b\u0119d\u0119 <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 2
     },
     {
-      "text": "Sta\u0142em si\u0119 <span class='pick'>____</span>  , niszczycielem <span class='pick'>____</span>.",
+      "text": "Sta\u0142em si\u0119 <span class='pick'>____</span>, niszczycielem <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 2
     },
     {
-      "text": "<span class='pick'>____</span>  ju\u017c nigdy nie b\u0119dzie takie same po <span class='pick'>____</span>.",
+      "text": "<span class='pick'>____</span> ju\u017c nigdy nie b\u0119dzie takie same po <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 2
     },
     {
-      "text": "\"Ksi\u0105\u017cka miesi\u0105ca to \"\" <span class='pick'>____</span>  dla <span class='pick'>____</span>  : historia o nadziei\"\".\"",
+      "text": "\"Ksi\u0105\u017cka miesi\u0105ca to \"\" <span class='pick'>____</span> dla <span class='pick'>____</span>: historia o nadziei\"\".\"",
       "pack": 0,
       "pick": 2
     },
     {
-      "text": "Ch\u0142opy, jaki widzia\u0142em wczoraj szalony film! Zaczyna si\u0119 <span class='pick'>____</span>  , potem jest troch\u0119 o <span class='pick'>____</span>  , a ko\u0144czy si\u0119 <span class='pick'>____</span>.",
+      "text": "Ch\u0142opy, jaki widzia\u0142em wczoraj szalony film! Zaczyna si\u0119 <span class='pick'>____</span>, potem jest troch\u0119 o <span class='pick'>____</span>, a ko\u0144czy si\u0119 <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 3
     },
     {
-      "text": "Nigdy nie znale\u017ali\u015bmy <span class='pick'>____</span>  , ale po drodze nauczyli\u015bmy si\u0119 wiele o <span class='pick'>____</span>.",
+      "text": "Nigdy nie znale\u017ali\u015bmy <span class='pick'>____</span>, ale po drodze nauczyli\u015bmy si\u0119 wiele o <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 2
     },
@@ -1006,7 +1007,7 @@
       "pack": 0
     },
     {
-      "text": "Ka\u017cdy krok w kierunku <span class='pick'>____</span>  przybli\u017ca mnie do <span class='pick'>____</span>.",
+      "text": "Ka\u017cdy krok w kierunku <span class='pick'>____</span> przybli\u017ca mnie do <span class='pick'>____</span>.",
       "pack": 0,
       "pick": 2
     },
@@ -1048,7 +1049,7 @@
       "pack": 0
     },
     {
-      "text": "Przykro mi prosz\u0119 pana, ale nie zezwalamy <span class='pick'>____</span>  w naszym klubie.",
+      "text": "Przykro mi prosz\u0119 pana, ale nie zezwalamy <span class='pick'>____</span> w naszym klubie.",
       "pack": 0
     },
     {
@@ -1061,7 +1062,7 @@
       "pack": 0
     },
     {
-      "text": "<span class='pick'>____</span>  przeminie, ale <span class='pick'>____</span>  przetrwa wiecznie.",
+      "text": "<span class='pick'>____</span> przeminie, ale <span class='pick'>____</span> przetrwa wiecznie.",
       "pack": 0,
       "pick": 2
     },
@@ -1082,7 +1083,7 @@
       "pack": 0
     },
     {
-      "text": "Przygotuj si\u0119 na film tego lata! Jeden porz\u0105dny glina. Drugiego interesuje  tylko : <span class='pick'>____</span>.",
+      "text": "Przygotuj si\u0119 na film tego lata! Jeden porz\u0105dny glina. Drugiego interesuje tylko: <span class='pick'>____</span>.",
       "pack": 0
     },
     {
@@ -1103,7 +1104,7 @@
       "pack": 0
     },
     {
-      "text": "\"Tutaj Mietek z ksi\u0119gowo\u015bci. Zauwa\u017cyli\u015bmy rachunek na 4000 z\u0142  za  \"\" <span class='pick'>____</span>.\"\" Mo\u017cesz to wyja\u015bni\u0107?\"",
+      "text": "\"Tutaj Mietek z ksi\u0119gowo\u015bci. Zauwa\u017cyli\u015bmy rachunek na 4000 z\u0142 za \"\" <span class='pick'>____</span>.\"\" Mo\u017cesz to wyja\u015bni\u0107?\"",
       "pack": 0
     },
     {
@@ -1649,7 +1650,7 @@
       "pack": 3
     },
     {
-      "text": "A romantic, candlelit dinner would be incomplete without  <span class='pick'>____</span>.",
+      "text": "A romantic, candlelit dinner would be incomplete without <span class='pick'>____</span>.",
       "pack": 3
     },
     {
@@ -3811,8 +3812,9 @@
       "pack": 50
     },
     {
-      "text": "Whoa there, partner! Looks like ____ spooked my horse.Princess Marigold, the kingdom is in danger! You must stop ____.",
-      "pack": 50
+      "text": "Whoa there, partner! Looks like ____ spooked my horse. Princess Marigold, the kingdom is in danger! You must stop ____.",
+      "pack": 50,
+      "pick": 2
     },
     {
       "text": "Shut up, Becky! At least I'm not ____.",
@@ -4349,7 +4351,7 @@
       "pack": 0
     },
     {
-      "text": "N iesy metryczne, sztuczne piersi.",
+      "text": "Niesymetryczne, sztuczne piersi.",
       "pack": 0
     },
     {
@@ -4821,7 +4823,7 @@
       "pack": 0
     },
     {
-      "text": "General Wojciech Jaruzelski.",
+      "text": "Generał Wojciech Jaruzelski.",
       "pack": 0
     },
     {
@@ -5909,7 +5911,7 @@
       "pack": 0
     },
     {
-      "text": "Bycie niesaowitym w \u0142\u00f3\u017cku.",
+      "text": "Bycie niesamowitym w \u0142\u00f3\u017cku.",
       "pack": 0
     },
     {
@@ -10105,7 +10107,7 @@
       "pack": 1
     },
     {
-      "text": "FIlling my son with spaghetti.",
+      "text": "Filling my son with spaghetti.",
       "pack": 1
     },
     {
@@ -10129,7 +10131,7 @@
       "pack": 1
     },
     {
-      "text": "An oversized lollipop,",
+      "text": "An oversized lollipop.",
       "pack": 1
     },
     {
@@ -10205,7 +10207,7 @@
       "pack": 1
     },
     {
-      "text": "LIving in a trashcan.",
+      "text": "Living in a trashcan.",
       "pack": 1
     },
     {
@@ -10529,7 +10531,7 @@
       "pack": 6
     },
     {
-      "text": "Indescribably loneliness.",
+      "text": "Indescribable loneliness.",
       "pack": 6
     },
     {
