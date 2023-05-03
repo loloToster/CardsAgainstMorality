@@ -114,6 +114,7 @@ socket.on("sync", data => {
     gameState.choices = data.choices
   } else {
     gameState.stage = GameStage.CHOOSING
+    gameState.submitted = data.submitted
   }
 })
 

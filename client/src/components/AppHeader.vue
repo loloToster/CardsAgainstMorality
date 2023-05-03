@@ -56,7 +56,7 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
           </AppButton>
         </div>
       </div>
-      <AppButton v-else @click="router.push('/login')" class="header__link">
+      <AppButton v-else @click="router.push('/login')" class="header__login">
         Login
       </AppButton>
     </div>
@@ -81,7 +81,6 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
     gap: 2vw;
     width: 90vw;
     max-width: 1200px;
-    padding: 16px 0;
     margin: auto;
     height: 100%;
   }
@@ -90,8 +89,6 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
     font-size: 1.1rem;
     text-decoration: none;
     color: colors.$subtext;
-
-    @include colors.app-button(colors.$primary);
 
     &:hover {
       text-decoration: underline;
@@ -104,6 +101,10 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
     font-weight: 600;
     margin-right: auto;
     text-decoration: none;
+  }
+
+  &__login {
+    @include colors.app-button(colors.$primary);
   }
 
   &__avatar {

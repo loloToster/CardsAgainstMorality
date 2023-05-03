@@ -1,3 +1,4 @@
+import { sum } from "./index"
 import { shuffle } from "./random"
 
 export enum GameState {
@@ -157,8 +158,12 @@ export class Game<PM = unknown> {
     if (!nextBlack) return false
 
     const cardsPerPlayer = this.maxCards + (nextBlack.draw ?? 0)
+    const playerCards = sum(this.players.map(p => p.cards.length))
 
-    return this.whiteCards.length >= this.players.length * cardsPerPlayer
+    return (
+      this.whiteCards.length >=
+      this.players.length * cardsPerPlayer - playerCards
+    )
   }
 
   newBlackCard() {
@@ -267,11 +272,18 @@ export class Game<PM = unknown> {
     return true
   }
 
+  /**
+   * The choices sorted by the sum of cards
+   *
+   * sort is used to shuffle instead of Math.random to always return the choices in the same order but still "shuffle" them
+   */
   getChoices() {
     const choices = []
 
     for (const player of this.players)
       if (!player.isTsar) choices.push(player.choice)
+
+    choices.sort((a, b) => sum(a) - sum(b))
 
     return choices
   }

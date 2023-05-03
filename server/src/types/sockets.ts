@@ -57,6 +57,7 @@ export type SyncData =
   | (NewRoundData & {
       started: true
       choices?: ApiWhiteCard[][]
+      submitted: boolean
       voting: VotingData | null
     })
 

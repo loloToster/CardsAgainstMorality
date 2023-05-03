@@ -497,8 +497,6 @@ export class Room {
       this.game.getChoices()
     )) as ApiWhiteCard[][]
 
-    shuffle(choices)
-
     const timeLimitSeconds = this.startTimeout(this.onVerdictTimeout)
 
     if (afkPlayers) {
@@ -559,6 +557,7 @@ export class Room {
       blackCard,
       cards,
       choices,
+      submitted: player.chose,
       voting,
       timeLimit: timeLimitSeconds
     }
