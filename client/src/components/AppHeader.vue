@@ -25,9 +25,10 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
 <template>
   <header class="header">
     <div class="header__content">
-      <RouterLink class="header__logo header__link" to="/">
+      <RouterLink class="header__logo" to="/">
         {{ TITLE }}
       </RouterLink>
+      <RouterLink class="header__link" to="/packs"> Packs </RouterLink>
       <div
         @click="state.profileMenuOpen = !state.profileMenuOpen"
         v-if="user.value"
@@ -77,6 +78,7 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
   &__content {
     display: flex;
     align-items: center;
+    gap: 2vw;
     width: 90vw;
     max-width: 1200px;
     padding: 16px 0;
@@ -85,16 +87,23 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
   }
 
   &__link {
+    font-size: 1.1rem;
     text-decoration: none;
-    color: colors.$text;
+    color: colors.$subtext;
 
     @include colors.app-button(colors.$primary);
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   &__logo {
     font-size: clamp(1.2rem, 2vw, 1.6rem);
+    color: colors.$text;
     font-weight: 600;
     margin-right: auto;
+    text-decoration: none;
   }
 
   &__avatar {

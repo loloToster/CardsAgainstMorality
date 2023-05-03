@@ -9,6 +9,7 @@ import { ApiCardPack, ApiBlackCard, ApiWhiteCard } from "@backend/types"
 import AppLoading from "@/components/AppLoading.vue"
 import AppChip from "@/components/AppChip.vue"
 import PlayingCard from "@/components/PlayingCard.vue"
+import CardPack from "@/components/CardPack.vue"
 
 import defaultPackIcon from "@/assets/black-card-icon.svg?raw"
 import BlackCardIcon from "@/assets/black-card-icon.svg?component"
@@ -124,7 +125,7 @@ const numOfWhiteDummies = computed(() => {
     class="pack"
     :class="{ 'pack--light': light }"
     :style="{
-      '--theme-color': state.pack.color ?? undefined
+      '--pack-color': state.pack.color ?? undefined
     }"
   >
     <div class="pack__mini-top" :class="{ active: state.showMiniTop }">
@@ -148,12 +149,9 @@ const numOfWhiteDummies = computed(() => {
         ></div>
       </div>
       <div class="pack__top__content">
-        <div class="pack__image">
-          <div class="pack__image__name">
-            {{ state.pack.name }}
-          </div>
-          <div v-html="packIcon" class="pack__image__icon"></div>
-        </div>
+        <CardPack class="pack__image" :icon="state.pack.icon ?? undefined">
+          {{ state.pack.name }}
+        </CardPack>
         <div class="pack__meta">
           <div class="pack__meta__type">Card Pack</div>
           <h1
@@ -239,7 +237,7 @@ const numOfWhiteDummies = computed(() => {
 @use "@/styles/colors" as colors;
 
 .pack {
-  --theme-color: white;
+  --pack-color: white;
   --r: 255;
   --g: 255;
   --b: 255;
@@ -249,7 +247,7 @@ const numOfWhiteDummies = computed(() => {
 
   &--light {
     --bg-icon-color: black;
-    --meta-content-color: #202020;
+    --meta-content-color: #{colors.$pack-color};
   }
 
   $mini-top-height: 30px;
@@ -262,7 +260,7 @@ const numOfWhiteDummies = computed(() => {
     height: 0;
     width: 100%;
     overflow: hidden;
-    background-color: var(--theme-color);
+    background-color: var(--pack-color);
     transition: height 50ms ease-out;
 
     &.active {
@@ -289,7 +287,7 @@ const numOfWhiteDummies = computed(() => {
         height: 100%;
 
         *[fill="white"] {
-          fill: var(--theme-color);
+          fill: var(--pack-color);
         }
 
         *[fill="black"] {
@@ -308,7 +306,7 @@ const numOfWhiteDummies = computed(() => {
   &__top {
     position: relative;
     width: 100%;
-    background-color: var(--theme-color);
+    background-color: var(--pack-color);
     height: 35vh;
 
     &__icon {
@@ -328,7 +326,7 @@ const numOfWhiteDummies = computed(() => {
         height: 100%;
 
         *[fill="white"] {
-          fill: var(--theme-color);
+          fill: var(--pack-color);
         }
 
         *[fill="black"] {
@@ -348,14 +346,10 @@ const numOfWhiteDummies = computed(() => {
   }
 
   &__image {
-    position: relative;
-    aspect-ratio: 12 / 17;
     height: 100%;
-    background-color: black;
     translate: 0 20%;
     rotate: -3deg;
-    padding: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    font-size: 2rem;
 
     @include mixins.sm {
       display: none;
@@ -378,32 +372,6 @@ const numOfWhiteDummies = computed(() => {
 
     &:hover {
       animation: wiggle 400ms linear;
-    }
-
-    &__name {
-      font-size: 2rem;
-      font-weight: bold;
-    }
-
-    &__icon {
-      position: absolute;
-      left: 16px;
-      bottom: 16px;
-      width: 30%;
-      aspect-ratio: 1;
-
-      :deep(svg) {
-        width: 100%;
-        height: 100%;
-
-        *[fill="white"] {
-          fill: black;
-        }
-
-        *[fill="black"] {
-          fill: var(--theme-color);
-        }
-      }
     }
   }
 
@@ -439,7 +407,7 @@ const numOfWhiteDummies = computed(() => {
       height: 26px;
 
       &--bundle {
-        color: var(--theme-color);
+        color: var(--pack-color);
       }
     }
 

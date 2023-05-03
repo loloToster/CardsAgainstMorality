@@ -9,6 +9,7 @@ import App from "./App.vue"
 import HomePage from "./pages/HomePage.vue"
 import LoginPage from "./pages/LoginPage.vue"
 import RoomPage from "./pages/RoomPage.vue"
+import PacksPage from "./pages/PacksPage.vue"
 import PackPage from "./pages/PackPage.vue"
 import NotFoundPage from "./pages/NotFoundPage.vue"
 
@@ -25,6 +26,11 @@ const router = createRouter({
       meta: { hideHeader: true }
     },
     { path: "/room/:id?", component: RoomPage, name: "Room" },
+    {
+      path: "/packs",
+      component: PacksPage,
+      name: "Card Packs"
+    },
     {
       path: "/pack/:id",
       component: PackPage,
