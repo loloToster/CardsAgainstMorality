@@ -37,6 +37,8 @@ defineEmits(["close"])
         <PlayingCard
           :text="blackCard.text"
           :pack="blackCard.pack"
+          :pick="blackCard.pick"
+          :draw="blackCard.draw"
           class="round-winner-modal__cards__card"
           color="black"
         />

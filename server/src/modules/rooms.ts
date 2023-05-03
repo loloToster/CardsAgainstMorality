@@ -96,20 +96,16 @@ export class Room {
   }
 
   async newConnection(socket: SocketClient, user: User) {
-    const foundPlayer = this.game.players.find(
-      p => p.metadata?.user.id === user.id
-    )
-
-    let player: Player<PlayerMetadata>
+    let foundPlayer: Player<PlayerMetadata> | null =
+      this.game.players.find(p => p.metadata?.user.id === user.id) ?? null
 
     if (foundPlayer) {
-      player = foundPlayer
-      player.metadata?.socket.disconnect()
-      player.metadata = {
+      foundPlayer.metadata?.socket.disconnect()
+      foundPlayer.metadata = {
         socket,
         user,
         connected: true,
-        joinedAt: player.metadata?.joinedAt ?? Date.now()
+        joinedAt: foundPlayer.metadata?.joinedAt ?? Date.now()
       }
     } else {
       // todo: connection before game start
@@ -120,13 +116,16 @@ export class Room {
         return socket.disconnect()
       }
 
-      player = this.game.addPlayer({
+      foundPlayer = this.game.addPlayer({
         socket,
         user,
         connected: true,
         joinedAt: Date.now()
       })
     }
+
+    if (!foundPlayer) return
+    const player = foundPlayer
 
     socket.join(this.id)
 
@@ -164,7 +163,7 @@ export class Room {
 
         const blackCards = await db.blackCard.findMany({
           where: { packId: { in: settings.packs } },
-          select: { id: true, pick: true }
+          select: { id: true, pick: true, draw: true }
         })
 
         try {

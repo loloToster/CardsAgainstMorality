@@ -275,6 +275,7 @@ function onCardsScroll(e: WheelEvent) {
                 :text="gameState.blackCard.text"
                 :pack="gameState.blackCard.pack"
                 :pick="gameState.blackCard.pick"
+                :draw="gameState.blackCard.draw"
                 color="black"
                 :animated="numOfTableCards === 1"
                 glow

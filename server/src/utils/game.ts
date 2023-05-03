@@ -152,12 +152,13 @@ export class Game<PM = unknown> {
     this.blackCards = blackCards
   }
 
-  // TODO: improve check (ex. take 'draw' param into account)
   enoughCards() {
-    return (
-      this.blackCards.length &&
-      this.whiteCards.length >= this.players.length * this.maxCards
-    )
+    const nextBlack = this.blackCards[0]
+    if (!nextBlack) return false
+
+    const cardsPerPlayer = this.maxCards + (nextBlack.draw ?? 0)
+
+    return this.whiteCards.length >= this.players.length * cardsPerPlayer
   }
 
   newBlackCard() {
@@ -166,7 +167,7 @@ export class Game<PM = unknown> {
       ? {
         id: newBlackCard.id,
         pick: newBlackCard.pick ?? 1,
-        draw: newBlackCard.draw ?? 1
+        draw: newBlackCard.draw ?? 0
       }
       : null
   }
@@ -180,10 +181,21 @@ export class Game<PM = unknown> {
     }
   }
 
-  addPlayer(metadata?: PM): Player<PM> {
+  addPlayer(metadata?: PM): Player<PM> | null {
     const player = new Player({ game: this, metadata })
+
+    if (this.state !== GameState.NOT_STARTED) {
+      let neededCards = this.maxCards
+      if (this.state === GameState.CHOOSING)
+        neededCards += this.curBlackCard?.draw ?? 0
+
+      if (this.whiteCards.length < neededCards) return null
+
+      player.cards = this.whiteCards.splice(0, neededCards)
+    }
+
     this.players.push(player)
-    if (this.state !== GameState.NOT_STARTED) this.dealCards()
+
     return player
   }
 
@@ -224,16 +236,15 @@ export class Game<PM = unknown> {
 
   // TODO: make sure to deal evenly
   dealCards() {
-    const additionalCards = this.curBlackCard?.draw
-      ? this.curBlackCard.draw - 1
-      : 0
-
-    const target = this.maxCards + additionalCards
+    const additionalCards = this.curBlackCard?.draw ?? 0
 
     for (const player of this.players) {
+      let target = this.maxCards
+      if (!player.isTsar) target += additionalCards
+
       while (player.cards.length + player.choice.length < target) {
         const newCard = this.whiteCards.pop()
-        if (!newCard) break
+        if (!newCard) return
         player.cards.push(newCard)
       }
     }
@@ -249,9 +260,9 @@ export class Game<PM = unknown> {
 
     this.players.forEach(p => (p.choice = []))
 
-    this.dealCards()
     this.chooseNewTsar()
     this.newBlackCard()
+    this.dealCards()
 
     return true
   }

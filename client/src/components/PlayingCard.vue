@@ -26,10 +26,12 @@ defineEmits<{
 const actions = computed(() => {
   if (props.color !== "black") return []
 
-  return [
-    { name: "DRAW", n: props.draw },
-    { name: "PICK", n: props.pick }
-  ].filter(a => a.n && a.n > 1)
+  const a = []
+
+  if (props.draw && props.draw > 0) a.push({ name: "DRAW", n: props.draw })
+  if (props.pick && props.pick > 1) a.push({ name: "PICK", n: props.pick })
+
+  return a
 })
 
 // HOVER ANIMATION:

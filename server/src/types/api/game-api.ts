@@ -17,4 +17,5 @@ export interface ApiWhiteCard {
 
 export interface ApiBlackCard extends ApiWhiteCard {
   pick: number
+  draw: number
 }

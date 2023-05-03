@@ -3,7 +3,7 @@ import cards from "../../cards.json"
 import { PrismaClient, User } from "@prisma/client"
 
 import { subtractMs } from "../utils"
-import { ApiWhiteCard } from "../types"
+import { ApiBlackCard, ApiWhiteCard } from "../types"
 import {
   MIN_TIME_BETWEEN_ANS_USER_RM,
   INACTIVITY_TIME,
@@ -112,6 +112,8 @@ class Database extends PrismaClient {
     )
       return
 
+    logger.info("Syncing cards")
+
     await this.blackCard.deleteMany()
     await this.whiteCard.deleteMany()
     await this.cardPack.deleteMany()
@@ -126,7 +128,11 @@ class Database extends PrismaClient {
           color: pack.color,
           icon: pack.icon,
           blackCards: {
-            create: blackCards.map(c => ({ text: c.text, pick: c.pick }))
+            create: blackCards.map(c => ({
+              text: c.text,
+              draw: c.draw,
+              pick: c.pick
+            }))
           },
           whiteCards: { create: whiteCards.map(c => ({ text: c.text })) }
         }
@@ -134,7 +140,7 @@ class Database extends PrismaClient {
     }
   }
 
-  async getApiBlackCard(id: number) {
+  async getApiBlackCard(id: number): Promise<ApiBlackCard> {
     const card = await this.blackCard.findUnique({
       where: { id },
       include: { pack: true }
@@ -146,6 +152,7 @@ class Database extends PrismaClient {
       id: card.id,
       text: card.text,
       pick: card.pick || 1,
+      draw: card.draw || 0,
       pack: card.pack.name
     }
   }

@@ -192,8 +192,9 @@ const numOfWhiteDummies = computed(() => {
           class="pack__cards__card"
           color="black"
           :text="card.text"
-          :pick="card.pick"
           :pack="state.pack.name"
+          :pick="card.pick"
+          :draw="card.draw"
           :key="card.id"
         />
       </div>
