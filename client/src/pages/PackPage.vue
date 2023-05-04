@@ -391,12 +391,14 @@ const numOfWhiteDummies = computed(() => {
 
   &__image {
     height: 35vh;
-    transform: translate(0, 20%) rotate(-3deg);
+    transform: translate(0, 20%);
+    rotate: -3deg;
     font-size: 2rem;
 
     @include mixins.sm {
       height: 20vh;
-      transform: translate(0, 0) rotate(-3deg);
+      transform: translate(0, 0);
+      rotate: -3deg;
       font-size: 1.2rem;
     }
 
