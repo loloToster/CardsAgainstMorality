@@ -54,6 +54,7 @@ import PlayingCard from "@/components/PlayingCard.vue"
 </template>
 
 <style scoped lang="scss">
+@use "@/styles/mixins" as mixins;
 @use "@/styles/colors" as colors;
 
 .home {
@@ -102,30 +103,50 @@ import PlayingCard from "@/components/PlayingCard.vue"
       position: absolute;
       bottom: 0;
       --w: 28vh;
-      transition: translate 100ms ease-in-out;
+      transition: all 100ms ease-in-out;
 
       &--black {
         left: 0;
+
+        @include mixins.sm {
+          left: 50%;
+          bottom: 23%;
+          transform: translateX(-50%);
+        }
       }
 
       &--create {
         right: 20%;
-        rotate: 352deg;
+        transform: rotate(352deg);
         cursor: pointer;
 
         &:hover {
           translate: -2% -4%;
+        }
+
+        @include mixins.sm {
+          right: unset;
+          left: 40%;
+          bottom: 0;
+          transform: translateX(-50%) rotate(352deg);
         }
       }
 
       &--join {
         bottom: -10%;
         right: 0;
-        rotate: 9deg;
+        transform: rotate(9deg);
         cursor: pointer;
 
         &:hover {
           translate: 2% -4%;
+        }
+
+        @include mixins.sm {
+          right: unset;
+          left: 60%;
+          bottom: -23%;
+          transform: translateX(-50%) rotate(9deg);
         }
       }
     }

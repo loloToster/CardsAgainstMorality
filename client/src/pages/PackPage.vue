@@ -52,21 +52,40 @@ fetch("/api/pack/" + encodeURIComponent(route.params.id.toString())).then(
   }
 )
 
-const BG_ICONS = [
+interface BgIconPos {
+  top: number
+  left: number
+  rotate: number
+  mobile?: Omit<BgIconPos, "mobile" | "rotate">
+}
+
+const BG_ICONS: BgIconPos[] = [
   {
     top: 17,
     left: 57,
-    rotate: -8
+    rotate: -8,
+    mobile: {
+      top: 14,
+      left: 8
+    }
   },
   {
     top: 72,
     left: 5,
-    rotate: -4
+    rotate: -4,
+    mobile: {
+      top: 13,
+      left: 90
+    }
   },
   {
     top: 26,
     left: 75,
-    rotate: 5
+    rotate: 5,
+    mobile: {
+      top: 44,
+      left: 16
+    }
   },
   {
     top: 79,
@@ -76,12 +95,20 @@ const BG_ICONS = [
   {
     top: 15,
     left: 94,
-    rotate: -12
+    rotate: -12,
+    mobile: {
+      top: 49,
+      left: 82
+    }
   },
   {
     top: 10,
     left: 10,
-    rotate: 10
+    rotate: 10,
+    mobile: {
+      top: 26,
+      left: 73
+    }
   }
 ]
 
@@ -97,10 +124,6 @@ useScroll(window, {
 
 const light = computed(() => {
   return state.pack?.color ? Color(state.pack.color).isLight() : true
-})
-
-const longName = computed(() => {
-  return (state.pack?.name.length || 0) > 12
 })
 
 const packIcon = computed(() => {
@@ -140,10 +163,13 @@ const numOfWhiteDummies = computed(() => {
           v-for="icon in BG_ICONS"
           v-html="packIcon"
           class="pack__top__icon"
+          :class="{ 'pack__top__icon--mobile': icon.mobile }"
           :style="{
             '--top': icon.top,
             '--left': icon.left,
-            '--rotate': icon.rotate
+            '--rotate': icon.rotate,
+            '--mobile-top': icon.mobile?.top,
+            '--mobile-left': icon.mobile?.left
           }"
           :key="icon.left"
         ></div>
@@ -156,7 +182,7 @@ const numOfWhiteDummies = computed(() => {
           <div class="pack__meta__type">{{ state.pack.type }}</div>
           <h1
             class="pack__meta__name"
-            :class="{ 'pack__meta__name--small': longName }"
+            :style="{ '--length': state.pack.name.length }"
           >
             {{ state.pack.name }}
           </h1>
@@ -312,7 +338,6 @@ const numOfWhiteDummies = computed(() => {
     position: relative;
     width: 100%;
     background-color: var(--pack-color);
-    height: 35vh;
 
     &__icon {
       position: absolute;
@@ -324,6 +349,12 @@ const numOfWhiteDummies = computed(() => {
 
       @include mixins.sm {
         display: none;
+
+        &--mobile {
+          display: block;
+          top: calc(var(--mobile-top) * 1%);
+          left: calc(var(--mobile-left) * 1%);
+        }
       }
 
       :deep(svg) {
@@ -342,22 +373,31 @@ const numOfWhiteDummies = computed(() => {
 
     &__content {
       display: flex;
+      align-items: end;
       gap: 65px;
       width: 90%;
       max-width: 1100px;
       height: 100%;
       margin: auto;
+
+      @include mixins.sm {
+        align-items: center;
+        flex-direction: column;
+        gap: 24px;
+        padding-top: 24px;
+      }
     }
   }
 
   &__image {
-    height: 100%;
-    translate: 0 20%;
-    rotate: -3deg;
+    height: 35vh;
+    transform: translate(0, 20%) rotate(-3deg);
     font-size: 2rem;
 
     @include mixins.sm {
-      display: none;
+      height: 20vh;
+      transform: translate(0, 0) rotate(-3deg);
+      font-size: 1.2rem;
     }
 
     @keyframes wiggle {
@@ -382,7 +422,6 @@ const numOfWhiteDummies = computed(() => {
 
   &__meta {
     color: var(--meta-content-color);
-    align-self: flex-end;
     flex-grow: 1;
     margin-bottom: 24px;
 
@@ -392,16 +431,28 @@ const numOfWhiteDummies = computed(() => {
     }
 
     &__name {
-      margin: 0.08em 0 0.12em;
-      font-size: 6rem;
+      // on what length the text should shrink
+      --text-boundry: 11;
+      // text size reference
+      --text-base: 6.5vw;
 
-      &--small {
-        font-size: 4.2rem;
+      margin-top: max(0.08em, 6px);
+      margin-bottom: max(0.12em, 10px);
+      font-size: clamp(
+        1.8rem,
+        (var(--text-boundry) / var(--length)) * var(--text-base),
+        6rem
+      );
+
+      @include mixins.sm {
+        --text-boundry: 13;
+        --text-base: 11vw;
       }
     }
 
     &__tags {
       display: flex;
+      flex-wrap: wrap;
       gap: 6px;
       margin-bottom: 8px;
     }
@@ -422,6 +473,7 @@ const numOfWhiteDummies = computed(() => {
 
     &__row {
       display: flex;
+      flex-wrap: wrap;
       font-size: 0.875rem;
 
       & > * {
@@ -510,11 +562,13 @@ const numOfWhiteDummies = computed(() => {
   }
 
   &__goto {
+    $size: clamp(48px, 5vw, 64px);
+
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 64px;
-    height: 64px;
+    width: $size;
+    height: $size;
     border-radius: 50%;
     transition: scale 100ms;
     outline: solid 2px colors.$main-bg;
