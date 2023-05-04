@@ -20,6 +20,8 @@ model User {
 model CardPack {
     id         Int         @id @default(autoincrement())
     name       String
+    type       String
+    bundle     String?
     icon       String?
     color      String?
     blackCards BlackCard[]

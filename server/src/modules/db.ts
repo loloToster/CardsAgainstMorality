@@ -125,6 +125,8 @@ class Database extends PrismaClient {
       await this.cardPack.create({
         data: {
           name: pack.name,
+          bundle: pack.bundle,
+          type: pack.type,
           color: pack.color,
           icon: pack.icon,
           blackCards: {

@@ -23,6 +23,8 @@ router.get("/", async (req, res) => {
         ({
           id: p.id,
           name: p.name,
+          type: p.type,
+          bundle: p.bundle,
           color: p.color,
           icon: p.icon,
           numOfBlacks: p._count.blackCards,

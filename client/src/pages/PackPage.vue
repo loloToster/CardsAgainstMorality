@@ -153,7 +153,7 @@ const numOfWhiteDummies = computed(() => {
           {{ state.pack.name }}
         </CardPack>
         <div class="pack__meta">
-          <div class="pack__meta__type">Card Pack</div>
+          <div class="pack__meta__type">{{ state.pack.type }}</div>
           <h1
             class="pack__meta__name"
             :class="{ 'pack__meta__name--small': longName }"
@@ -161,9 +161,13 @@ const numOfWhiteDummies = computed(() => {
             {{ state.pack.name }}
           </h1>
           <div class="pack__meta__tags">
-            <AppChip class="pack__meta__tag pack__meta__tag--bundle">
-              Some Bundle
+            <AppChip
+              v-if="state.pack.bundle"
+              class="pack__meta__tag pack__meta__tag--bundle"
+            >
+              {{ state.pack.bundle }}
             </AppChip>
+            <AppChip class="pack__meta__tag" outlined> Tag 1 </AppChip>
             <AppChip class="pack__meta__tag" outlined> Tag 2 </AppChip>
             <AppChip class="pack__meta__tag" outlined> Tag 3 </AppChip>
           </div>

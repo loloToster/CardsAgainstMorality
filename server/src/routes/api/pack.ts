@@ -27,6 +27,8 @@ router.get("/:id", async (req, res) => {
     ? {
       id: foundPack.id,
       name: foundPack.name,
+      type: foundPack.type,
+      bundle: foundPack.bundle,
       color: foundPack.color,
       icon: foundPack.icon,
       numOfBlacks: foundPack._count.blackCards,
