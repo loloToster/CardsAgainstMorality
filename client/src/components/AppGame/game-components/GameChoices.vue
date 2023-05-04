@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from "vue"
-import AppTooltip from "@/components/AppTooltip.vue"
 
 withDefaults(
   defineProps<{
@@ -70,10 +69,8 @@ function onTransEnd(e: TransitionEvent, idx: number) {
         v-if="choosable && activeIdx === choice - 1"
         @transitionend="e => onTransEnd(e, choice - 1)"
         class="choices__choice__choose"
+        v-tooltip.top="'Hold to choose'"
       >
-        <AppTooltip class="choices__choice__choose__tooltip">
-          Hold to choose
-        </AppTooltip>
         <div class="choices__choice__choose__progress"></div>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
           <path d="M382 848 122 588l90-90 170 170 366-366 90 90-456 456Z" />
@@ -101,7 +98,7 @@ function onTransEnd(e: TransitionEvent, idx: number) {
   margin: auto;
   overflow-y: hidden;
   overflow-x: auto;
-  padding: 0 50px;
+  padding: 0 12px;
 
   &::-webkit-scrollbar {
     height: 8px;
@@ -211,14 +208,6 @@ function onTransEnd(e: TransitionEvent, idx: number) {
       border-radius: 50%;
       cursor: pointer;
       transform: translate(20%, 20%);
-
-      &__tooltip {
-        display: none;
-      }
-
-      &:hover &__tooltip {
-        display: block;
-      }
 
       &__progress {
         position: absolute;

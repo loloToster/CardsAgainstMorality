@@ -1,7 +1,9 @@
 import { createApp, nextTick } from "vue"
 import { createRouter, createWebHistory } from "vue-router"
 import VWave from "v-wave"
+import FloatingVue from "floating-vue"
 
+import "floating-vue/dist/style.css"
 import "./styles/style.scss"
 
 import App from "./App.vue"
@@ -52,5 +54,6 @@ const app = createApp(App)
 
 app.use(router)
 app.use(VWave, {})
+app.use(FloatingVue)
 
 app.mount("#app")
