@@ -8,11 +8,12 @@ datasource db {
 }
 
 model User {
-    id         Int       @id @default(autoincrement())
+    id         Int        @id @default(autoincrement())
     name       String
     picture    String?
-    lastUsed   DateTime? @map("last_used")
-    strategyId String    @map("strategy_id")
+    lastUsed   DateTime?  @map("last_used")
+    strategyId String     @map("strategy_id")
+    likedPacks CardPack[]
 
     @@map("users")
 }
@@ -26,6 +27,7 @@ model CardPack {
     color      String?
     blackCards BlackCard[]
     whiteCards WhiteCard[]
+    likedBy    User[]
 
     @@map("card_packs")
 }

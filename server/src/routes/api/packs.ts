@@ -11,7 +11,8 @@ router.get("/", async (req, res) => {
       _count: {
         select: {
           blackCards: true,
-          whiteCards: true
+          whiteCards: true,
+          likedBy: true
         }
       }
     }
@@ -28,7 +29,8 @@ router.get("/", async (req, res) => {
           color: p.color,
           icon: p.icon,
           numOfBlacks: p._count.blackCards,
-          numOfWhites: p._count.whiteCards
+          numOfWhites: p._count.whiteCards,
+          likedBy: p._count.likedBy
         } satisfies ApiCardPack)
     )
   })

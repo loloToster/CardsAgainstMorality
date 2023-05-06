@@ -2,7 +2,7 @@ import { Router } from "express"
 import db from "../../modules/db"
 import { ApiCardPack } from "../../types"
 
-const INT_REGEX = /^\d+$/
+const POS_INT_REGEX = /^\d+$/
 
 const router = Router()
 
@@ -11,17 +11,31 @@ router.get("/:id", async (req, res) => {
 
   const foundPack = await db.cardPack.findFirst({
     where: {
-      OR: [{ id: INT_REGEX.test(id) ? parseInt(id) : -1 }, { name: id }]
+      OR: [{ id: POS_INT_REGEX.test(id) ? parseInt(id) : -1 }, { name: id }]
     },
     include: {
       _count: {
         select: {
           blackCards: true,
-          whiteCards: true
+          whiteCards: true,
+          likedBy: true
         }
       }
     }
   })
+
+  let liked: boolean | undefined
+
+  if (req.user && foundPack) {
+    const { id: userId } = req.user
+
+    const result = await db.user.findUniqueOrThrow({
+      where: { id: userId },
+      select: { likedPacks: { where: { id: foundPack.id } } }
+    })
+
+    liked = Boolean(result.likedPacks.length)
+  }
 
   const pack: ApiCardPack | null = foundPack
     ? {
@@ -32,7 +46,9 @@ router.get("/:id", async (req, res) => {
       color: foundPack.color,
       icon: foundPack.icon,
       numOfBlacks: foundPack._count.blackCards,
-      numOfWhites: foundPack._count.whiteCards
+      numOfWhites: foundPack._count.whiteCards,
+      likedBy: foundPack._count.likedBy,
+      liked
     }
     : null
 
@@ -43,7 +59,7 @@ router.get("/:id", async (req, res) => {
 router.get("/:id/cards", async (req, res) => {
   const { id } = req.params
 
-  if (!INT_REGEX.test(id)) return res.status(400).send()
+  if (!POS_INT_REGEX.test(id)) return res.status(400).send()
 
   const cards = await db.cardPack.findFirst({
     where: { id: parseInt(id) },
@@ -56,6 +72,36 @@ router.get("/:id/cards", async (req, res) => {
   if (!cards) return res.status(404).send()
 
   res.json({ cards })
+})
+
+// ensure user is requesting
+router.use((req, res, next) => {
+  if (!req.user) return res.status(401).send()
+  next()
+})
+
+router.put("/:id/like", async (req, res) => {
+  const { id } = req.params
+  if (!POS_INT_REGEX.test(id)) return res.status(400).send()
+
+  await db.user.update({
+    where: { id: req.user?.id },
+    data: { likedPacks: { connect: { id: parseInt(id) } } }
+  })
+
+  res.send()
+})
+
+router.delete("/:id/like", async (req, res) => {
+  const { id } = req.params
+  if (!POS_INT_REGEX.test(id)) return res.status(400).send()
+
+  await db.user.update({
+    where: { id: req.user?.id },
+    data: { likedPacks: { disconnect: { id: parseInt(id) } } }
+  })
+
+  res.send()
 })
 
 export = router

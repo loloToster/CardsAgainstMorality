@@ -6,10 +6,13 @@ import Color from "color"
 
 import { ApiCardPack, ApiBlackCard, ApiWhiteCard } from "@backend/types"
 
+import { notify } from "@/contexts/notifications"
+
 import AppLoading from "@/components/AppLoading.vue"
 import AppChip from "@/components/AppChip.vue"
 import PlayingCard from "@/components/PlayingCard.vue"
 import CardPack from "@/components/CardPack.vue"
+import LikeButton from "@/components/LikeButton.vue"
 
 import defaultPackIcon from "@/assets/black-card-icon.svg?raw"
 import BlackCardIcon from "@/assets/black-card-icon.svg?component"
@@ -139,6 +142,17 @@ const numOfWhiteDummies = computed(() => {
   if (!state.pack) return 0
   return state.pack.numOfWhites - state.fetchedWhiteCards.length
 })
+
+async function handleLike(liked: boolean) {
+  if (!state.pack) return
+
+  const res = await fetch(`/api/pack/${state.pack.id}/like`, {
+    method: liked ? "PUT" : "DELETE"
+  })
+
+  if (!res.ok)
+    notify({ type: "error", text: `Failed to ${liked ? "like" : "dislike"}` })
+}
 </script>
 
 <template>
@@ -199,13 +213,21 @@ const numOfWhiteDummies = computed(() => {
           </div>
           <div class="pack__meta__row">
             <div class="pack__meta__author">Cards Against Humanity</div>
-            <div class="pack__meta__likes">100 likes</div>
+            <div v-if="state.pack.likedBy" class="pack__meta__likes">
+              {{ state.pack.likedBy }} likes
+            </div>
             <div v-if="state.pack.numOfBlacks" class="pack__meta__black">
               {{ state.pack.numOfBlacks }} black cards
             </div>
             <div v-if="state.pack.numOfWhites" class="pack__meta__white">
               {{ state.pack.numOfWhites }} white cards
             </div>
+          </div>
+          <div class="pack__meta__actions">
+            <LikeButton
+              :liked="state.pack.liked ?? false"
+              @change="handleLike"
+            />
           </div>
         </div>
       </div>
@@ -423,9 +445,10 @@ const numOfWhiteDummies = computed(() => {
   }
 
   &__meta {
+    position: relative;
     color: var(--meta-content-color);
     flex-grow: 1;
-    margin-bottom: 24px;
+    padding-bottom: 24px;
 
     &__type {
       font-size: 0.875rem;
@@ -489,6 +512,15 @@ const numOfWhiteDummies = computed(() => {
           margin: 0;
         }
       }
+    }
+
+    &__actions {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      transform: translateY(100%);
+      width: 100%;
+      padding-top: 16px;
     }
   }
 
