@@ -1,22 +1,58 @@
 <script setup lang="ts">
-import { reactive } from "vue"
+import { reactive, ref } from "vue"
+import { destroyTooltip } from "floating-vue"
 
 const emit = defineEmits<{ (ev: "change", liked: boolean): void }>()
 const props = defineProps<{ liked: boolean }>()
-const state = reactive({ liked: props.liked })
+
+const state = reactive({
+  liked: props.liked,
+  mouseover: false,
+  showTooltip: false,
+  interacted: false
+})
+
+const btn = ref<HTMLButtonElement>()
 
 function handleClick() {
+  state.interacted = true
+  destroyTooltip(btn.value)
+  state.showTooltip = false
   state.liked = !state.liked
   emit("change", state.liked)
+}
+
+function handleMouseEnter() {
+  if (state.mouseover) return
+
+  state.mouseover = true
+  state.showTooltip = true
+}
+
+function handleMouseLeave() {
+  state.mouseover = false
+  state.showTooltip = false
 }
 </script>
 
 <template>
   <button
     @click="handleClick"
+    @mouseenter="handleMouseEnter"
+    @mouseleave="handleMouseLeave"
     class="like"
-    :class="{ active: state.liked }"
-    v-tooltip="state.liked ? 'Remove from favourites' : 'Add to favourites'"
+    :class="{
+      liked: state.liked,
+      active: state.interacted && state.liked,
+      inactive: state.interacted && !state.liked
+    }"
+    ref="btn"
+    v-tooltip="{
+      delay: { show: 100, hide: 0 },
+      content: state.liked ? 'Remove from favourites' : 'Add to favourites',
+      triggers: [],
+      shown: state.showTooltip
+    }"
   >
     <svg
       v-if="state.liked"
@@ -38,16 +74,6 @@ function handleClick() {
         d="m479.761 943.131-45.065-40.587Q328.21 804.705 258.735 733.787q-69.474-70.917-110.713-126.896-41.24-55.978-57.74-101.576-16.5-45.598-16.5-92.338 0-92.802 62.212-154.998 62.212-62.197 153.767-62.197 56.83 0 105.176 26.283 48.346 26.283 84.824 76.326 42.478-53.043 89.247-77.826 46.769-24.783 100.753-24.783 91.961 0 154.209 62.204Q886.218 320.189 886.218 413q0 46.71-16.5 92.192-16.5 45.482-57.74 101.46-41.239 55.978-110.801 127.043-69.562 71.064-176.112 168.849l-45.304 40.587Zm-.12-89.761q101.117-92.996 166.26-159.139 65.142-66.144 103.403-115.785 38.261-49.642 53.522-88.454 15.261-38.812 15.261-76.842 0-65.193-41.489-107.215-41.488-42.022-106.496-42.022-50.923 0-94.415 31.62-43.491 31.619-70.491 88.38h-51.631q-25.94-56-69.63-88t-94.36-32q-64.684 0-106.053 41.868-41.37 41.868-41.37 107.535 0 38.466 15.366 77.744t53.642 89.392q38.275 50.113 103.677 115.754 65.402 65.642 164.804 157.164Zm.598-294.848Z"
       />
     </svg>
-    <svg
-      v-if="state.liked"
-      class="like__break"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 96 960 960"
-    >
-      <path
-        d="M478.37 981.805Q342.174 845.326 261.359 761.131q-80.816-84.196-123.272-140.25-42.457-56.055-55.055-96.848-12.597-40.794-12.597-89.468 0-94.152 65.076-159.826 65.076-65.674 158.989-65.674 46.913 0 90.348 17.696 43.435 17.695 77.869 49.891L404.065 496h116.218l-46.24 386.826 123.413-425.391H479.043l70.522-219.892q26.674-14.478 55.968-21.478 29.293-7 59.967-7 93.913 0 159.109 65.674 65.196 65.674 65.196 159.826 0 47.435-12.457 87.609-12.457 40.174-55.13 96.848-42.674 56.674-123.946 141.109Q617 844.565 478.37 981.805Z"
-      />
-    </svg>
   </button>
 </template>
 
@@ -55,34 +81,105 @@ function handleClick() {
 @use "@/styles/colors" as colors;
 
 .like {
+  position: relative;
   width: 32px;
   height: 32px;
   cursor: pointer;
+
+  @keyframes shake {
+    from,
+    to {
+      transform: rotate(0);
+    }
+
+    33% {
+      transform: rotate(-7deg);
+    }
+
+    66% {
+      transform: rotate(7deg);
+    }
+
+    90% {
+      transform: rotate(-2deg);
+    }
+  }
+
+  &.inactive {
+    transform-origin: center 200%;
+    animation: shake 300ms;
+  }
+
+  &::before {
+    z-index: -1;
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1px;
+    height: 1px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+
+    outline-style: solid;
+    outline-color: colors.$liked;
+    outline-width: 0;
+  }
+
+  @keyframes glow {
+    from {
+      outline-width: 0;
+      outline-offset: 0;
+      opacity: 0.8;
+    }
+
+    30% {
+      outline-width: 10px;
+    }
+
+    to {
+      outline-offset: 40px;
+      opacity: 0;
+      outline-width: 0;
+    }
+  }
+
+  &.active::before {
+    animation: glow 400ms ease-out;
+  }
 
   svg {
     width: 100%;
     height: 100%;
     fill: colors.$lightgray;
+    transition: fill 100ms;
   }
 
   &:hover svg {
     fill: colors.$subtext;
   }
 
-  &.active svg {
+  &.liked svg {
     fill: colors.$liked;
   }
 
-  &__break {
-    display: none;
+  @keyframes pop {
+    from,
+    to {
+      scale: 1;
+    }
+
+    30% {
+      scale: 0.6;
+    }
+
+    80% {
+      scale: 1.08;
+    }
   }
 
-  &.active:hover &__filled {
-    display: none;
-  }
-
-  &.active:hover &__break {
-    display: block;
+  &.active &__filled {
+    animation: pop 300ms ease-in;
   }
 }
 </style>
