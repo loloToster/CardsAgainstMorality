@@ -7,6 +7,7 @@ const router = Router()
 
 router.get("/", async (req, res) => {
   const packs = await db.cardPack.findMany({
+    orderBy: { id: "asc" },
     include: {
       _count: {
         select: {
