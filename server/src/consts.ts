@@ -1,3 +1,5 @@
+import { SettingsBoundaries } from "./types"
+
 // minimum amount of miliseconds between inactive anonymous users removal
 export const MIN_TIME_BETWEEN_ANS_USER_RM = 20 * 60 * 1000
 // after how many miliseconds is user considered inactive
@@ -11,5 +13,28 @@ export enum StrategyIdentifier {
 }
 
 export const TIME_LIMIT_OFFSET = 500
+
+export const SETTINGS_BOUNDARIES: SettingsBoundaries = {
+  playersLimit: {
+    min: 2,
+    max: 20,
+    default: 10
+  },
+  timeLimit: {
+    min: 5,
+    max: 360,
+    default: 120
+  },
+  scoreLimit: {
+    min: 0,
+    max: undefined,
+    default: 15
+  },
+  roundLimit: {
+    min: 0,
+    max: undefined,
+    default: 30
+  }
+}
 
 export const VOTING_TIME = 2 * 60 * 1000

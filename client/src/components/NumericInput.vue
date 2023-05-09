@@ -8,7 +8,9 @@ const props = withDefaults(
     highest?: number
     step?: number
   }>(),
-  { step: 1 }
+  {
+    step: 1
+  }
 )
 
 const emit = defineEmits<{
@@ -32,8 +34,8 @@ watch(
     }
 
     state.invalid = false
-    if (props.lowest !== undefined) state.toLow = props.lowest >= newVal
-    if (props.highest !== undefined) state.toBig = props.highest <= newVal
+    if (props.lowest !== undefined) state.toLow = props.lowest > newVal
+    if (props.highest !== undefined) state.toBig = props.highest < newVal
 
     emit("update:modelValue", state.toLow || state.toBig ? NaN : newVal)
   }
@@ -48,7 +50,7 @@ watch(
       :class="{ invalid: state.toLow, inactive: state.invalid }"
     >
       <span>{{ lowest }}</span>
-      <span> &lt;</span>
+      <span> &le;</span>
     </div>
     <input
       type="number"
@@ -61,7 +63,7 @@ watch(
       class="inp__limit"
       :class="{ invalid: state.toBig, inactive: state.invalid }"
     >
-      <span>&lt; </span>
+      <span>&le; </span>
       <span v-if="isFinite(highest)">{{ highest }}</span>
       <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <title>infinity</title>

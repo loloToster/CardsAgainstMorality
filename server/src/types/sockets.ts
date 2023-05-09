@@ -1,6 +1,15 @@
 import type { IncomingMessage } from "http"
 import type { Server, Socket } from "socket.io"
 import type { ApiBlackCard, ApiPlayer, ApiWhiteCard } from "./api"
+import { SettingsBoundaries } from "."
+
+export interface SettingsData {
+  playersLimit: number
+  timeLimit: number | null
+  scoreLimit: number | null
+  roundLimit: number | null
+  packs: number[]
+}
 
 export interface NewRoundData {
   tsar: boolean
@@ -53,8 +62,12 @@ export interface ChoicesData {
 }
 
 export type SyncData =
-  | { started: false }
+  | {
+      settingsBoundaries: SettingsBoundaries
+      started: false
+    }
   | (NewRoundData & {
+      settingsBoundaries: SettingsBoundaries
       started: true
       choices?: ApiWhiteCard[][]
       submitted: boolean
@@ -62,6 +75,7 @@ export type SyncData =
     })
 
 export interface ServerToClientSocketEvents {
+  "sync-settings": (data: SettingsData) => void
   players: (data: { players: ApiPlayer[]; kickedChoice?: number[] }) => void
   "new-round": (
     data: NewRoundData & { prevRound?: PrevRound; roundRestart?: boolean }
@@ -70,14 +84,6 @@ export interface ServerToClientSocketEvents {
   sync: (data: SyncData) => void
   end: (data: { podium: PodiumEl[] }) => void
   voting: (data: VotingData | null) => void
-}
-
-export interface StartData {
-  playersLimit: number
-  timeLimit: number | null
-  scoreLimit: number | null
-  roundLimit: number | null
-  packs: number[]
 }
 
 export interface Submition {
@@ -93,7 +99,8 @@ export interface Vote {
 }
 
 export interface ClientToServerSocketEvents {
-  start: (data: StartData) => void
+  "sync-settings": (data: SettingsData) => void
+  start: (data: SettingsData) => void
   submit: (data: Submition) => void
   verdict: (data: Verdict) => void
   "vote-start": (data: VotingMeta) => void

@@ -2,7 +2,7 @@
 import { onMounted, onUnmounted, watch } from "vue"
 import { useRoute } from "vue-router"
 
-import { StartData, VotingMeta } from "@backend/types"
+import { SettingsData, VotingMeta } from "@backend/types"
 import { GameStage } from "@/types/game"
 
 import {
@@ -17,6 +17,10 @@ import {
   resetGameState,
   resetPlayerState
 } from "./contexts/gamestate"
+import {
+  setSettingBoundaries,
+  setByParsedSettings
+} from "./contexts/gamesettingsstate"
 
 import AppLoading from "@/components/AppLoading.vue"
 import GameView from "./GameView.vue"
@@ -44,6 +48,10 @@ socket.on("players", data => {
         text: "The player that was kicked has already submitted his choice so it was removed"
       })
   }
+})
+
+socket.on("sync-settings", data => {
+  setByParsedSettings(data)
 })
 
 socket.on("new-round", data => {
@@ -97,6 +105,8 @@ socket.on("choices", data => {
 })
 
 socket.on("sync", data => {
+  setSettingBoundaries(data.settingsBoundaries)
+
   if (!data.started) {
     gameState.stage = GameStage.NOT_STARTED
     return
@@ -129,7 +139,11 @@ socket.on("voting", data => {
   gameState.voting = data
 })
 
-function onStart(data: StartData) {
+function onSettingsChange(data: SettingsData) {
+  socket.emit("sync-settings", data)
+}
+
+function onStart(data: SettingsData) {
   socket.emit("start", data)
 }
 
@@ -169,6 +183,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   socket.off("players")
+  socket.off("sync-settings")
   socket.off("new-round")
   socket.off("choices")
   socket.off("sync")
@@ -199,7 +214,12 @@ onUnmounted(() => {
     @new-voting="onNewVoting"
     @vote="onVote"
   />
-  <GameSettings v-else :room-id="roomId.toString()" @start="onStart" />
+  <GameSettings
+    v-else
+    :room-id="roomId.toString()"
+    @change="onSettingsChange"
+    @start="onStart"
+  />
 </template>
 
 <style scoped lang="scss"></style>
