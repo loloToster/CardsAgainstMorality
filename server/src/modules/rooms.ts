@@ -2,7 +2,7 @@ import { nanoid } from "nanoid"
 import db from "./db"
 import logger from "./logger"
 
-import { TIME_LIMIT_OFFSET, VOTING_TIME } from "../consts"
+import { SETTINGS_BOUNDARIES, TIME_LIMIT_OFFSET, VOTING_TIME } from "../consts"
 
 import { randomElement, shuffle } from "../utils/random"
 import { Game, GameState, Player, Podium, WinnerData } from "../utils/game"
@@ -38,6 +38,7 @@ interface Voting {
   createdBy: string
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const errWrapper = <T extends (...args: any[]) => any>(cb: T): T => {
   return ((...args: Parameters<T>) => {
     try {
@@ -46,6 +47,8 @@ const errWrapper = <T extends (...args: any[]) => any>(cb: T): T => {
       if (!(returnedVal instanceof Promise)) return returnedVal
 
       return returnedVal.catch(err => logger.error(err?.message ?? err))
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       logger.error(err?.message ?? err)
     }
@@ -144,6 +147,13 @@ export class Room {
         )
       }
     })
+
+    socket.on(
+      "sync-settings",
+      errWrapper(data => {
+        socket.broadcast.to(this.id).emit("sync-settings", data)
+      })
+    )
 
     socket.on(
       "start",
@@ -518,7 +528,11 @@ export class Room {
     const { game } = player
 
     if (game.state === GameState.NOT_STARTED) {
-      player.metadata?.socket.emit("sync", { started: false })
+      player.metadata?.socket.emit("sync", {
+        settingsBoundaries: SETTINGS_BOUNDARIES,
+        started: false
+      })
+
       return
     }
 
@@ -552,6 +566,7 @@ export class Room {
     const timeLimitSeconds = this.getTimeLimitSeconds()
 
     const data: SyncData = {
+      settingsBoundaries: SETTINGS_BOUNDARIES,
       started: true,
       tsar: player.isTsar,
       blackCard,
