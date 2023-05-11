@@ -61,18 +61,22 @@ export interface ChoicesData {
   timeLimit: number | null
 }
 
+export interface SharedSyncData {
+  settingsBoundaries: SettingsBoundaries
+  currentSettings: SettingsData
+}
+
 export type SyncData =
-  | {
-      settingsBoundaries: SettingsBoundaries
+  | (SharedSyncData & {
       started: false
-    }
-  | (NewRoundData & {
-      settingsBoundaries: SettingsBoundaries
-      started: true
-      choices?: ApiWhiteCard[][]
-      submitted: boolean
-      voting: VotingData | null
     })
+  | (SharedSyncData &
+      NewRoundData & {
+        started: true
+        choices?: ApiWhiteCard[][]
+        submitted: boolean
+        voting: VotingData | null
+      })
 
 export interface ServerToClientSocketEvents {
   "sync-settings": (data: SettingsData) => void

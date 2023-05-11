@@ -12,6 +12,7 @@ type SocketValidators = {
 }
 
 const validators: Record<string, ClassType<object> | undefined> = {
+  "sync-settings": SettingsDto,
   start: SettingsDto,
   submit: SubmitionDto,
   verdict: VerdictDto,

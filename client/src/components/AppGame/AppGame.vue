@@ -106,6 +106,7 @@ socket.on("choices", data => {
 
 socket.on("sync", data => {
   setSettingBoundaries(data.settingsBoundaries)
+  setByParsedSettings(data.currentSettings)
 
   if (!data.started) {
     gameState.stage = GameStage.NOT_STARTED
@@ -139,8 +140,14 @@ socket.on("voting", data => {
   gameState.voting = data
 })
 
+let settingsChangeTimeout: ReturnType<typeof setTimeout> | undefined
 function onSettingsChange(data: SettingsData) {
-  socket.emit("sync-settings", data)
+  clearTimeout(settingsChangeTimeout)
+
+  // debounce
+  settingsChangeTimeout = setTimeout(() => {
+    socket.emit("sync-settings", data)
+  }, 500)
 }
 
 function onStart(data: SettingsData) {

@@ -25,8 +25,9 @@ import WhiteCardIcon from "@/assets/white-card-icon.svg?component"
 
 defineProps<{ roomId: string }>()
 
-const leader = computed(() => {
-  return gameState.players.find(p => p.leader)
+// todo: block inputs & hide start btn for non leaders
+const imLeader = computed(() => {
+  return gameState.players.find(p => p.leader)?.userId === user.value?.id
 })
 
 const emit = defineEmits<{
@@ -78,6 +79,7 @@ fetch("/api/packs").then(async res => {
   state.loading = false
 })
 
+// todo: validate boundaries
 const canStart = computed(() => {
   return (
     numOfBlackCards.value &&
@@ -97,12 +99,12 @@ const canStart = computed(() => {
   )
 })
 
-function onStart() {
-  emit("start", getParsedSettings())
+function onChange() {
+  if (imLeader.value) emit("change", getParsedSettings())
 }
 
-function onChange() {
-  emit("change", getParsedSettings())
+function onStart() {
+  emit("start", getParsedSettings())
 }
 
 watch(gameSettingsState, onChange)

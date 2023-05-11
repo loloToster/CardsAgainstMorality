@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { reactive } from "vue"
+import { reactive, watch } from "vue"
 
-defineProps<{
+const props = defineProps<{
   modelValue: boolean
 }>()
 
@@ -17,6 +17,13 @@ function onChange() {
   state.val = !state.val
   emit("update:modelValue", state.val)
 }
+
+watch(
+  () => props.modelValue,
+  newVal => {
+    state.val = newVal
+  }
+)
 </script>
 
 <template>

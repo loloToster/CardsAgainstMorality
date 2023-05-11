@@ -29,7 +29,7 @@ watch(
   newVal => {
     if (typeof newVal !== "number" || newVal % props.step) {
       state.invalid = true
-      emit("update:modelValue", NaN)
+      emit("update:modelValue", newVal)
       return
     }
 
@@ -37,9 +37,14 @@ watch(
     if (props.lowest !== undefined) state.toLow = props.lowest > newVal
     if (props.highest !== undefined) state.toBig = props.highest < newVal
 
-    emit("update:modelValue", state.toLow || state.toBig ? NaN : newVal)
+    emit("update:modelValue", newVal)
   }
 )
+
+watch(() => props.modelValue, newVal => {
+  state.val = newVal
+})
+
 </script>
 
 <template>

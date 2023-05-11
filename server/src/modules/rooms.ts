@@ -12,6 +12,7 @@ import {
   ApiWhiteCard,
   ExtendedReq,
   PrevRound,
+  SharedSyncData,
   SocketClient,
   SocketServer,
   SyncData,
@@ -60,6 +61,7 @@ export class Room {
   timeLimit: number | null
   scoreLimit: number | null
   roundLimit: number | null
+  selectedPacks: number[]
 
   timeLimitStart: number | null
   timeLimitTimeout: ReturnType<typeof setTimeout> | undefined
@@ -76,10 +78,11 @@ export class Room {
     public io: SocketServer,
     public onEmpty: EmptyRoomCallback
   ) {
-    this.playersLimit = Infinity
+    this.playersLimit = SETTINGS_BOUNDARIES.playersLimit.default
     this.timeLimit = null
     this.scoreLimit = null
     this.roundLimit = null
+    this.selectedPacks = []
 
     this.timeLimitStart = null
     this.timeLimitTimeout = undefined
@@ -94,7 +97,7 @@ export class Room {
     if (this.timeLimit === null || !this.timeLimitStart) return null
 
     return Math.round(
-      (this.timeLimit - (Date.now() - this.timeLimitStart)) / 1000
+      (this.timeLimit * 1000 - (Date.now() - this.timeLimitStart)) / 1000
     )
   }
 
@@ -151,6 +154,18 @@ export class Room {
     socket.on(
       "sync-settings",
       errWrapper(data => {
+        if (
+          this.game.state !== GameState.NOT_STARTED ||
+          this.getLeader() !== player
+        )
+          return
+
+        this.playersLimit = data.playersLimit
+        this.selectedPacks = data.packs
+        this.timeLimit = data.timeLimit
+        this.scoreLimit = data.scoreLimit
+        this.roundLimit = data.roundLimit
+
         socket.broadcast.to(this.id).emit("sync-settings", data)
       })
     )
@@ -160,9 +175,8 @@ export class Room {
       errWrapper(async settings => {
         if (this.getLeader() !== player) return
 
-        this.timeLimit =
-          settings.timeLimit === null ? null : settings.timeLimit * 1000
         this.playersLimit = settings.playersLimit
+        this.timeLimit = settings.timeLimit
         this.scoreLimit = settings.scoreLimit
         this.roundLimit = settings.roundLimit
 
@@ -329,7 +343,7 @@ export class Room {
       clearTimeout(this.timeLimitTimeout)
       this.timeLimitTimeout = setTimeout(
         errWrapper(func.bind(this)),
-        this.timeLimit + TIME_LIMIT_OFFSET
+        this.timeLimit * 1000 + TIME_LIMIT_OFFSET
       )
     }
 
@@ -527,9 +541,20 @@ export class Room {
   async sendSyncData(player: Player<PlayerMetadata>) {
     const { game } = player
 
+    const sharedSyncData: SharedSyncData = {
+      settingsBoundaries: SETTINGS_BOUNDARIES,
+      currentSettings: {
+        playersLimit: this.playersLimit,
+        timeLimit: this.timeLimit,
+        scoreLimit: this.scoreLimit,
+        roundLimit: this.roundLimit,
+        packs: this.selectedPacks
+      }
+    }
+
     if (game.state === GameState.NOT_STARTED) {
       player.metadata?.socket.emit("sync", {
-        settingsBoundaries: SETTINGS_BOUNDARIES,
+        ...sharedSyncData,
         started: false
       })
 
@@ -566,7 +591,7 @@ export class Room {
     const timeLimitSeconds = this.getTimeLimitSeconds()
 
     const data: SyncData = {
-      settingsBoundaries: SETTINGS_BOUNDARIES,
+      ...sharedSyncData,
       started: true,
       tsar: player.isTsar,
       blackCard,
