@@ -7,9 +7,24 @@ import { ApiCardPack } from "@backend/types"
 import AppChip from "@/components/AppChip.vue"
 import defaultIcon from "@/assets/white-card-icon.svg?raw"
 
-const props = defineProps<{ pack: ApiCardPack; selected?: boolean }>()
+const props = withDefaults(
+  defineProps<{
+    pack: ApiCardPack
+    selected?: boolean
+    disabled?: boolean
+  }>(),
+  {
+    selected: false,
+    disabled: false
+  }
+)
 
-defineEmits(["click"])
+const emit = defineEmits(["click"])
+
+function handleClick() {
+  if (props.disabled) return
+  emit("click")
+}
 
 const packColor = computed(() => {
   const color = props.pack.color
@@ -36,10 +51,10 @@ const packIcon = computed(() => {
 
 <template>
   <AppChip
-    @click="$emit('click')"
+    @click="handleClick"
     :color="packColor"
     :style="{ '--pack-color': packColor }"
-    :class="{ selected }"
+    :class="{ selected, disabled }"
     :outlined="!selected"
     class="pack"
   >
@@ -60,6 +75,10 @@ const packIcon = computed(() => {
 
 .pack {
   transition: all 100ms;
+
+  &.disabled {
+    cursor: not-allowed;
+  }
 
   &__icon {
     :deep(svg) {

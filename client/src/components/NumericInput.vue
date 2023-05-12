@@ -7,9 +7,11 @@ const props = withDefaults(
     lowest?: number
     highest?: number
     step?: number
+    disabled?: boolean
   }>(),
   {
-    step: 1
+    step: 1,
+    disabled: false
   }
 )
 
@@ -41,10 +43,12 @@ watch(
   }
 )
 
-watch(() => props.modelValue, newVal => {
-  state.val = newVal
-})
-
+watch(
+  () => props.modelValue,
+  newVal => {
+    state.val = newVal
+  }
+)
 </script>
 
 <template>
@@ -62,6 +66,7 @@ watch(() => props.modelValue, newVal => {
       v-model="state.val"
       :step="step"
       :class="{ invalid: state.invalid }"
+      :disabled="disabled"
     />
     <div
       v-if="highest !== undefined"
@@ -132,6 +137,15 @@ watch(() => props.modelValue, newVal => {
     &::-webkit-inner-spin-button {
       -webkit-appearance: none;
       margin: 0;
+    }
+
+    &:disabled {
+      color: inherit;
+      cursor: not-allowed;
+
+      &:hover {
+        color: colors.$lightgray;
+      }
     }
 
     &.invalid {

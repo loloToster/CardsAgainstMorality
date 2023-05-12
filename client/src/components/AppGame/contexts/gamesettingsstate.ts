@@ -34,11 +34,12 @@ export const gameSettingsState = reactive<{
   packs: []
 })
 
-function checkBoundary(curVal: number, boundary: SettingsBoundary) {
+export function ensureBoundary(curVal: number, boundary: SettingsBoundary) {
   return (
-    isNaN(curVal) ||
-    (boundary.min && curVal < boundary.min) ||
-    (boundary.max && curVal > boundary.max)
+    !isNaN(curVal) &&
+    !(curVal % 1) &&
+    (boundary.min === undefined || curVal >= boundary.min) &&
+    (boundary.max === undefined || curVal <= boundary.max)
   )
 }
 
@@ -46,23 +47,25 @@ export function setSettingBoundaries(settingsBoundaries: SettingsBoundaries) {
   gameSettingsState.settingsBoundaries = settingsBoundaries
 
   if (
-    checkBoundary(
+    !ensureBoundary(
       gameSettingsState.playersLimit,
       settingsBoundaries.playersLimit
     )
   )
     gameSettingsState.playersLimit = settingsBoundaries.playersLimit.default
 
-  if (checkBoundary(gameSettingsState.timeLimit, settingsBoundaries.timeLimit))
+  if (
+    !ensureBoundary(gameSettingsState.timeLimit, settingsBoundaries.timeLimit)
+  )
     gameSettingsState.timeLimit = settingsBoundaries.timeLimit.default
 
   if (
-    checkBoundary(gameSettingsState.scoreLimit, settingsBoundaries.scoreLimit)
+    !ensureBoundary(gameSettingsState.scoreLimit, settingsBoundaries.scoreLimit)
   )
     gameSettingsState.scoreLimit = settingsBoundaries.scoreLimit.default
 
   if (
-    checkBoundary(gameSettingsState.roundLimit, settingsBoundaries.roundLimit)
+    !ensureBoundary(gameSettingsState.roundLimit, settingsBoundaries.roundLimit)
   )
     gameSettingsState.roundLimit = settingsBoundaries.roundLimit.default
 }

@@ -8,7 +8,8 @@ import { user } from "@/contexts/user"
 import { gameState } from "./contexts/gamestate"
 import {
   gameSettingsState,
-  getParsedSettings
+  getParsedSettings,
+  ensureBoundary
 } from "./contexts/gamesettingsstate"
 
 import AppSwitch from "@/components/AppSwitch.vue"
@@ -25,7 +26,6 @@ import WhiteCardIcon from "@/assets/white-card-icon.svg?component"
 
 defineProps<{ roomId: string }>()
 
-// todo: block inputs & hide start btn for non leaders
 const imLeader = computed(() => {
   return gameState.players.find(p => p.leader)?.userId === user.value?.id
 })
@@ -79,22 +79,36 @@ fetch("/api/packs").then(async res => {
   state.loading = false
 })
 
-// todo: validate boundaries
 const canStart = computed(() => {
+  // this should never happen
+  if (!gameSettingsState.settingsBoundaries) return false
+
   return (
     numOfBlackCards.value &&
     numOfWhiteCards.value &&
     gameState.players.length >=
-      (gameSettingsState.settingsBoundaries?.playersLimit.min ?? 0) &&
-    !isNaN(gameSettingsState.playersLimit) &&
+      (gameSettingsState.settingsBoundaries.playersLimit.min ?? 1) &&
+    ensureBoundary(
+      gameSettingsState.playersLimit,
+      gameSettingsState.settingsBoundaries.playersLimit
+    ) &&
     (gameSettingsState.timeLimitEnabled
-      ? !isNaN(gameSettingsState.timeLimit)
+      ? ensureBoundary(
+        gameSettingsState.timeLimit,
+        gameSettingsState.settingsBoundaries.timeLimit
+      )
       : true) &&
     (gameSettingsState.scoreLimitEnabled
-      ? !isNaN(gameSettingsState.scoreLimit)
+      ? ensureBoundary(
+        gameSettingsState.scoreLimit,
+        gameSettingsState.settingsBoundaries.scoreLimit
+      )
       : true) &&
     (gameSettingsState.roundLimitEnabled
-      ? !isNaN(gameSettingsState.roundLimit)
+      ? ensureBoundary(
+        gameSettingsState.roundLimit,
+        gameSettingsState.settingsBoundaries.roundLimit
+      )
       : true)
   )
 })
@@ -161,12 +175,16 @@ onClickOutside(invitePlayersContent, () => {
                   gameSettingsState.settingsBoundaries.playersLimit.max ??
                   Infinity
                 "
+                :disabled="!imLeader"
               />
             </div>
           </div>
           <div class="settings__main__options-row">
             <div class="settings__main__option-title">
-              <AppSwitch v-model="gameSettingsState.timeLimitEnabled" />
+              <AppSwitch
+                v-model="gameSettingsState.timeLimitEnabled"
+                :disabled="!imLeader"
+              />
               <h3>Time limit</h3>
               <div
                 class="settings__main__option-title__tooltip"
@@ -189,12 +207,16 @@ onClickOutside(invitePlayersContent, () => {
                 :highest="
                   gameSettingsState.settingsBoundaries.timeLimit.max ?? Infinity
                 "
+                :disabled="!imLeader"
               />
             </div>
           </div>
           <div class="settings__main__options-row">
             <div class="settings__main__option-title">
-              <AppSwitch v-model="gameSettingsState.scoreLimitEnabled" />
+              <AppSwitch
+                v-model="gameSettingsState.scoreLimitEnabled"
+                :disabled="!imLeader"
+              />
               <h3>Score limit</h3>
               <div
                 class="settings__main__option-title__tooltip"
@@ -218,12 +240,16 @@ onClickOutside(invitePlayersContent, () => {
                   gameSettingsState.settingsBoundaries.scoreLimit.max ??
                   Infinity
                 "
+                :disabled="!imLeader"
               />
             </div>
           </div>
           <div class="settings__main__options-row">
             <div class="settings__main__option-title">
-              <AppSwitch v-model="gameSettingsState.roundLimitEnabled" />
+              <AppSwitch
+                v-model="gameSettingsState.roundLimitEnabled"
+                :disabled="!imLeader"
+              />
               <h3>Round limit</h3>
               <div
                 class="settings__main__option-title__tooltip"
@@ -247,6 +273,7 @@ onClickOutside(invitePlayersContent, () => {
                   gameSettingsState.settingsBoundaries.roundLimit.max ??
                   Infinity
                 "
+                :disabled="!imLeader"
               />
             </div>
           </div>
@@ -263,8 +290,12 @@ onClickOutside(invitePlayersContent, () => {
                   />
                 </svg>
               </div>
-              <button @click="selectAllPacks">Select all</button>
-              <button @click="unselectAllPacks">Unselect all</button>
+              <button v-if="imLeader" @click="selectAllPacks">
+                Select all
+              </button>
+              <button v-if="imLeader" @click="unselectAllPacks">
+                Unselect all
+              </button>
             </div>
           </div>
           <div class="settings__main__options-row">
@@ -274,6 +305,7 @@ onClickOutside(invitePlayersContent, () => {
                 @click="togglePack(pack.id)"
                 :pack="pack"
                 :selected="pack.selected"
+                :disabled="!imLeader"
                 :key="pack.id"
               />
             </div>
@@ -290,9 +322,21 @@ onClickOutside(invitePlayersContent, () => {
             :value="numOfWhiteCards"
             class="settings__main__bottom__n"
           />
-          <AppButton @click="onStart()" :disabled="!canStart">
+          <AppButton
+            v-if="imLeader"
+            @click="onStart()"
+            :disabled="!canStart"
+            class="settings__main__bottom__right"
+          >
             Start
           </AppButton>
+          <div
+            v-else
+            class="settings__main__bottom__right settings__main__bottom__right--waiting"
+          >
+            Waiting for leader to start
+            <span v-for="i in 3" :key="i">.</span>
+          </div>
         </div>
       </div>
     </div>
@@ -546,10 +590,6 @@ $main-gap: 16px;
       align-items: center;
       gap: 8px;
 
-      button {
-        margin-left: auto;
-      }
-
       &__icon {
         height: 32px;
         width: 32px;
@@ -561,6 +601,37 @@ $main-gap: 16px;
 
         @include mixins.sm() {
           min-width: 2ch;
+        }
+      }
+
+      &__right {
+        margin-left: auto;
+
+        &--waiting {
+          padding-left: 6px;
+          font-size: min(3.5vw, 1.1rem);
+          text-align: end;
+
+          @keyframes waiting {
+            0%,
+            60%,
+            100% {
+              transform: translateY(0);
+            }
+
+            40% {
+              transform: translateY(-60%);
+            }
+          }
+
+          @for $i from 1 through 3 {
+            span:nth-child(#{$i}) {
+              display: inline-block;
+              line-height: 20%;
+              animation: waiting 1100ms infinite;
+              animation-delay: #{$i * 200ms};
+            }
+          }
         }
       }
     }

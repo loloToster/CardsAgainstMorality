@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { reactive, watch } from "vue"
 
-const props = defineProps<{
-  modelValue: boolean
-}>()
+const props = withDefaults(
+  defineProps<{
+    modelValue: boolean
+    disabled?: boolean
+  }>(),
+  { disabled: false }
+)
 
 const state = reactive({
   val: false
@@ -14,6 +18,8 @@ const emit = defineEmits<{
 }>()
 
 function onChange() {
+  if (props.disabled) return false
+
   state.val = !state.val
   emit("update:modelValue", state.val)
 }
@@ -29,7 +35,7 @@ watch(
 <template>
   <div
     @click="onChange"
-    :class="{ active: state.val }"
+    :class="{ active: state.val, disabled }"
     class="switch"
     role="checkbox"
     :aria-checked="state.val"
@@ -60,6 +66,10 @@ $hover-size: 34px;
     background-color: colors.$lime;
   }
 
+  &.disabled {
+    cursor: not-allowed;
+  }
+
   &__thumb {
     $size: $h - (2 * $inset);
 
@@ -81,6 +91,10 @@ $hover-size: 34px;
 
   &:active &__thumb {
     outline-color: colors.$inp-active;
+  }
+
+  &.disabled &__thumb {
+    outline-color: transparent;
   }
 
   &.active &__thumb {
