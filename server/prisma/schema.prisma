@@ -19,17 +19,26 @@ model User {
 }
 
 model CardPack {
-    id         Int         @id @default(autoincrement())
+    id         Int           @id @default(autoincrement())
     name       String
     type       String
     bundle     String?
     icon       String?
     color      String?
+    tags       CardPackTag[]
     blackCards BlackCard[]
     whiteCards WhiteCard[]
     likedBy    User[]
 
     @@map("card_packs")
+}
+
+model CardPackTag {
+    id    Int        @id @default(autoincrement())
+    name  String
+    packs CardPack[]
+
+    @@map("card_pack_tags")
 }
 
 model BlackCard {

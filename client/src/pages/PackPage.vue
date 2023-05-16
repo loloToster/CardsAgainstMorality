@@ -207,9 +207,14 @@ async function handleLike(liked: boolean) {
             >
               {{ state.pack.bundle }}
             </AppChip>
-            <AppChip class="pack__meta__tag" outlined> Tag 1 </AppChip>
-            <AppChip class="pack__meta__tag" outlined> Tag 2 </AppChip>
-            <AppChip class="pack__meta__tag" outlined> Tag 3 </AppChip>
+            <AppChip
+              v-for="tag in state.pack.tags"
+              class="pack__meta__tag"
+              outlined
+              :key="tag"
+            >
+              {{ tag }}
+            </AppChip>
           </div>
           <div class="pack__meta__row">
             <div class="pack__meta__author">Cards Against Humanity</div>

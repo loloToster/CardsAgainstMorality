@@ -14,6 +14,7 @@ router.get("/:id", async (req, res) => {
       OR: [{ id: POS_INT_REGEX.test(id) ? parseInt(id) : -1 }, { name: id }]
     },
     include: {
+      tags: { select: { name: true } },
       _count: {
         select: {
           blackCards: true,
@@ -45,6 +46,7 @@ router.get("/:id", async (req, res) => {
       bundle: foundPack.bundle,
       color: foundPack.color,
       icon: foundPack.icon,
+      tags: foundPack.tags.map(t => t.name),
       numOfBlacks: foundPack._count.blackCards,
       numOfWhites: foundPack._count.whiteCards,
       likedBy: foundPack._count.likedBy,

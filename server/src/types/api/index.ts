@@ -10,6 +10,7 @@ export interface ApiCardPack {
   bundle?: string | null
   color?: string | null
   icon?: string | null
+  tags: string[]
   numOfBlacks: number
   numOfWhites: number
   likedBy: number
