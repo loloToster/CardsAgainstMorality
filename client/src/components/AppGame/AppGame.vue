@@ -141,7 +141,9 @@ socket.on("voting", data => {
 })
 
 let settingsChangeTimeout: ReturnType<typeof setTimeout> | undefined
-function onSettingsChange(data: SettingsData) {
+function onSettingsChange(data: Partial<SettingsData>) {
+  if (gameState.stage === GameStage.UNKNOWN) return
+
   clearTimeout(settingsChangeTimeout)
 
   // debounce

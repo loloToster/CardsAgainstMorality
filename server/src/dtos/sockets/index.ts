@@ -1,7 +1,7 @@
 import { ClassType, transformAndValidate } from "class-transformer-validator"
 import { ClientToServerSocketEvents } from "../../types"
 
-import { SettingsDto } from "./settings.dto"
+import { PartialSettingsDto, SettingsDto } from "./settings.dto"
 import { SubmitionDto } from "./submition.dto"
 import { VerdictDto } from "./verdict.dto"
 import { VoteStartDto } from "./vote-start.dto"
@@ -12,7 +12,7 @@ type SocketValidators = {
 }
 
 const validators: Record<string, ClassType<object> | undefined> = {
-  "sync-settings": SettingsDto,
+  "sync-settings": PartialSettingsDto,
   start: SettingsDto,
   submit: SubmitionDto,
   verdict: VerdictDto,

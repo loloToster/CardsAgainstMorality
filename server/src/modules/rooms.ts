@@ -12,6 +12,7 @@ import {
   ApiWhiteCard,
   ExtendedReq,
   PrevRound,
+  SettingsData,
   SharedSyncData,
   SocketClient,
   SocketServer,
@@ -160,13 +161,22 @@ export class Room {
         )
           return
 
-        this.playersLimit = data.playersLimit
-        this.selectedPacks = data.packs
-        this.timeLimit = data.timeLimit
-        this.scoreLimit = data.scoreLimit
-        this.roundLimit = data.roundLimit
+        if (data.playersLimit !== undefined)
+          this.playersLimit = data.playersLimit
+        if (data.timeLimit !== undefined) this.timeLimit = data.timeLimit
+        if (data.scoreLimit !== undefined) this.scoreLimit = data.scoreLimit
+        if (data.roundLimit !== undefined) this.roundLimit = data.roundLimit
+        if (data.packs !== undefined) this.selectedPacks = data.packs
 
-        socket.broadcast.to(this.id).emit("sync-settings", data)
+        const curSettings: SettingsData = {
+          playersLimit: this.playersLimit,
+          timeLimit: this.timeLimit,
+          scoreLimit: this.scoreLimit,
+          roundLimit: this.roundLimit,
+          packs: this.selectedPacks
+        }
+
+        socket.broadcast.to(this.id).emit("sync-settings", curSettings)
       })
     )
 

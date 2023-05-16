@@ -10,7 +10,7 @@ const props = withDefaults(
 )
 
 const state = reactive({
-  val: false
+  val: props.modelValue
 })
 
 const emit = defineEmits<{

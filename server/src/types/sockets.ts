@@ -103,7 +103,7 @@ export interface Vote {
 }
 
 export interface ClientToServerSocketEvents {
-  "sync-settings": (data: SettingsData) => void
+  "sync-settings": (data: Partial<SettingsData>) => void
   start: (data: SettingsData) => void
   submit: (data: Submition) => void
   verdict: (data: Verdict) => void

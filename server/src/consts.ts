@@ -26,12 +26,12 @@ export const SETTINGS_BOUNDARIES: SettingsBoundaries = {
     default: 120
   },
   scoreLimit: {
-    min: 0,
+    min: 1,
     max: undefined,
     default: 15
   },
   roundLimit: {
-    min: 0,
+    min: 1,
     max: undefined,
     default: 30
   }

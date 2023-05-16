@@ -9,6 +9,7 @@ import { gameState } from "./contexts/gamestate"
 import {
   gameSettingsState,
   getParsedSettings,
+  getValidParsedSettings,
   ensureBoundary
 } from "./contexts/gamesettingsstate"
 
@@ -32,7 +33,7 @@ const imLeader = computed(() => {
 
 const emit = defineEmits<{
   (e: "start", data: SettingsData): void
-  (e: "change", data: SettingsData): void
+  (e: "change", data: Partial<SettingsData>): void
 }>()
 
 const state = reactive<{
@@ -114,7 +115,7 @@ const canStart = computed(() => {
 })
 
 function onChange() {
-  if (imLeader.value) emit("change", getParsedSettings())
+  if (imLeader.value) emit("change", getValidParsedSettings())
 }
 
 function onStart() {

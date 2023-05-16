@@ -99,3 +99,50 @@ export function getParsedSettings(): SettingsData {
     packs: gameSettingsState.packs.filter(p => p.selected).map(p => p.id)
   }
 }
+
+export function getValidParsedSettings(): Partial<SettingsData> {
+  const curSettings = getParsedSettings()
+
+  if (!gameSettingsState.settingsBoundaries) return curSettings
+
+  const validSettings: Partial<SettingsData> = {}
+
+  if (
+    ensureBoundary(
+      curSettings.playersLimit,
+      gameSettingsState.settingsBoundaries.playersLimit
+    )
+  )
+    validSettings.playersLimit = curSettings.playersLimit
+
+  if (
+    curSettings.timeLimit === null ||
+    ensureBoundary(
+      curSettings.timeLimit,
+      gameSettingsState.settingsBoundaries.timeLimit
+    )
+  )
+    validSettings.timeLimit = curSettings.timeLimit
+
+  if (
+    curSettings.scoreLimit === null ||
+    ensureBoundary(
+      curSettings.scoreLimit,
+      gameSettingsState.settingsBoundaries.scoreLimit
+    )
+  )
+    validSettings.scoreLimit = curSettings.scoreLimit
+
+  if (
+    curSettings.roundLimit === null ||
+    ensureBoundary(
+      curSettings.roundLimit,
+      gameSettingsState.settingsBoundaries.roundLimit
+    )
+  )
+    validSettings.roundLimit = curSettings.roundLimit
+
+  validSettings.packs = curSettings.packs
+
+  return validSettings
+}
