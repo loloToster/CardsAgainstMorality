@@ -14,6 +14,8 @@ router.get("/:id", async (req, res) => {
       OR: [{ id: POS_INT_REGEX.test(id) ? parseInt(id) : -1 }, { name: id }]
     },
     include: {
+      type: { select: { name: true } },
+      bundle: { select: { name: true } },
       tags: { select: { name: true } },
       _count: {
         select: {
@@ -42,11 +44,11 @@ router.get("/:id", async (req, res) => {
     ? {
       id: foundPack.id,
       name: foundPack.name,
-      type: foundPack.type,
-      bundle: foundPack.bundle,
+      type: foundPack.type.name,
+      bundle: foundPack.bundle?.name,
+      tags: foundPack.tags.map(t => t.name),
       color: foundPack.color,
       icon: foundPack.icon,
-      tags: foundPack.tags.map(t => t.name),
       numOfBlacks: foundPack._count.blackCards,
       numOfWhites: foundPack._count.whiteCards,
       likedBy: foundPack._count.likedBy,

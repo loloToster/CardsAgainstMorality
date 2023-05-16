@@ -1,6 +1,6 @@
 import { Router } from "express"
 import db from "../../modules/db"
-import { ApiCardPack } from "../../types"
+import { ApiCardPack, SearchCriteria } from "../../types"
 import { getRandomInt } from "../../utils/random"
 
 const router = Router()
@@ -9,6 +9,8 @@ router.get("/", async (req, res) => {
   const packs = await db.cardPack.findMany({
     orderBy: { id: "asc" },
     include: {
+      type: { select: { name: true } },
+      bundle: { select: { name: true } },
       tags: { select: { name: true } },
       _count: {
         select: {
@@ -26,8 +28,8 @@ router.get("/", async (req, res) => {
         ({
           id: p.id,
           name: p.name,
-          type: p.type,
-          bundle: p.bundle,
+          type: p.type.name,
+          bundle: p.bundle?.name,
           color: p.color,
           icon: p.icon,
           tags: p.tags.map(t => t.name),
@@ -37,6 +39,14 @@ router.get("/", async (req, res) => {
         } satisfies ApiCardPack)
     )
   })
+})
+
+router.get("/search-criteria", async (req, res) => {
+  res.json({
+    types: await db.cardPackType.findMany(),
+    bundles: await db.cardPackBundle.findMany(),
+    tags: await db.cardPackTag.findMany()
+  } satisfies SearchCriteria)
 })
 
 router.get("/random-cards", async (req, res) => {

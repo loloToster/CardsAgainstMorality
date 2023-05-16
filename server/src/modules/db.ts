@@ -101,12 +101,16 @@ class Database extends PrismaClient {
   }
 
   async syncCards() {
+    const numOfTypes = await this.cardPackType.count()
+    const numOfBundles = await this.cardPackBundle.count()
     const numOfTags = await this.cardPackTag.count()
     const numOfPacks = await this.cardPack.count()
     const numOfBlackCards = await this.blackCard.count()
     const numOfWhiteCards = await this.whiteCard.count()
 
     if (
+      numOfTypes === cards.types.length &&
+      numOfBundles === cards.bundles.length &&
       numOfTags === cards.tags.length &&
       numOfPacks === cards.packs.length &&
       numOfBlackCards === cards.black.length &&
@@ -118,9 +122,13 @@ class Database extends PrismaClient {
 
     await this.blackCard.deleteMany()
     await this.whiteCard.deleteMany()
-    await this.cardPackTag.deleteMany()
     await this.cardPack.deleteMany()
+    await this.cardPackType.deleteMany()
+    await this.cardPackBundle.deleteMany()
+    await this.cardPackTag.deleteMany()
 
+    await this.cardPackType.createMany({ data: cards.types })
+    await this.cardPackBundle.createMany({ data: cards.bundles })
     await this.cardPackTag.createMany({ data: cards.tags })
 
     for (const pack of cards.packs) {
@@ -129,12 +137,15 @@ class Database extends PrismaClient {
 
       await this.cardPack.create({
         data: {
+          type: { connect: { id: pack.type } },
+          bundle:
+            pack.bundle === undefined
+              ? undefined
+              : { connect: { id: pack.bundle } },
+          tags: { connect: pack.tags?.map(t => ({ id: t })) ?? [] },
           name: pack.name,
-          bundle: pack.bundle,
-          type: pack.type,
           color: pack.color,
           icon: pack.icon,
-          tags: { connect: pack.tags?.map(t => ({ id: t })) ?? [] },
           blackCards: {
             create: blackCards.map(c => ({
               text: c.text,

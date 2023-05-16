@@ -1,62 +1,80 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DB_URL")
+  provider = "postgresql"
+  url      = env("DB_URL")
 }
 
 model User {
-    id         Int        @id @default(autoincrement())
-    name       String
-    picture    String?
-    lastUsed   DateTime?  @map("last_used")
-    strategyId String     @map("strategy_id")
-    likedPacks CardPack[]
+  id         Int        @id @default(autoincrement())
+  name       String
+  picture    String?
+  lastUsed   DateTime?  @map("last_used")
+  strategyId String     @map("strategy_id")
+  likedPacks CardPack[]
 
-    @@map("users")
+  @@map("users")
 }
 
 model CardPack {
-    id         Int           @id @default(autoincrement())
-    name       String
-    type       String
-    bundle     String?
-    icon       String?
-    color      String?
-    tags       CardPackTag[]
-    blackCards BlackCard[]
-    whiteCards WhiteCard[]
-    likedBy    User[]
+  id         Int             @id @default(autoincrement())
+  name       String
+  typeId     Int             @map("type_id")
+  type       CardPackType    @relation(fields: [typeId], references: [id])
+  bundleId   Int?            @map("bundle_id")
+  bundle     CardPackBundle? @relation(fields: [bundleId], references: [id])
+  icon       String?
+  color      String?
+  tags       CardPackTag[]
+  blackCards BlackCard[]
+  whiteCards WhiteCard[]
+  likedBy    User[]
 
-    @@map("card_packs")
+  @@map("card_packs")
+}
+
+model CardPackType {
+  id    Int        @id @default(autoincrement())
+  name  String
+  packs CardPack[]
+
+  @@map("card_pack_types")
+}
+
+model CardPackBundle {
+  id    Int        @id @default(autoincrement())
+  name  String
+  packs CardPack[]
+
+  @@map("card_pack_bundles")
 }
 
 model CardPackTag {
-    id    Int        @id @default(autoincrement())
-    name  String
-    packs CardPack[]
+  id    Int        @id @default(autoincrement())
+  name  String
+  packs CardPack[]
 
-    @@map("card_pack_tags")
+  @@map("card_pack_tags")
 }
 
 model BlackCard {
-    id     Int      @id @default(autoincrement())
-    text   String
-    pick   Int?
-    draw   Int?
-    packId Int      @map("pack_id")
-    pack   CardPack @relation(fields: [packId], references: [id])
+  id     Int      @id @default(autoincrement())
+  text   String
+  pick   Int?
+  draw   Int?
+  packId Int      @map("pack_id")
+  pack   CardPack @relation(fields: [packId], references: [id])
 
-    @@map("black_cards")
+  @@map("black_cards")
 }
 
 model WhiteCard {
-    id     Int      @id @default(autoincrement())
-    text   String
-    packId Int      @map("pack_id")
-    pack   CardPack @relation(fields: [packId], references: [id])
+  id     Int      @id @default(autoincrement())
+  text   String
+  packId Int      @map("pack_id")
+  pack   CardPack @relation(fields: [packId], references: [id])
 
-    @@map("white_cards")
+  @@map("white_cards")
 }

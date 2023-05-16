@@ -3,10 +3,17 @@ import { reactive, ref } from "vue"
 import { RouterLink } from "vue-router"
 import { onClickOutside } from "@vueuse/core"
 
-import { ApiCardPack } from "@backend/types"
+import {
+  ApiCardPack,
+  ApiCardPackType,
+  ApiCardPackBundle,
+  ApiCardPackTag,
+  SearchCriteria
+} from "@backend/types"
 
 import AppLoading from "@/components/AppLoading.vue"
 import AppButton from "@/components/AppButton.vue"
+import AppChip from "@/components/AppChip.vue"
 import CardPack from "@/components/CardPack.vue"
 
 const SORT_TYPES = {
@@ -18,27 +25,51 @@ const SORT_TYPES = {
 
 type SortType = keyof typeof SORT_TYPES
 
+interface CriteriaShared {
+  selected: boolean
+}
+
 const state = reactive<{
   searchQuery: string
   sortBy: null | SortType
   searchAdditionalActive: boolean
+  types: (ApiCardPackType & CriteriaShared)[]
+  bundles: (ApiCardPackBundle & CriteriaShared)[]
+  tags: (ApiCardPackTag & CriteriaShared)[]
   sortDropdownActive: boolean
   loading: boolean
   packs: ApiCardPack[]
-}>({
-  searchQuery: "",
-  sortBy: null,
-  searchAdditionalActive: false,
-  sortDropdownActive: false,
-  loading: true,
-  packs: []
-})
+    }>({
+      searchQuery: "",
+      sortBy: null,
+      searchAdditionalActive: false,
+      types: [],
+      bundles: [],
+      tags: [],
+      sortDropdownActive: false,
+      loading: true,
+      packs: []
+    })
 
 fetch("/api/packs").then(async res => {
   if (res.ok) {
     const { packs } = await res.json()
     state.packs = packs
     state.loading = false
+  }
+})
+
+fetch("/api/packs/search-criteria").then(async res => {
+  if (res.ok) {
+    const criteria: SearchCriteria = await res.json()
+
+    const sharedDefault: CriteriaShared = {
+      selected: false
+    }
+
+    state.types = criteria.types.map(t => ({ ...sharedDefault, ...t }))
+    state.bundles = criteria.bundles.map(b => ({ ...sharedDefault, ...b }))
+    state.tags = criteria.tags.map(tg => ({ ...sharedDefault, ...tg }))
   }
 })
 
@@ -62,9 +93,35 @@ function handleInputWrapperClick() {
   }
 }
 
+function handleClear() {
+  state.searchQuery = ""
+  searchQueryInput.value?.focus()
+}
+
 onClickOutside(searchInputWrapper, () => {
   state.searchAdditionalActive = false
 })
+
+function handleTypeClick(id: number) {
+  state.types = state.types.map(t => ({
+    ...t,
+    selected: t.id === id ? !t.selected : t.selected
+  }))
+}
+
+function handleBundleClick(id: number) {
+  state.bundles = state.bundles.map(b => ({
+    ...b,
+    selected: b.id === id ? !b.selected : b.selected
+  }))
+}
+
+function handleTagClick(id: number) {
+  state.tags = state.tags.map(tg => ({
+    ...tg,
+    selected: tg.id === id ? !tg.selected : tg.selected
+  }))
+}
 
 const sortSection = ref<HTMLDivElement>()
 
@@ -97,7 +154,7 @@ onClickOutside(sortSection, () => {
           />
           <button
             v-if="state.searchQuery"
-            @click="state.searchQuery = ''"
+            @click="handleClear"
             class="search__clear"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
@@ -108,7 +165,45 @@ onClickOutside(sortSection, () => {
           </button>
         </div>
         <div v-if="state.searchAdditionalActive" class="search__additional">
-          todo: tags, bundles, types
+          <div class="search__additional__section-title">types</div>
+          <div class="search__additional__section">
+            <AppChip
+              v-for="t in state.types"
+              @click="handleTypeClick(t.id)"
+              class="search__additional__chip"
+              :outlined="!t.selected"
+              :key="t.id"
+            >
+              {{ t.name }}
+            </AppChip>
+          </div>
+          <div class="search__additional__section-title">bundles</div>
+          <div class="search__additional__section">
+            <AppChip
+              v-for="bundle in state.bundles"
+              @click="handleBundleClick(bundle.id)"
+              class="search__additional__chip"
+              :outlined="!bundle.selected"
+              :key="bundle.id"
+            >
+              {{ bundle.name }}
+            </AppChip>
+          </div>
+          <div class="search__additional__section-title">tags</div>
+          <div class="search__additional__section">
+            <AppChip
+              v-for="tag in state.tags"
+              @click="handleTagClick(tag.id)"
+              class="search__additional__chip"
+              :outlined="!tag.selected"
+              :key="tag.id"
+            >
+              {{ tag.name }}
+            </AppChip>
+          </div>
+          <div class="search__additional__section">
+            <AppButton class="search__btn">Search</AppButton>
+          </div>
         </div>
       </div>
       <div ref="sortSection" class="search__sort">
@@ -234,17 +329,47 @@ onClickOutside(sortSection, () => {
     }
   }
 
+  &__clear {
+    cursor: pointer;
+  }
+
   &__additional {
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     padding: 8px 14px;
     background-color: colors.$inp-bg;
     border-radius: 0 0 $roundness $roundness;
 
-    // !
-    height: 40vh;
+    &__section-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+
+    &__section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: inherit;
+    }
+
+    &__chip {
+      padding: 4px 8px;
+      height: auto;
+    }
+  }
+
+  &__btn {
+    margin-left: auto;
+  }
+
+  &__btn {
+    margin-left: auto;
   }
 
   &__sort {
