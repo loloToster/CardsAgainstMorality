@@ -3,10 +3,44 @@ import db from "../../modules/db"
 import { ApiCardPack, SearchCriteria } from "../../types"
 import { getRandomInt } from "../../utils/random"
 
+const POS_INT_REGEX = /^\d+$/
+
 const router = Router()
 
+const searchArrSep = ","
+function parseSearchArray(str: string | undefined) {
+  if (!str) return undefined
+
+  const splited = str.split(searchArrSep)
+  const result: number[] = []
+
+  for (const el of splited) {
+    if (POS_INT_REGEX.test(el)) result.push(parseInt(el))
+  }
+
+  return result
+}
+
 router.get("/", async (req, res) => {
+  const parsedQuery: Record<string, string | undefined> = {}
+
+  Object.keys(req.query).forEach(key => {
+    parsedQuery[key] = req.query[key]?.toString()
+  })
+
+  const { q, types, bundles, tags } = parsedQuery
+
+  const parsedTypes = parseSearchArray(types)
+  const parsedBundles = parseSearchArray(bundles)
+  const parsedTags = parseSearchArray(tags)
+
   const packs = await db.cardPack.findMany({
+    where: {
+      name: q && { contains: q, mode: "insensitive" },
+      typeId: parsedTypes && { in: parsedTypes },
+      bundleId: parsedBundles && { in: parsedBundles },
+      tags: parsedTags && { some: { id: { in: parsedTags } } }
+    },
     orderBy: { id: "asc" },
     include: {
       type: true,

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue"
-import { useRoute } from "vue-router"
+import { RouterLink, useRoute } from "vue-router"
 import { useScroll } from "@vueuse/core"
 import Color from "color"
 
@@ -193,7 +193,12 @@ async function handleLike(liked: boolean) {
           {{ state.pack.name }}
         </CardPack>
         <div class="pack__meta">
-          <div class="pack__meta__type">{{ state.pack.type.name }}</div>
+          <RouterLink
+            :to="`/packs?types=${state.pack.type.id}`"
+            class="pack__meta__type"
+          >
+            {{ state.pack.type.name }}
+          </RouterLink>
           <h1
             class="pack__meta__name"
             :style="{ '--length': state.pack.name.length }"
@@ -201,20 +206,23 @@ async function handleLike(liked: boolean) {
             {{ state.pack.name }}
           </h1>
           <div class="pack__meta__tags">
-            <AppChip
+            <RouterLink
               v-if="state.pack.bundle"
-              class="pack__meta__tag pack__meta__tag--bundle"
+              :to="`/packs?bundles=${state.pack.bundle.id}`"
             >
-              {{ state.pack.bundle.name }}
-            </AppChip>
-            <AppChip
+              <AppChip class="pack__meta__tag pack__meta__tag--bundle">
+                {{ state.pack.bundle.name }}
+              </AppChip>
+            </RouterLink>
+            <RouterLink
               v-for="tag in state.pack.tags"
-              class="pack__meta__tag"
-              outlined
+              :to="`/packs?tags=${tag.id}`"
               :key="tag.id"
             >
-              {{ tag.name }}
-            </AppChip>
+              <AppChip class="pack__meta__tag" outlined>
+                {{ tag.name }}
+              </AppChip>
+            </RouterLink>
           </div>
           <div class="pack__meta__row">
             <div class="pack__meta__author">Cards Against Humanity</div>
@@ -456,8 +464,16 @@ async function handleLike(liked: boolean) {
     padding-bottom: 24px;
 
     &__type {
+      width: fit-content;
       font-size: 0.875rem;
       font-weight: 700;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline 2px;
+      }
     }
 
     &__name {
@@ -485,10 +501,15 @@ async function handleLike(liked: boolean) {
       flex-wrap: wrap;
       gap: 6px;
       margin-bottom: 8px;
+
+      a {
+        text-decoration: none;
+      }
     }
 
     &__tag {
       --chip-bg: var(--meta-content-color);
+
       padding: 0 8px;
       height: 26px;
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue"
-import { RouterLink } from "vue-router"
+import { useRouter, useRoute, RouterLink } from "vue-router"
 import { onClickOutside } from "@vueuse/core"
 
 import {
@@ -16,6 +16,9 @@ import AppButton from "@/components/AppButton.vue"
 import AppChip from "@/components/AppChip.vue"
 import CardPack from "@/components/CardPack.vue"
 
+const router = useRouter()
+const route = useRoute()
+
 const SORT_TYPES = {
   likes: "Likes",
   cards: "Number of Cards",
@@ -25,31 +28,45 @@ const SORT_TYPES = {
 
 type SortType = keyof typeof SORT_TYPES
 
-interface CriteriaShared {
-  selected: boolean
-}
-
 const state = reactive<{
   searchQuery: string
   searchAdditionalActive: boolean
-  types: (ApiCardPackType & CriteriaShared)[]
-  bundles: (ApiCardPackBundle & CriteriaShared)[]
-  tags: (ApiCardPackTag & CriteriaShared)[]
+  types: ApiCardPackType[]
+  selectedTypes: number[]
+  bundles: ApiCardPackBundle[]
+  selectedBundles: number[]
+  tags: ApiCardPackTag[]
+  selectedTags: number[]
   sortBy: null | SortType
   sortDropdownActive: boolean
   loading: boolean
   packs: ApiCardPack[]
-    }>({
-      searchQuery: "",
-      searchAdditionalActive: false,
-      types: [],
-      bundles: [],
-      tags: [],
-      sortBy: null,
-      sortDropdownActive: false,
-      loading: true,
-      packs: []
-    })
+}>({
+  searchQuery: route.query.q?.toString() ?? "",
+  searchAdditionalActive: false,
+  types: [],
+  selectedTypes:
+    route.query.types
+      ?.toString()
+      .split(",")
+      .map(t => parseInt(t)) ?? [],
+  bundles: [],
+  selectedBundles:
+    route.query.bundles
+      ?.toString()
+      .split(",")
+      .map(b => parseInt(b)) ?? [],
+  tags: [],
+  selectedTags:
+    route.query.tags
+      ?.toString()
+      .split(",")
+      .map(tg => parseInt(tg)) ?? [],
+  sortBy: null,
+  sortDropdownActive: false,
+  loading: true,
+  packs: []
+})
 
 let packController: AbortController | undefined
 
@@ -60,28 +77,18 @@ async function fetchPacks() {
 
   const queryParams: Record<string, string> = {}
 
-  if (state.searchQuery) queryParams["q"] = state.searchQuery
+  if (state.searchQuery) queryParams.q = state.searchQuery
 
-  const selectedTypes = state.types
-    .filter(t => t.selected)
-    .map(t => t.id)
-    .join(",")
+  const selectedTypes = state.selectedTypes.join(",")
+  if (selectedTypes) queryParams.types = selectedTypes
 
-  if (selectedTypes) queryParams["types"] = selectedTypes
+  const selectedBundles = state.selectedBundles.join(",")
+  if (selectedBundles) queryParams.bundles = selectedBundles
 
-  const selectedBundles = state.bundles
-    .filter(t => t.selected)
-    .map(t => t.id)
-    .join(",")
+  const selectedTags = state.selectedTags.join(",")
+  if (selectedTags) queryParams.tags = selectedTags
 
-  if (selectedBundles) queryParams["bundles"] = selectedBundles
-
-  const selectedTags = state.tags
-    .filter(t => t.selected)
-    .map(t => t.id)
-    .join(",")
-
-  if (selectedTags) queryParams["tags"] = selectedTags
+  router.push({ path: "/packs", query: queryParams })
 
   const parsedQuery = Object.keys(queryParams)
     .map(key => key + "=" + encodeURIComponent(queryParams[key]))
@@ -103,13 +110,9 @@ fetch("/api/packs/search-criteria").then(async res => {
   if (res.ok) {
     const criteria: SearchCriteria = await res.json()
 
-    const sharedDefault: CriteriaShared = {
-      selected: false
-    }
-
-    state.types = criteria.types.map(t => ({ ...sharedDefault, ...t }))
-    state.bundles = criteria.bundles.map(b => ({ ...sharedDefault, ...b }))
-    state.tags = criteria.tags.map(tg => ({ ...sharedDefault, ...tg }))
+    state.types = criteria.types
+    state.bundles = criteria.bundles
+    state.tags = criteria.tags
   }
 })
 
@@ -118,6 +121,11 @@ fetchPacks()
 function handleSearch() {
   state.searchAdditionalActive = false
   fetchPacks()
+}
+
+function handleMainInputKeypress(e: KeyboardEvent) {
+  if (e.key !== "Enter") return
+  handleSearch()
 }
 
 function handleSort(sortType: SortType) {
@@ -150,24 +158,27 @@ onClickOutside(searchInputWrapper, () => {
 })
 
 function handleTypeClick(id: number) {
-  state.types = state.types.map(t => ({
-    ...t,
-    selected: t.id === id ? !t.selected : t.selected
-  }))
+  if (state.selectedTypes.includes(id)) {
+    state.selectedTypes = state.selectedTypes.filter(t => t !== id)
+  } else {
+    state.selectedTypes.push(id)
+  }
 }
 
 function handleBundleClick(id: number) {
-  state.bundles = state.bundles.map(b => ({
-    ...b,
-    selected: b.id === id ? !b.selected : b.selected
-  }))
+  if (state.selectedBundles.includes(id)) {
+    state.selectedBundles = state.selectedBundles.filter(b => b !== id)
+  } else {
+    state.selectedBundles.push(id)
+  }
 }
 
 function handleTagClick(id: number) {
-  state.tags = state.tags.map(tg => ({
-    ...tg,
-    selected: tg.id === id ? !tg.selected : tg.selected
-  }))
+  if (state.selectedTags.includes(id)) {
+    state.selectedTags = state.selectedTags.filter(tg => tg !== id)
+  } else {
+    state.selectedTags.push(id)
+  }
 }
 
 const sortSection = ref<HTMLDivElement>()
@@ -193,6 +204,7 @@ onClickOutside(sortSection, () => {
           </svg>
           <input
             v-model="state.searchQuery"
+            @keydown="handleMainInputKeypress"
             ref="searchQueryInput"
             class="search__input"
             type="search"
@@ -217,7 +229,7 @@ onClickOutside(sortSection, () => {
               v-for="t in state.types"
               @click="handleTypeClick(t.id)"
               class="search__additional__chip"
-              :outlined="!t.selected"
+              :outlined="!state.selectedTypes.includes(t.id)"
               :key="t.id"
             >
               {{ t.name }}
@@ -229,7 +241,7 @@ onClickOutside(sortSection, () => {
               v-for="bundle in state.bundles"
               @click="handleBundleClick(bundle.id)"
               class="search__additional__chip"
-              :outlined="!bundle.selected"
+              :outlined="!state.selectedBundles.includes(bundle.id)"
               :key="bundle.id"
             >
               {{ bundle.name }}
@@ -241,7 +253,7 @@ onClickOutside(sortSection, () => {
               v-for="tag in state.tags"
               @click="handleTagClick(tag.id)"
               class="search__additional__chip"
-              :outlined="!tag.selected"
+              :outlined="!state.selectedTags.includes(tag.id)"
               :key="tag.id"
             >
               {{ tag.name }}
