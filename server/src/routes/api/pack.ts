@@ -11,12 +11,15 @@ router.get("/:id", async (req, res) => {
 
   const foundPack = await db.cardPack.findFirst({
     where: {
-      OR: [{ id: POS_INT_REGEX.test(id) ? parseInt(id) : -1 }, { name: id }]
+      OR: [
+        { id: POS_INT_REGEX.test(id) ? parseInt(id) : -1 },
+        { name: { mode: "insensitive", equals: id } }
+      ]
     },
     include: {
-      type: { select: { name: true } },
-      bundle: { select: { name: true } },
-      tags: { select: { name: true } },
+      type: true,
+      bundle: true,
+      tags: true,
       _count: {
         select: {
           blackCards: true,
@@ -44,9 +47,9 @@ router.get("/:id", async (req, res) => {
     ? {
       id: foundPack.id,
       name: foundPack.name,
-      type: foundPack.type.name,
-      bundle: foundPack.bundle?.name,
-      tags: foundPack.tags.map(t => t.name),
+      type: foundPack.type,
+      bundle: foundPack.bundle,
+      tags: foundPack.tags,
       color: foundPack.color,
       icon: foundPack.icon,
       numOfBlacks: foundPack._count.blackCards,

@@ -193,7 +193,7 @@ async function handleLike(liked: boolean) {
           {{ state.pack.name }}
         </CardPack>
         <div class="pack__meta">
-          <div class="pack__meta__type">{{ state.pack.type }}</div>
+          <div class="pack__meta__type">{{ state.pack.type.name }}</div>
           <h1
             class="pack__meta__name"
             :style="{ '--length': state.pack.name.length }"
@@ -205,15 +205,15 @@ async function handleLike(liked: boolean) {
               v-if="state.pack.bundle"
               class="pack__meta__tag pack__meta__tag--bundle"
             >
-              {{ state.pack.bundle }}
+              {{ state.pack.bundle.name }}
             </AppChip>
             <AppChip
               v-for="tag in state.pack.tags"
               class="pack__meta__tag"
               outlined
-              :key="tag"
+              :key="tag.id"
             >
-              {{ tag }}
+              {{ tag.name }}
             </AppChip>
           </div>
           <div class="pack__meta__row">

@@ -31,33 +31,73 @@ interface CriteriaShared {
 
 const state = reactive<{
   searchQuery: string
-  sortBy: null | SortType
   searchAdditionalActive: boolean
   types: (ApiCardPackType & CriteriaShared)[]
   bundles: (ApiCardPackBundle & CriteriaShared)[]
   tags: (ApiCardPackTag & CriteriaShared)[]
+  sortBy: null | SortType
   sortDropdownActive: boolean
   loading: boolean
   packs: ApiCardPack[]
     }>({
       searchQuery: "",
-      sortBy: null,
       searchAdditionalActive: false,
       types: [],
       bundles: [],
       tags: [],
+      sortBy: null,
       sortDropdownActive: false,
       loading: true,
       packs: []
     })
 
-fetch("/api/packs").then(async res => {
-  if (res.ok) {
-    const { packs } = await res.json()
-    state.packs = packs
-    state.loading = false
-  }
-})
+let packController: AbortController | undefined
+
+async function fetchPacks() {
+  state.loading = true
+
+  packController?.abort()
+
+  const queryParams: Record<string, string> = {}
+
+  if (state.searchQuery) queryParams["q"] = state.searchQuery
+
+  const selectedTypes = state.types
+    .filter(t => t.selected)
+    .map(t => t.id)
+    .join(",")
+
+  if (selectedTypes) queryParams["types"] = selectedTypes
+
+  const selectedBundles = state.bundles
+    .filter(t => t.selected)
+    .map(t => t.id)
+    .join(",")
+
+  if (selectedBundles) queryParams["bundles"] = selectedBundles
+
+  const selectedTags = state.tags
+    .filter(t => t.selected)
+    .map(t => t.id)
+    .join(",")
+
+  if (selectedTags) queryParams["tags"] = selectedTags
+
+  const parsedQuery = Object.keys(queryParams)
+    .map(key => key + "=" + encodeURIComponent(queryParams[key]))
+    .join("&")
+
+  packController = new AbortController()
+  const res = await fetch("/api/packs?" + parsedQuery, {
+    signal: packController.signal
+  })
+
+  if (!res.ok) return // todo: handle error
+
+  const { packs } = await res.json()
+  state.packs = packs
+  state.loading = false
+}
 
 fetch("/api/packs/search-criteria").then(async res => {
   if (res.ok) {
@@ -73,6 +113,13 @@ fetch("/api/packs/search-criteria").then(async res => {
   }
 })
 
+fetchPacks()
+
+function handleSearch() {
+  state.searchAdditionalActive = false
+  fetchPacks()
+}
+
 function handleSort(sortType: SortType) {
   state.sortDropdownActive = false
 
@@ -86,7 +133,7 @@ function handleSort(sortType: SortType) {
 const searchInputWrapper = ref<HTMLDivElement>()
 const searchQueryInput = ref<HTMLInputElement>()
 
-function handleInputWrapperClick() {
+function handleMainInputClick() {
   if (!state.searchAdditionalActive) {
     state.searchAdditionalActive = true
     searchQueryInput.value?.focus()
@@ -134,12 +181,11 @@ onClickOutside(sortSection, () => {
   <div class="packs-page">
     <div class="search">
       <div
-        @click="handleInputWrapperClick"
         ref="searchInputWrapper"
         class="search__input-wrapper"
         :class="{ active: state.searchAdditionalActive }"
       >
-        <div class="search__main-input">
+        <div @click="handleMainInputClick" class="search__main-input">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
             <path
               d="M795.761 941.696 531.326 677.5q-29.761 25.264-69.6 39.415-39.84 14.15-85.161 14.15-109.835 0-185.95-76.195Q114.5 578.674 114.5 471t76.196-183.87q76.195-76.195 184.369-76.195t183.87 76.195q75.695 76.196 75.695 184.02 0 43.328-13.641 82.97-13.641 39.641-40.924 74.402L845.5 891.957l-49.739 49.739ZM375.65 662.935q79.73 0 135.29-56.245Q566.5 550.446 566.5 471t-55.595-135.69q-55.595-56.245-135.255-56.245-80.494 0-136.757 56.245Q182.63 391.554 182.63 471t56.228 135.69q56.227 56.245 136.792 56.245Z"
@@ -202,7 +248,9 @@ onClickOutside(sortSection, () => {
             </AppChip>
           </div>
           <div class="search__additional__section">
-            <AppButton class="search__btn">Search</AppButton>
+            <AppButton @click="handleSearch" class="search__btn">
+              Search
+            </AppButton>
           </div>
         </div>
       </div>

@@ -9,9 +9,9 @@ router.get("/", async (req, res) => {
   const packs = await db.cardPack.findMany({
     orderBy: { id: "asc" },
     include: {
-      type: { select: { name: true } },
-      bundle: { select: { name: true } },
-      tags: { select: { name: true } },
+      type: true,
+      bundle: true,
+      tags: true,
       _count: {
         select: {
           blackCards: true,
@@ -28,11 +28,11 @@ router.get("/", async (req, res) => {
         ({
           id: p.id,
           name: p.name,
-          type: p.type.name,
-          bundle: p.bundle?.name,
+          type: p.type,
+          bundle: p.bundle,
           color: p.color,
           icon: p.icon,
-          tags: p.tags.map(t => t.name),
+          tags: p.tags,
           numOfBlacks: p._count.blackCards,
           numOfWhites: p._count.whiteCards,
           likedBy: p._count.likedBy

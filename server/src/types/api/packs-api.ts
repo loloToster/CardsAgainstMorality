@@ -5,23 +5,23 @@ interface IdWithName {
   name: string
 }
 
+export type ApiCardPackType = IdWithName
+export type ApiCardPackBundle = IdWithName
+export type ApiCardPackTag = IdWithName
+
 export interface ApiCardPack {
   id: number
   name: string
-  type: string
-  bundle?: string | null
+  type: ApiCardPackType
+  bundle?: ApiCardPackBundle | null
   color?: string | null
   icon?: string | null
-  tags: string[]
+  tags: ApiCardPackTag[]
   numOfBlacks: number
   numOfWhites: number
   likedBy: number
   liked?: boolean
 }
-
-export type ApiCardPackType = IdWithName
-export type ApiCardPackBundle = IdWithName
-export type ApiCardPackTag = IdWithName
 
 export interface SearchCriteria {
   types: ApiCardPackType[]
