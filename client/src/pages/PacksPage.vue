@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref } from "vue"
+import { computed, reactive, ref } from "vue"
 import { useRouter, useRoute, RouterLink } from "vue-router"
 import { onClickOutside } from "@vueuse/core"
 
@@ -8,7 +8,8 @@ import type {
   ApiCardPackType,
   ApiCardPackBundle,
   ApiCardPackTag,
-  SearchCriteria
+  SearchCriteria,
+  SortType
 } from "@backend/types"
 
 import AppLoading from "@/components/AppLoading.vue"
@@ -19,14 +20,11 @@ import CardPack from "@/components/CardPack.vue"
 const router = useRouter()
 const route = useRoute()
 
-const SORT_TYPES = {
+const SORT_TYPES: Record<SortType, string> = {
   likes: "Likes",
-  cards: "Number of Cards",
   blacks: "Number of Black Cards",
   whites: "Number of White Cards"
 }
-
-type SortType = keyof typeof SORT_TYPES
 
 function parseQueryParam(p: { toString: () => string } | undefined | null) {
   return (
@@ -59,7 +57,7 @@ const state = reactive<{
   selectedBundles: parseQueryParam(route.query.bundles),
   tags: [],
   selectedTags: parseQueryParam(route.query.tags),
-  sortBy: null,
+  sortBy: (route.query.sort?.toString() as SortType) ?? null,
   sortDropdownActive: false,
   loading: true,
   packs: []
@@ -84,6 +82,8 @@ async function fetchPacks() {
 
   const selectedTags = state.selectedTags.join(",")
   if (selectedTags) queryParams.tags = selectedTags
+
+  if (state.sortBy) queryParams.sort = state.sortBy
 
   router.push({ path: "/packs", query: queryParams })
 
@@ -133,6 +133,8 @@ function handleSort(sortType: SortType) {
   } else {
     state.sortBy = sortType
   }
+
+  fetchPacks()
 }
 
 const searchInputWrapper = ref<HTMLDivElement>()
@@ -148,10 +150,26 @@ function handleMainInputClick() {
 function handleClear() {
   state.searchQuery = ""
   searchQueryInput.value?.focus()
+
+  state.selectedTypes = []
+  state.selectedBundles = []
+  state.selectedTags = []
 }
 
 onClickOutside(searchInputWrapper, () => {
   state.searchAdditionalActive = false
+})
+
+const selectedAdditional = computed(() => {
+  return (
+    state.selectedTypes.length +
+    state.selectedBundles.length +
+    state.selectedTags.length
+  )
+})
+
+const canClear = computed(() => {
+  return state.searchQuery || selectedAdditional.value
 })
 
 function handleAdditionalClick(arr: number[], id: number) {
@@ -195,6 +213,12 @@ onClickOutside(sortSection, () => {
               d="M795.761 941.696 531.326 677.5q-29.761 25.264-69.6 39.415-39.84 14.15-85.161 14.15-109.835 0-185.95-76.195Q114.5 578.674 114.5 471t76.196-183.87q76.195-76.195 184.369-76.195t183.87 76.195q75.695 76.196 75.695 184.02 0 43.328-13.641 82.97-13.641 39.641-40.924 74.402L845.5 891.957l-49.739 49.739ZM375.65 662.935q79.73 0 135.29-56.245Q566.5 550.446 566.5 471t-55.595-135.69q-55.595-56.245-135.255-56.245-80.494 0-136.757 56.245Q182.63 391.554 182.63 471t56.228 135.69q56.227 56.245 136.792 56.245Z"
             />
           </svg>
+          <div
+            v-if="!state.searchAdditionalActive && selectedAdditional"
+            class="search__main-input__additional"
+          >
+            +{{ selectedAdditional }}
+          </div>
           <input
             v-model="state.searchQuery"
             @keydown="handleMainInputKeypress"
@@ -203,11 +227,7 @@ onClickOutside(sortSection, () => {
             type="search"
             placeholder="Search through packs"
           />
-          <button
-            v-if="state.searchQuery"
-            @click="handleClear"
-            class="search__clear"
-          >
+          <button v-if="canClear" @click="handleClear" class="search__clear">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
               <path
                 d="M249 854.739 201.261 807l231-231-231-231L249 297.261l231 231 231-231L758.739 345l-231 231 231 231L711 854.739l-231-231-231 231Z"
@@ -315,6 +335,8 @@ onClickOutside(sortSection, () => {
 .search {
   $gap: 8px;
   $roundness: 6px;
+  $dark-primary: darken(colors.$primary, 10%);
+  $active-outline-width: 2px;
 
   position: sticky;
   top: calc(vars.$header-height + 20px);
@@ -354,6 +376,7 @@ onClickOutside(sortSection, () => {
 
   &__main-input {
     display: flex;
+    align-items: center;
     gap: 6px;
     padding: 8px 14px;
     width: 100%;
@@ -379,6 +402,18 @@ onClickOutside(sortSection, () => {
       &::-webkit-search-results-decoration {
         -webkit-appearance: none;
       }
+    }
+
+    &__additional {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 24px;
+      padding: 0 6px;
+      font-size: 0.875rem;
+      background-color: $dark-primary;
+      border: $active-outline-width colors.$primary solid;
+      border-radius: 4px;
     }
   }
 
@@ -441,10 +476,9 @@ onClickOutside(sortSection, () => {
       cursor: pointer;
 
       &.active {
-        $outline: 2px;
-        outline: $outline colors.$primary solid;
-        outline-offset: -$outline;
-        background-color: darken(colors.$primary, 10%);
+        outline: $active-outline-width colors.$primary solid;
+        outline-offset: -$active-outline-width;
+        background-color: $dark-primary;
       }
 
       svg {

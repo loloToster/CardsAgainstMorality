@@ -1,6 +1,6 @@
 import { Router } from "express"
 import db from "../../modules/db"
-import type { ApiCardPack, SearchCriteria } from "../../types"
+import type { ApiCardPack, SearchCriteria, SortType } from "../../types"
 import { getRandomInt } from "../../utils/random"
 
 const POS_INT_REGEX = /^\d+$/
@@ -21,6 +21,13 @@ function parseSearchArray(str: string | undefined) {
   return result
 }
 
+// TODO: add sorting by all cards
+const SORT_MAP: Record<SortType, string> = {
+  likes: "likedBy",
+  blacks: "blackCards",
+  whites: "whiteCards"
+}
+
 router.get("/", async (req, res) => {
   const parsedQuery: Record<string, string | undefined> = {}
 
@@ -28,11 +35,13 @@ router.get("/", async (req, res) => {
     parsedQuery[key] = req.query[key]?.toString()
   })
 
-  const { q, types, bundles, tags } = parsedQuery
+  const { q, types, bundles, tags, sort } = parsedQuery
 
   const parsedTypes = parseSearchArray(types)
   const parsedBundles = parseSearchArray(bundles)
   const parsedTags = parseSearchArray(tags)
+
+  const parsedSort = SORT_MAP[sort as SortType] as string | undefined
 
   const packs = await db.cardPack.findMany({
     where: {
@@ -41,7 +50,7 @@ router.get("/", async (req, res) => {
       bundleId: parsedBundles && { in: parsedBundles },
       tags: parsedTags && { some: { id: { in: parsedTags } } }
     },
-    orderBy: { id: "asc" },
+    orderBy: parsedSort ? { [parsedSort]: { _count: "desc" } } : { id: "asc" },
     include: {
       type: true,
       bundle: true,
