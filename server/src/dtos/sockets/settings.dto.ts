@@ -8,7 +8,7 @@ import {
 } from "class-validator"
 
 import { SETTINGS_BOUNDARIES } from "../../consts"
-import { SettingsData } from "../../types"
+import type { SettingsData } from "../../types"
 
 export class SettingsDto implements SettingsData {
   @IsInt()

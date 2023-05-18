@@ -1,5 +1,5 @@
 import { IsBoolean } from "class-validator"
-import { Vote } from "../../types"
+import type { Vote } from "../../types"
 
 export class VoteDto implements Vote {
   @IsBoolean()

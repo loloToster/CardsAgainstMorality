@@ -2,7 +2,7 @@
 import { reactive, computed, ref, watch } from "vue"
 import { onClickOutside, useResizeObserver } from "@vueuse/core"
 
-import { VotingMeta } from "@backend/types"
+import type { VotingMeta } from "@backend/types"
 
 import { audioState, toggleAudio } from "@/contexts/audio"
 import { gameState } from "../contexts/gamestate"

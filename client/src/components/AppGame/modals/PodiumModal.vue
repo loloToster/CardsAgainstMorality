@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue"
 
-import { PodiumEl } from "@backend/types"
+import type { PodiumEl } from "@backend/types"
 
 import confetti from "@/contexts/confetti"
 import { user } from "@/contexts/user"

@@ -2,7 +2,7 @@
 import { computed } from "vue"
 import Color from "color"
 
-import { ApiCardPack } from "@backend/types"
+import type { ApiCardPack } from "@backend/types"
 
 import AppChip from "@/components/AppChip.vue"
 import defaultIcon from "@/assets/white-card-icon.svg?raw"

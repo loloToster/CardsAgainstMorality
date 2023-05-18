@@ -3,7 +3,7 @@ import cards from "../../cards.json"
 import { PrismaClient, User } from "@prisma/client"
 
 import { subtractMs } from "../utils"
-import { ApiBlackCard, ApiWhiteCard } from "../types"
+import type { ApiBlackCard, ApiWhiteCard } from "../types"
 import {
   MIN_TIME_BETWEEN_ANS_USER_RM,
   INACTIVITY_TIME,

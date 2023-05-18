@@ -3,7 +3,7 @@ import { computed, reactive } from "vue"
 
 import { TITLE } from "@/consts"
 
-import { ApiCardPack } from "@backend/types"
+import type { ApiCardPack } from "@backend/types"
 
 import AppButton from "@/components/AppButton.vue"
 import PlayingCard from "@/components/PlayingCard.vue"

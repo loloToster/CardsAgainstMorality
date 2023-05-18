@@ -1,5 +1,5 @@
 import { reactive } from "vue"
-import { LoggedInUser } from "@/types/user"
+import type { LoggedInUser } from "@/types/user"
 
 export const user = reactive<{
   value: LoggedInUser

@@ -1,5 +1,5 @@
 import { IsArray, IsInt } from "class-validator"
-import { Submition } from "../../types"
+import type { Submition } from "../../types"
 
 export class SubmitionDto implements Submition {
   @IsInt({ each: true })

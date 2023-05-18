@@ -1,6 +1,6 @@
 import { Router } from "express"
 import db from "../../modules/db"
-import { ApiCardPack, SearchCriteria } from "../../types"
+import type { ApiCardPack, SearchCriteria } from "../../types"
 import { getRandomInt } from "../../utils/random"
 
 const POS_INT_REGEX = /^\d+$/

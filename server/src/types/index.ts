@@ -2,8 +2,8 @@ export * from "./api"
 export * from "./sockets"
 
 export interface SettingsBoundary {
-  min?: number
-  max?: number
+  min: number
+  max: number
   default: number
 }
 
@@ -13,3 +13,5 @@ export interface SettingsBoundaries {
   scoreLimit: SettingsBoundary
   roundLimit: SettingsBoundary
 }
+
+export type SettingsBoundaryName = keyof SettingsBoundaries

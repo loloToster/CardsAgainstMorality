@@ -1,4 +1,4 @@
-import { ApiUser } from "@backend/types"
+import type { ApiUser } from "@backend/types"
 
 export type User = ApiUser
 export type LoggedInUser = null | User

@@ -20,7 +20,7 @@ const defaultGameState: GameState = {
   players: [],
   voting: null,
   timeLimit: null,
-  blackCard: { id: -1, text: "test", pack: "test pack", pick: 1 },
+  blackCard: { id: -1, text: "test", pack: "test pack", pick: 1, draw: 0 },
   roundWinnerData: null,
   podium: null,
   ...defaultPlayerState

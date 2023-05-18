@@ -2,7 +2,7 @@
 import { computed, onUnmounted, reactive, ref, watch } from "vue"
 import { syncRefs, useResizeObserver } from "@vueuse/core"
 
-import { VotingMeta } from "@backend/types"
+import type { VotingMeta } from "@backend/types"
 import { GameStage } from "@/types/game"
 
 import { playAudio } from "@/contexts/audio"

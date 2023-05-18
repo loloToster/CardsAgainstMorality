@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from "vue"
 
-import { ApiBlackCard, ApiWhiteCard } from "@backend/types"
+import type { ApiBlackCard, ApiWhiteCard } from "@backend/types"
 
 import confetti from "@/contexts/confetti"
 

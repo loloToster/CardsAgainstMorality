@@ -3,7 +3,7 @@ import { reactive, ref } from "vue"
 import { useRouter, useRoute, RouterLink } from "vue-router"
 import { onClickOutside } from "@vueuse/core"
 
-import {
+import type {
   ApiCardPack,
   ApiCardPackType,
   ApiCardPackBundle,
@@ -28,6 +28,15 @@ const SORT_TYPES = {
 
 type SortType = keyof typeof SORT_TYPES
 
+function parseQueryParam(p: { toString: () => string } | undefined | null) {
+  return (
+    p
+      ?.toString()
+      .split(",")
+      .map(id => parseInt(id)) ?? []
+  )
+}
+
 const state = reactive<{
   searchQuery: string
   searchAdditionalActive: boolean
@@ -45,23 +54,11 @@ const state = reactive<{
   searchQuery: route.query.q?.toString() ?? "",
   searchAdditionalActive: false,
   types: [],
-  selectedTypes:
-    route.query.types
-      ?.toString()
-      .split(",")
-      .map(t => parseInt(t)) ?? [],
+  selectedTypes: parseQueryParam(route.query.types),
   bundles: [],
-  selectedBundles:
-    route.query.bundles
-      ?.toString()
-      .split(",")
-      .map(b => parseInt(b)) ?? [],
+  selectedBundles: parseQueryParam(route.query.bundles),
   tags: [],
-  selectedTags:
-    route.query.tags
-      ?.toString()
-      .split(",")
-      .map(tg => parseInt(tg)) ?? [],
+  selectedTags: parseQueryParam(route.query.tags),
   sortBy: null,
   sortDropdownActive: false,
   loading: true,
@@ -157,28 +154,24 @@ onClickOutside(searchInputWrapper, () => {
   state.searchAdditionalActive = false
 })
 
-function handleTypeClick(id: number) {
-  if (state.selectedTypes.includes(id)) {
-    state.selectedTypes = state.selectedTypes.filter(t => t !== id)
+function handleAdditionalClick(arr: number[], id: number) {
+  if (arr.includes(id)) {
+    return arr.filter(t => t !== id)
   } else {
-    state.selectedTypes.push(id)
+    return [...arr, id]
   }
+}
+
+function handleTypeClick(id: number) {
+  state.selectedTypes = handleAdditionalClick(state.selectedTypes, id)
 }
 
 function handleBundleClick(id: number) {
-  if (state.selectedBundles.includes(id)) {
-    state.selectedBundles = state.selectedBundles.filter(b => b !== id)
-  } else {
-    state.selectedBundles.push(id)
-  }
+  state.selectedBundles = handleAdditionalClick(state.selectedBundles, id)
 }
 
 function handleTagClick(id: number) {
-  if (state.selectedTags.includes(id)) {
-    state.selectedTags = state.selectedTags.filter(tg => tg !== id)
-  } else {
-    state.selectedTags.push(id)
-  }
+  state.selectedTags = handleAdditionalClick(state.selectedTags, id)
 }
 
 const sortSection = ref<HTMLDivElement>()

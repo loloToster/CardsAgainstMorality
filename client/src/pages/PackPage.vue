@@ -4,7 +4,7 @@ import { RouterLink, useRoute } from "vue-router"
 import { useScroll } from "@vueuse/core"
 import Color from "color"
 
-import { ApiCardPack, ApiBlackCard, ApiWhiteCard } from "@backend/types"
+import type { ApiCardPack, ApiBlackCard, ApiWhiteCard } from "@backend/types"
 
 import { notify } from "@/contexts/notifications"
 

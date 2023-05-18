@@ -1,4 +1,4 @@
-import { SettingsBoundaries } from "./types"
+import type { SettingsBoundaries } from "./types"
 
 // minimum amount of miliseconds between inactive anonymous users removal
 export const MIN_TIME_BETWEEN_ANS_USER_RM = 20 * 60 * 1000
@@ -27,12 +27,12 @@ export const SETTINGS_BOUNDARIES: SettingsBoundaries = {
   },
   scoreLimit: {
     min: 1,
-    max: undefined,
+    max: Infinity,
     default: 15
   },
   roundLimit: {
     min: 1,
-    max: undefined,
+    max: Infinity,
     default: 30
   }
 }

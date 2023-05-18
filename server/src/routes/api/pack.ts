@@ -1,6 +1,6 @@
 import { Router } from "express"
 import db from "../../modules/db"
-import { ApiCardPack } from "../../types"
+import type { ApiCardPack } from "../../types"
 
 const POS_INT_REGEX = /^\d+$/
 

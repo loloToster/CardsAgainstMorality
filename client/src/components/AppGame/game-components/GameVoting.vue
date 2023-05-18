@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive, computed, watch, onMounted, onUnmounted } from "vue"
-import { VotingData, ApiPlayer } from "@backend/types"
+import type { VotingData, ApiPlayer } from "@backend/types"
 import AppButton from "@/components/AppButton.vue"
 
 const INTERVAL = 1000

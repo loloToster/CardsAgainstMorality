@@ -1,17 +1,17 @@
 import { reactive } from "vue"
-import {
+import type {
   ApiCardPack,
-  SettingsBoundaries,
   SettingsBoundary,
+  SettingsBoundaryName,
   SettingsData
 } from "@backend/types"
+import { SETTINGS_BOUNDARIES } from "@backend/consts"
 
 interface SettingsPack extends ApiCardPack {
   selected: boolean
 }
 
 export const gameSettingsState = reactive<{
-  settingsBoundaries: SettingsBoundaries | null
   roomName: string
   playersLimit: number
   timeLimitEnabled: boolean
@@ -22,15 +22,14 @@ export const gameSettingsState = reactive<{
   roundLimit: number
   packs: SettingsPack[]
 }>({
-  settingsBoundaries: null,
   roomName: "",
-  playersLimit: NaN,
+  playersLimit: SETTINGS_BOUNDARIES.playersLimit.default,
   timeLimitEnabled: false,
-  timeLimit: NaN,
+  timeLimit: SETTINGS_BOUNDARIES.timeLimit.default,
   scoreLimitEnabled: false,
-  scoreLimit: NaN,
+  scoreLimit: SETTINGS_BOUNDARIES.scoreLimit.default,
   roundLimitEnabled: false,
-  roundLimit: NaN,
+  roundLimit: SETTINGS_BOUNDARIES.roundLimit.default,
   packs: []
 })
 
@@ -41,33 +40,6 @@ export function ensureBoundary(curVal: number, boundary: SettingsBoundary) {
     (boundary.min === undefined || curVal >= boundary.min) &&
     (boundary.max === undefined || curVal <= boundary.max)
   )
-}
-
-export function setSettingBoundaries(settingsBoundaries: SettingsBoundaries) {
-  gameSettingsState.settingsBoundaries = settingsBoundaries
-
-  if (
-    !ensureBoundary(
-      gameSettingsState.playersLimit,
-      settingsBoundaries.playersLimit
-    )
-  )
-    gameSettingsState.playersLimit = settingsBoundaries.playersLimit.default
-
-  if (
-    !ensureBoundary(gameSettingsState.timeLimit, settingsBoundaries.timeLimit)
-  )
-    gameSettingsState.timeLimit = settingsBoundaries.timeLimit.default
-
-  if (
-    !ensureBoundary(gameSettingsState.scoreLimit, settingsBoundaries.scoreLimit)
-  )
-    gameSettingsState.scoreLimit = settingsBoundaries.scoreLimit.default
-
-  if (
-    !ensureBoundary(gameSettingsState.roundLimit, settingsBoundaries.roundLimit)
-  )
-    gameSettingsState.roundLimit = settingsBoundaries.roundLimit.default
 }
 
 export function setByParsedSettings(data: SettingsData) {
@@ -103,46 +75,32 @@ export function getParsedSettings(): SettingsData {
 export function getValidParsedSettings(): Partial<SettingsData> {
   const curSettings = getParsedSettings()
 
-  if (!gameSettingsState.settingsBoundaries) return curSettings
-
   const validSettings: Partial<SettingsData> = {}
 
+  // check required
+  validSettings.packs = curSettings.packs
+
   if (
-    ensureBoundary(
-      curSettings.playersLimit,
-      gameSettingsState.settingsBoundaries.playersLimit
-    )
+    ensureBoundary(curSettings.playersLimit, SETTINGS_BOUNDARIES.playersLimit)
   )
     validSettings.playersLimit = curSettings.playersLimit
 
-  if (
-    curSettings.timeLimit === null ||
-    ensureBoundary(
-      curSettings.timeLimit,
-      gameSettingsState.settingsBoundaries.timeLimit
-    )
-  )
-    validSettings.timeLimit = curSettings.timeLimit
+  // check not required
+  const notRequired = [
+    "timeLimit",
+    "scoreLimit",
+    "roundLimit"
+  ] as const satisfies Readonly<SettingsBoundaryName[]>
 
-  if (
-    curSettings.scoreLimit === null ||
-    ensureBoundary(
-      curSettings.scoreLimit,
-      gameSettingsState.settingsBoundaries.scoreLimit
-    )
-  )
-    validSettings.scoreLimit = curSettings.scoreLimit
+  notRequired.forEach(k => {
+    const curSetting = curSettings[k]
 
-  if (
-    curSettings.roundLimit === null ||
-    ensureBoundary(
-      curSettings.roundLimit,
-      gameSettingsState.settingsBoundaries.roundLimit
+    if (
+      curSetting === null ||
+      ensureBoundary(curSetting, SETTINGS_BOUNDARIES[k])
     )
-  )
-    validSettings.roundLimit = curSettings.roundLimit
-
-  validSettings.packs = curSettings.packs
+      validSettings[k] = curSetting
+  })
 
   return validSettings
 }

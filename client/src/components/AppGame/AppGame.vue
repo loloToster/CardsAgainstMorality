@@ -2,7 +2,7 @@
 import { onMounted, onUnmounted, watch } from "vue"
 import { useRoute } from "vue-router"
 
-import { SettingsData, VotingMeta } from "@backend/types"
+import type { SettingsData, VotingMeta } from "@backend/types"
 import { GameStage } from "@/types/game"
 
 import {
@@ -17,10 +17,7 @@ import {
   resetGameState,
   resetPlayerState
 } from "./contexts/gamestate"
-import {
-  setSettingBoundaries,
-  setByParsedSettings
-} from "./contexts/gamesettingsstate"
+import { setByParsedSettings } from "./contexts/gamesettingsstate"
 
 import AppLoading from "@/components/AppLoading.vue"
 import GameView from "./GameView.vue"
@@ -105,7 +102,6 @@ socket.on("choices", data => {
 })
 
 socket.on("sync", data => {
-  setSettingBoundaries(data.settingsBoundaries)
   setByParsedSettings(data.currentSettings)
 
   if (!data.started) {

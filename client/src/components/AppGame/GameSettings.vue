@@ -2,7 +2,9 @@
 import { computed, reactive, ref, watch } from "vue"
 import { onClickOutside } from "@vueuse/core"
 
-import { ApiCardPack, SettingsData } from "@backend/types"
+import type { ApiCardPack, SettingsData } from "@backend/types"
+
+import { SETTINGS_BOUNDARIES } from "@backend/consts"
 
 import { user } from "@/contexts/user"
 import { gameState } from "./contexts/gamestate"
@@ -81,34 +83,30 @@ fetch("/api/packs").then(async res => {
 })
 
 const canStart = computed(() => {
-  // this should never happen
-  if (!gameSettingsState.settingsBoundaries) return false
-
   return (
     numOfBlackCards.value &&
     numOfWhiteCards.value &&
-    gameState.players.length >=
-      (gameSettingsState.settingsBoundaries.playersLimit.min ?? 1) &&
+    gameState.players.length >= (SETTINGS_BOUNDARIES.playersLimit.min ?? 1) &&
     ensureBoundary(
       gameSettingsState.playersLimit,
-      gameSettingsState.settingsBoundaries.playersLimit
+      SETTINGS_BOUNDARIES.playersLimit
     ) &&
     (gameSettingsState.timeLimitEnabled
       ? ensureBoundary(
         gameSettingsState.timeLimit,
-        gameSettingsState.settingsBoundaries.timeLimit
+        SETTINGS_BOUNDARIES.timeLimit
       )
       : true) &&
     (gameSettingsState.scoreLimitEnabled
       ? ensureBoundary(
         gameSettingsState.scoreLimit,
-        gameSettingsState.settingsBoundaries.scoreLimit
+        SETTINGS_BOUNDARIES.scoreLimit
       )
       : true) &&
     (gameSettingsState.roundLimitEnabled
       ? ensureBoundary(
         gameSettingsState.roundLimit,
-        gameSettingsState.settingsBoundaries.roundLimit
+        SETTINGS_BOUNDARIES.roundLimit
       )
       : true)
   )
@@ -135,8 +133,7 @@ onClickOutside(invitePlayersContent, () => {
 })
 </script>
 <template>
-  <!-- settings boundaries should always be set when mounting this component -->
-  <div class="settings" v-if="gameSettingsState.settingsBoundaries">
+  <div class="settings">
     <div class="settings__left">
       <div
         v-if="state.loading || !gameState.players.length"
@@ -171,11 +168,8 @@ onClickOutside(invitePlayersContent, () => {
             <div class="settings__main__optional active">
               <NumericInput
                 v-model="gameSettingsState.playersLimit"
-                :lowest="gameSettingsState.settingsBoundaries.playersLimit.min"
-                :highest="
-                  gameSettingsState.settingsBoundaries.playersLimit.max ??
-                  Infinity
-                "
+                :lowest="SETTINGS_BOUNDARIES.playersLimit.min"
+                :highest="SETTINGS_BOUNDARIES.playersLimit.max ?? Infinity"
                 :disabled="!imLeader"
               />
             </div>
@@ -204,10 +198,8 @@ onClickOutside(invitePlayersContent, () => {
             >
               <NumericInput
                 v-model="gameSettingsState.timeLimit"
-                :lowest="gameSettingsState.settingsBoundaries.timeLimit.min"
-                :highest="
-                  gameSettingsState.settingsBoundaries.timeLimit.max ?? Infinity
-                "
+                :lowest="SETTINGS_BOUNDARIES.timeLimit.min"
+                :highest="SETTINGS_BOUNDARIES.timeLimit.max"
                 :disabled="!imLeader"
               />
             </div>
@@ -236,11 +228,8 @@ onClickOutside(invitePlayersContent, () => {
             >
               <NumericInput
                 v-model="gameSettingsState.scoreLimit"
-                :lowest="gameSettingsState.settingsBoundaries.scoreLimit.min"
-                :highest="
-                  gameSettingsState.settingsBoundaries.scoreLimit.max ??
-                  Infinity
-                "
+                :lowest="SETTINGS_BOUNDARIES.scoreLimit.min"
+                :highest="SETTINGS_BOUNDARIES.scoreLimit.max"
                 :disabled="!imLeader"
               />
             </div>
@@ -269,11 +258,8 @@ onClickOutside(invitePlayersContent, () => {
             >
               <NumericInput
                 v-model="gameSettingsState.roundLimit"
-                :lowest="gameSettingsState.settingsBoundaries.roundLimit.min"
-                :highest="
-                  gameSettingsState.settingsBoundaries.roundLimit.max ??
-                  Infinity
-                "
+                :lowest="SETTINGS_BOUNDARIES.roundLimit.min"
+                :highest="SETTINGS_BOUNDARIES.roundLimit.max"
                 :disabled="!imLeader"
               />
             </div>
@@ -425,7 +411,6 @@ onClickOutside(invitePlayersContent, () => {
       </div>
     </div>
   </div>
-  <div v-else>Invalid usage of GameSettings</div>
 </template>
 <style scoped lang="scss">
 @use "sass:math" as math;

@@ -1,5 +1,5 @@
 import { ClassType, transformAndValidate } from "class-transformer-validator"
-import { ClientToServerSocketEvents } from "../../types"
+import type { ClientToServerSocketEvents } from "../../types"
 
 import { PartialSettingsDto, SettingsDto } from "./settings.dto"
 import { SubmitionDto } from "./submition.dto"

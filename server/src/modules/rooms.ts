@@ -8,7 +8,7 @@ import { randomElement, shuffle } from "../utils/random"
 import { Game, GameState, Player, Podium, WinnerData } from "../utils/game"
 
 import type { User } from "@prisma/client"
-import {
+import type {
   ApiWhiteCard,
   ExtendedReq,
   PrevRound,

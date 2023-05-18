@@ -3,7 +3,7 @@ import { computed } from "vue"
 
 import { user } from "@/contexts/user"
 
-import { ApiPlayer } from "@backend/types"
+import type { ApiPlayer } from "@backend/types"
 
 import AppModal from "@/components/AppModal.vue"
 import AppButton from "@/components/AppButton.vue"
@@ -13,7 +13,7 @@ const props = defineProps<{ players: ApiPlayer[] }>()
 
 defineEmits<{
   (ev: "close"): void
-  (ev:"kick", playerId: number): void
+  (ev: "kick", playerId: number): void
 }>()
 
 const filteredPlayers = computed(() => {

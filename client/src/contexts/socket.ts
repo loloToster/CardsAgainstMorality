@@ -1,6 +1,6 @@
 import { reactive } from "vue"
 import { io, Socket } from "socket.io-client"
-import {
+import type {
   ClientToServerSocketEvents,
   ServerToClientSocketEvents
 } from "@backend/types"
