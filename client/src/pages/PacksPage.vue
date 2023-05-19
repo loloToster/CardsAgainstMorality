@@ -22,6 +22,7 @@ const route = useRoute()
 
 const SORT_TYPES: Record<SortType, string> = {
   likes: "Likes",
+  cards: "Number of Cards",
   blacks: "Number of Black Cards",
   whites: "Number of White Cards"
 }

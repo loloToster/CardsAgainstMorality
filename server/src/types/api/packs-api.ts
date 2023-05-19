@@ -29,7 +29,7 @@ export interface SearchCriteria {
   tags: ApiCardPackTag[]
 }
 
-export type SortType = "likes" | "blacks" | "whites"
+export type SortType = "likes" | "cards" |"blacks" | "whites"
 
 export interface ApiRandomCard extends ApiWhiteCard {
   color: "white" | "black"

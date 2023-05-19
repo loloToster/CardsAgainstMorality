@@ -21,11 +21,11 @@ function parseSearchArray(str: string | undefined) {
   return result
 }
 
-// TODO: add sorting by all cards
-const SORT_MAP: Record<SortType, string> = {
-  likes: "likedBy",
-  blacks: "blackCards",
-  whites: "whiteCards"
+const SORT_MAP: Record<SortType, object> = {
+  likes: { likedBy: { _count: "desc" } },
+  cards: { numberOfCards: "desc" },
+  blacks: { blackCards: { _count: "desc" } },
+  whites: { whiteCards: { _count: "desc" } }
 }
 
 router.get("/", async (req, res) => {
@@ -41,7 +41,7 @@ router.get("/", async (req, res) => {
   const parsedBundles = parseSearchArray(bundles)
   const parsedTags = parseSearchArray(tags)
 
-  const parsedSort = SORT_MAP[sort as SortType] as string | undefined
+  const parsedSort = SORT_MAP[sort as SortType] as object | undefined
 
   const packs = await db.cardPack.findMany({
     where: {
@@ -50,7 +50,7 @@ router.get("/", async (req, res) => {
       bundleId: parsedBundles && { in: parsedBundles },
       tags: parsedTags && { some: { id: { in: parsedTags } } }
     },
-    orderBy: parsedSort ? { [parsedSort]: { _count: "desc" } } : { id: "asc" },
+    orderBy: parsedSort ?? { id: "asc" },
     include: {
       type: true,
       bundle: true,

@@ -19,18 +19,19 @@ model User {
 }
 
 model CardPack {
-  id         Int             @id @default(autoincrement())
-  name       String
-  typeId     Int             @map("type_id")
-  type       CardPackType    @relation(fields: [typeId], references: [id])
-  bundleId   Int?            @map("bundle_id")
-  bundle     CardPackBundle? @relation(fields: [bundleId], references: [id])
-  icon       String?
-  color      String?
-  tags       CardPackTag[]
-  blackCards BlackCard[]
-  whiteCards WhiteCard[]
-  likedBy    User[]
+  id            Int             @id @default(autoincrement())
+  name          String
+  typeId        Int             @map("type_id")
+  type          CardPackType    @relation(fields: [typeId], references: [id])
+  bundleId      Int?            @map("bundle_id")
+  bundle        CardPackBundle? @relation(fields: [bundleId], references: [id])
+  icon          String?
+  color         String?
+  tags          CardPackTag[]
+  blackCards    BlackCard[]
+  whiteCards    WhiteCard[]
+  numberOfCards Int             @map("number_of_cards")
+  likedBy       User[]
 
   @@map("card_packs")
 }

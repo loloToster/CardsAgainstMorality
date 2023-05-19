@@ -146,6 +146,7 @@ class Database extends PrismaClient {
           name: pack.name,
           color: pack.color,
           icon: pack.icon,
+          numberOfCards: blackCards.length + whiteCards.length,
           blackCards: {
             create: blackCards.map(c => ({
               text: c.text,
