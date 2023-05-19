@@ -74,7 +74,12 @@ function onMouseLeave() {
 </script>
 
 <template>
-  <div class="card-perspective">
+  <div
+    class="card-wrapper"
+    :style="{
+      '--w': width ? width + 'px' : undefined
+    }"
+  >
     <div
       @touchend="e => $emit('touchend', e)"
       @click="e => $emit('click', e)"
@@ -82,7 +87,6 @@ function onMouseLeave() {
       @mousemove="e => (animated ? onMouseMove(e) : undefined)"
       @mouseleave="() => (animated ? onMouseLeave() : undefined)"
       :style="{
-        '--w': width ? width + 'px' : undefined,
         '--x-rotation': animation.rotation.x,
         '--y-rotation': animation.rotation.y,
         '--a-rotation': animation.rotation.a
@@ -126,22 +130,33 @@ function onMouseLeave() {
 
 <style scoped lang="scss">
 @use "@/styles/colors" as colors;
+@use "@/styles/variables" as vars;
 
-$default-card-height: 320px;
-$default-card-width: 226px;
+.card-wrapper {
+  --width: var(
+    --w,
+    calc(
+      var(--h, #{vars.$default-card-height}) / #{vars.$card-aspect-height} * #{vars.$card-aspect-width}
+    )
+  );
 
-.card-perspective {
-  --w: #{$default-card-width};
   perspective: 1500px;
 }
 
 .card {
-  --padding: calc(var(--w) * 0.081);
-  --border-radius: calc(var(--w) * 0.049);
-  --main-font-size: calc(var(--w) * 0.07);
-  --pack-font-size: calc(var(--w) * 0.04);
-  --pick-font-size: calc(var(--w) * 0.065);
-  --main-icon-size: calc(var(--w) * 0.08);
+  --padding: calc(var(--width) * 0.081);
+  --border-radius: calc(var(--width) * 0.049);
+  --main-font-size: calc(var(--width) * 0.07);
+  --pack-font-size: calc(var(--width) * 0.04);
+  --pick-font-size: calc(var(--width) * 0.065);
+  --main-icon-size: calc(var(--width) * 0.08);
+  --bottom-top-gap: calc(var(--width) * 0.016);
+  --bottom-gap: calc(var(--width) * 0.014);
+  --action-gap: calc(var(--width) * 0.016);
+  --n-size: calc(var(--width) * 0.085);
+
+  width: var(--width);
+  aspect-ratio: vars.$card-aspect-ratio;
 
   box-sizing: border-box;
   position: relative;
@@ -149,8 +164,6 @@ $default-card-width: 226px;
   display: flex;
   flex-direction: column;
 
-  width: var(--w);
-  aspect-ratio: 12 / 17;
   overflow: hidden;
   padding: var(--padding);
 
@@ -200,8 +213,8 @@ $default-card-width: 226px;
   &__bottom {
     display: flex;
     align-items: end;
-    gap: calc(var(--w) * 0.014);
-    padding-top: calc(var(--w) * 0.02);
+    gap: var(--bottom-gap);
+    padding-top: var(--bottom-top-gap);
 
     svg {
       width: var(--main-icon-size);
@@ -212,7 +225,7 @@ $default-card-width: 226px;
   &__pack {
     display: flex;
     align-items: center;
-    gap: calc(var(--w) * 0.014);
+    gap: var(--bottom-gap);
     font-size: var(--pack-font-size);
     line-height: 1.3;
   }
@@ -221,14 +234,14 @@ $default-card-width: 226px;
     display: flex;
     flex-direction: column;
     align-items: end;
-    gap: calc(var(--w) * 0.014);
+    gap: var(--bottom-gap);
     margin-left: auto;
   }
 
   &__action {
     display: flex;
     align-items: center;
-    gap: calc(var(--w) * 0.016);
+    gap: var(--action-gap);
     font-size: var(--pick-font-size);
 
     &__n {
@@ -236,10 +249,10 @@ $default-card-width: 226px;
       align-items: center;
       justify-content: center;
       border-radius: 50%;
-      height: calc(var(--w) * 0.085);
-      width: calc(var(--w) * 0.085);
+      height: var(--n-size);
+      width: var(--n-size);
 
-      // pick should not be in white cards
+      // pick & draw should not be in white cards
       background-color: white;
       color: black;
     }

@@ -19,13 +19,14 @@ withDefaults(defineProps<{ icon?: string }>(), {
 </template>
 <style scoped lang="scss">
 @use "@/styles/colors" as colors;
+@use "@/styles/variables" as vars;
 
 .card-pack {
   $horizonal-padding: 10%;
   $vertical-padding: 18%;
 
   position: relative;
-  aspect-ratio: 12 / 17;
+  aspect-ratio: vars.$card-aspect-ratio;
 
   &__padding {
     display: flex;

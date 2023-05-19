@@ -606,7 +606,7 @@ async function handleLike(liked: boolean) {
 
     &__dummy {
       width: var(--size-of-item);
-      aspect-ratio: 12/ 17;
+      aspect-ratio: vars.$card-aspect-ratio;
       background-color: colors.$light-surface;
       // todo: move dummies to Card Component
       border-radius: calc(var(--size-of-item) * 0.049);

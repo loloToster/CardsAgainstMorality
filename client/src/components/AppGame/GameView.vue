@@ -2,6 +2,8 @@
 import { computed, onUnmounted, reactive, ref, watch } from "vue"
 import { syncRefs, useResizeObserver } from "@vueuse/core"
 
+import { CARD_ASPECT_WIDTH, CARD_ASPECT_HEIGHT } from "@/consts"
+
 import type { VotingMeta } from "@backend/types"
 import { GameStage } from "@/types/game"
 
@@ -38,29 +40,13 @@ defineEmits<{
   (ev: "vote", data: boolean): void
 }>()
 
-enum MAX_CARD_WIDTH {
-  SMALL = 160,
-  BIG = 226
-}
-
-enum CARD_HEIGHT {
-  SMALL = 228,
-  BIG = 325
-}
-
-const SMALLER_CARDS_BOUNDARY = 500
-
 const state = reactive<{
   kickPlayerModalActive: boolean
-  maxTableCardWidth: MAX_CARD_WIDTH
-  tableCardHeight: number | undefined
   tableCardWidth: number | undefined
   showedCard: number
   tablePicture: HTMLCanvasElement | null
 }>({
   kickPlayerModalActive: false,
-  maxTableCardWidth: MAX_CARD_WIDTH.BIG,
-  tableCardHeight: undefined,
   tableCardWidth: undefined,
   showedCard: -1,
   tablePicture: null
@@ -127,7 +113,7 @@ function onChangeChoice(choiceIdx: number) {
 }
 
 const TABLE_CARDS_GAP = 8
-const table = ref<HTMLDivElement>()
+const tableCards = ref<HTMLDivElement>()
 const timer = ref<HTMLDivElement>()
 const timerWrapper = ref<HTMLDivElement>()
 
@@ -144,11 +130,14 @@ const timerWarn = computed(() => {
   )
 })
 
-function resizeTableCards(tableWidth: number) {
+function resizeTableCards(tableWidth: number, tableHeight: number) {
   const g = (numOfTableCards.value - 1) * TABLE_CARDS_GAP
+
+  const maxCardWidth = (tableHeight / CARD_ASPECT_HEIGHT) * CARD_ASPECT_WIDTH
+
   const cardWidth = Math.min(
     (tableWidth - g) / numOfTableCards.value,
-    state.maxTableCardWidth
+    maxCardWidth
   )
 
   let additionalPadding = 0
@@ -166,33 +155,23 @@ function resizeTableCards(tableWidth: number) {
   state.tableCardWidth = cardWidth - additionalPadding / numOfTableCards.value
 }
 
-useResizeObserver(table, entries => {
+useResizeObserver(tableCards, entries => {
   const entry = entries[0]
-  const { width } = entry.contentRect
-
-  if (width < SMALLER_CARDS_BOUNDARY) {
-    state.maxTableCardWidth = MAX_CARD_WIDTH.SMALL
-    state.tableCardHeight = CARD_HEIGHT.SMALL
-  } else {
-    state.maxTableCardWidth = MAX_CARD_WIDTH.BIG
-    state.tableCardHeight = CARD_HEIGHT.BIG
-  }
-
-  resizeTableCards(width)
+  const { width, height } = entry.contentRect
+  resizeTableCards(width, height)
 })
 
 watch(
   () => numOfTableCards.value,
   () => {
-    if (!table.value) return
-    const { width } = table.value.getBoundingClientRect()
-    resizeTableCards(width)
+    if (!tableCards.value) return
+    const { width, height } = tableCards.value.getBoundingClientRect()
+    resizeTableCards(width, height)
   }
 )
 
 let flashTimeout: ReturnType<typeof setTimeout> | undefined
 const flash = ref<HTMLDivElement>()
-const tableCards = ref<HTMLDivElement>()
 syncRefs(tableCards, pictureTarget)
 
 function runFlashAnimation() {
@@ -249,18 +228,18 @@ function onCardsScroll(e: WheelEvent) {
   />
   <div class="game">
     <div class="game__top">
-      <div class="game__table" ref="table">
+      <div class="game__table">
         <div class="game__table__flash-wrapper">
           <div
             class="game__table__cards"
             ref="tableCards"
             :style="{
-              '--table-cards-height': state.tableCardHeight,
               '--table-cards-gap': TABLE_CARDS_GAP
             }"
           >
             <div ref="timerWrapper" class="game__table__timer-wrapper">
               <div ref="timer" class="game__table__timer">
+                <!-- :key prop is used to reset the time everytime the stage of the game is changed -->
                 <GameTimer
                   v-if="gameState.timeLimit"
                   :from="gameState.timeLimit"
@@ -268,9 +247,9 @@ function onCardsScroll(e: WheelEvent) {
                   :warning-boundry="timerWarn ? 10 : 0"
                   :key="gameState.stage"
                 />
-                <!-- :key prop is used to reset the time everytime the stage of the game is changed -->
               </div>
               <PlayingCard
+                class="game__table__card"
                 :width="state.tableCardWidth"
                 :text="gameState.blackCard.text"
                 :pack="gameState.blackCard.pack"
@@ -283,8 +262,9 @@ function onCardsScroll(e: WheelEvent) {
             </div>
             <PlayingCard
               v-for="card in gameState.pickedCards"
-              :width="state.tableCardWidth"
               @click="onPickedCardClick(card.id)"
+              class="game__table__card"
+              :width="state.tableCardWidth"
               :text="card.text"
               :pack="card.pack"
               color="white"
@@ -292,6 +272,7 @@ function onCardsScroll(e: WheelEvent) {
             />
             <PlayingCard
               v-for="card in activeChoice"
+              class="game__table__card"
               :width="state.tableCardWidth"
               :text="card.text"
               :pack="card.pack"
@@ -352,6 +333,7 @@ function onCardsScroll(e: WheelEvent) {
 </template>
 <style scoped lang="scss">
 @use "@/styles/mixins" as mixins;
+@use "@/styles/variables" as vars;
 
 $main-gap: 20px;
 
@@ -430,8 +412,8 @@ $main-gap: 20px;
       align-items: center;
       justify-content: center;
       gap: calc(var(--table-cards-gap, 8) * 1px);
-      height: calc(var(--table-cards-height, 325) * 1px);
-      width: fit-content;
+      height: min(33vh, #{vars.$default-card-height});
+      width: 100%;
       margin: auto;
     }
 
@@ -448,7 +430,7 @@ $main-gap: 20px;
   }
 
   &__under-cards {
-    height: 110px;
+    height: min(11vh, 110px);
     width: 100%;
   }
 
@@ -474,6 +456,8 @@ $main-gap: 20px;
     }
 
     &__card {
+      --h: min(33vh, #{vars.$default-card-height});
+
       position: relative;
       z-index: 2;
       cursor: pointer;
@@ -511,8 +495,6 @@ $main-gap: 20px;
       }
 
       &__card {
-        --w: 150px;
-
         &:hover,
         &.active {
           transform: unset;

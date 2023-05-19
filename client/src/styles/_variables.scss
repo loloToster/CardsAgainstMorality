@@ -1,1 +1,8 @@
 $header-height: clamp(60px, 9vw, 76px);
+
+$default-card-width: 226px;
+$default-card-height: 320px;
+
+$card-aspect-width: 12;
+$card-aspect-height: 17;
+$card-aspect-ratio: #{$card-aspect-width} / #{$card-aspect-height};

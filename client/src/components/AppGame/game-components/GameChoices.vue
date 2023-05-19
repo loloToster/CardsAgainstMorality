@@ -84,8 +84,8 @@ function onTransEnd(e: TransitionEvent, idx: number) {
 @use "@/styles/colors" as colors;
 
 .choices {
-  $card-w: 56px;
-  $card-h: 80px;
+  $card-w: min(6.6vh, 56px);
+  $card-h: min(9.2vh, 80px);
   $card-margin: 6px;
 
   position: relative;
@@ -134,11 +134,11 @@ function onTransEnd(e: TransitionEvent, idx: number) {
     height: $card-h;
     flex-shrink: 0;
 
-    font-size: 1.8rem;
+    font-size: clamp(1.1rem, 4.5vh, 1.8rem);
     transition: font-size 150ms linear;
 
     &.active {
-      font-size: 3.3rem;
+      font-size: clamp(1.5rem, 6vh, 3.3rem);
       z-index: 1;
     }
 
