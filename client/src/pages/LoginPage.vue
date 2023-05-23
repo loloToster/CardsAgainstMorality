@@ -301,7 +301,6 @@ $colors: (
 
     h1 {
       font-size: 1.3rem;
-      margin: 0;
       margin-bottom: 24px;
     }
 

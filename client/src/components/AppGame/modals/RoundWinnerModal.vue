@@ -23,7 +23,7 @@ defineEmits(["close"])
 </script>
 
 <template>
-  <AppModal @close="$emit('close')">
+  <AppModal @close="$emit('close')" transparent>
     <div class="round-winner-modal">
       <h1>
         <span>{{ winner }}</span> <span>won the round!</span>
@@ -67,7 +67,6 @@ defineEmits(["close"])
 .round-winner-modal {
   h1 {
     max-width: 60vw;
-    margin: 0;
     margin-bottom: 16px;
     font-size: clamp(1.2rem, 5vw, 2.4rem);
 

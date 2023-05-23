@@ -496,7 +496,6 @@ $main-gap: 16px;
     }
 
     h3 {
-      margin: 0;
       letter-spacing: 0.5px;
     }
 
@@ -682,7 +681,6 @@ $main-gap: 16px;
 
     h2,
     h5 {
-      margin: 0;
       margin-bottom: math.div($space, 2);
     }
 

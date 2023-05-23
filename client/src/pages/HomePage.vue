@@ -71,9 +71,9 @@ function handleJoinOpen() {
   <AppModal
     v-if="state.joinRoomModalActive"
     @close="state.joinRoomModalActive = false"
+    title="Join a room"
   >
     <div class="join">
-      <h1>Join a room</h1>
       <input
         v-model="state.joinModalCode"
         @keypress="handleJoin"
@@ -233,15 +233,6 @@ function handleJoinOpen() {
 @use "@/styles/variables" as vars;
 
 .join {
-  max-width: 96vw;
-  padding: 22px;
-  border-radius: 12px;
-  background-color: colors.$light-surface;
-
-  h1 {
-    margin-top: 0;
-  }
-
   input {
     margin-bottom: 20px;
     width: 100%;
@@ -261,7 +252,6 @@ function handleJoinOpen() {
 .home {
   h1 {
     text-align: center;
-    margin: 0;
     margin-top: 8vh;
     font-size: clamp(1.2rem, 10vw, 64px);
     padding: 0 12px;
@@ -495,7 +485,6 @@ function handleJoinOpen() {
       }
 
       h2 {
-        margin: 0;
         margin-bottom: 10px;
       }
 

@@ -30,7 +30,7 @@ const bottom = computed(() => {
 </script>
 
 <template>
-  <AppModal @close="$emit('close')">
+  <AppModal @close="$emit('close')" transparent>
     <div class="podium">
       <div class="podium__cols">
         <div

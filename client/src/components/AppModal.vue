@@ -1,35 +1,58 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import AppModalBase from "@/components/AppModalBase.vue"
 
-const emit = defineEmits(["close"])
+defineProps<{ title?: string; transparent?: boolean }>()
 
-const modal = ref<HTMLDivElement>()
-
-function handleClose(e: MouseEvent) {
-  if (e.target === modal.value) emit("close")
-}
+defineEmits(["close"])
 </script>
 
 <template>
-  <div ref="modal" @click="handleClose" class="modal">
-    <slot></slot>
-  </div>
+  <AppModalBase @close="$emit('close')">
+    <div class="modal" :class="{ 'modal--transparent': transparent }">
+      <h1 v-if="title">{{ title }}</h1>
+      <button @click="$emit('close')" class="modal__close">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+          <path
+            d="m249 873-66-66 231-231-231-231 66-66 231 231 231-231 66 66-231 231 231 231-66 66-231-231-231 231Z"
+          />
+        </svg>
+      </button>
+      <div class="modal__content">
+        <slot></slot>
+      </div>
+    </div>
+  </AppModalBase>
 </template>
 
 <style scoped lang="scss">
 @use "@/styles/colors" as colors;
 
 .modal {
-  position: fixed;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 4;
-  overflow: hidden;
-  background-color: colors.$modal-bg;
+  position: relative;
+  max-width: 96vw;
+  padding: 22px;
+  border-radius: 12px;
+  background-color: colors.$light-surface;
+
+  &--transparent {
+    background-color: transparent;
+  }
+
+  h1 {
+    margin-bottom: 12px;
+  }
+
+  &__close {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    cursor: pointer;
+
+    svg {
+      width: 16px;
+      height: 16px;
+      fill: white;
+    }
+  }
 }
 </style>

@@ -239,7 +239,6 @@ const light = computed(() => {
   }
 
   h4 {
-    margin: 0;
     padding-right: 16px;
   }
 
