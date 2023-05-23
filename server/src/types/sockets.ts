@@ -3,12 +3,18 @@ import type { Server, Socket } from "socket.io"
 import type { ApiBlackCard, ApiPlayer, ApiWhiteCard } from "./api"
 import { SettingsBoundaries } from "."
 
+export interface SettingsPack {
+  id: number
+  whites: boolean
+  blacks: boolean
+}
+
 export interface SettingsData {
   playersLimit: number
   timeLimit: number | null
   scoreLimit: number | null
   roundLimit: number | null
-  packs: number[]
+  packs: SettingsPack[]
 }
 
 export interface NewRoundData {

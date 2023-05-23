@@ -46,31 +46,61 @@ const state = reactive<{
   inviteOpen: false
 })
 
-const selectedPacks = computed(() => {
-  return [...gameSettingsState.packs].filter(p => p.selected)
-})
-
 const numOfWhiteCards = computed(() => {
-  return selectedPacks.value.reduce((n, { numOfWhites }) => n + numOfWhites, 0)
+  return gameSettingsState.packs
+    .filter(p => p.selectedWhites)
+    .reduce((n, { numOfWhites }) => n + numOfWhites, 0)
 })
 
 const numOfBlackCards = computed(() => {
-  return selectedPacks.value.reduce((n, { numOfBlacks }) => n + numOfBlacks, 0)
+  return gameSettingsState.packs
+    .filter(p => p.selectedBlacks)
+    .reduce((n, { numOfBlacks }) => n + numOfBlacks, 0)
 })
 
-function selectAllPacks() {
-  gameSettingsState.packs.forEach(p => (p.selected = true))
-}
-
-function unselectAllPacks() {
-  gameSettingsState.packs.forEach(p => (p.selected = false))
+function toggleAllPacks(selected: boolean) {
+  gameSettingsState.packs.forEach(p => {
+    p.selectedBlacks = selected
+    p.selectedWhites = selected
+  })
 }
 
 function togglePack(packId: number) {
-  gameSettingsState.packs = gameSettingsState.packs.map(p => ({
-    ...p,
-    selected: packId === p.id ? !p.selected : p.selected
-  }))
+  gameSettingsState.packs = gameSettingsState.packs.map(p => {
+    if (packId !== p.id) return p
+
+    const selected = p.selectedBlacks || p.selectedWhites
+
+    return {
+      ...p,
+      selectedBlacks: !selected,
+      selectedWhites: !selected
+    }
+  })
+}
+
+function onlyBlacks(packId: number) {
+  gameSettingsState.packs = gameSettingsState.packs.map(p => {
+    if (packId !== p.id) return p
+
+    return {
+      ...p,
+      selectedBlacks: true,
+      selectedWhites: false
+    }
+  })
+}
+
+function onlyWhites(packId: number) {
+  gameSettingsState.packs = gameSettingsState.packs.map(p => {
+    if (packId !== p.id) return p
+
+    return {
+      ...p,
+      selectedBlacks: false,
+      selectedWhites: true
+    }
+  })
 }
 
 fetch("/api/packs").then(async res => {
@@ -277,10 +307,10 @@ onClickOutside(invitePlayersContent, () => {
                   />
                 </svg>
               </div>
-              <button v-if="imLeader" @click="selectAllPacks">
+              <button v-if="imLeader" @click="toggleAllPacks(true)">
                 Select all
               </button>
-              <button v-if="imLeader" @click="unselectAllPacks">
+              <button v-if="imLeader" @click="toggleAllPacks(false)">
                 Unselect all
               </button>
             </div>
@@ -290,8 +320,11 @@ onClickOutside(invitePlayersContent, () => {
               <GamePack
                 v-for="pack in gameSettingsState.packs"
                 @click="togglePack(pack.id)"
+                @only-blacks="onlyBlacks(pack.id)"
+                @only-whites="onlyWhites(pack.id)"
                 :pack="pack"
-                :selected="pack.selected"
+                :selectedBlacks="pack.selectedBlacks"
+                :selectedWhites="pack.selectedWhites"
                 :disabled="!imLeader"
                 :key="pack.id"
               />

@@ -11,11 +11,13 @@ import defaultIcon from "@/assets/white-card-icon.svg?raw"
 const props = withDefaults(
   defineProps<{
     pack: ApiCardPack
-    selected?: boolean
+    selectedWhites?: boolean
+    selectedBlacks?: boolean
     disabled?: boolean
   }>(),
   {
-    selected: false,
+    selectedWhites: false,
+    selectedBlacks: false,
     disabled: false
   }
 )
@@ -24,7 +26,7 @@ const state = reactive<{ detailsOpen: boolean }>({
   detailsOpen: false
 })
 
-const emit = defineEmits(["click"])
+const emit = defineEmits(["click", "only-blacks", "only-whites"])
 
 function handleClick() {
   if (props.disabled) return
@@ -35,12 +37,25 @@ function handleDetailsOpen() {
   state.detailsOpen = true
 }
 
+function handleOnlyBlacks() {
+  state.detailsOpen = false
+  emit("only-blacks")
+}
+
+function handleOnlyWhites() {
+  state.detailsOpen = false
+  emit("only-whites")
+}
+
+const selected = computed(() => {
+  return props.selectedBlacks || props.selectedWhites
+})
+
 const packColor = computed(() => {
   const color = props.pack.color
-  const selected = props.selected
 
   if (color) {
-    if (selected) return color
+    if (selected.value) return color
     const parsedColor = Color(color)
 
     if (parsedColor.luminosity() < 0.1) {
@@ -94,6 +109,16 @@ const light = computed(() => {
       >
         ...
       </button>
+      <div
+        v-if="selectedBlacks !== selectedWhites"
+        class="pack-wrapper__partial-select"
+        :class="{
+          'pack-wrapper__partial-select--black': selectedBlacks,
+          'pack-wrapper__partial-select--white': selectedWhites
+        }"
+      >
+        <div></div>
+      </div>
     </div>
 
     <template #popper>
@@ -115,11 +140,17 @@ const light = computed(() => {
           <div v-if="pack.numOfBlacks">{{ pack.numOfBlacks }} blacks</div>
           <div v-if="pack.numOfWhites">{{ pack.numOfWhites }} whites</div>
         </div>
-        <div class="details__only">
-          <button class="details__only__btn details__only__btn--blacks">
+        <div v-if="!disabled" class="details__only">
+          <button
+            @click="handleOnlyBlacks"
+            class="details__only__btn details__only__btn--blacks"
+          >
             Only Blacks
           </button>
-          <button class="details__only__btn details__only__btn--whites">
+          <button
+            @click="handleOnlyWhites"
+            class="details__only__btn details__only__btn--whites"
+          >
             Only Whites
           </button>
         </div>
@@ -163,6 +194,30 @@ const light = computed(() => {
 
   &:hover &__more {
     display: block;
+  }
+
+  &__partial-select {
+    position: absolute;
+    top: 0;
+    right: 12px;
+    border: 3px solid colors.$light-surface;
+    border-top-color: transparent;
+    border-radius: 50%;
+    transform: translateY(-40%);
+
+    div {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    &--black div {
+      background-color: black;
+    }
+
+    &--white div {
+      background-color: white;
+    }
   }
 }
 

@@ -8,7 +8,8 @@ import type {
 import { SETTINGS_BOUNDARIES } from "@backend/consts"
 
 interface SettingsPack extends ApiCardPack {
-  selected: boolean
+  selectedBlacks: boolean
+  selectedWhites: boolean
 }
 
 export const gameSettingsState = reactive<{
@@ -53,7 +54,12 @@ export function setByParsedSettings(data: SettingsData) {
   if (data.scoreLimit !== null) gameSettingsState.scoreLimit = data.scoreLimit
   if (data.roundLimit !== null) gameSettingsState.roundLimit = data.roundLimit
 
-  gameSettingsState.packs.forEach(p => (p.selected = data.packs.includes(p.id)))
+  gameSettingsState.packs.forEach(pack => {
+    pack.selectedBlacks =
+      data.packs.find(p => p.id === pack.id)?.blacks ?? false
+    pack.selectedWhites =
+      data.packs.find(p => p.id === pack.id)?.whites ?? false
+  })
 }
 
 export function getParsedSettings(): SettingsData {
@@ -68,7 +74,13 @@ export function getParsedSettings(): SettingsData {
     roundLimit: gameSettingsState.roundLimitEnabled
       ? gameSettingsState.roundLimit
       : null,
-    packs: gameSettingsState.packs.filter(p => p.selected).map(p => p.id)
+    packs: gameSettingsState.packs
+      .filter(p => p.selectedBlacks || p.selectedWhites)
+      .map(p => ({
+        id: p.id,
+        blacks: p.selectedBlacks,
+        whites: p.selectedWhites
+      }))
   }
 }
 
