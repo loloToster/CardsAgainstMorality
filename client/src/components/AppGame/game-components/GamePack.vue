@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed } from "vue"
+import { reactive, computed } from "vue"
+import { Dropdown } from "floating-vue"
 import Color from "color"
 
 import type { ApiCardPack } from "@backend/types"
@@ -19,11 +20,19 @@ const props = withDefaults(
   }
 )
 
+const state = reactive<{ detailsOpen: boolean }>({
+  detailsOpen: false
+})
+
 const emit = defineEmits(["click"])
 
 function handleClick() {
   if (props.disabled) return
   emit("click")
+}
+
+function handleDetailsOpen() {
+  state.detailsOpen = true
 }
 
 const packColor = computed(() => {
@@ -47,34 +56,119 @@ const packColor = computed(() => {
 const packIcon = computed(() => {
   return props.pack.icon || defaultIcon
 })
+
+const light = computed(() => {
+  return Color(packColor.value).isLight()
+})
 </script>
 
 <template>
-  <AppChip
-    @click="handleClick"
-    :color="packColor"
-    :style="{ '--pack-color': packColor }"
-    :class="{ selected, disabled }"
-    :outlined="!selected"
-    class="pack"
+  <Dropdown
+    @hide="state.detailsOpen = false"
+    :shown="state.detailsOpen"
+    :triggers="[]"
+    :distance="4"
   >
-    <div
-      class="pack__icon"
-      :class="{
-        'pack__icon--colored-icon': pack.icon && pack.color,
-        'pack__icon--only-colored': pack.color && !pack.icon
-      }"
-      v-html="packIcon"
-    ></div>
-    {{ pack.name }}
-  </AppChip>
+    <div class="pack-wrapper" :style="{ '--pack-color': packColor }">
+      <AppChip
+        @click="handleClick"
+        :color="packColor"
+        :class="{ selected, disabled }"
+        :outlined="!selected"
+        class="pack"
+      >
+        <div
+          class="pack__icon"
+          :class="{
+            'pack__icon--colored-icon': pack.icon && pack.color,
+            'pack__icon--only-colored': pack.color && !pack.icon
+          }"
+          v-html="packIcon"
+        ></div>
+        {{ pack.name }}
+      </AppChip>
+      <button
+        v-if="!state.detailsOpen"
+        @click="handleDetailsOpen"
+        class="pack-wrapper__more"
+      >
+        ...
+      </button>
+    </div>
+
+    <template #popper>
+      <div
+        class="details"
+        :class="{ 'details--light': light }"
+        :style="{ '--pack-color': packColor }"
+      >
+        <button @click="state.detailsOpen = false" class="details__close">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+            <path
+              d="m291-208-83-83 189-189-189-189 83-83 189 189 189-189 83 83-189 189 189 189-83 83-189-189-189 189Z"
+            />
+          </svg>
+        </button>
+        <h4>{{ pack.name }}</h4>
+        <div class="details__meta">
+          <div>♥ {{ pack.likedBy }}</div>
+          <div v-if="pack.numOfBlacks">{{ pack.numOfBlacks }} blacks</div>
+          <div v-if="pack.numOfWhites">{{ pack.numOfWhites }} whites</div>
+        </div>
+        <div class="details__only">
+          <button class="details__only__btn details__only__btn--blacks">
+            Only Blacks
+          </button>
+          <button class="details__only__btn details__only__btn--whites">
+            Only Whites
+          </button>
+        </div>
+        <a
+          :href="`/pack/${encodeURIComponent(pack.name)}`"
+          class="details__view-cards"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <button>View Cards</button>
+        </a>
+      </div>
+    </template>
+  </Dropdown>
 </template>
 
 <style scoped lang="scss">
 @use "@/styles/colors" as colors;
 
+.pack-wrapper {
+  position: relative;
+
+  &__more {
+    display: none;
+    position: absolute;
+    background-color: colors.$light-surface;
+    top: 100%;
+    right: 16px;
+    z-index: 1;
+    border: var(--pack-color) 2px solid;
+    border-top-width: 0;
+    border-radius: 0 0 3px 3px;
+    line-height: 0.4;
+    color: var(--pack-color);
+    font-size: 16px;
+    padding: 6px 4px;
+    padding-top: 0;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  &:hover &__more {
+    display: block;
+  }
+}
+
 .pack {
   transition: all 100ms;
+  cursor: default;
 
   &.disabled {
     cursor: not-allowed;
@@ -125,6 +219,99 @@ const packIcon = computed(() => {
       *[fill="white"] {
         fill: currentColor;
       }
+    }
+  }
+}
+
+.details {
+  --color: white;
+
+  position: relative;
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+  padding: 8px;
+  color: var(--color);
+  background-color: var(--pack-color);
+
+  &--light {
+    --color: black;
+  }
+
+  h4 {
+    margin: 0;
+    padding-right: 16px;
+  }
+
+  svg {
+    fill: var(--color);
+  }
+
+  &__close {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    cursor: pointer;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  &__meta {
+    display: flex;
+    font-size: 0.8rem;
+    padding-right: 16px;
+
+    & > * {
+      &::before {
+        content: "•";
+        margin: 0 4px;
+      }
+
+      &:first-child::before {
+        content: "";
+        margin: 0;
+      }
+    }
+  }
+
+  &__only {
+    display: flex;
+    gap: 4px;
+
+    &__btn {
+      min-width: 0;
+      flex-grow: 1;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      padding: 3px 5px;
+      cursor: pointer;
+
+      &--whites {
+        background-color: white;
+        color: black;
+      }
+
+      &--blacks {
+        background-color: black;
+        color: white;
+      }
+    }
+  }
+
+  &__view-cards {
+    display: block;
+
+    button {
+      background-color: var(--color);
+      color: var(--pack-color);
+      width: 100%;
+      padding: 4px 0;
+      border-radius: 6px;
+      cursor: pointer;
     }
   }
 }

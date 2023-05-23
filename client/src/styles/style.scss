@@ -39,3 +39,11 @@ input {
 button:disabled {
   color: inherit;
 }
+
+.v-popper__arrow-container {
+  display: none;
+}
+
+.v-popper--theme-dropdown .v-popper__inner {
+  border: none;
+}
