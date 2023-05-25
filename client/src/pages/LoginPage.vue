@@ -3,9 +3,10 @@ import { onMounted, onUnmounted, reactive } from "vue"
 import { RouterLink, useRoute } from "vue-router"
 import HCaptcha from "@hcaptcha/vue3-hcaptcha"
 
-import type { ApiRandomCard } from "@backend/types"
 import { TITLE } from "@/consts"
 import { getRandomInt } from "@/utils"
+import api from "@/utils/api"
+import type { ApiRandomCard } from "@backend/types"
 
 import AppButton from "@/components/AppButton.vue"
 import PlayingCard from "@/components/PlayingCard.vue"
@@ -70,10 +71,8 @@ function addCards(newCards: ApiRandomCard[]) {
 }
 
 async function fetchNewCards() {
-  const res = await fetch("/api/packs/random-cards")
-  const { cards } = await res.json()
-
-  addCards(cards)
+  const res = await api.get("/api/packs/random-cards")
+  addCards(res.data.cards)
 }
 
 let newCardsInterval: ReturnType<typeof setTimeout> | undefined

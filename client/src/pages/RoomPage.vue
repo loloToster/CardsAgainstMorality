@@ -2,6 +2,7 @@
 import { onBeforeMount, watch } from "vue"
 import { useRouter, useRoute } from "vue-router"
 
+import api from "@/utils/api"
 import { user } from "@/contexts/user"
 
 import AppGame from "@/components/AppGame/AppGame.vue"
@@ -17,10 +18,8 @@ function redirectNotLoggedIn() {
 async function createRoom() {
   if (!user.value) return
 
-  const res = await fetch("/api/room")
-  const json = await res.json()
-
-  router.replace("/room/" + json.roomId)
+  const res = await api.get("/api/room")
+  router.replace("/room/" + res.data.roomId)
 }
 
 onBeforeMount(() => {
@@ -32,6 +31,14 @@ watch(
   () => user.fetching,
   (newVal, oldVal) => {
     if (!user.value && !newVal && oldVal) return redirectNotLoggedIn()
+    if (!route.params.id) createRoom()
+  }
+)
+
+watch(
+  () => user.value,
+  (newVal, oldVal) => {
+    if (!user.fetching && !newVal && oldVal) return redirectNotLoggedIn()
     if (!route.params.id) createRoom()
   }
 )

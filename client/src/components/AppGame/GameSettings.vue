@@ -2,9 +2,9 @@
 import { computed, reactive, ref, watch } from "vue"
 import { onClickOutside } from "@vueuse/core"
 
-import type { ApiCardPack, SettingsData } from "@backend/types"
-
+import api from "@/utils/api"
 import { SETTINGS_BOUNDARIES } from "@backend/consts"
+import type { ApiCardPack, SettingsData } from "@backend/types"
 
 import { user } from "@/contexts/user"
 import { gameState } from "./contexts/gamestate"
@@ -103,12 +103,13 @@ function onlyWhites(packId: number) {
   })
 }
 
-fetch("/api/packs").then(async res => {
-  const { packs } = await res.json()
-  gameSettingsState.packs = packs.map((p: ApiCardPack) => ({
+// todo: add error handling
+api.get("/api/packs").then(async res => {
+  gameSettingsState.packs = res.data.packs.map((p: ApiCardPack) => ({
     ...p,
     selected: false
   }))
+
   state.loading = false
 })
 

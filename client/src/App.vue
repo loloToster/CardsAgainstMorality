@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router"
 
+import api from "@/utils/api"
 import { user } from "./contexts/user"
 
 import AppHeader from "./components/AppHeader.vue"
 import AppNotifications from "./components/AppNotifications/AppNotifications.vue"
 
-fetch("/auth/me").then(async res => {
-  if (res.ok) {
-    user.value = await res.json()
-  }
-
-  user.fetching = false
-})
+api
+  .get("/auth/me")
+  .then(res => {
+    user.value = res.data
+  })
+  .finally(() => {
+    user.fetching = false
+  })
 </script>
 
 <template>

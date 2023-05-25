@@ -3,7 +3,7 @@ import { computed, nextTick, reactive, ref } from "vue"
 import { useRouter } from "vue-router"
 
 import { TITLE } from "@/consts"
-
+import api from "@/utils/api"
 import type { ApiCardPack } from "@backend/types"
 
 import AppButton from "@/components/AppButton.vue"
@@ -43,11 +43,8 @@ function handleJoin(e: MouseEvent | KeyboardEvent) {
   router.push(`/room/${roomId}`)
 }
 
-fetch("/api/packs").then(async res => {
-  if (res.ok) {
-    const { packs } = await res.json()
-    state.packs = packs
-  }
+api.get("/api/packs").then(res => {
+  state.packs = res.data.packs
 })
 
 const NUM_OF_CIRCLE_ITEMS = 16

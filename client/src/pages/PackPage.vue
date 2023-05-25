@@ -4,6 +4,8 @@ import { RouterLink, useRoute } from "vue-router"
 import { useScroll } from "@vueuse/core"
 import Color from "color"
 
+import api from "@/utils/api"
+
 import type { ApiCardPack, ApiBlackCard, ApiWhiteCard } from "@backend/types"
 
 import { notify } from "@/contexts/notifications"
@@ -36,24 +38,24 @@ const state = reactive<{
 
 // TODO: add pagination
 async function fetchCards(id: number) {
-  const res = await fetch(`/api/pack/${id}/cards`)
-  if (!res.ok) return
-
-  const { cards } = await res.json()
-  state.fetchedBlackCards = cards.blackCards
-  state.fetchedWhiteCards = cards.whiteCards
+  try {
+    const res = await api.get(`/api/pack/${id}/cards`)
+    state.fetchedBlackCards = res.data.cards.blackCards
+    state.fetchedWhiteCards = res.data.cards.whiteCards
+  } catch (err) {
+    // todo: add error handling
+    console.log(err)
+  }
 }
 
-fetch("/api/pack/" + encodeURIComponent(route.params.id.toString())).then(
-  async res => {
-    if (res.ok) {
-      const { pack } = await res.json()
-      state.pack = pack
-      state.loading = false
-      fetchCards(pack.id)
-    }
-  }
-)
+// todo: add error handling
+api
+  .get("/api/pack/" + encodeURIComponent(route.params.id.toString()))
+  .then(res => {
+    state.pack = res.data.pack
+    fetchCards(res.data.pack.id)
+    state.loading = false
+  })
 
 interface BgIconPos {
   top: number
@@ -146,12 +148,13 @@ const numOfWhiteDummies = computed(() => {
 async function handleLike(liked: boolean) {
   if (!state.pack) return
 
-  const res = await fetch(`/api/pack/${state.pack.id}/like`, {
-    method: liked ? "PUT" : "DELETE"
-  })
+  const url = `/api/pack/${state.pack.id}/like`
 
-  if (!res.ok)
+  try {
+    await (liked ? api.put : api.delete)(url)
+  } catch {
     notify({ type: "error", text: `Failed to ${liked ? "like" : "dislike"}` })
+  }
 }
 </script>
 

@@ -3,6 +3,8 @@ import { computed, reactive, ref } from "vue"
 import { useRouter, useRoute, RouterLink } from "vue-router"
 import { onClickOutside } from "@vueuse/core"
 
+import api from "@/utils/api"
+
 import type {
   ApiCardPack,
   ApiCardPackType,
@@ -93,25 +95,27 @@ async function fetchPacks() {
     .join("&")
 
   packController = new AbortController()
-  const res = await fetch("/api/packs?" + parsedQuery, {
-    signal: packController.signal
-  })
 
-  if (!res.ok) return // todo: handle error
+  try {
+    const res = await api.get("/api/packs?" + parsedQuery, {
+      signal: packController.signal
+    })
 
-  const { packs } = await res.json()
-  state.packs = packs
+    state.packs = res.data.packs
+  } catch (err) {
+    // todo: handle error
+    console.error(err)
+  }
+
   state.loading = false
 }
 
-fetch("/api/packs/search-criteria").then(async res => {
-  if (res.ok) {
-    const criteria: SearchCriteria = await res.json()
+api.get("/api/packs/search-criteria").then(res => {
+  const criteria: SearchCriteria = res.data
 
-    state.types = criteria.types
-    state.bundles = criteria.bundles
-    state.tags = criteria.tags
-  }
+  state.types = criteria.types
+  state.bundles = criteria.bundles
+  state.tags = criteria.tags
 })
 
 fetchPacks()
@@ -155,6 +159,8 @@ function handleClear() {
   state.selectedTypes = []
   state.selectedBundles = []
   state.selectedTags = []
+
+  fetchPacks()
 }
 
 onClickOutside(searchInputWrapper, () => {
