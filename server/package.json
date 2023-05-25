@@ -27,6 +27,7 @@
     "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
     "prisma": "^4.11.0",
+    "reflect-metadata": "^0.1.13",
     "socket.io": "^4.6.1",
     "unique-names-generator": "^4.7.1",
     "uuid": "^9.0.0",

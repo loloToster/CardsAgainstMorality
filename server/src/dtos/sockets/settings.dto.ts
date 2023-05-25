@@ -4,11 +4,15 @@ import {
   IsOptional,
   Max,
   Min,
-  ValidateIf
+  ValidateIf,
+  ValidateNested
 } from "class-validator"
+import { Type } from "class-transformer"
 
 import { SETTINGS_BOUNDARIES } from "../../consts"
-import type { SettingsData } from "../../types"
+import type { SettingsData, SettingsPack } from "../../types"
+
+import { SettingsPackDto } from "./settings-pack.dto"
 
 export class SettingsDto implements SettingsData {
   @IsInt()
@@ -34,9 +38,10 @@ export class SettingsDto implements SettingsData {
   @ValidateIf((_, value) => value !== null)
   roundLimit!: number | null
 
-  @IsInt({ each: true })
   @IsArray()
-  packs!: number[]
+  @ValidateNested({ each: true })
+  @Type(() => SettingsPackDto)
+  packs!: SettingsPack[]
 }
 
 export class PartialSettingsDto implements Partial<SettingsData> {
@@ -68,7 +73,8 @@ export class PartialSettingsDto implements Partial<SettingsData> {
   roundLimit?: number | null
 
   @IsOptional()
-  @IsInt({ each: true })
   @IsArray()
-  packs?: number[]
+  @ValidateNested({ each: true })
+  @Type(() => SettingsPackDto)
+  packs?: SettingsPack[]
 }

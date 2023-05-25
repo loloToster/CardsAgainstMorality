@@ -1,3 +1,4 @@
+import "reflect-metadata"
 import dotenv from "dotenv"
 import express, { ErrorRequestHandler } from "express"
 import "express-async-errors"

@@ -13,6 +13,7 @@ import type {
   ExtendedReq,
   PrevRound,
   SettingsData,
+  SettingsPack,
   SharedSyncData,
   SocketClient,
   SocketServer,
@@ -62,7 +63,7 @@ export class Room {
   timeLimit: number | null
   scoreLimit: number | null
   roundLimit: number | null
-  selectedPacks: number[]
+  selectedPacks: SettingsPack[]
 
   timeLimitStart: number | null
   timeLimitTimeout: ReturnType<typeof setTimeout> | undefined
@@ -191,12 +192,16 @@ export class Room {
         this.roundLimit = settings.roundLimit
 
         const whiteCards = await db.whiteCard.findMany({
-          where: { packId: { in: settings.packs } },
+          where: {
+            packId: { in: settings.packs.filter(p => p.whites).map(p => p.id) }
+          },
           select: { id: true }
         })
 
         const blackCards = await db.blackCard.findMany({
-          where: { packId: { in: settings.packs } },
+          where: {
+            packId: { in: settings.packs.filter(p => p.blacks).map(p => p.id) }
+          },
           select: { id: true, pick: true, draw: true }
         })
 
