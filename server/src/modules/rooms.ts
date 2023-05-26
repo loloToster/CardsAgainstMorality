@@ -116,7 +116,6 @@ export class Room {
         joinedAt: foundPlayer.metadata?.joinedAt ?? Date.now()
       }
     } else {
-      // todo: connection before game start
       if (
         this.game.players.length >= this.playersLimit ||
         this.kickedPlayers.includes(user.id)
@@ -317,7 +316,8 @@ export class Room {
 
         if (
           this.currentVoting.for.length + this.currentVoting.against.length >=
-          this.game.players.filter(p => p.metadata?.connected).length
+            this.game.players.filter(p => p.metadata?.connected).length ||
+          this.currentVoting.for.length > this.game.players.length / 2
         ) {
           return await this.resolveVoting()
         }
@@ -623,6 +623,7 @@ export class Room {
   sendGameEnd(podium: Podium<PlayerMetadata>) {
     this.io.to(this.id).emit("end", {
       podium: podium.map((pel, i) => ({
+        id: pel.metadata?.user.id ?? -1,
         place: i + 1,
         name: pel.metadata?.user.name || "?",
         picture: pel.metadata?.user.picture || "",
@@ -754,10 +755,11 @@ export class Rooms {
 
     while (this.rooms.has(roomId) || !roomId) roomId = nanoid(16)
 
+    logger.info(`Creating room with id: '${roomId}'`)
+
     this.rooms.set(
       roomId,
       new Room(roomId, creatorId, new Game(), this.io, () => {
-        logger.info(`Deleting room with id: '${roomId}'`)
         this.deleteRoom(roomId)
       })
     )
@@ -766,6 +768,7 @@ export class Rooms {
   }
 
   deleteRoom(roomId: string) {
+    logger.info(`Deleting room with id: '${roomId}'`)
     const room = this.rooms.get(roomId)
     if (!room) return
     room.cleanup()

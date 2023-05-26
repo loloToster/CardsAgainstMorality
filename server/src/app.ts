@@ -29,9 +29,15 @@ const app = express()
 const server = createHttpServer(app)
 const port = 3000
 
+let { COOKIE_SECRET } = process.env
+if (!COOKIE_SECRET) {
+  logger.warn("No Cookie Secret")
+  COOKIE_SECRET = "secret"
+}
+
 const sessionMw = cookieSession({
   maxAge: 24 * 60 * 60 * 1000,
-  keys: ["process.env.COOKIE_SECRET"] // todo: move to env var
+  keys: [COOKIE_SECRET]
 })
 
 app.use(sessionMw)

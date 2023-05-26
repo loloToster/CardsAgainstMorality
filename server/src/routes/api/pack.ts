@@ -1,5 +1,6 @@
 import { Router } from "express"
 import db from "../../modules/db"
+import { StrategyIdentifier } from "../../consts"
 import type { ApiCardPack } from "../../types"
 
 const POS_INT_REGEX = /^\d+$/
@@ -81,9 +82,12 @@ router.get("/:id/cards", async (req, res) => {
   res.json({ cards })
 })
 
-// ensure user is requesting
+// ensure non anonymous user is requesting
 router.use((req, res, next) => {
   if (!req.user) return res.status(401).send()
+  if (req.user.strategyId.startsWith(StrategyIdentifier.Anonymous))
+    return res.status(403).send()
+
   next()
 })
 

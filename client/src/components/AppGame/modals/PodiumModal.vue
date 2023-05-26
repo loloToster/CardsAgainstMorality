@@ -14,8 +14,7 @@ const props = defineProps<{ podium: PodiumEl[] }>()
 defineEmits(["close"])
 
 onMounted(() => {
-  // todo: more reliable way then username
-  if (props.podium[0].name === user.value?.name) confetti.addConfetti()
+  if (props.podium[0].id === user.value?.id) confetti.addConfetti()
 })
 
 const top = computed(() => {

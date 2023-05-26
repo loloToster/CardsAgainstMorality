@@ -239,19 +239,30 @@ export class Game<PM = unknown> {
     if (!this.newRound()) throw new Error("Not enough cards")
   }
 
-  // TODO: make sure to deal evenly
   dealCards() {
     const additionalCards = this.curBlackCard?.draw ?? 0
 
-    for (const player of this.players) {
-      let target = this.maxCards
-      if (!player.isTsar) target += additionalCards
+    // tsar should have the lowest priority of getting cards if there are not enough
+    const playersWithTsarLast = this.players.filter(p => !p.isTsar)
+    if (this.tsar) playersWithTsarLast.push(this.tsar)
 
-      while (player.cards.length + player.choice.length < target) {
+    while (this.whiteCards.length) {
+      let allDealt = true
+
+      for (const player of playersWithTsarLast) {
+        let target = this.maxCards
+        if (!player.isTsar) target += additionalCards
+
+        if (player.cards.length + player.choice.length >= target) continue
+
+        allDealt = false
+
         const newCard = this.whiteCards.pop()
-        if (!newCard) return
+        if (!newCard) break
         player.cards.push(newCard)
       }
+
+      if (allDealt) break
     }
   }
 

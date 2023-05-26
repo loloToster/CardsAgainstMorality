@@ -33,6 +33,7 @@ export interface PrevRound {
 }
 
 export interface PodiumEl {
+  id: number
   place: number
   name: string
   picture: string

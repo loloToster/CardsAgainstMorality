@@ -15,9 +15,11 @@ function redirectNotLoggedIn() {
   router.replace({ path: "/login", query: { returnTo: route.fullPath } })
 }
 
+let creatingRoom = false
 async function createRoom() {
-  if (!user.value) return
+  if (!user.value || creatingRoom) return
 
+  creatingRoom = true
   const res = await api.get("/api/room")
   router.replace("/room/" + res.data.roomId)
 }
