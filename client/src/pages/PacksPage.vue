@@ -15,6 +15,7 @@ import type {
 } from "@backend/types"
 
 import AppLoading from "@/components/AppLoading.vue"
+import AppError from "@/components/AppError.vue"
 import AppButton from "@/components/AppButton.vue"
 import AppChip from "@/components/AppChip.vue"
 import CardPack from "@/components/CardPack.vue"
@@ -50,6 +51,7 @@ const state = reactive<{
   sortBy: null | SortType
   sortDropdownActive: boolean
   loading: boolean
+  error: boolean
   packs: ApiCardPack[]
 }>({
   searchQuery: route.query.q?.toString() ?? "",
@@ -63,6 +65,7 @@ const state = reactive<{
   sortBy: (route.query.sort?.toString() as SortType) ?? null,
   sortDropdownActive: false,
   loading: true,
+  error: false,
   packs: []
 })
 
@@ -97,14 +100,15 @@ async function fetchPacks() {
   packController = new AbortController()
 
   try {
+    state.error = false
     const res = await api.get("/api/packs?" + parsedQuery, {
       signal: packController.signal
     })
 
     state.packs = res.data.packs
   } catch (err) {
-    // todo: handle error
     console.error(err)
+    state.error = true
   }
 
   state.loading = false
@@ -314,6 +318,9 @@ onClickOutside(sortSection, () => {
       </div>
     </div>
     <AppLoading v-if="state.loading">Loading packs</AppLoading>
+    <AppError v-else-if="state.error">
+      Something went wrong while fetching packs
+    </AppError>
     <div v-else-if="state.packs.length" class="packs">
       <RouterLink
         v-for="pack in state.packs"

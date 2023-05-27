@@ -11,6 +11,7 @@ import type { ApiCardPack, ApiBlackCard, ApiWhiteCard } from "@backend/types"
 import { notify } from "@/contexts/notifications"
 
 import AppLoading from "@/components/AppLoading.vue"
+import AppError from "@/components/AppError.vue"
 import AppChip from "@/components/AppChip.vue"
 import PlayingCard from "@/components/PlayingCard.vue"
 import CardPack from "@/components/CardPack.vue"
@@ -25,14 +26,18 @@ const route = useRoute()
 const state = reactive<{
   pack: ApiCardPack | null
   loading: boolean
+  packError: boolean
   fetchedBlackCards: ApiBlackCard[]
   fetchedWhiteCards: ApiWhiteCard[]
+  cardsError: boolean
   showMiniTop: boolean
 }>({
   pack: null,
   loading: true,
+  packError: false,
   fetchedBlackCards: [],
   fetchedWhiteCards: [],
+  cardsError: false,
   showMiniTop: false
 })
 
@@ -43,17 +48,22 @@ async function fetchCards(id: number) {
     state.fetchedBlackCards = res.data.cards.blackCards
     state.fetchedWhiteCards = res.data.cards.whiteCards
   } catch (err) {
-    // todo: add error handling
-    console.log(err)
+    console.error(err)
+    state.cardsError = true
   }
 }
 
-// todo: add error handling
 api
   .get("/api/pack/" + encodeURIComponent(route.params.id.toString()))
   .then(res => {
     state.pack = res.data.pack
     fetchCards(res.data.pack.id)
+  })
+  .catch(err => {
+    console.error(err)
+    state.packError = true
+  })
+  .finally(() => {
     state.loading = false
   })
 
@@ -160,6 +170,9 @@ async function handleLike(liked: boolean) {
 
 <template>
   <AppLoading v-if="state.loading">Loading the Pack</AppLoading>
+  <AppError v-else-if="state.packError">
+    Something went wrong while fetching the pack
+  </AppError>
   <div
     v-else-if="state.pack"
     class="pack"
@@ -248,7 +261,10 @@ async function handleLike(liked: boolean) {
         </div>
       </div>
     </div>
-    <div class="pack__cards-wrapper">
+    <AppError v-if="state.cardsError" class="pack__cards-error">
+      Something went wrong while fetching cards
+    </AppError>
+    <div v-else class="pack__cards-wrapper">
       <div id="black-cards" class="pack__cards pack__cards--black">
         <div
           class="pack__cards__dummy"
@@ -551,6 +567,10 @@ async function handleLike(liked: boolean) {
       width: 100%;
       padding-top: 16px;
     }
+  }
+
+  &__cards-error {
+    margin-top: 120px;
   }
 
   $cards-gap: 12px;

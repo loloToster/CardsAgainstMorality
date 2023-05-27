@@ -19,6 +19,7 @@ import AppSwitch from "@/components/AppSwitch.vue"
 import AppButton from "@/components/AppButton.vue"
 import CopyButton from "@/components/CopyButton.vue"
 import AppLoader from "@/components/AppLoader.vue"
+import AppError from "@/components/AppError.vue"
 import NumericInput from "@/components/NumericInput.vue"
 import AnimatedNumber from "@/components/AnimatedNumber.vue"
 import UserAvatar from "@/components/UserAvatar.vue"
@@ -40,9 +41,11 @@ const emit = defineEmits<{
 
 const state = reactive<{
   loading: boolean
+  error: boolean
   inviteOpen: boolean
 }>({
   loading: true,
+  error: false,
   inviteOpen: false
 })
 
@@ -103,15 +106,21 @@ function onlyWhites(packId: number) {
   })
 }
 
-// todo: add error handling
-api.get("/api/packs").then(async res => {
-  gameSettingsState.packs = res.data.packs.map((p: ApiCardPack) => ({
-    ...p,
-    selected: false
-  }))
-
-  state.loading = false
-})
+api
+  .get("/api/packs")
+  .then(res => {
+    gameSettingsState.packs = res.data.packs.map((p: ApiCardPack) => ({
+      ...p,
+      selected: false
+    }))
+  })
+  .catch(err => {
+    console.error(err)
+    state.error = true
+  })
+  .finally(() => {
+    state.loading = false
+  })
 
 const canStart = computed(() => {
   return (
@@ -166,8 +175,11 @@ onClickOutside(invitePlayersContent, () => {
 <template>
   <div class="settings">
     <div class="settings__left">
+      <div v-if="state.error" class="settings__panel">
+        <AppError> Something went wrong </AppError>
+      </div>
       <div
-        v-if="state.loading || !gameState.players.length"
+        v-else-if="state.loading || !gameState.players.length"
         class="settings__panel settings__loading"
       >
         <AppLoader class="settings__loader" />
