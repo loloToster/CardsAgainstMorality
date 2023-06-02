@@ -6,17 +6,18 @@ import { VTooltip } from "floating-vue"
 import "floating-vue/dist/style.css"
 import "./styles/style.scss"
 
+import { TITLE } from "./consts"
+
 import App from "./App.vue"
 
 import HomePage from "./pages/HomePage.vue"
-import LoginPage from "./pages/LoginPage.vue"
-import RoomPage from "./pages/RoomPage.vue"
-import RoomsPage from "./pages/RoomsPage.vue"
-import PacksPage from "./pages/PacksPage.vue"
-import PackPage from "./pages/PackPage.vue"
 import NotFoundPage from "./pages/NotFoundPage.vue"
 
-import { TITLE } from "./consts"
+const LoginPage = () => import("./pages/LoginPage.vue")
+const RoomPage = () => import("./pages/RoomPage.vue")
+const RoomsPage = () => import("./pages/RoomsPage.vue")
+const PacksPage = () => import("./pages/PacksPage.vue")
+const PackPage = () => import("./pages/PackPage.vue")
 
 const router = createRouter({
   history: createWebHistory(),
