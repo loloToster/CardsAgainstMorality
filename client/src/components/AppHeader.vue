@@ -28,6 +28,7 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
       <RouterLink class="header__logo" to="/">
         {{ TITLE }}
       </RouterLink>
+      <RouterLink class="header__link" to="/rooms"> Rooms </RouterLink>
       <RouterLink class="header__link" to="/packs"> Packs </RouterLink>
       <div
         @click="state.profileMenuOpen = !state.profileMenuOpen"
