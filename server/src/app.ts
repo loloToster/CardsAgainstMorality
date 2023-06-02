@@ -6,6 +6,7 @@ import { createServer as createHttpServer } from "http"
 import { Server as SocketIoServer } from "socket.io"
 import cookieSession from "cookie-session"
 import passport from "passport"
+import path from "path"
 
 import configurePassport from "./modules/passport"
 import db from "./modules/db"
@@ -23,11 +24,11 @@ declare global {
   }
 }
 
-dotenv.config()
+dotenv.config({ path: __dirname + "/../../.env" })
 
 const app = express()
 const server = createHttpServer(app)
-const port = 3000
+const port = process.env.PORT || 3000
 
 let { COOKIE_SECRET } = process.env
 if (!COOKIE_SECRET) {
@@ -64,7 +65,12 @@ app.use(express.urlencoded({ extended: false }))
 
 loadRoutes(app, __dirname + "/routes")
 
-app.use(express.static(__dirname + "/../../client/dist"))
+const staticPath = path.normalize(__dirname + "/../../client/dist")
+app.use(express.static(staticPath))
+
+app.use((req, res) => {
+  res.sendFile(staticPath + "/index.html")
+})
 
 app.use(((err, req, res, next) => {
   logger.error(err?.message ?? err)

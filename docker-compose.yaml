@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  web:
+    restart: always
+    build: .
+    env_file:
+      - .env
+    environment:
+      - PORT=3000
+      - DB_URL=postgres://postgres:${PG_PASS}@postgres:5432
+    ports:
+      - ${PORT}:3000
+    depends_on:
+      - postgres
+  postgres:
+    restart: always
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${PG_PASS}
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+volumes:
+  postgres:

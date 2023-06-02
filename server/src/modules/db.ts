@@ -1,4 +1,4 @@
-import cards from "../../cards.json"
+import cards from "../cards.json"
 
 import { PrismaClient, User } from "@prisma/client"
 

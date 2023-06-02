@@ -4,14 +4,15 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
+    "generate": "prisma generate",
+    "migrate": "prisma migrate deploy",
+    "build": "rimraf ./dist && tsc",
+    "start": "node ./dist/app.js",
     "dev": "ts-node ./src/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "@prisma/client": "^4.11.0",
-    "@types/express": "^4.17.17",
-    "@types/passport": "^1.0.7",
-    "@types/uuid": "^9.0.1",
     "class-transformer": "^0.5.1",
     "class-transformer-validator": "^0.9.1",
     "class-validator": "^0.14.0",
@@ -35,9 +36,13 @@
   },
   "devDependencies": {
     "@types/cookie-session": "^2.0.44",
+    "@types/express": "^4.17.17",
+    "@types/passport": "^1.0.7",
     "@types/passport-discord": "^0.1.6",
     "@types/passport-facebook": "^2.1.11",
     "@types/passport-google-oauth20": "^2.0.11",
+    "@types/uuid": "^9.0.1",
+    "rimraf": "^5.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.5"
   }

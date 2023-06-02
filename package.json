@@ -4,6 +4,10 @@
   "private": true,
   "description": "",
   "scripts": {
+    "build:client": "cd ./client && npm run build",
+    "build:server": "cd ./server && npm run build",
+    "build": "npm run build:client && npm run build:server",
+    "start": "cd ./server && npm run generate && npm run migrate && npm run start",
     "dev:client": "cd ./client && npm run dev",
     "dev:server": "cd ./server && npm run dev",
     "test": "echo \"Error: no test specified\" && exit 1",
