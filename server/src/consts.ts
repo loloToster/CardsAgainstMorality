@@ -15,6 +15,13 @@ export enum StrategyIdentifier {
 export const TIME_LIMIT_OFFSET = 500
 
 export const SETTINGS_BOUNDARIES: SettingsBoundaries = {
+  name: {
+    default: "",
+    matches: /^[a-zA-z0-9 ]{0,32}$/
+  },
+  public: {
+    default: false
+  },
   playersLimit: {
     min: 2,
     max: 20,

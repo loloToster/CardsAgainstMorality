@@ -8,6 +8,8 @@ export interface SettingsBoundary {
 }
 
 export interface SettingsBoundaries {
+  name: { matches: RegExp; default: string }
+  public: { default: boolean }
   playersLimit: SettingsBoundary
   timeLimit: SettingsBoundary
   scoreLimit: SettingsBoundary

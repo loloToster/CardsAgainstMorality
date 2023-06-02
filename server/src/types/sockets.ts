@@ -10,6 +10,8 @@ export interface SettingsPack {
 }
 
 export interface SettingsData {
+  name: string
+  public: boolean
   playersLimit: number
   timeLimit: number | null
   scoreLimit: number | null

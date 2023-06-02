@@ -14,6 +14,7 @@ interface SettingsPack extends ApiCardPack {
 
 export const gameSettingsState = reactive<{
   roomName: string
+  public: boolean
   playersLimit: number
   timeLimitEnabled: boolean
   timeLimit: number
@@ -23,7 +24,8 @@ export const gameSettingsState = reactive<{
   roundLimit: number
   packs: SettingsPack[]
 }>({
-  roomName: "",
+  roomName: SETTINGS_BOUNDARIES.name.default,
+  public: SETTINGS_BOUNDARIES.public.default,
   playersLimit: SETTINGS_BOUNDARIES.playersLimit.default,
   timeLimitEnabled: false,
   timeLimit: SETTINGS_BOUNDARIES.timeLimit.default,
@@ -44,6 +46,9 @@ export function ensureBoundary(curVal: number, boundary: SettingsBoundary) {
 }
 
 export function setByParsedSettings(data: SettingsData) {
+  gameSettingsState.roomName = data.name
+  gameSettingsState.public = data.public
+
   gameSettingsState.playersLimit = data.playersLimit
 
   gameSettingsState.timeLimitEnabled = data.timeLimit !== null
@@ -64,6 +69,8 @@ export function setByParsedSettings(data: SettingsData) {
 
 export function getParsedSettings(): SettingsData {
   return {
+    name: gameSettingsState.roomName,
+    public: gameSettingsState.public,
     playersLimit: gameSettingsState.playersLimit,
     timeLimit: gameSettingsState.timeLimitEnabled
       ? gameSettingsState.timeLimit
@@ -90,6 +97,10 @@ export function getValidParsedSettings(): Partial<SettingsData> {
   const validSettings: Partial<SettingsData> = {}
 
   // check required
+  if (SETTINGS_BOUNDARIES.name.matches.test(curSettings.name))
+    validSettings.name = curSettings.name
+
+  validSettings.public = curSettings.public
   validSettings.packs = curSettings.packs
 
   if (

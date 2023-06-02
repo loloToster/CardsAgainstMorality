@@ -1,7 +1,10 @@
 import {
   IsArray,
+  IsBoolean,
   IsInt,
   IsOptional,
+  IsString,
+  Matches,
   Max,
   Min,
   ValidateIf,
@@ -15,6 +18,13 @@ import type { SettingsData, SettingsPack } from "../../types"
 import { SettingsPackDto } from "./settings-pack.dto"
 
 export class SettingsDto implements SettingsData {
+  @IsString()
+  @Matches(SETTINGS_BOUNDARIES.name.matches)
+  name!: string
+
+  @IsBoolean()
+  public!: boolean
+
   @IsInt()
   @Min(SETTINGS_BOUNDARIES.playersLimit.min ?? -Infinity)
   @Max(SETTINGS_BOUNDARIES.playersLimit.max ?? Infinity)
@@ -45,6 +55,15 @@ export class SettingsDto implements SettingsData {
 }
 
 export class PartialSettingsDto implements Partial<SettingsData> {
+  @IsOptional()
+  @IsString()
+  @Matches(SETTINGS_BOUNDARIES.name.matches)
+  name?: string
+
+  @IsOptional()
+  @IsBoolean()
+  public?: boolean
+
   @IsOptional()
   @IsInt()
   @Min(SETTINGS_BOUNDARIES.playersLimit.min ?? -Infinity)

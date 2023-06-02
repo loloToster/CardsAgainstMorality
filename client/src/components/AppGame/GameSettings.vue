@@ -30,8 +30,12 @@ import WhiteCardIcon from "@/assets/white-card-icon.svg?component"
 
 defineProps<{ roomId: string }>()
 
+const leader = computed(() => {
+  return gameState.players.find(p => p.leader)
+})
+
 const imLeader = computed(() => {
-  return gameState.players.find(p => p.leader)?.userId === user.value?.id
+  return leader.value?.userId === user.value?.id
 })
 
 const emit = defineEmits<{
@@ -47,6 +51,10 @@ const state = reactive<{
   loading: true,
   error: false,
   inviteOpen: false
+})
+
+const invalidRoomName = computed(() => {
+  return !SETTINGS_BOUNDARIES.name.matches.test(gameSettingsState.roomName)
 })
 
 const numOfWhiteCards = computed(() => {
@@ -124,6 +132,7 @@ api
 
 const canStart = computed(() => {
   return (
+    !invalidRoomName.value &&
     numOfBlackCards.value &&
     numOfWhiteCards.value &&
     gameState.players.length >= (SETTINGS_BOUNDARIES.playersLimit.min ?? 1) &&
@@ -189,10 +198,33 @@ onClickOutside(invitePlayersContent, () => {
           <div class="settings__main__options-row">
             <input
               v-model="gameSettingsState.roomName"
-              placeholder="User's Room"
+              :placeholder="`${leader?.name}'s Room`"
+              :disabled="!imLeader"
               class="settings__main__room-name"
               type="text"
             />
+            <div v-if="invalidRoomName" class="settings__main__room-name-err">
+              The name is invalid
+            </div>
+          </div>
+          <div class="settings__main__options-row">
+            <div class="settings__main__option-title">
+              <h3>Public room</h3>
+              <AppSwitch
+                v-model="gameSettingsState.public"
+                :disabled="!imLeader"
+              />
+              <div
+                class="settings__main__option-title__tooltip"
+                v-tooltip.right="'test'"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                  <path
+                    d="M480 816q20 0 34-14t14-34q0-20-14-34t-34-14q-20 0-34 14t-14 34q0 20 14 34t34 14Zm-36-153h73q0-37 6.5-52.5T555 571q35-34 48.5-58t13.5-53q0-55-37.5-89.5T484 336q-51 0-88.5 27T343 436l65 27q9-28 28.5-43.5T482 404q28 0 46 16t18 42q0 23-15.5 41T496 538q-35 32-43.5 52.5T444 663Zm36 297q-79 0-149-30t-122.5-82.5Q156 795 126 725T96 576q0-80 30-149.5t82.5-122Q261 252 331 222t149-30q80 0 149.5 30t122 82.5Q804 357 834 426.5T864 576q0 79-30 149t-82.5 122.5Q699 900 629.5 930T480 960Zm0-72q130 0 221-91t91-221q0-130-91-221t-221-91q-130 0-221 91t-91 221q0 130 91 221t221 91Zm0-312Z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
           <div class="settings__main__options-row">
             <div class="settings__main__option-title">
@@ -565,7 +597,7 @@ $main-gap: 16px;
     }
 
     &__room-name {
-      width: 45%;
+      width: 70%;
       padding: 8px;
       font-size: 1.6rem;
       border-radius: 4px;
@@ -587,6 +619,16 @@ $main-gap: 16px;
       &:focus {
         background-color: colors.$inp-bg;
       }
+
+      &:disabled {
+        color: inherit;
+      }
+    }
+
+    &__room-name-err {
+      color: colors.$error;
+      margin-top: 4px;
+      font-size: 0.875rem;
     }
 
     &__option-title {

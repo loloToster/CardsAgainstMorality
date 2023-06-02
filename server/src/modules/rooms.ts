@@ -59,6 +59,8 @@ const errWrapper = <T extends (...args: any[]) => any>(cb: T): T => {
 }
 
 export class Room {
+  name: string
+  public: boolean
   playersLimit: number
   timeLimit: number | null
   scoreLimit: number | null
@@ -80,6 +82,8 @@ export class Room {
     public io: SocketServer,
     public onEmpty: EmptyRoomCallback
   ) {
+    this.name = SETTINGS_BOUNDARIES.name.default
+    this.public = SETTINGS_BOUNDARIES.public.default
     this.playersLimit = SETTINGS_BOUNDARIES.playersLimit.default
     this.timeLimit = null
     this.scoreLimit = null
@@ -161,6 +165,8 @@ export class Room {
         )
           return
 
+        if (data.name !== undefined) this.name = data.name
+        if (data.public !== undefined) this.public = data.public
         if (data.playersLimit !== undefined)
           this.playersLimit = data.playersLimit
         if (data.timeLimit !== undefined) this.timeLimit = data.timeLimit
@@ -169,6 +175,8 @@ export class Room {
         if (data.packs !== undefined) this.selectedPacks = data.packs
 
         const curSettings: SettingsData = {
+          name: this.name,
+          public: this.public,
           playersLimit: this.playersLimit,
           timeLimit: this.timeLimit,
           scoreLimit: this.scoreLimit,
@@ -185,6 +193,8 @@ export class Room {
       errWrapper(async settings => {
         if (this.getLeader() !== player) return
 
+        this.name = settings.name
+        this.public = settings.public
         this.playersLimit = settings.playersLimit
         this.timeLimit = settings.timeLimit
         this.scoreLimit = settings.scoreLimit
@@ -559,6 +569,8 @@ export class Room {
     const sharedSyncData: SharedSyncData = {
       settingsBoundaries: SETTINGS_BOUNDARIES,
       currentSettings: {
+        name: this.name,
+        public: this.public,
         playersLimit: this.playersLimit,
         timeLimit: this.timeLimit,
         scoreLimit: this.scoreLimit,
