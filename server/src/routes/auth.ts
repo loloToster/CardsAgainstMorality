@@ -1,10 +1,22 @@
 import { RequestHandler, Router } from "express"
 import passport from "passport"
 
+import { ApiUser } from "../types"
+import { StrategyIdentifier } from "../consts"
+
 const router = Router()
 
 router.get("/me", (req, res) => {
-  req.user ? res.send(req.user) : res.status(404).send()
+  if (!req.user) return res.status(404).send()
+
+  const user: ApiUser = {
+    id: req.user.id,
+    name: req.user.name,
+    picture: req.user.picture,
+    anonymous: req.user.strategyId.startsWith(StrategyIdentifier.Anonymous)
+  }
+
+  res.send(user)
 })
 
 router.get("/logout", (req, res) => {

@@ -393,6 +393,10 @@ async function handleLike(liked: boolean) {
     width: 100%;
     background-color: var(--pack-color);
 
+    @include mixins.sm {
+      margin-bottom: 64px;
+    }
+
     &__icon {
       position: absolute;
       top: calc(var(--top) * 1%);
