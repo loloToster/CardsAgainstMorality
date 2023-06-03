@@ -1,10 +1,11 @@
-// TODO: add more data about the game: all players, cards, stage, etc.
-// TODO: add info when user is rejoining
+// TODO: add more data about the game: card packs
 export interface ApiRoom {
   id: string
   name: string
+  started: boolean
   leaderAvatar: string | null | undefined
   leaderName: string
-  players: number
+  players: string[]
   maxPlayers: number
+  rejoin: boolean
 }
