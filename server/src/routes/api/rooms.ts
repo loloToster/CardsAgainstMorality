@@ -1,6 +1,8 @@
 import { Router } from "express"
+
 import type { Rooms } from "../../modules/rooms"
 import { ApiRoom } from "../../types"
+import { GameState } from "../../utils/game"
 
 const router = Router()
 
@@ -17,10 +19,16 @@ router.get("/", (req, res) => {
     publicRooms.push({
       id: roomId,
       name: room.name,
+      started: room.game.state !== GameState.NOT_STARTED,
       leaderAvatar: leader?.metadata?.user.picture,
       leaderName: leader?.metadata?.user.name || "???",
-      players: room.game.players.filter(p => p.metadata?.connected).length,
-      maxPlayers: room.playersLimit
+      players: room.game.players
+        .filter(p => p !== leader)
+        .map(p => p.metadata?.user.name || "???"),
+      maxPlayers: room.playersLimit,
+      rejoin: req.user
+        ? room.game.players.some(p => p.metadata?.user.id === req.user?.id)
+        : false
     })
   }
 

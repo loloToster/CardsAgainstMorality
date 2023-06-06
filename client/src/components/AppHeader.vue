@@ -11,11 +11,7 @@ import UserAvatar from "./UserAvatar.vue"
 
 const router = useRouter()
 
-const state = reactive({ profileMenuOpen: false })
-
-function logout() {
-  window.location.replace("/auth/logout")
-}
+const state = reactive({ drawerOpen: false, profileMenuOpen: false })
 
 const target = ref(null)
 
@@ -23,8 +19,30 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
 </script>
 
 <template>
+  <div
+    @click="state.drawerOpen = false"
+    class="drawer"
+    :class="{ active: state.drawerOpen }"
+  >
+    <div class="drawer__content" :class="{ active: state.drawerOpen }">
+      <RouterLink to="/" class="drawer__logo">
+        <div v-for="word in TITLE.split(' ')" :key="word">
+          {{ word }}
+        </div>
+      </RouterLink>
+      <RouterLink to="/rooms" class="drawer__btn" v-wave> Rooms </RouterLink>
+      <RouterLink to="/packs" class="drawer__btn" v-wave> Packs </RouterLink>
+    </div>
+  </div>
   <header class="header">
     <div class="header__content">
+      <button @click="state.drawerOpen = true" class="header__burger" v-wave>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+          <path
+            d="M115.935-233.304v-68.131h728.13v68.131h-728.13Zm0-212.631v-68.13h728.13v68.13h-728.13Zm0-212.63v-68.37h728.13v68.37h-728.13Z"
+          />
+        </svg>
+      </button>
       <RouterLink class="header__logo" to="/">
         {{ TITLE }}
       </RouterLink>
@@ -47,14 +65,16 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
             <span>{{ user.value.name }}</span>
           </div>
           <div class="header__profile-menu__divider"></div>
-          <AppButton @click="logout" class="header__profile-menu__btn">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
-              <path
-                d="M179 961q-39.462 0-67.231-27.475Q84 906.05 84 867V285q0-39.463 27.769-67.231Q139.538 190 179 190h298v95H179v582h298v94H179Zm488-174-68-66 98-98H362v-94h333l-98-98 68-66 211 212-209 210Z"
-              />
-            </svg>
-            <span>Log Out</span>
-          </AppButton>
+          <a href="/auth/logout">
+            <AppButton class="header__profile-menu__btn">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                <path
+                  d="M179 961q-39.462 0-67.231-27.475Q84 906.05 84 867V285q0-39.463 27.769-67.231Q139.538 190 179 190h298v95H179v582h298v94H179Zm488-174-68-66 98-98H362v-94h333l-98-98 68-66 211 212-209 210Z"
+                />
+              </svg>
+              <span>Log Out</span>
+            </AppButton>
+          </a>
         </div>
       </div>
       <AppButton v-else @click="router.push('/login')" class="header__login">
@@ -66,7 +86,63 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
 
 <style scoped lang="scss">
 @use "@/styles/variables" as vars;
+@use "@/styles/mixins" as mixins;
 @use "@/styles/colors" as colors;
+
+.drawer {
+  display: none;
+  z-index: 2;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+  pointer-events: none;
+  transition: background-color 200ms;
+
+  @include mixins.xs {
+    display: block;
+  }
+
+  &.active {
+    background-color: colors.$modal-bg;
+    pointer-events: all;
+  }
+
+  &__content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 60vw;
+    background-color: colors.$light-surface;
+    transform: translateX(-100%);
+    transition: transform 200ms;
+
+    &.active {
+      transform: translateX(0);
+    }
+  }
+
+  &__logo {
+    display: block;
+    padding: 4vw;
+    font-size: clamp(1.2rem, 12vw, 1.8rem);
+    letter-spacing: 0.09em;
+    font-weight: bold;
+    line-height: 1;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  &__btn {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    padding: 12px 32px;
+  }
+}
 
 .header {
   position: sticky;
@@ -84,6 +160,25 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
     max-width: 1200px;
     margin: auto;
     height: 100%;
+
+    @include mixins.xs {
+      justify-content: space-between;
+    }
+  }
+
+  &__burger {
+    display: none;
+
+    @include mixins.xs {
+      display: block;
+    }
+
+    svg {
+      min-width: 24px;
+      width: 5vw;
+      max-width: 42px;
+      fill: currentColor;
+    }
   }
 
   &__link {
@@ -94,6 +189,10 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
     &:hover {
       text-decoration: underline;
     }
+
+    @include mixins.xs {
+      display: none;
+    }
   }
 
   &__logo {
@@ -102,6 +201,11 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
     font-weight: 600;
     margin-right: auto;
     text-decoration: none;
+    text-align: center;
+
+    @include mixins.xs {
+      margin-right: unset;
+    }
   }
 
   &__login {
@@ -110,7 +214,7 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
 
   &__avatar {
     min-width: 24px;
-    width: 4vw;
+    width: 5vw;
     max-width: 42px;
     aspect-ratio: 1;
     border-radius: 50%;
@@ -130,6 +234,10 @@ onClickOutside(target, () => (state.profileMenuOpen = false))
     padding: 12px;
     background-color: colors.$dark-surface;
     border-radius: 6px;
+
+    a {
+      text-decoration: none;
+    }
 
     &__divider {
       width: 100%;
