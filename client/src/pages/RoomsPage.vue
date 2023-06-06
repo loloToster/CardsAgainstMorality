@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import { computed, reactive } from "vue"
 import { RouterLink } from "vue-router"
+import { Tooltip } from "floating-vue"
 
-import { ApiRoom } from "@backend/types"
+import type { ApiRoom } from "@backend/types"
 import api from "@/utils/api"
 
 import AppLoading from "@/components/AppLoading.vue"
 import AppError from "@/components/AppError.vue"
 import UserAvatar from "@/components/UserAvatar.vue"
 import AppButton from "@/components/AppButton.vue"
+
+const MAX_PACKS = 6
 
 const state = reactive<{
   loading: boolean
@@ -50,7 +53,7 @@ const rooms = computed(() => {
   <div v-else-if="state.rooms.length" class="rooms">
     <div v-for="room in rooms" class="room" :key="room.id">
       <div class="room__top">
-        <div class="room__name">{{ room.name }}</div>
+        <h2 class="room__name">{{ room.name }}</h2>
         <div
           class="room__state"
           :class="{ 'room__state--started': room.started }"
@@ -60,7 +63,7 @@ const rooms = computed(() => {
       </div>
       <div class="room__code">{{ room.id }}</div>
       <div class="room__players-header">
-        <span> Players: </span>
+        <h3>Players:</h3>
         <!-- add leader -->
         <span>{{ room.players.length + 1 }}/{{ room.maxPlayers }}</span>
       </div>
@@ -71,6 +74,29 @@ const rooms = computed(() => {
         />
         <span class="room__players__leader-name">{{ room.leaderName }}</span>
         <span v-if="room.players.length"> • {{ room.players.join(", ") }}</span>
+      </div>
+      <div v-if="room.packs.length" class="room__packs-header">
+        <h3>Cards:</h3>
+      </div>
+      <div v-if="room.packs.length" class="room__packs">
+        <span>{{ room.packs.slice(0, MAX_PACKS).join(", ") }}</span>
+        <span v-if="room.packs.length > MAX_PACKS" class="room__packs__plus">
+          +
+        </span>
+        <Tooltip
+          v-if="room.packs.length > MAX_PACKS"
+          placement="bottom"
+          class="room__packs__more"
+        >
+          <span>{{ room.packs.length - MAX_PACKS }} packs </span>
+          <template #popper>
+            <ul class="room__packs__overflow">
+              <li v-for="pack in room.packs.slice(MAX_PACKS)" :key="pack">
+                {{ pack }}
+              </li>
+            </ul>
+          </template>
+        </Tooltip>
       </div>
       <RouterLink class="room__btn-wrapper" :to="`/room/${room.id}`">
         <AppButton v-if="room.rejoin" class="room__btn room__btn--rejoin">
@@ -115,6 +141,10 @@ const rooms = computed(() => {
   overflow: hidden;
   border-radius: 16px;
   background-color: colors.$light-surface;
+
+  h3 {
+    font-size: 1rem;
+  }
 
   &__top {
     display: flex;
@@ -161,6 +191,19 @@ const rooms = computed(() => {
   &__players-header {
     display: flex;
     justify-content: space-between;
+  }
+
+  &__packs {
+    &__plus {
+      cursor: default;
+      font-weight: bold;
+    }
+
+    &__more {
+      display: inline;
+      cursor: default;
+      font-weight: bold;
+    }
   }
 
   &__btn-wrapper {
