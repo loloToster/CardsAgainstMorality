@@ -23,18 +23,24 @@ const state = reactive<{
   rooms: []
 })
 
-api
-  .get("/api/rooms")
-  .then(res => {
+async function fetchRooms(showActivity = false) {
+  state.loading = true
+  state.error = false
+
+  if (showActivity) await new Promise(r => setTimeout(r, 1000))
+
+  try {
+    const res = await api.get("/api/rooms")
     state.rooms = res.data.rooms
-  })
-  .catch(err => {
+  } catch (err) {
     console.error(err)
     state.error = true
-  })
-  .finally(() => {
+  } finally {
     state.loading = false
-  })
+  }
+}
+
+fetchRooms()
 
 const rooms = computed(() => {
   return state.rooms.map(r => {
@@ -106,7 +112,22 @@ const rooms = computed(() => {
       </RouterLink>
     </div>
   </div>
-  <div v-else>No rooms</div>
+  <div v-else class="no-room">
+    <svg viewBox="0 0 24 24">
+      <path
+        d="M2,5.27L3.28,4L20,20.72L18.73,22L12.73,16H7.97L5,19C4.67,19.3 4.23,19.5 3.75,19.5A1.75,1.75 0 0,1 2,17.75V17.5L3,10.12C3.1,9.09 3.53,8.17 4.19,7.46L2,5.27M5,10V11H7V13H8V11.27L6.73,10H5M16.5,6C18.86,6 20.79,7.81 21,10.12L22,17.5V17.75C22,18.41 21.64,19 21.1,19.28L7.82,6H16.5M16.5,8A0.75,0.75 0 0,0 15.75,8.75A0.75,0.75 0 0,0 16.5,9.5A0.75,0.75 0 0,0 17.25,8.75A0.75,0.75 0 0,0 16.5,8M14.75,9.75A0.75,0.75 0 0,0 14,10.5A0.75,0.75 0 0,0 14.75,11.25A0.75,0.75 0 0,0 15.5,10.5A0.75,0.75 0 0,0 14.75,9.75M18.25,9.75A0.75,0.75 0 0,0 17.5,10.5A0.75,0.75 0 0,0 18.25,11.25A0.75,0.75 0 0,0 19,10.5A0.75,0.75 0 0,0 18.25,9.75M16.5,11.5A0.75,0.75 0 0,0 15.75,12.25A0.75,0.75 0 0,0 16.5,13A0.75,0.75 0 0,0 17.25,12.25A0.75,0.75 0 0,0 16.5,11.5Z"
+      ></path>
+    </svg>
+    <h1>No rooms are currently public</h1>
+    <button @click="fetchRooms(true)" class="no-room__refresh">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+        <path
+          d="M480-160q-133 0-226.5-93.5T160-480q0-133 93.5-226.5T480-800q85 0 149 34.5T740-671v-129h60v254H546v-60h168q-38-60-97-97t-137-37q-109 0-184.5 75.5T220-480q0 109 75.5 184.5T480-220q83 0 152-47.5T728-393h62q-29 105-115 169t-195 64Z"
+        />
+      </svg>
+      <span>Refresh</span>
+    </button>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -219,6 +240,50 @@ const rooms = computed(() => {
 
     &--join {
       @include colors.app-button(colors.$primary);
+    }
+  }
+}
+
+.no-room {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 0 20px;
+  margin-top: 10vh;
+
+  svg {
+    $size: 20vw;
+    $max-size: 168px;
+
+    width: $size;
+    height: $size;
+    max-width: $max-size;
+    max-height: $max-size;
+    fill: currentColor;
+  }
+
+  h1 {
+    margin-top: 16px;
+    margin-bottom: 4px;
+    font-size: clamp(1.4rem, 7vw, 2.4rem);
+  }
+
+  &__refresh {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    svg {
+      fill: currentColor;
+      width: 1rem;
+      height: 1rem;
     }
   }
 }
