@@ -153,9 +153,26 @@ export default () => {
       {
         clientID: FACEBOOK_CLIENT_ID,
         clientSecret: FACEBOOK_CLIENT_SECRET,
-        callbackURL: "/auth/facebook/callback"
+        callbackURL: "/auth/facebook/callback",
+        profileFields: ["id", "displayName", "picture.type(large)"]
       },
-      () => null // todo: implement
+      async (at, rt, profile, done) => {
+        const strategyId = `${StrategyIdentifier.Facebook}-${profile.id}`
+
+        let user = await db.user.findFirst({ where: { strategyId } })
+
+        if (!user) {
+          user = await db.user.create({
+            data: {
+              name: profile.displayName,
+              strategyId,
+              picture: profile.photos?.at(0)?.value
+            }
+          })
+        }
+
+        done(null, user)
+      }
     )
   )
 }
