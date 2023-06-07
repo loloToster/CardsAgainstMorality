@@ -1,16 +1,11 @@
 import { reactive } from "vue"
 import type {
-  ApiCardPack,
   SettingsBoundary,
   SettingsBoundaryName,
+  SettingsPack,
   SettingsData
 } from "@backend/types"
 import { SETTINGS_BOUNDARIES } from "@backend/consts"
-
-interface SettingsPack extends ApiCardPack {
-  selectedBlacks: boolean
-  selectedWhites: boolean
-}
 
 export const gameSettingsState = reactive<{
   roomName: string
@@ -22,7 +17,7 @@ export const gameSettingsState = reactive<{
   scoreLimit: number
   roundLimitEnabled: boolean
   roundLimit: number
-  packs: SettingsPack[]
+  selectedPacks: SettingsPack[] // this should never contain both false
 }>({
   roomName: SETTINGS_BOUNDARIES.name.default,
   public: SETTINGS_BOUNDARIES.public.default,
@@ -33,7 +28,7 @@ export const gameSettingsState = reactive<{
   scoreLimit: SETTINGS_BOUNDARIES.scoreLimit.default,
   roundLimitEnabled: false,
   roundLimit: SETTINGS_BOUNDARIES.roundLimit.default,
-  packs: []
+  selectedPacks: []
 })
 
 export function ensureBoundary(curVal: number, boundary: SettingsBoundary) {
@@ -59,12 +54,7 @@ export function setByParsedSettings(data: SettingsData) {
   if (data.scoreLimit !== null) gameSettingsState.scoreLimit = data.scoreLimit
   if (data.roundLimit !== null) gameSettingsState.roundLimit = data.roundLimit
 
-  gameSettingsState.packs.forEach(pack => {
-    pack.selectedBlacks =
-      data.packs.find(p => p.id === pack.id)?.blacks ?? false
-    pack.selectedWhites =
-      data.packs.find(p => p.id === pack.id)?.whites ?? false
-  })
+  gameSettingsState.selectedPacks = data.packs.filter(p => p.blacks || p.whites)
 }
 
 export function getParsedSettings(): SettingsData {
@@ -81,13 +71,7 @@ export function getParsedSettings(): SettingsData {
     roundLimit: gameSettingsState.roundLimitEnabled
       ? gameSettingsState.roundLimit
       : null,
-    packs: gameSettingsState.packs
-      .filter(p => p.selectedBlacks || p.selectedWhites)
-      .map(p => ({
-        id: p.id,
-        blacks: p.selectedBlacks,
-        whites: p.selectedWhites
-      }))
+    packs: gameSettingsState.selectedPacks.filter(p => p.blacks || p.whites)
   }
 }
 

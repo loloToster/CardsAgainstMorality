@@ -4,7 +4,7 @@ import { onClickOutside } from "@vueuse/core"
 
 import api from "@/utils/api"
 import { SETTINGS_BOUNDARIES } from "@backend/consts"
-import type { ApiCardPack, SettingsData } from "@backend/types"
+import type { ApiCardPack, SettingsData, SettingsPack } from "@backend/types"
 
 import { user } from "@/contexts/user"
 import { gameState } from "./contexts/gamestate"
@@ -47,80 +47,126 @@ const state = reactive<{
   loading: boolean
   error: boolean
   inviteOpen: boolean
+  packs: ApiCardPack[]
 }>({
   loading: true,
   error: false,
-  inviteOpen: false
+  inviteOpen: false,
+  packs: []
 })
 
 const invalidRoomName = computed(() => {
   return !SETTINGS_BOUNDARIES.name.matches.test(gameSettingsState.roomName)
 })
 
+interface SettingsApiPack extends ApiCardPack {
+  blacks: boolean
+  whites: boolean
+}
+
+const selectedApiPacks = computed(() => {
+  const packs: SettingsApiPack[] = []
+
+  for (const pack of state.packs) {
+    const selectedPack = gameSettingsState.selectedPacks.find(
+      p => p.id === pack.id
+    )
+
+    packs.push({
+      ...pack,
+      blacks: selectedPack?.blacks ?? false,
+      whites: selectedPack?.whites ?? false
+    })
+  }
+
+  return packs
+})
+
 const numOfWhiteCards = computed(() => {
-  return gameSettingsState.packs
-    .filter(p => p.selectedWhites)
+  return selectedApiPacks.value
+    .filter(p => p.whites)
     .reduce((n, { numOfWhites }) => n + numOfWhites, 0)
 })
 
 const numOfBlackCards = computed(() => {
-  return gameSettingsState.packs
-    .filter(p => p.selectedBlacks)
+  return selectedApiPacks.value
+    .filter(p => p.blacks)
     .reduce((n, { numOfBlacks }) => n + numOfBlacks, 0)
 })
 
 function toggleAllPacks(selected: boolean) {
-  gameSettingsState.packs.forEach(p => {
-    p.selectedBlacks = selected
-    p.selectedWhites = selected
-  })
+  if (selected) {
+    gameSettingsState.selectedPacks = state.packs.map(p => ({
+      id: p.id,
+      blacks: true,
+      whites: true
+    }))
+  } else {
+    gameSettingsState.selectedPacks = []
+  }
 }
 
 function togglePack(packId: number) {
-  gameSettingsState.packs = gameSettingsState.packs.map(p => {
-    if (packId !== p.id) return p
+  const newSelectedPacks: SettingsPack[] = []
+  let foundPack = false
 
-    const selected = p.selectedBlacks || p.selectedWhites
-
-    return {
-      ...p,
-      selectedBlacks: !selected,
-      selectedWhites: !selected
+  for (const pack of gameSettingsState.selectedPacks) {
+    if (packId !== pack.id) {
+      newSelectedPacks.push(pack)
+      continue
     }
-  })
+
+    foundPack = true
+  }
+
+  if (!foundPack) {
+    newSelectedPacks.push({
+      id: packId,
+      blacks: true,
+      whites: true
+    })
+  }
+
+  gameSettingsState.selectedPacks = newSelectedPacks
+
+  return
 }
 
 function onlyBlacks(packId: number) {
-  gameSettingsState.packs = gameSettingsState.packs.map(p => {
-    if (packId !== p.id) return p
+  const pack = gameSettingsState.selectedPacks.find(p => p.id === packId)
 
-    return {
-      ...p,
-      selectedBlacks: true,
-      selectedWhites: false
-    }
-  })
+  if (pack) {
+    pack.blacks = true
+    pack.whites = false
+  } else {
+    gameSettingsState.selectedPacks.push({
+      id: packId,
+      blacks: true,
+      whites: false
+    })
+  }
 }
 
 function onlyWhites(packId: number) {
-  gameSettingsState.packs = gameSettingsState.packs.map(p => {
-    if (packId !== p.id) return p
+  const pack = gameSettingsState.selectedPacks.find(p => p.id === packId)
 
-    return {
-      ...p,
-      selectedBlacks: false,
-      selectedWhites: true
-    }
-  })
+  if (pack) {
+    pack.blacks = false
+    pack.whites = true
+  } else {
+    gameSettingsState.selectedPacks.push({
+      id: packId,
+      blacks: false,
+      whites: true
+    })
+  }
 }
 
 api
   .get("/api/packs")
   .then(res => {
-    gameSettingsState.packs = res.data.packs.map((p: ApiCardPack) => ({
-      ...p,
-      selected: false
-    }))
+    const packs: ApiCardPack[] = res.data.packs
+    state.packs = packs
   })
   .catch(err => {
     console.error(err)
@@ -363,13 +409,13 @@ onClickOutside(invitePlayersContent, () => {
           <div class="settings__main__options-row">
             <div class="settings__packs">
               <GamePack
-                v-for="pack in gameSettingsState.packs"
+                v-for="pack in selectedApiPacks"
                 @click="togglePack(pack.id)"
                 @only-blacks="onlyBlacks(pack.id)"
                 @only-whites="onlyWhites(pack.id)"
                 :pack="pack"
-                :selectedBlacks="pack.selectedBlacks"
-                :selectedWhites="pack.selectedWhites"
+                :selectedBlacks="pack.blacks"
+                :selectedWhites="pack.whites"
                 :disabled="!imLeader"
                 :key="pack.id"
               />

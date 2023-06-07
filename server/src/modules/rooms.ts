@@ -172,7 +172,8 @@ export class Room {
         if (data.timeLimit !== undefined) this.timeLimit = data.timeLimit
         if (data.scoreLimit !== undefined) this.scoreLimit = data.scoreLimit
         if (data.roundLimit !== undefined) this.roundLimit = data.roundLimit
-        if (data.packs !== undefined) this.selectedPacks = data.packs
+        if (data.packs !== undefined)
+          this.selectedPacks = data.packs.filter(p => p.blacks || p.whites)
 
         const curSettings: SettingsData = {
           name: this.name,
@@ -199,17 +200,22 @@ export class Room {
         this.timeLimit = settings.timeLimit
         this.scoreLimit = settings.scoreLimit
         this.roundLimit = settings.roundLimit
+        this.selectedPacks = settings.packs.filter(p => p.blacks || p.whites)
 
         const whiteCards = await db.whiteCard.findMany({
           where: {
-            packId: { in: settings.packs.filter(p => p.whites).map(p => p.id) }
+            packId: {
+              in: this.selectedPacks.filter(p => p.whites).map(p => p.id)
+            }
           },
           select: { id: true }
         })
 
         const blackCards = await db.blackCard.findMany({
           where: {
-            packId: { in: settings.packs.filter(p => p.blacks).map(p => p.id) }
+            packId: {
+              in: this.selectedPacks.filter(p => p.blacks).map(p => p.id)
+            }
           },
           select: { id: true, pick: true, draw: true }
         })
