@@ -17,6 +17,7 @@ const LoginPage = () => import("./pages/LoginPage.vue")
 const RoomPage = () => import("./pages/RoomPage.vue")
 const RoomsPage = () => import("./pages/RoomsPage.vue")
 const PacksPage = () => import("./pages/PacksPage.vue")
+const MyPacksPage = () => import("./pages/MyPacksPage.vue")
 const PackPage = () => import("./pages/PackPage.vue")
 
 const router = createRouter({
@@ -37,11 +38,16 @@ const router = createRouter({
       name: "Card Packs"
     },
     {
+      path: "/my-packs",
+      component: MyPacksPage,
+      name: "My Card Packs"
+    },
+    {
       path: "/pack/:id",
       component: PackPage,
       name: "Card Pack"
     },
-    { path: "/:pathMatch(.*)*", component: NotFoundPage, name: "404" }
+    { path: "/:pathMatch(.*)*", component: NotFoundPage, name: "Not Found" }
   ]
 })
 

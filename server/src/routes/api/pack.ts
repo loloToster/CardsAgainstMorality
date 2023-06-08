@@ -115,4 +115,19 @@ router.delete("/:id/like", async (req, res) => {
   res.send()
 })
 
+router.post("/", async (req, res) => {
+  const pack = await db.cardPack.create({
+    data: {
+      name: "Card Pack",
+      numberOfCards: 0,
+      type: { connect: { id: 2 } },
+      owner: { connect: { id: req.user?.id } }
+    }
+  })
+
+  res.json({
+    id: pack.id
+  })
+})
+
 export = router

@@ -2,6 +2,7 @@ import { Router } from "express"
 import db from "../../modules/db"
 import type { ApiCardPack, SearchCriteria, SortType } from "../../types"
 import { getRandomInt } from "../../utils/random"
+import { StrategyIdentifier } from "../../consts"
 
 const POS_INT_REGEX = /^\d+$/
 
@@ -35,7 +36,7 @@ router.get("/", async (req, res) => {
     parsedQuery[key] = req.query[key]?.toString()
   })
 
-  const { q, types, bundles, tags, sort } = parsedQuery
+  const { q, types, bundles, tags, sort, my } = parsedQuery
 
   const parsedTypes = parseSearchArray(types)
   const parsedBundles = parseSearchArray(bundles)
@@ -43,8 +44,14 @@ router.get("/", async (req, res) => {
 
   const parsedSort = SORT_MAP[sort as SortType] as object | undefined
 
+  const userPack =
+    my &&
+    req.user &&
+    !req.user.strategyId.startsWith(StrategyIdentifier.Anonymous)
+
   const packs = await db.cardPack.findMany({
     where: {
+      ownerId: userPack ? req.user?.id : undefined,
       name: q && { contains: q, mode: "insensitive" },
       typeId: parsedTypes && { in: parsedTypes },
       bundleId: parsedBundles && { in: parsedBundles },

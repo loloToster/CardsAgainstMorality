@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue"
-import { useRouter, useRoute, RouterLink } from "vue-router"
+import { useRouter, useRoute } from "vue-router"
 import { onClickOutside } from "@vueuse/core"
 
 import api from "@/utils/api"
@@ -18,7 +18,7 @@ import AppLoading from "@/components/AppLoading.vue"
 import AppError from "@/components/AppError.vue"
 import AppButton from "@/components/AppButton.vue"
 import AppChip from "@/components/AppChip.vue"
-import CardPack from "@/components/CardPack.vue"
+import PackList from "@/components/PackList.vue"
 
 const router = useRouter()
 const route = useRoute()
@@ -321,17 +321,7 @@ onClickOutside(sortSection, () => {
     <AppError v-else-if="state.error">
       Something went wrong while fetching packs
     </AppError>
-    <div v-else-if="state.packs.length" class="packs">
-      <RouterLink
-        v-for="pack in state.packs"
-        :to="`/pack/${encodeURIComponent(pack.name)}`"
-        class="packs__pack"
-        :style="{ '--pack-color': pack.color ?? undefined }"
-        :key="pack.id"
-      >
-        <CardPack :icon="pack.icon ?? undefined">{{ pack.name }}</CardPack>
-      </RouterLink>
-    </div>
+    <PackList v-else-if="state.packs.length" :packs="state.packs" />
     <div v-else class="no-packs">
       <svg viewBox="0 0 24 24">
         <path
@@ -532,39 +522,6 @@ onClickOutside(sortSection, () => {
       &.active {
         --color: unset;
       }
-    }
-  }
-}
-
-.packs {
-  --items-in-row: 4;
-
-  @include mixins.sm {
-    --items-in-row: 3;
-  }
-
-  @include mixins.xs {
-    --items-in-row: 2;
-  }
-
-  display: grid;
-  grid-template-columns: repeat(var(--items-in-row), 1fr);
-  grid-auto-rows: 1fr;
-  gap: 3vw;
-  width: 90%;
-  max-width: 1100px;
-  margin: 30px auto;
-
-  &__pack {
-    display: block;
-    width: 100%;
-    text-decoration: none;
-    color: inherit;
-    font-size: 1.3rem;
-    transition: transform 100ms;
-
-    &:hover {
-      transform: scale(1.05);
     }
   }
 }
