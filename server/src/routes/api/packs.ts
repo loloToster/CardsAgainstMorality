@@ -140,4 +140,21 @@ router.get("/random-cards", async (req, res) => {
   res.json({ cards })
 })
 
+const MAX_ICONS = 64
+
+router.get("/icons", async (req, res) => {
+  const { q } = req.query
+
+  if (typeof q !== "string") return res.status(400).send()
+
+  const icons = await db.icon.findMany({
+    where: {
+      search: { contains: q }
+    },
+    take: MAX_ICONS
+  })
+
+  res.json({ icons: icons.map(i => i.name) })
+})
+
 export = router

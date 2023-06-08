@@ -64,6 +64,11 @@ model CardPackTag {
   @@map("card_pack_tags")
 }
 
+model Icon {
+  name   String @id
+  search String
+}
+
 model BlackCard {
   id     Int      @id @default(autoincrement())
   text   String

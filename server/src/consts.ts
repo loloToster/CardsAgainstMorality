@@ -1,5 +1,7 @@
 import type { SettingsBoundaries } from "./types"
 
+export const ICONS_URL = "https://cdn.jsdelivr.net/npm/@mdi/svg/meta.json"
+
 // minimum amount of miliseconds between inactive anonymous users removal
 export const MIN_TIME_BETWEEN_ANS_USER_RM = 20 * 60 * 1000
 // after how many miliseconds is user considered inactive

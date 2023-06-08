@@ -3,12 +3,17 @@ import cards from "../cards.json"
 import { PrismaClient, User } from "@prisma/client"
 
 import { subtractMs } from "../utils"
+import { get } from "../utils/get"
+
 import type { ApiBlackCard, ApiWhiteCard } from "../types"
+
 import {
+  ICONS_URL,
   MIN_TIME_BETWEEN_ANS_USER_RM,
   INACTIVITY_TIME,
   StrategyIdentifier
 } from "../consts"
+
 import logger from "./logger"
 
 type ValueOrArray<T> = T | ValueOrArray<T>[]
@@ -91,12 +96,36 @@ class Database extends PrismaClient {
   }
 
   async preHttpServerStart() {
+    await this.syncIcons()
     await this.syncCards()
 
     await this.user.deleteMany({
       where: {
         AND: [{ strategyId: StrategyIdentifier.Anonymous }, { lastUsed: null }]
       }
+    })
+  }
+
+  async syncIcons() {
+    logger.info("Syncing icons")
+
+    const res = await get(ICONS_URL)
+
+    if (res.status !== 200) throw new Error("Failed to sync icons")
+
+    const icons: Array<{
+      name: string
+      aliases: string[]
+      tags: string[]
+      [key: string]: unknown
+    }> = JSON.parse(res.data)
+
+    await this.icon.deleteMany()
+    await this.icon.createMany({
+      data: icons.map(i => ({
+        name: i.name,
+        search: [i.name, ...i.aliases, ...i.tags].join("|")
+      }))
     })
   }
 
