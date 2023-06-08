@@ -1,9 +1,9 @@
-import { IsBoolean, IsInt } from "class-validator"
+import { IsBoolean, IsString } from "class-validator"
 import type { SettingsPack } from "../../types"
 
 export class SettingsPackDto implements SettingsPack {
-  @IsInt()
-  id!: number
+  @IsString()
+  id!: string
 
   @IsBoolean()
   whites!: boolean

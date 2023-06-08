@@ -119,9 +119,6 @@ function handleMouseLeave() {
 
 .like {
   position: relative;
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
 
   @keyframes shake {
     from,

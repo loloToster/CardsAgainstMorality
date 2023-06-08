@@ -9,6 +9,7 @@ import api from "@/utils/api"
 import type { ApiCardPack, ApiBlackCard, ApiWhiteCard } from "@backend/types"
 
 import { notify } from "@/contexts/notifications"
+import { user } from "@/contexts/user"
 
 import AppLoading from "@/components/AppLoading.vue"
 import AppError from "@/components/AppError.vue"
@@ -166,6 +167,10 @@ async function handleLike(liked: boolean) {
     notify({ type: "error", text: `Failed to ${liked ? "like" : "dislike"}` })
   }
 }
+
+const owns = computed(() => {
+  return user.value && state.pack?.owner?.id === user.value.id
+})
 </script>
 
 <template>
@@ -241,7 +246,16 @@ async function handleLike(liked: boolean) {
             </RouterLink>
           </div>
           <div class="pack__meta__row">
-            <div class="pack__meta__author">Cards Against Humanity</div>
+            <div
+              v-if="state.pack.official || state.pack.owner"
+              class="pack__meta__author"
+            >
+              {{
+                state.pack.official
+                  ? "Cards Against Humanity"
+                  : state.pack.owner?.name
+              }}
+            </div>
             <div v-if="state.pack.likedBy" class="pack__meta__likes">
               {{ state.pack.likedBy }} likes
             </div>
@@ -254,9 +268,32 @@ async function handleLike(liked: boolean) {
           </div>
           <div class="pack__meta__actions">
             <LikeButton
-              :liked="state.pack.liked ?? false"
               @change="handleLike"
+              :liked="state.pack.liked ?? false"
+              class="pack__meta__action"
             />
+            <button
+              v-if="owns"
+              class="pack__meta__action"
+              v-tooltip="'Edit details'"
+            >
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"
+                ></path>
+              </svg>
+            </button>
+            <button
+              v-if="owns"
+              class="pack__meta__action"
+              v-tooltip="'Add card'"
+            >
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M13.09 20H5V6H3V20A2 2 0 0 0 5 22H13.81A5.5 5.5 0 0 1 13.09 20M19 7V2H9A2 2 0 0 0 7 4V16A2 2 0 0 0 9 18H13.09A6 6 0 0 1 21 13.34V4A2 2 0 0 0 19 2M20 15V18H23V20H20V23H18V20H15V18H18V15Z"
+                ></path>
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -564,12 +601,30 @@ async function handleLike(liked: boolean) {
     }
 
     &__actions {
+      display: flex;
+      gap: 18px;
       position: absolute;
       bottom: 0;
       left: 0;
       transform: translateY(100%);
       width: 100%;
       padding-top: 16px;
+    }
+
+    &__action {
+      width: 32px;
+      height: 32px;
+
+      svg {
+        width: 100%;
+        height: 100%;
+        fill: colors.$lightgray;
+        transition: fill 100ms;
+      }
+
+      &:hover svg {
+        fill: colors.$subtext;
+      }
     }
   }
 

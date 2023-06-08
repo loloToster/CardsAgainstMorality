@@ -118,6 +118,8 @@ class Database extends PrismaClient {
     )
       return
 
+    return // todo: improve card syncing
+
     logger.info("Syncing cards")
 
     await this.blackCard.deleteMany()
@@ -137,13 +139,15 @@ class Database extends PrismaClient {
 
       await this.cardPack.create({
         data: {
+          id: pack.id.toString(),
+          name: pack.name,
+          official: true,
           type: { connect: { id: pack.type } },
           bundle:
             pack.bundle === undefined
               ? undefined
               : { connect: { id: pack.bundle } },
           tags: { connect: pack.tags?.map(t => ({ id: t })) ?? [] },
-          name: pack.name,
           color: pack.color,
           icon: pack.icon,
           numberOfCards: blackCards.length + whiteCards.length,

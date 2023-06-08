@@ -10,8 +10,9 @@ export type ApiCardPackBundle = IdWithName
 export type ApiCardPackTag = IdWithName
 
 export interface ApiCardPack {
-  id: number
+  id: string
   name: string
+  official: boolean
   type: ApiCardPackType
   bundle?: ApiCardPackBundle | null
   color?: string | null
@@ -21,6 +22,10 @@ export interface ApiCardPack {
   numOfWhites: number
   likedBy: number
   liked?: boolean
+  owner?: {
+    id: number
+    name: string
+  }
 }
 
 export interface SearchCriteria {
@@ -29,7 +34,7 @@ export interface SearchCriteria {
   tags: ApiCardPackTag[]
 }
 
-export type SortType = "likes" | "cards" |"blacks" | "whites"
+export type SortType = "likes" | "cards" | "blacks" | "whites"
 
 export interface ApiRandomCard extends ApiWhiteCard {
   color: "white" | "black"

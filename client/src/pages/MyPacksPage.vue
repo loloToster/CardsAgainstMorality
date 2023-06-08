@@ -56,7 +56,12 @@ async function createPack() {
   <AppError v-else-if="state.error">
     Something went wrong while fetching packs
   </AppError>
-  <PackList v-else-if="state.packs.length" :packs="state.packs" />
+  <PackList
+    v-else-if="state.packs.length"
+    @create="createPack"
+    :packs="state.packs"
+    editable
+  />
   <div v-else class="no-pack">
     <svg viewBox="0 0 24 24">
       <path

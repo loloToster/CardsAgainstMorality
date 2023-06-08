@@ -73,11 +73,14 @@ router.get("/", async (req, res) => {
   })
 
   res.json({
+    allOfficial: await db.cardPack.count({ where: { official: true } }),
+    allCommunity: await db.cardPack.count({ where: { official: false } }),
     packs: packs.map(
       p =>
         ({
           id: p.id,
           name: p.name,
+          official: p.official,
           type: p.type,
           bundle: p.bundle,
           color: p.color,

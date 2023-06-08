@@ -106,7 +106,7 @@ function toggleAllPacks(selected: boolean) {
   }
 }
 
-function togglePack(packId: number) {
+function togglePack(packId: string) {
   const newSelectedPacks: SettingsPack[] = []
   let foundPack = false
 
@@ -132,7 +132,7 @@ function togglePack(packId: number) {
   return
 }
 
-function onlyBlacks(packId: number) {
+function onlyBlacks(packId: string) {
   const pack = gameSettingsState.selectedPacks.find(p => p.id === packId)
 
   if (pack) {
@@ -147,7 +147,7 @@ function onlyBlacks(packId: number) {
   }
 }
 
-function onlyWhites(packId: number) {
+function onlyWhites(packId: string) {
   const pack = gameSettingsState.selectedPacks.find(p => p.id === packId)
 
   if (pack) {

@@ -20,8 +20,9 @@ model User {
 }
 
 model CardPack {
-  id            Int             @id @default(autoincrement())
+  id            String          @id @default(uuid())
   name          String
+  official      Boolean         @default(false)
   typeId        Int             @map("type_id")
   type          CardPackType    @relation(fields: [typeId], references: [id])
   bundleId      Int?            @map("bundle_id")
@@ -31,7 +32,7 @@ model CardPack {
   tags          CardPackTag[]
   blackCards    BlackCard[]
   whiteCards    WhiteCard[]
-  numberOfCards Int             @map("number_of_cards")
+  numberOfCards Int             @default(0) @map("number_of_cards")
   likedBy       User[]          @relation("likes")
   owner         User?           @relation("owns", fields: [ownerId], references: [id])
   ownerId       Int?            @map("owner_id")
@@ -68,7 +69,7 @@ model BlackCard {
   text   String
   pick   Int?
   draw   Int?
-  packId Int      @map("pack_id")
+  packId String   @map("pack_id")
   pack   CardPack @relation(fields: [packId], references: [id])
 
   @@map("black_cards")
@@ -77,7 +78,7 @@ model BlackCard {
 model WhiteCard {
   id     Int      @id @default(autoincrement())
   text   String
-  packId Int      @map("pack_id")
+  packId String   @map("pack_id")
   pack   CardPack @relation(fields: [packId], references: [id])
 
   @@map("white_cards")

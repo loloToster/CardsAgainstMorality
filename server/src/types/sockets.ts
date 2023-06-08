@@ -4,7 +4,7 @@ import type { ApiBlackCard, ApiPlayer, ApiWhiteCard } from "./api"
 import { SettingsBoundaries } from "."
 
 export interface SettingsPack {
-  id: number
+  id: string
   whites: boolean
   blacks: boolean
 }

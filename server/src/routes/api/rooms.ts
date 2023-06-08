@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
 
   const publicRooms: ApiRoom[] = []
 
-  const allPackIds = new Set<number>()
+  const allPackIds = new Set<string>()
 
   for (const room of rooms.rooms.values()) {
     if (!room || room.game.state === GameState.NOT_STARTED) continue

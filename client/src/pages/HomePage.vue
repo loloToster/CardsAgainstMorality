@@ -16,11 +16,13 @@ const state = reactive<{
   joinRoomModalActive: boolean
   joinModalCode: string
   packs: ApiCardPack[]
+  numOfOfficialPacks: number | null
   numOfCommunityPacks: number | null
 }>({
   joinRoomModalActive: false,
   joinModalCode: "",
   packs: [],
+  numOfOfficialPacks: null,
   numOfCommunityPacks: null
 })
 
@@ -45,6 +47,8 @@ function handleJoin(e: MouseEvent | KeyboardEvent) {
 
 api.get("/api/packs").then(res => {
   state.packs = res.data.packs
+  state.numOfOfficialPacks = res.data.allOfficial
+  state.numOfCommunityPacks = res.data.allCommunity
 })
 
 const NUM_OF_CIRCLE_ITEMS = 16
@@ -154,11 +158,11 @@ function handleJoinOpen() {
         <li>To start the game, each player draws ten White Cards</li>
         <li>A Card Tsar is then selected and reads a random Black Card</li>
         <li>
-          Everyone else fill in or answers the Black Card by submitting one
+          Everyone else fills in or answers the Black Card by submitting one
           White Card
         </li>
         <li>
-          The cards are shuffled and the Tsar pick one funniest submittion, and
+          The cards are shuffled and the Tsar picks the funniest submittion, and
           whoever submitted it gets one point
         </li>
         <li>
@@ -200,7 +204,7 @@ function handleJoinOpen() {
         <h2>As many cards<br />as you will ever need</h2>
         <p>
           {{ TITLE }} currently<br />supports
-          <span>{{ state.packs.length || "..." }} official card sets</span
+          <span>{{ state.numOfOfficialPacks ?? "..." }} official card sets</span
           >,<br />and {{ state.numOfCommunityPacks ?? "..." }} sets created by
           the community!
         </p>
