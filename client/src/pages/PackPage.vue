@@ -12,6 +12,7 @@ import { notify } from "@/contexts/notifications"
 import { user } from "@/contexts/user"
 
 import PackDetailsModal, { Details } from "@/components/PackDetailsModal.vue"
+import CardEditModal from "@/components/CardEditModal.vue"
 import AppLoading from "@/components/AppLoading.vue"
 import AppError from "@/components/AppError.vue"
 import AppChip from "@/components/AppChip.vue"
@@ -34,6 +35,7 @@ const state = reactive<{
   cardsError: boolean
   showMiniTop: boolean
   editDetailsOpen: boolean
+  editCardOpen: boolean
 }>({
   pack: null,
   loading: true,
@@ -42,7 +44,8 @@ const state = reactive<{
   fetchedWhiteCards: [],
   cardsError: false,
   showMiniTop: false,
-  editDetailsOpen: false
+  editDetailsOpen: false,
+  editCardOpen: false
 })
 
 // TODO: add pagination
@@ -211,6 +214,11 @@ async function handleDetailsSave(details: Details) {
       icon: state.pack.icon ?? undefined
     }"
   />
+  <CardEditModal
+    v-if="state.editCardOpen && state.pack"
+    @close="state.editCardOpen = false"
+    :pack-name="state.pack.name"
+  />
   <AppLoading v-if="state.loading">Loading the Pack</AppLoading>
   <AppError v-else-if="state.packError">
     Something went wrong while fetching the pack
@@ -323,6 +331,7 @@ async function handleDetailsSave(details: Details) {
             </button>
             <button
               v-if="owns"
+              @click="state.editCardOpen = true"
               class="pack__meta__action"
               v-tooltip="'Add card'"
             >
