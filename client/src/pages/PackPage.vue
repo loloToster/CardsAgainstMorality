@@ -11,6 +11,7 @@ import type { ApiCardPack, ApiBlackCard, ApiWhiteCard } from "@backend/types"
 import { notify } from "@/contexts/notifications"
 import { user } from "@/contexts/user"
 
+import PackDetailsModal, { Details } from "@/components/PackDetailsModal.vue"
 import AppLoading from "@/components/AppLoading.vue"
 import AppError from "@/components/AppError.vue"
 import AppChip from "@/components/AppChip.vue"
@@ -32,6 +33,7 @@ const state = reactive<{
   fetchedWhiteCards: ApiWhiteCard[]
   cardsError: boolean
   showMiniTop: boolean
+  editDetailsOpen: boolean
 }>({
   pack: null,
   loading: true,
@@ -39,7 +41,8 @@ const state = reactive<{
   fetchedBlackCards: [],
   fetchedWhiteCards: [],
   cardsError: false,
-  showMiniTop: false
+  showMiniTop: false,
+  editDetailsOpen: false
 })
 
 // TODO: add pagination
@@ -171,9 +174,43 @@ async function handleLike(liked: boolean) {
 const owns = computed(() => {
   return user.value && state.pack?.owner?.id === user.value.id
 })
+
+async function handleDetailsSave(details: Details) {
+  state.editDetailsOpen = false
+
+  if (!state.pack) return
+
+  state.pack.name = details.name
+  state.pack.color = details.color
+  state.pack.icon = details.icon
+
+  try {
+    await api.post(`/api/pack/${state.pack.id}/details`, details)
+
+    notify({
+      type: "success",
+      text: "Successfully saved the details"
+    })
+  } catch (err) {
+    notify({
+      type: "error",
+      text: "Failed to save the details"
+    })
+  }
+}
 </script>
 
 <template>
+  <PackDetailsModal
+    v-if="state.editDetailsOpen && state.pack"
+    @save="handleDetailsSave"
+    @close="state.editDetailsOpen = false"
+    :initialDetails="{
+      name: state.pack.name,
+      color: state.pack.color ?? undefined,
+      icon: state.pack.icon ?? undefined
+    }"
+  />
   <AppLoading v-if="state.loading">Loading the Pack</AppLoading>
   <AppError v-else-if="state.packError">
     Something went wrong while fetching the pack
@@ -274,6 +311,7 @@ const owns = computed(() => {
             />
             <button
               v-if="owns"
+              @click="state.editDetailsOpen = true"
               class="pack__meta__action"
               v-tooltip="'Edit details'"
             >

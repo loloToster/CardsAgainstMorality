@@ -1,7 +1,11 @@
 import { Router } from "express"
+import { transformAndValidate } from "class-transformer-validator"
+
+import type { ApiCardPack } from "../../types"
+
 import db from "../../modules/db"
 import { StrategyIdentifier } from "../../consts"
-import type { ApiCardPack } from "../../types"
+import { PackDetailsDto } from "../../dtos/api/pack-details.dto"
 
 const router = Router()
 
@@ -125,6 +129,44 @@ router.post("/", async (req, res) => {
   res.json({
     id: pack.id
   })
+})
+
+router.post("/:id/details", async (req, res) => {
+  const { id } = req.params
+
+  const details = await transformAndValidate(PackDetailsDto, req.body, {
+    validator: {
+      whitelist: true
+    }
+  })
+
+  if (Array.isArray(details)) return res.status(400).send()
+
+  const targetPack = await db.cardPack.findUnique({ where: { id } })
+
+  if (
+    !targetPack ||
+    typeof targetPack.ownerId !== "number" ||
+    targetPack.ownerId !== req.user?.id
+  )
+    return res.status(403).send()
+
+  if (details.icon !== undefined) {
+    const icon = await db.icon.findUnique({ where: { name: details.icon } })
+
+    if (!icon) return res.status(400).send()
+  }
+
+  await db.cardPack.update({
+    where: { id },
+    data: {
+      name: details.name,
+      color: details.color ?? null,
+      icon: details.icon ?? null
+    }
+  })
+
+  res.send()
 })
 
 export = router
