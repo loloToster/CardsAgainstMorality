@@ -12,7 +12,7 @@ import { notify } from "@/contexts/notifications"
 import { user } from "@/contexts/user"
 
 import PackDetailsModal, { Details } from "@/components/PackDetailsModal.vue"
-import CardEditModal from "@/components/CardEditModal.vue"
+import CardEditModal, { CardDetails } from "@/components/CardEditModal.vue"
 import AppLoading from "@/components/AppLoading.vue"
 import AppError from "@/components/AppError.vue"
 import AppChip from "@/components/AppChip.vue"
@@ -154,12 +154,12 @@ const packIcon = computed(() => {
 
 const numOfBlackDummies = computed(() => {
   if (!state.pack) return 0
-  return state.pack.numOfBlacks - state.fetchedBlackCards.length
+  return Math.min(state.pack.numOfBlacks - state.fetchedBlackCards.length, 0)
 })
 
 const numOfWhiteDummies = computed(() => {
   if (!state.pack) return 0
-  return state.pack.numOfWhites - state.fetchedWhiteCards.length
+  return Math.min(state.pack.numOfWhites - state.fetchedWhiteCards.length, 0)
 })
 
 async function handleLike(liked: boolean) {
@@ -201,6 +201,42 @@ async function handleDetailsSave(details: Details) {
     })
   }
 }
+
+async function handleNewCard(card: CardDetails) {
+  state.editCardOpen = false
+
+  if (!state.pack) return
+
+  const apiCard = {
+    ...card,
+    draw: 0,
+    pick: 1,
+    id: Math.random(),
+    pack: state.pack.name
+  }
+
+  if (card.color === "black") {
+    state.pack.numOfBlacks++
+    state.fetchedBlackCards.push(apiCard)
+  } else if (card.color === "white") {
+    state.pack.numOfWhites++
+    state.fetchedWhiteCards.push(apiCard)
+  }
+
+  try {
+    await api.post(`/api/pack/${state.pack.id}/card`, card)
+
+    notify({
+      type: "success",
+      text: "Successfully added a card"
+    })
+  } catch (err) {
+    notify({
+      type: "error",
+      text: "Failed to add a card"
+    })
+  }
+}
 </script>
 
 <template>
@@ -216,8 +252,9 @@ async function handleDetailsSave(details: Details) {
   />
   <CardEditModal
     v-if="state.editCardOpen && state.pack"
+    @save="handleNewCard"
     @close="state.editCardOpen = false"
-    :pack-name="state.pack.name"
+    :pack="state.pack"
   />
   <AppLoading v-if="state.loading">Loading the Pack</AppLoading>
   <AppError v-else-if="state.packError">

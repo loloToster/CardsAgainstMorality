@@ -5,7 +5,9 @@ import type { ApiCardPack } from "../../types"
 
 import db from "../../modules/db"
 import { StrategyIdentifier } from "../../consts"
+
 import { PackDetailsDto } from "../../dtos/api/pack-details.dto"
+import { CardDto } from "../../dtos/api/card.dto"
 
 const router = Router()
 
@@ -165,6 +167,37 @@ router.post("/:id/details", async (req, res) => {
       icon: details.icon ?? null
     }
   })
+
+  res.send()
+})
+
+router.post("/:id/card", async (req, res) => {
+  const { id } = req.params
+
+  const card = await transformAndValidate(CardDto, req.body, {
+    validator: {
+      whitelist: true
+    }
+  })
+
+  if (Array.isArray(card)) return res.status(400).send()
+
+  const targetPack = await db.cardPack.findUnique({ where: { id } })
+
+  if (
+    !targetPack ||
+    typeof targetPack.ownerId !== "number" ||
+    targetPack.ownerId !== req.user?.id
+  )
+    return res.status(403).send()
+
+  const data = { text: card.text, pack: { connect: { id } } }
+
+  if (card.color === "black") {
+    await db.blackCard.create({ data })
+  } else if (card.color === "white") {
+    await db.whiteCard.create({ data })
+  }
 
   res.send()
 })

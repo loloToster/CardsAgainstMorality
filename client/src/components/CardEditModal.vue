@@ -1,27 +1,43 @@
 <script setup lang="ts">
 import { reactive } from "vue"
 
+import { ApiCardPack } from "@backend/types"
+
 import AppModal from "@/components/AppModal.vue"
 import PlayingCard from "@/components/PlayingCard.vue"
 import AppButton from "@/components/AppButton.vue"
 
-defineProps<{ packName: string }>()
+export interface CardDetails {
+  text: string
+  color: "white" | "black"
+}
 
-defineEmits(["close"])
+defineProps<{ pack: ApiCardPack }>()
 
-const state = reactive<{ color: "white" | "black" }>({
+const emit = defineEmits<{
+  (ev: "close"): void
+  (ev: "save", card: CardDetails): void
+}>()
+
+const state = reactive<CardDetails>({
+  text: "",
   color: "black"
 })
+
+async function save() {
+  emit("save", state)
+}
 </script>
 <template>
   <AppModal @close="$emit('close')" transparent>
     <div class="card-edit">
       <PlayingCard
         :color="state.color"
-        :pack="packName"
+        :pack="pack.name"
         class="card-edit__card"
       >
         <textarea
+          v-model="state.text"
           class="card-edit__text"
           placeholder="Card content..."
         ></textarea>
@@ -35,7 +51,7 @@ const state = reactive<{ color: "white" | "black" }>({
           @click="state.color = 'white'"
           class="card-edit__color card-edit__color--white"
         ></button>
-        <AppButton class="card-edit__save">
+        <AppButton @click="save" class="card-edit__save">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
             <path d="M378-222 130-470l68-68 180 180 383-383 68 68-451 451Z" />
           </svg>
