@@ -3,10 +3,12 @@ import {
   MinLength,
   MaxLength,
   IsOptional,
-  Matches
+  Matches,
+  ValidateIf
 } from "class-validator"
+import { ApiCardPackEditableDetails } from "../../types"
 
-export class PackDetailsDto {
+export class PackDetailsDto implements ApiCardPackEditableDetails {
   @IsString()
   @MinLength(1)
   @MaxLength(32)
@@ -15,10 +17,12 @@ export class PackDetailsDto {
   @IsOptional()
   @IsString()
   @Matches(/^#[0-9A-F]{6}$/i)
-  color!: string | undefined
+  @ValidateIf((_, value) => value !== null)
+  color!: string | undefined | null
 
   @IsOptional()
   @IsString()
   @MinLength(1)
-  icon!: string | undefined
+  @ValidateIf((_, value) => value !== null)
+  icon!: string | undefined | null
 }

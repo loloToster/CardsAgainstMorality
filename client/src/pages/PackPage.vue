@@ -6,13 +6,18 @@ import Color from "color"
 
 import api from "@/utils/api"
 
-import type { ApiCardPack, ApiBlackCard, ApiWhiteCard } from "@backend/types"
+import type {
+  ApiCardPack,
+  ApiCardPackEditableDetails,
+  ApiBlackCard,
+  ApiWhiteCard
+} from "@backend/types"
 
 import { notify } from "@/contexts/notifications"
 import { user } from "@/contexts/user"
 
-import PackDetailsModal, { Details } from "@/components/PackDetailsModal.vue"
-import CardEditModal, { CardDetails } from "@/components/CardEditModal.vue"
+import PackDetailsModal from "@/components/PackDetailsModal.vue"
+import CardEditModal from "@/components/CardEditModal.vue"
 import AppLoading from "@/components/AppLoading.vue"
 import AppError from "@/components/AppError.vue"
 import AppChip from "@/components/AppChip.vue"
@@ -178,7 +183,7 @@ const owns = computed(() => {
   return user.value && state.pack?.owner?.id === user.value.id
 })
 
-async function handleDetailsSave(details: Details) {
+function handleDetailsSave(details: ApiCardPackEditableDetails) {
   state.editDetailsOpen = false
 
   if (!state.pack) return
@@ -186,56 +191,22 @@ async function handleDetailsSave(details: Details) {
   state.pack.name = details.name
   state.pack.color = details.color
   state.pack.icon = details.icon
-
-  try {
-    await api.post(`/api/pack/${state.pack.id}/details`, details)
-
-    notify({
-      type: "success",
-      text: "Successfully saved the details"
-    })
-  } catch (err) {
-    notify({
-      type: "error",
-      text: "Failed to save the details"
-    })
-  }
 }
 
-async function handleNewCard(card: CardDetails) {
+function handleNewBlackCard(card: ApiBlackCard) {
   state.editCardOpen = false
-
   if (!state.pack) return
 
-  const apiCard = {
-    ...card,
-    draw: 0,
-    pick: 1,
-    id: Math.random(),
-    pack: state.pack.name
-  }
+  state.pack.numOfBlacks++
+  state.fetchedBlackCards.push(card)
+}
 
-  if (card.color === "black") {
-    state.pack.numOfBlacks++
-    state.fetchedBlackCards.push(apiCard)
-  } else if (card.color === "white") {
-    state.pack.numOfWhites++
-    state.fetchedWhiteCards.push(apiCard)
-  }
+function handleNewWhiteCard(card: ApiWhiteCard) {
+  state.editCardOpen = false
+  if (!state.pack) return
 
-  try {
-    await api.post(`/api/pack/${state.pack.id}/card`, card)
-
-    notify({
-      type: "success",
-      text: "Successfully added a card"
-    })
-  } catch (err) {
-    notify({
-      type: "error",
-      text: "Failed to add a card"
-    })
-  }
+  state.pack.numOfWhites++
+  state.fetchedWhiteCards.push(card)
 }
 </script>
 
@@ -244,15 +215,12 @@ async function handleNewCard(card: CardDetails) {
     v-if="state.editDetailsOpen && state.pack"
     @save="handleDetailsSave"
     @close="state.editDetailsOpen = false"
-    :initialDetails="{
-      name: state.pack.name,
-      color: state.pack.color ?? undefined,
-      icon: state.pack.icon ?? undefined
-    }"
+    :pack="state.pack"
   />
   <CardEditModal
     v-if="state.editCardOpen && state.pack"
-    @save="handleNewCard"
+    @save-black="handleNewBlackCard"
+    @save-white="handleNewWhiteCard"
     @close="state.editCardOpen = false"
     :pack="state.pack"
   />

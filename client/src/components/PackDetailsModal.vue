@@ -3,6 +3,7 @@ import { reactive, ref } from "vue"
 import { watchDebounced } from "@vueuse/core"
 import { Dropdown } from "floating-vue"
 
+import type { ApiCardPackEditableDetails, ApiCardPack } from "@backend/types"
 import api from "@/utils/api"
 import { CUSTOM_ICONS_BASE_URL } from "@/consts"
 import { notify } from "@/contexts/notifications"
@@ -12,17 +13,11 @@ import AppButton from "@/components/AppButton.vue"
 
 import defaultIcon from "@/assets/white-card-icon.svg?url"
 
-export interface Details {
-  name: string
-  color?: string
-  icon?: string
-}
-
-const props = defineProps<{ initialDetails: Details }>()
+const props = defineProps<{ pack: ApiCardPack }>()
 
 const emit = defineEmits<{
   (ev: "close"): void
-  (ev: "save", details: Details): void
+  (ev: "save", details: ApiCardPackEditableDetails): void
 }>()
 
 const state = reactive<{
@@ -33,9 +28,9 @@ const state = reactive<{
   iconSearchQuery: string
   icons: string[]
 }>({
-  name: props.initialDetails.name,
-  color: props.initialDetails.color ?? "#ffffff",
-  icon: props.initialDetails.icon,
+  name: props.pack.name,
+  color: props.pack.color ?? "#ffffff",
+  icon: props.pack.icon ?? undefined,
   iconsOpen: false,
   iconSearchQuery: "",
   icons: []
@@ -72,11 +67,27 @@ function selectIcon(name: string) {
 }
 
 async function save() {
-  emit("save", {
+  const details: ApiCardPackEditableDetails = {
     name: state.name,
     color: state.color,
     icon: state.icon
-  })
+  }
+
+  emit("save", details)
+
+  try {
+    await api.post(`/api/pack/${props.pack.id}/details`, details)
+
+    notify({
+      type: "success",
+      text: "Successfully saved the details"
+    })
+  } catch (err) {
+    notify({
+      type: "error",
+      text: "Failed to save the details"
+    })
+  }
 }
 </script>
 

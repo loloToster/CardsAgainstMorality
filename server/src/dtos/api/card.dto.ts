@@ -1,6 +1,6 @@
 import { IsString, MinLength, MaxLength, IsIn } from "class-validator"
-
-const colors = ["white", "black"] as const
+import { CARD_COLORS } from "../../consts"
+import { CardColor } from "../../types"
 
 // todo: add draw & pick
 export class CardDto {
@@ -10,6 +10,6 @@ export class CardDto {
   text!: string
 
   @IsString()
-  @IsIn(colors)
-  color!: (typeof colors)[number]
+  @IsIn(CARD_COLORS)
+  color!: CardColor
 }

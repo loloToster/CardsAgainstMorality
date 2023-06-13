@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { transformAndValidate } from "class-transformer-validator"
+import { ClassType, transformAndValidate } from "class-transformer-validator"
 
 import type { ApiCardPack } from "../../types"
 
@@ -133,27 +133,33 @@ router.post("/", async (req, res) => {
   })
 })
 
-router.post("/:id/details", async (req, res) => {
-  const { id } = req.params
-
-  const details = await transformAndValidate(PackDetailsDto, req.body, {
+async function validateDto<T extends object>(
+  classType: ClassType<T>,
+  object: object
+): Promise<T> {
+  return await transformAndValidate(classType, object, {
     validator: {
       whitelist: true
     }
   })
+}
 
-  if (Array.isArray(details)) return res.status(400).send()
+async function validatePackOwnage(packId: string, userId: number | undefined) {
+  if (!userId) return false
 
-  const targetPack = await db.cardPack.findUnique({ where: { id } })
+  const targetPack = await db.cardPack.findUnique({ where: { id: packId } })
+  return targetPack && targetPack.ownerId === userId
+}
 
-  if (
-    !targetPack ||
-    typeof targetPack.ownerId !== "number" ||
-    targetPack.ownerId !== req.user?.id
-  )
+router.post("/:id/details", async (req, res) => {
+  const { id } = req.params
+
+  const details = await validateDto(PackDetailsDto, req.body)
+
+  if (!(await validatePackOwnage(id, req.user?.id)))
     return res.status(403).send()
 
-  if (details.icon !== undefined) {
+  if (details.icon !== undefined && details.icon !== null) {
     const icon = await db.icon.findUnique({ where: { name: details.icon } })
 
     if (!icon) return res.status(400).send()
@@ -174,32 +180,28 @@ router.post("/:id/details", async (req, res) => {
 router.post("/:id/card", async (req, res) => {
   const { id } = req.params
 
-  const card = await transformAndValidate(CardDto, req.body, {
-    validator: {
-      whitelist: true
-    }
-  })
+  const card = await validateDto(CardDto, req.body)
 
-  if (Array.isArray(card)) return res.status(400).send()
-
-  const targetPack = await db.cardPack.findUnique({ where: { id } })
-
-  if (
-    !targetPack ||
-    typeof targetPack.ownerId !== "number" ||
-    targetPack.ownerId !== req.user?.id
-  )
+  if (!(await validatePackOwnage(id, req.user?.id)))
     return res.status(403).send()
 
   const data = { text: card.text, pack: { connect: { id } } }
 
   if (card.color === "black") {
-    await db.blackCard.create({ data })
-  } else if (card.color === "white") {
-    await db.whiteCard.create({ data })
-  }
+    const card = await db.blackCard.create({
+      data,
+      select: { id: true, text: true, draw: true, pick: true }
+    })
 
-  res.send()
+    res.send({ card })
+  } else if (card.color === "white") {
+    const card = await db.whiteCard.create({
+      data,
+      select: { id: true, text: true }
+    })
+
+    res.send({ card })
+  }
 })
 
 export = router

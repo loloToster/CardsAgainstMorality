@@ -1,6 +1,11 @@
 import { Router } from "express"
 import db from "../../modules/db"
-import type { ApiCardPack, SearchCriteria, SortType } from "../../types"
+import type {
+  ApiCardPack,
+  ApiRandomCard,
+  SearchCriteria,
+  SortType
+} from "../../types"
 import { getRandomInt } from "../../utils/random"
 import { StrategyIdentifier } from "../../consts"
 
@@ -121,20 +126,26 @@ router.get("/random-cards", async (req, res) => {
     skip: getRandomInt(0, totalBlackCards - NUM_OF_BLACK)
   })
 
-  const cards = dbWhiteCards
-    .map(c => ({
-      id: c.id,
-      text: c.text,
-      pack: c.pack.name,
-      color: "white"
-    }))
+  const cards: ApiRandomCard[] = dbWhiteCards
+    .map(
+      c =>
+        ({
+          id: c.id,
+          text: c.text,
+          pack: c.pack.name,
+          color: "white"
+        } as ApiRandomCard)
+    )
     .concat(
-      dbBlackCards.map(c => ({
-        id: c.id,
-        text: c.text,
-        pack: c.pack.name,
-        color: "black"
-      }))
+      dbBlackCards.map(
+        c =>
+          ({
+            id: c.id,
+            text: c.text,
+            pack: c.pack.name,
+            color: "black"
+          } as ApiRandomCard)
+      )
     )
 
   res.json({ cards })

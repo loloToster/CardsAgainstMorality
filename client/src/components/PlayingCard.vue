@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, reactive } from "vue"
 
+import { CardColor } from "@backend/types"
+
 import BlackCardIcon from "@/assets/black-card-icon.svg?component"
 import WhiteCardIcon from "@/assets/white-card-icon.svg?component"
 
@@ -8,9 +10,9 @@ const props = withDefaults(
   defineProps<{
     text?: string
     pack?: string
-    pick?: number
-    draw?: number
-    color?: "white" | "black"
+    pick?: number | null
+    draw?: number | null
+    color?: CardColor
     width?: number
     animated?: boolean
     glow?: boolean

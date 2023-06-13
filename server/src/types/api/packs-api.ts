@@ -1,4 +1,5 @@
 import { ApiWhiteCard } from "./game-api"
+import { CARD_COLORS } from "../../consts"
 
 interface IdWithName {
   id: number
@@ -9,14 +10,17 @@ export type ApiCardPackType = IdWithName
 export type ApiCardPackBundle = IdWithName
 export type ApiCardPackTag = IdWithName
 
-export interface ApiCardPack {
-  id: string
+export interface ApiCardPackEditableDetails {
   name: string
+  color?: string | null
+  icon?: string | null
+}
+
+export interface ApiCardPack extends ApiCardPackEditableDetails {
+  id: string
   official: boolean
   type: ApiCardPackType
   bundle?: ApiCardPackBundle | null
-  color?: string | null
-  icon?: string | null
   tags: ApiCardPackTag[]
   numOfBlacks: number
   numOfWhites: number
@@ -36,6 +40,8 @@ export interface SearchCriteria {
 
 export type SortType = "likes" | "cards" | "blacks" | "whites"
 
+export type CardColor = (typeof CARD_COLORS)[number]
+
 export interface ApiRandomCard extends ApiWhiteCard {
-  color: "white" | "black"
+  color: CardColor
 }
