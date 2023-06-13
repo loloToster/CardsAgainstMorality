@@ -6,7 +6,7 @@ import Color from "color"
 import type { ApiCardPack } from "@backend/types"
 
 import AppChip from "@/components/AppChip.vue"
-import defaultIcon from "@/assets/white-card-icon.svg?raw"
+import PackIcon from "@/components/PackIcon.vue"
 
 const props = withDefaults(
   defineProps<{
@@ -68,10 +68,6 @@ const packColor = computed(() => {
   }
 })
 
-const packIcon = computed(() => {
-  return props.pack.icon || defaultIcon
-})
-
 const light = computed(() => {
   return Color(packColor.value).isLight()
 })
@@ -92,14 +88,14 @@ const light = computed(() => {
         :outlined="!selected"
         class="pack"
       >
-        <div
+        <PackIcon
+          :icon="pack.icon"
           class="pack__icon"
           :class="{
             'pack__icon--colored-icon': pack.icon && pack.color,
             'pack__icon--only-colored': pack.color && !pack.icon
           }"
-          v-html="packIcon"
-        ></div>
+        />
         {{ pack.name }}
       </AppChip>
       <button
@@ -234,6 +230,10 @@ const light = computed(() => {
       display: block;
       width: 16px;
       height: 16px;
+
+      *[fill="black"] {
+        fill: white;
+      }
     }
 
     &--colored-icon :deep(svg) {
@@ -247,7 +247,7 @@ const light = computed(() => {
     }
 
     &--only-colored :deep(svg) {
-      *[fill="white"] {
+      *[fill="black"] {
         fill: currentColor;
       }
     }
@@ -255,7 +255,7 @@ const light = computed(() => {
 
   &.selected &__icon {
     :deep(svg) {
-      *[fill="white"] {
+      *[fill="black"] {
         fill: black;
       }
     }

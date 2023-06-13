@@ -1,10 +1,8 @@
 <script setup lang="ts">
+import PackIcon from "@/components/PackIcon.vue"
 import PackBaseImg from "@/assets/pack-base.png"
-import defaultPackIcon from "@/assets/black-card-icon.svg?raw"
 
-withDefaults(defineProps<{ icon?: string }>(), {
-  icon: defaultPackIcon
-})
+defineProps<{ icon?: string }>()
 </script>
 <template>
   <div class="card-pack">
@@ -13,7 +11,7 @@ withDefaults(defineProps<{ icon?: string }>(), {
       <div class="card-pack__name">
         <slot></slot>
       </div>
-      <div v-html="icon" class="card-pack__icon"></div>
+      <PackIcon :icon="icon" class="card-pack__icon" />
     </div>
   </div>
 </template>

@@ -21,11 +21,11 @@ import CardEditModal from "@/components/CardEditModal.vue"
 import AppLoading from "@/components/AppLoading.vue"
 import AppError from "@/components/AppError.vue"
 import AppChip from "@/components/AppChip.vue"
+import PackIcon from "@/components/PackIcon.vue"
 import PlayingCard from "@/components/PlayingCard.vue"
 import CardPack from "@/components/CardPack.vue"
 import LikeButton from "@/components/LikeButton.vue"
 
-import defaultPackIcon from "@/assets/black-card-icon.svg?raw"
 import BlackCardIcon from "@/assets/black-card-icon.svg?component"
 import WhiteCardIcon from "@/assets/white-card-icon.svg?component"
 
@@ -153,10 +153,6 @@ const light = computed(() => {
   return state.pack?.color ? Color(state.pack.color).isLight() : true
 })
 
-const packIcon = computed(() => {
-  return state.pack?.icon || defaultPackIcon
-})
-
 const numOfBlackDummies = computed(() => {
   if (!state.pack) return 0
   return Math.min(state.pack.numOfBlacks - state.fetchedBlackCards.length, 0)
@@ -238,15 +234,15 @@ function handleNewWhiteCard(card: ApiWhiteCard) {
   >
     <div class="pack__mini-top" :class="{ active: state.showMiniTop }">
       <div class="pack__mini-top__content">
-        <div v-html="packIcon" class="pack__mini-top__icon"></div>
+        <PackIcon :icon="state.pack.icon" class="pack__mini-top__icon" />
         <div class="pack__mini-top__name">{{ state.pack.name }}</div>
       </div>
     </div>
     <div class="pack__top" ref="top">
       <div class="pack__top__icons">
-        <div
+        <PackIcon
           v-for="icon in BG_ICONS"
-          v-html="packIcon"
+          :icon="state.pack.icon"
           class="pack__top__icon"
           :class="{ 'pack__top__icon--mobile': icon.mobile }"
           :style="{
@@ -257,7 +253,7 @@ function handleNewWhiteCard(card: ApiWhiteCard) {
             '--mobile-left': icon.mobile?.left
           }"
           :key="icon.left"
-        ></div>
+        />
       </div>
       <div class="pack__top__content">
         <CardPack class="pack__image" :icon="state.pack.icon ?? undefined">
