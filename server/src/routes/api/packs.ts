@@ -62,7 +62,13 @@ router.get("/", async (req, res) => {
       bundleId: parsedBundles && { in: parsedBundles },
       tags: parsedTags && { some: { id: { in: parsedTags } } }
     },
-    orderBy: parsedSort ?? { id: "asc" },
+    orderBy: [
+      ...(parsedSort ? [parsedSort] : []),
+      { official: "desc" },
+      { typeId: "asc" },
+      { numberOfCards: "desc" },
+      { icon: "asc" }
+    ],
     include: {
       type: true,
       bundle: true,

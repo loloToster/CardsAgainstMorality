@@ -1,4 +1,5 @@
 import { Router } from "express"
+import { BlackCard, WhiteCard } from "@prisma/client"
 import { ClassType, transformAndValidate } from "class-transformer-validator"
 
 import type { ApiCardPack } from "../../types"
@@ -180,28 +181,35 @@ router.post("/:id/details", async (req, res) => {
 router.post("/:id/card", async (req, res) => {
   const { id } = req.params
 
-  const card = await validateDto(CardDto, req.body)
+  const cardDetails = await validateDto(CardDto, req.body)
 
   if (!(await validatePackOwnage(id, req.user?.id)))
     return res.status(403).send()
 
-  const data = { text: card.text, pack: { connect: { id } } }
+  const data = { text: cardDetails.text, pack: { connect: { id } } }
 
-  if (card.color === "black") {
-    const card = await db.blackCard.create({
+  let card: BlackCard | WhiteCard
+
+  if (cardDetails.color === "black") {
+    card = (await db.blackCard.create({
       data,
       select: { id: true, text: true, draw: true, pick: true }
-    })
-
-    res.send({ card })
-  } else if (card.color === "white") {
-    const card = await db.whiteCard.create({
+    })) as BlackCard
+  } else if (cardDetails.color === "white") {
+    card = (await db.whiteCard.create({
       data,
       select: { id: true, text: true }
-    })
-
-    res.send({ card })
+    })) as WhiteCard
+  } else {
+    return
   }
+
+  await db.cardPack.update({
+    where: { id },
+    data: { numberOfCards: { increment: 1 } }
+  })
+
+  res.send({ card })
 })
 
 export = router

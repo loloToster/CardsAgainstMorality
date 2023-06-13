@@ -155,12 +155,12 @@ const light = computed(() => {
 
 const numOfBlackDummies = computed(() => {
   if (!state.pack) return 0
-  return Math.min(state.pack.numOfBlacks - state.fetchedBlackCards.length, 0)
+  return Math.max(state.pack.numOfBlacks - state.fetchedBlackCards.length, 0)
 })
 
 const numOfWhiteDummies = computed(() => {
   if (!state.pack) return 0
-  return Math.min(state.pack.numOfWhites - state.fetchedWhiteCards.length, 0)
+  return Math.max(state.pack.numOfWhites - state.fetchedWhiteCards.length, 0)
 })
 
 async function handleLike(liked: boolean) {
