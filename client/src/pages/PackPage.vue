@@ -197,20 +197,32 @@ function handleCreateCard() {
   state.editCardOpen = true
 }
 
-function handleNewBlackCard(card: ApiBlackCard) {
+function handleBlackCardSave(card: ApiBlackCard) {
   state.editCardOpen = false
   if (!state.pack) return
 
-  state.pack.numOfBlacks++
-  state.fetchedBlackCards.push(card)
+  const modified = state.fetchedBlackCards.findIndex(c => c.id === card.id)
+
+  if (modified < 0) {
+    state.pack.numOfBlacks++
+    state.fetchedBlackCards.push(card)
+  } else {
+    state.fetchedBlackCards[modified] = card
+  }
 }
 
-function handleNewWhiteCard(card: ApiWhiteCard) {
+function handleWhiteCardSave(card: ApiWhiteCard) {
   state.editCardOpen = false
   if (!state.pack) return
 
-  state.pack.numOfWhites++
-  state.fetchedWhiteCards.push(card)
+  const modified = state.fetchedWhiteCards.findIndex(c => c.id === card.id)
+
+  if (modified < 0) {
+    state.pack.numOfWhites++
+    state.fetchedWhiteCards.push(card)
+  } else {
+    state.fetchedWhiteCards[modified] = card
+  }
 }
 
 function handleCardDelete(cardId: number, color: CardColor) {
@@ -254,8 +266,8 @@ function editWhiteCard(card: ApiWhiteCard) {
   />
   <CardEditModal
     v-if="state.editCardOpen && state.pack"
-    @save-black="handleNewBlackCard"
-    @save-white="handleNewWhiteCard"
+    @save-black="handleBlackCardSave"
+    @save-white="handleWhiteCardSave"
     @delete="handleCardDelete"
     @close="state.editCardOpen = false"
     :card="state.editedCard"

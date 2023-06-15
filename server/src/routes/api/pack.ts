@@ -1,14 +1,14 @@
 import { Router } from "express"
 import { BlackCard, WhiteCard } from "@prisma/client"
-import { ClassType, transformAndValidate } from "class-transformer-validator"
 
-import type { ApiCardPack, CardColor } from "../../types"
+import type { ApiCardPack } from "../../types"
 
 import db from "../../modules/db"
-import { CARD_COLORS, StrategyIdentifier } from "../../consts"
 
 import { PackDetailsDto } from "../../dtos/api/pack-details.dto"
-import { CardDto } from "../../dtos/api/card.dto"
+import { CreateCardDto } from "../../dtos/api/create-card.dto"
+import { nonAnonymous } from "../../middleware/non-anonymous"
+import { validateDto } from "../../utils"
 
 const router = Router()
 
@@ -85,14 +85,7 @@ router.get("/:id/cards", async (req, res) => {
   res.json({ cards })
 })
 
-// ensure non anonymous user is requesting
-router.use((req, res, next) => {
-  if (!req.user) return res.status(401).send()
-  if (req.user.strategyId.startsWith(StrategyIdentifier.Anonymous))
-    return res.status(403).send()
-
-  next()
-})
+router.use(nonAnonymous)
 
 router.put("/:id/like", async (req, res) => {
   const { id } = req.params
@@ -134,17 +127,6 @@ router.post("/", async (req, res) => {
   })
 })
 
-async function validateDto<T extends object>(
-  classType: ClassType<T>,
-  object: object
-): Promise<T> {
-  return await transformAndValidate(classType, object, {
-    validator: {
-      whitelist: true
-    }
-  })
-}
-
 async function validatePackOwnage(packId: string, userId: number | undefined) {
   if (!userId) return false
 
@@ -185,7 +167,7 @@ router.post("/:id/details", async (req, res) => {
 router.post("/:id/card", async (req, res) => {
   const { id } = req.params
 
-  const cardDetails = await validateDto(CardDto, req.body)
+  const cardDetails = await validateDto(CreateCardDto, req.body)
 
   if (!(await validatePackOwnage(id, req.user?.id)))
     return res.status(403).send()
@@ -212,43 +194,6 @@ router.post("/:id/card", async (req, res) => {
   })
 
   res.send({ card })
-})
-
-router.delete("/:id/card/:clr/:cId", async (req, res) => {
-  const { id, clr, cId } = req.params
-  const color = clr as CardColor
-  const cardId = parseInt(cId)
-
-  if (!CARD_COLORS.includes(color)) return res.status(404).send()
-
-  if (!(await validatePackOwnage(id, req.user?.id)))
-    return res.status(403).send()
-
-  const targetCard =
-    color === "black"
-      ? await db.blackCard.findUnique({
-        where: { id: cardId },
-        select: { packId: true }
-      })
-      : await db.whiteCard.findUnique({
-        where: { id: cardId },
-        select: { packId: true }
-      })
-
-  if (targetCard?.packId !== id) return res.status(403).send()
-
-  if (color === "black") {
-    await db.blackCard.delete({ where: { id: cardId } })
-  } else {
-    await db.whiteCard.delete({ where: { id: cardId } })
-  }
-
-  await db.cardPack.update({
-    where: { id },
-    data: { numberOfCards: { decrement: 1 } }
-  })
-
-  res.send()
 })
 
 export = router

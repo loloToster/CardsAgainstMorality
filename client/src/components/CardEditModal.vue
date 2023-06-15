@@ -44,11 +44,7 @@ const state = reactive<{
   }
 })
 
-async function save() {
-  if (state.saving) return
-
-  state.saving = true
-
+async function createCard() {
   try {
     const res = await api.post(`/api/pack/${props.pack.id}/card`, state.card)
 
@@ -67,6 +63,46 @@ async function save() {
       type: "error",
       text: "Failed to add a card"
     })
+  }
+}
+
+async function modifyCard() {
+  if (!props.card) return
+
+  try {
+    await api.patch(`/api/card/${props.card.color}/${props.card.id}`, {
+      text: state.card.text
+    })
+
+    notify({
+      type: "success",
+      text: "Successfully modified a card"
+    })
+
+    if (props.card.color === "black") {
+      emit("save-black", { ...props.card, ...state.card })
+    } else {
+      emit("save-white", { ...props.card, ...state.card })
+    }
+  } catch (err) {
+    notify({
+      type: "error",
+      text: "Failed to modify a card"
+    })
+  }
+}
+
+async function save() {
+  if (state.saving) return
+
+  try {
+    state.saving = true
+
+    if (props.card) {
+      await modifyCard()
+    } else {
+      await createCard()
+    }
   } finally {
     state.saving = false
   }
@@ -78,9 +114,7 @@ async function handleDelete() {
   state.saving = true
 
   try {
-    await api.delete(
-      `/api/pack/${props.pack.id}/card/${state.card.color}/${props.card?.id}`
-    )
+    await api.delete(`/api/card/${state.card.color}/${props.card?.id}`)
 
     if (!props.card) {
       // this should never happen
@@ -146,10 +180,12 @@ async function handleDelete() {
       </div>
       <div class="card-edit__bottom">
         <button
+          v-if="!props.card"
           @click="state.card.color = 'black'"
           class="card-edit__color card-edit__color--black"
         ></button>
         <button
+          v-if="!props.card"
           @click="state.card.color = 'white'"
           class="card-edit__color card-edit__color--white"
         ></button>

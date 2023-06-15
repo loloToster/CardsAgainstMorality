@@ -1,5 +1,7 @@
-import { ClassType, transformAndValidate } from "class-transformer-validator"
+import type { ClassType } from "class-transformer-validator"
 import type { ClientToServerSocketEvents } from "../../types"
+
+import { validateDto } from "../../utils"
 
 import { PartialSettingsDto, SettingsDto } from "./settings.dto"
 import { SubmitionDto } from "./submition.dto"
@@ -26,11 +28,8 @@ export async function validate(ev: string, obj: object | null | undefined) {
   const Validator = validators[ev]
   if (!Validator) return obj
 
-  return await transformAndValidate(Validator, obj, {
-    validator: {
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      forbidUnknownValues: true
-    }
+  return await validateDto(Validator, obj, {
+    forbidNonWhitelisted: true,
+    forbidUnknownValues: true
   })
 }
