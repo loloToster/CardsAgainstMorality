@@ -2,10 +2,10 @@ import { Router } from "express"
 import { BlackCard, WhiteCard } from "@prisma/client"
 import { ClassType, transformAndValidate } from "class-transformer-validator"
 
-import type { ApiCardPack } from "../../types"
+import type { ApiCardPack, CardColor } from "../../types"
 
 import db from "../../modules/db"
-import { StrategyIdentifier } from "../../consts"
+import { CARD_COLORS, StrategyIdentifier } from "../../consts"
 
 import { PackDetailsDto } from "../../dtos/api/pack-details.dto"
 import { CardDto } from "../../dtos/api/card.dto"
@@ -148,7 +148,11 @@ async function validateDto<T extends object>(
 async function validatePackOwnage(packId: string, userId: number | undefined) {
   if (!userId) return false
 
-  const targetPack = await db.cardPack.findUnique({ where: { id: packId } })
+  const targetPack = await db.cardPack.findUnique({
+    where: { id: packId },
+    select: { ownerId: true }
+  })
+
   return targetPack && targetPack.ownerId === userId
 }
 
@@ -195,13 +199,11 @@ router.post("/:id/card", async (req, res) => {
       data,
       select: { id: true, text: true, draw: true, pick: true }
     })) as BlackCard
-  } else if (cardDetails.color === "white") {
+  } else {
     card = (await db.whiteCard.create({
       data,
       select: { id: true, text: true }
     })) as WhiteCard
-  } else {
-    return
   }
 
   await db.cardPack.update({
@@ -210,6 +212,43 @@ router.post("/:id/card", async (req, res) => {
   })
 
   res.send({ card })
+})
+
+router.delete("/:id/card/:clr/:cId", async (req, res) => {
+  const { id, clr, cId } = req.params
+  const color = clr as CardColor
+  const cardId = parseInt(cId)
+
+  if (!CARD_COLORS.includes(color)) return res.status(404).send()
+
+  if (!(await validatePackOwnage(id, req.user?.id)))
+    return res.status(403).send()
+
+  const targetCard =
+    color === "black"
+      ? await db.blackCard.findUnique({
+        where: { id: cardId },
+        select: { packId: true }
+      })
+      : await db.whiteCard.findUnique({
+        where: { id: cardId },
+        select: { packId: true }
+      })
+
+  if (targetCard?.packId !== id) return res.status(403).send()
+
+  if (color === "black") {
+    await db.blackCard.delete({ where: { id: cardId } })
+  } else {
+    await db.whiteCard.delete({ where: { id: cardId } })
+  }
+
+  await db.cardPack.update({
+    where: { id },
+    data: { numberOfCards: { decrement: 1 } }
+  })
+
+  res.send()
 })
 
 export = router

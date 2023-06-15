@@ -14,12 +14,20 @@ import AppModal from "@/components/AppModal.vue"
 import PlayingCard from "@/components/PlayingCard.vue"
 import AppButton from "@/components/AppButton.vue"
 
-const props = defineProps<{ pack: ApiCardPack }>()
+export type EditableCard =
+  | (ApiBlackCard & { color: "black" })
+  | (ApiWhiteCard & { color: "white" })
+
+const props = defineProps<{
+  pack: ApiCardPack
+  card?: EditableCard | null
+}>()
 
 const emit = defineEmits<{
   (ev: "close"): void
   (ev: "save-black", card: ApiBlackCard): void
   (ev: "save-white", card: ApiWhiteCard): void
+  (ev: "delete", cardId: number, color: CardColor): void
 }>()
 
 const state = reactive<{
@@ -31,8 +39,8 @@ const state = reactive<{
 }>({
   saving: false,
   card: {
-    text: "",
-    color: "black"
+    text: props.card?.text ?? "",
+    color: props.card?.color ?? "black"
   }
 })
 
@@ -63,6 +71,37 @@ async function save() {
     state.saving = false
   }
 }
+
+async function handleDelete() {
+  if (state.saving) return
+
+  state.saving = true
+
+  try {
+    await api.delete(
+      `/api/pack/${props.pack.id}/card/${state.card.color}/${props.card?.id}`
+    )
+
+    if (!props.card) {
+      // this should never happen
+      throw new Error("No card to delete?")
+    }
+
+    notify({
+      type: "success",
+      text: "Successfully deleted a card"
+    })
+
+    emit("delete", props.card.id, props.card.color)
+  } catch (err) {
+    notify({
+      type: "error",
+      text: "Failed to delete a card"
+    })
+  } finally {
+    state.saving = false
+  }
+}
 </script>
 <template>
   <AppModal @close="$emit('close')" transparent>
@@ -78,6 +117,33 @@ async function save() {
           placeholder="Card content..."
         ></textarea>
       </PlayingCard>
+      <div class="card-edit__menu">
+        <button v-wave>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+            <path
+              d="M275-200v-560h228q66 0 114.5 42T666-612q0 38-21 70t-56 49v6q43 14 69.5 50t26.5 81q0 68-52.5 112T510-200H275Zm86-76h144q38 0 66-25t28-63q0-37-28-62t-66-25H361v175Zm0-247h136q35 0 60.5-23t25.5-58q0-35-25.5-58.5T497-686H361v163Z"
+            />
+          </svg>
+        </button>
+        <button v-wave>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+            <path
+              d="M224-199v-80h134l139-409H338v-80h380v80H584L445-279h159v80H224Z"
+            />
+          </svg>
+        </button>
+        <button v-if="props.card" @click="handleDelete" v-wave>
+          <svg
+            class="red"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 -960 960 960"
+          >
+            <path
+              d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"
+            />
+          </svg>
+        </button>
+      </div>
       <div class="card-edit__bottom">
         <button
           @click="state.card.color = 'black'"
@@ -109,6 +175,8 @@ async function save() {
 @use "@/styles/colors" as colors;
 
 .card-edit {
+  position: relative;
+
   &__card {
     --w: min(280px, 80vw);
   }
@@ -120,6 +188,28 @@ async function save() {
     color: inherit;
     font-weight: inherit;
     font-size: inherit;
+  }
+
+  &__menu {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    padding: 4px;
+
+    button {
+      padding: 4px;
+      border-radius: 50%;
+    }
+
+    svg {
+      width: 28px;
+      height: 28px;
+      fill: colors.$lightgray;
+
+      &.red {
+        fill: colors.$danger;
+      }
+    }
   }
 
   &__bottom {

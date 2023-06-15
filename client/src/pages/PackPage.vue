@@ -10,14 +10,15 @@ import type {
   ApiCardPack,
   ApiCardPackEditableDetails,
   ApiBlackCard,
-  ApiWhiteCard
+  ApiWhiteCard,
+  CardColor
 } from "@backend/types"
 
 import { notify } from "@/contexts/notifications"
 import { user } from "@/contexts/user"
 
 import PackDetailsModal from "@/components/PackDetailsModal.vue"
-import CardEditModal from "@/components/CardEditModal.vue"
+import CardEditModal, { EditableCard } from "@/components/CardEditModal.vue"
 import AppLoading from "@/components/AppLoading.vue"
 import AppError from "@/components/AppError.vue"
 import AppChip from "@/components/AppChip.vue"
@@ -41,6 +42,7 @@ const state = reactive<{
   showMiniTop: boolean
   editDetailsOpen: boolean
   editCardOpen: boolean
+  editedCard: EditableCard | null
 }>({
   pack: null,
   loading: true,
@@ -50,7 +52,8 @@ const state = reactive<{
   cardsError: false,
   showMiniTop: false,
   editDetailsOpen: false,
-  editCardOpen: false
+  editCardOpen: false,
+  editedCard: null
 })
 
 // TODO: add pagination
@@ -189,6 +192,11 @@ function handleDetailsSave(details: ApiCardPackEditableDetails) {
   state.pack.icon = details.icon
 }
 
+function handleCreateCard() {
+  state.editedCard = null
+  state.editCardOpen = true
+}
+
 function handleNewBlackCard(card: ApiBlackCard) {
   state.editCardOpen = false
   if (!state.pack) return
@@ -204,6 +212,37 @@ function handleNewWhiteCard(card: ApiWhiteCard) {
   state.pack.numOfWhites++
   state.fetchedWhiteCards.push(card)
 }
+
+function handleCardDelete(cardId: number, color: CardColor) {
+  state.editCardOpen = false
+
+  if (!state.pack) return
+
+  if (color === "black") {
+    state.pack.numOfBlacks--
+    state.fetchedBlackCards = state.fetchedBlackCards.filter(
+      c => c.id !== cardId
+    )
+  } else {
+    state.pack.numOfWhites--
+    state.fetchedWhiteCards = state.fetchedWhiteCards.filter(
+      c => c.id !== cardId
+    )
+  }
+}
+
+function handleEdit(card: EditableCard) {
+  state.editedCard = card
+  state.editCardOpen = true
+}
+
+function editBlackCard(card: ApiBlackCard) {
+  handleEdit({ ...card, color: "black" })
+}
+
+function editWhiteCard(card: ApiWhiteCard) {
+  handleEdit({ ...card, color: "white" })
+}
 </script>
 
 <template>
@@ -217,7 +256,9 @@ function handleNewWhiteCard(card: ApiWhiteCard) {
     v-if="state.editCardOpen && state.pack"
     @save-black="handleNewBlackCard"
     @save-white="handleNewWhiteCard"
+    @delete="handleCardDelete"
     @close="state.editCardOpen = false"
+    :card="state.editedCard"
     :pack="state.pack"
   />
   <AppLoading v-if="state.loading">Loading the Pack</AppLoading>
@@ -332,7 +373,7 @@ function handleNewWhiteCard(card: ApiWhiteCard) {
             </button>
             <button
               v-if="owns"
-              @click="state.editCardOpen = true"
+              @click="handleCreateCard"
               class="pack__meta__action"
               v-tooltip="'Add card'"
             >
@@ -358,6 +399,7 @@ function handleNewWhiteCard(card: ApiWhiteCard) {
         ></div>
         <PlayingCard
           v-for="card in state.fetchedBlackCards"
+          @click="editBlackCard(card)"
           class="pack__cards__card"
           color="black"
           :text="card.text"
@@ -375,6 +417,7 @@ function handleNewWhiteCard(card: ApiWhiteCard) {
         ></div>
         <PlayingCard
           v-for="card in state.fetchedWhiteCards"
+          @click="editWhiteCard(card)"
           class="pack__cards__card"
           :text="card.text"
           :pack="state.pack.name"
