@@ -249,10 +249,12 @@ function handleEdit(card: EditableCard) {
 }
 
 function editBlackCard(card: ApiBlackCard) {
+  if (!owns.value) return
   handleEdit({ ...card, color: "black" })
 }
 
 function editWhiteCard(card: ApiWhiteCard) {
+  if (!owns.value) return
   handleEdit({ ...card, color: "white" })
 }
 </script>

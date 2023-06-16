@@ -9,6 +9,7 @@ import { PackDetailsDto } from "../../dtos/api/pack-details.dto"
 import { CreateCardDto } from "../../dtos/api/create-card.dto"
 import { nonAnonymous } from "../../middleware/non-anonymous"
 import { validateDto } from "../../utils"
+import { sanitizeCardContent } from "../../utils/sanitize"
 
 const router = Router()
 
@@ -172,7 +173,8 @@ router.post("/:id/card", async (req, res) => {
   if (!(await validatePackOwnage(id, req.user?.id)))
     return res.status(403).send()
 
-  const data = { text: cardDetails.text, pack: { connect: { id } } }
+  const text = sanitizeCardContent(cardDetails.text)
+  const data = { text, pack: { connect: { id } } }
 
   let card: BlackCard | WhiteCard
 

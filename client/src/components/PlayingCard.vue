@@ -210,6 +210,10 @@ function onMouseLeave() {
   &__text {
     flex-grow: 1;
     overflow-y: auto;
+
+    :deep(b) {
+      font-weight: bolder;
+    }
   }
 
   &__bottom {

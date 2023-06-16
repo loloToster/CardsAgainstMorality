@@ -5,6 +5,7 @@ import type { CardColor } from "../../types"
 import db from "../../modules/db"
 import { CARD_COLORS } from "../../consts"
 import { validateDto } from "../../utils"
+import { sanitizeCardContent } from "../../utils/sanitize"
 import { nonAnonymous } from "../../middleware/non-anonymous"
 import { UpdateCardDto } from "../../dtos/api/update-card.dto"
 
@@ -54,20 +55,22 @@ router.patch(path, async (req, res) => {
 
   const cardModifications = await validateDto(UpdateCardDto, req.body)
 
+  const text =
+    cardModifications.text === undefined
+      ? undefined
+      : sanitizeCardContent(cardModifications.text)
+
+  const args = {
+    where: { id },
+    data: {
+      text
+    }
+  }
+
   if (color === "black") {
-    await db.blackCard.update({
-      where: { id },
-      data: {
-        text: cardModifications.text
-      }
-    })
+    await db.blackCard.update(args)
   } else {
-    await db.whiteCard.update({
-      where: { id },
-      data: {
-        text: cardModifications.text
-      }
-    })
+    await db.whiteCard.update(args)
   }
 
   res.send()

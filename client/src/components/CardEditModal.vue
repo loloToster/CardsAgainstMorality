@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive } from "vue"
+import { reactive, ref } from "vue"
 
 import type {
   ApiBlackCard,
@@ -44,9 +44,26 @@ const state = reactive<{
   }
 })
 
+const textInput = ref<HTMLDivElement>()
+
+function handleFormatting(action: "bold" | "italic" | "underline") {
+  document.execCommand(action)
+}
+
+function handlePaste(e: ClipboardEvent) {
+  e.preventDefault()
+  const text = e.clipboardData?.getData("text/plain")
+  document.execCommand("insertText", false, text)
+}
+
 async function createCard() {
+  const text = textInput.value?.innerHTML
+
   try {
-    const res = await api.post(`/api/pack/${props.pack.id}/card`, state.card)
+    const res = await api.post(`/api/pack/${props.pack.id}/card`, {
+      ...state.card,
+      text
+    })
 
     notify({
       type: "success",
@@ -69,9 +86,12 @@ async function createCard() {
 async function modifyCard() {
   if (!props.card) return
 
+  const text = textInput.value?.innerHTML
+  if (!text) return
+
   try {
     await api.patch(`/api/card/${props.card.color}/${props.card.id}`, {
-      text: state.card.text
+      text
     })
 
     notify({
@@ -80,9 +100,9 @@ async function modifyCard() {
     })
 
     if (props.card.color === "black") {
-      emit("save-black", { ...props.card, ...state.card })
+      emit("save-black", { ...props.card, ...state.card, text })
     } else {
-      emit("save-white", { ...props.card, ...state.card })
+      emit("save-white", { ...props.card, ...state.card, text })
     }
   } catch (err) {
     notify({
@@ -145,24 +165,35 @@ async function handleDelete() {
         :pack="pack.name"
         class="card-edit__card"
       >
-        <textarea
-          v-model="state.card.text"
+        <div
+          @paste="handlePaste"
+          contenteditable
+          ref="textInput"
           class="card-edit__text"
           placeholder="Card content..."
-        ></textarea>
+          v-html="state.card.text"
+        ></div>
       </PlayingCard>
       <div class="card-edit__menu">
-        <button v-wave>
+        <button @click="handleFormatting('bold')" title="bold" v-wave>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
             <path
               d="M275-200v-560h228q66 0 114.5 42T666-612q0 38-21 70t-56 49v6q43 14 69.5 50t26.5 81q0 68-52.5 112T510-200H275Zm86-76h144q38 0 66-25t28-63q0-37-28-62t-66-25H361v175Zm0-247h136q35 0 60.5-23t25.5-58q0-35-25.5-58.5T497-686H361v163Z"
             />
           </svg>
         </button>
-        <button v-wave>
+        <button @click="handleFormatting('italic')" v-wave>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
             <path
               d="M224-199v-80h134l139-409H338v-80h380v80H584L445-279h159v80H224Z"
+            />
+          </svg>
+        </button>
+        <button @click="handleFormatting('underline')" v-wave>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+            <path
+              xmlns="http://www.w3.org/2000/svg"
+              d="M200-140v-60h560v60H200Zm280-140q-100 0-156.5-58.5T267-497v-343h83v343q0 63 34 101t96 38q62 0 96-38t34-101v-343h83v343q0 100-56.5 158.5T480-280Z"
             />
           </svg>
         </button>
@@ -222,8 +253,14 @@ async function handleDelete() {
     height: 100%;
     resize: none;
     color: inherit;
-    font-weight: inherit;
+    font-weight: normal;
     font-size: inherit;
+    outline: none;
+
+    &[placeholder]:empty::before {
+      content: attr(placeholder);
+      color: #555;
+    }
   }
 
   &__menu {
