@@ -16,7 +16,7 @@ import AppButton from "@/components/AppButton.vue"
 
 export type EditableCard =
   | (ApiBlackCard & { color: "black" })
-  | (ApiWhiteCard & { color: "white" })
+  | (ApiWhiteCard & { color: "white"; pick?: undefined; draw?: undefined })
 
 const props = defineProps<{
   pack: ApiCardPack
@@ -35,12 +35,16 @@ const state = reactive<{
   card: {
     text: string
     color: CardColor
+    pick: number | null
+    draw: number | null
   }
 }>({
   saving: false,
   card: {
     text: props.card?.text ?? "",
-    color: props.card?.color ?? "black"
+    color: props.card?.color ?? "black",
+    pick: props.card?.pick ?? null,
+    draw: props.card?.draw ?? null
   }
 })
 
@@ -164,6 +168,11 @@ async function handleDelete() {
         :color="state.card.color"
         :pack="pack.name"
         class="card-edit__card"
+        :pick="state.card.pick"
+        :draw="state.card.draw"
+        @pick="n => (state.card.pick = n)"
+        @draw="n => (state.card.draw = n)"
+        editable-actions
       >
         <div
           @paste="handlePaste"

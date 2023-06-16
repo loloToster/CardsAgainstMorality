@@ -16,6 +16,7 @@ const props = withDefaults(
     width?: number
     animated?: boolean
     glow?: boolean
+    editableActions?: boolean
   }>(),
   { color: "white" }
 )
@@ -23,15 +24,42 @@ const props = withDefaults(
 defineEmits<{
   (e: "click", ev: MouseEvent): void
   (e: "touchend", ev: TouchEvent): void
+  (e: "pick", n: number): void
+  (e: "draw", n: number): void
 }>()
 
+const possibleDraw = [0, 1, 2]
+const possiblePick = [1, 2, 3]
 const actions = computed(() => {
   if (props.color !== "black") return []
 
   const a = []
 
-  if (props.draw && props.draw > 0) a.push({ name: "DRAW", n: props.draw })
-  if (props.pick && props.pick > 1) a.push({ name: "PICK", n: props.pick })
+  if (
+    props.editableActions ||
+    (typeof props.draw === "number" && props.draw > possibleDraw[0])
+  ) {
+    const num = props.draw ?? possibleDraw[0]
+
+    a.push({
+      name: "draw",
+      n: num,
+      opts: props.editableActions ? possibleDraw.filter(n => n !== num) : []
+    })
+  }
+
+  if (
+    props.editableActions ||
+    (typeof props.pick === "number" && props.pick > possiblePick[0])
+  ) {
+    const num = props.pick ?? possiblePick[0]
+
+    a.push({
+      name: "pick",
+      n: num,
+      opts: props.editableActions ? possiblePick.filter(n => n !== num) : []
+    })
+  }
 
   return a
 })
@@ -111,10 +139,25 @@ function onMouseLeave() {
           <div
             v-for="action in actions"
             class="card__action"
+            :class="{ 'card__action--editable': props.editableActions }"
             :key="action.name"
           >
             {{ action.name }}
-            <div class="card__action__n">{{ action.n }}</div>
+            <div class="card__action__n-wrapper">
+              <div
+                v-if="props.editableActions"
+                class="card__action__hover-catcher"
+              ></div>
+              <div class="card__action__n">{{ action.n }}</div>
+              <div
+                v-for="opt in action.opts"
+                @click="$emit(action.name, opt)"
+                class="card__action__n"
+                :key="opt"
+              >
+                {{ opt }}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -166,7 +209,6 @@ function onMouseLeave() {
   display: flex;
   flex-direction: column;
 
-  overflow: hidden;
   padding: var(--padding);
 
   border-radius: var(--border-radius);
@@ -249,18 +291,60 @@ function onMouseLeave() {
     align-items: center;
     gap: var(--action-gap);
     font-size: var(--pick-font-size);
+    text-transform: uppercase;
+
+    &--editable {
+      cursor: pointer;
+    }
+
+    $n-opts: 3;
+
+    &__n-wrapper {
+      position: relative;
+      height: var(--n-size);
+      width: var(--n-size);
+    }
+
+    &__hover-catcher {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: var(--n-size);
+    }
+
+    &:hover &__hover-catcher {
+      width: calc(var(--n-size) * $n-opts + var(--action-gap) * ($n-opts - 1));
+    }
 
     &__n {
+      position: absolute;
+      top: 0;
+      left: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 50%;
       height: var(--n-size);
       width: var(--n-size);
+      transition: left 100ms;
 
       // pick & draw should not be in white cards
       background-color: white;
       color: black;
+
+      &:nth-child(2) {
+        z-index: 1;
+      }
+    }
+
+    &:hover &__n {
+      // +1 because of hover catcher
+      @for $i from 2 through $n-opts + 1 {
+        &:nth-child(#{$i}) {
+          left: calc(var(--n-size) * ($i - 2) + var(--action-gap) * ($i - 2));
+        }
+      }
     }
   }
 
@@ -270,12 +354,23 @@ function onMouseLeave() {
     height: 100%;
     left: 0;
     top: 0;
+    border-radius: inherit;
     pointer-events: none;
-    background-image: radial-gradient(
-      circle at var(--x) var(--y),
-      #ffffff19,
-      #0000000f
-    );
+    overflow: hidden;
+
+    &::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      background-image: radial-gradient(
+        circle at var(--x) var(--y),
+        #ffffff19,
+        #0000000f
+      );
+    }
   }
 }
 </style>
