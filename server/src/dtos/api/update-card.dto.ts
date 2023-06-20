@@ -1,10 +1,31 @@
-import { IsOptional, IsString, MinLength, MaxLength } from "class-validator"
+import {
+  IsOptional,
+  IsString,
+  MinLength,
+  MaxLength,
+  Min,
+  Max,
+  IsInt
+} from "class-validator"
 
-// todo: add draw & pick
+import { MAX_DRAW, MAX_PICK, MIN_DRAW, MIN_PICK } from "../../consts"
+
 export class UpdateCardDto {
   @IsOptional()
   @IsString()
   @MinLength(1)
   @MaxLength(256)
   text!: string | undefined
+
+  @IsOptional()
+  @IsInt()
+  @Min(MIN_DRAW)
+  @Max(MAX_DRAW)
+  draw!: number | undefined
+
+  @IsOptional()
+  @IsInt()
+  @Min(MIN_PICK)
+  @Max(MAX_PICK)
+  pick!: number | undefined
 }

@@ -1,5 +1,6 @@
 import { sum } from "./index"
 import { shuffle } from "./random"
+import { MIN_DRAW, MIN_PICK } from "../consts"
 
 export enum GameState {
   NOT_STARTED,
@@ -171,8 +172,8 @@ export class Game<PM = unknown> {
     this.curBlackCard = newBlackCard
       ? {
         id: newBlackCard.id,
-        pick: newBlackCard.pick ?? 1,
-        draw: newBlackCard.draw ?? 0
+        pick: newBlackCard.pick ?? MIN_PICK,
+        draw: newBlackCard.draw ?? MIN_DRAW
       }
       : null
   }

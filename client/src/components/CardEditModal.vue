@@ -66,7 +66,9 @@ async function createCard() {
   try {
     const res = await api.post(`/api/pack/${props.pack.id}/card`, {
       ...state.card,
-      text
+      text,
+      pick: state.card.pick ?? undefined,
+      draw: state.card.draw ?? undefined
     })
 
     notify({
@@ -95,7 +97,9 @@ async function modifyCard() {
 
   try {
     await api.patch(`/api/card/${props.card.color}/${props.card.id}`, {
-      text
+      text,
+      pick: state.card.pick ?? undefined,
+      draw: state.card.draw ?? undefined
     })
 
     notify({

@@ -16,6 +16,11 @@ export enum StrategyIdentifier {
   Facebook = "fcb"
 }
 
+export const MIN_PICK = 1
+export const MAX_PICK = 3
+export const MIN_DRAW = 0
+export const MAX_DRAW = 2
+
 export const TIME_LIMIT_OFFSET = 500
 
 export const SETTINGS_BOUNDARIES: SettingsBoundaries = {

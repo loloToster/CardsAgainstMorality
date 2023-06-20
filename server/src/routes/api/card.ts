@@ -3,7 +3,7 @@ import { Router } from "express"
 import type { CardColor } from "../../types"
 
 import db from "../../modules/db"
-import { CARD_COLORS } from "../../consts"
+import { CARD_COLORS, MIN_DRAW, MIN_PICK } from "../../consts"
 import { validateDto } from "../../utils"
 import { sanitizeCardContent } from "../../utils/sanitize"
 import { nonAnonymous } from "../../middleware/non-anonymous"
@@ -68,7 +68,20 @@ router.patch(path, async (req, res) => {
   }
 
   if (color === "black") {
-    await db.blackCard.update(args)
+    await db.blackCard.update({
+      ...args,
+      data: {
+        ...args.data,
+        draw:
+          cardModifications.draw === MIN_DRAW
+            ? undefined
+            : cardModifications.draw,
+        pick:
+          cardModifications.pick === MIN_PICK
+            ? undefined
+            : cardModifications.pick
+      }
+    })
   } else {
     await db.whiteCard.update(args)
   }

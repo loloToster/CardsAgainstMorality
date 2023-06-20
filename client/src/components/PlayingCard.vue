@@ -2,6 +2,8 @@
 import { computed, reactive } from "vue"
 
 import { CardColor } from "@backend/types"
+import { MAX_DRAW, MIN_DRAW, MIN_PICK, MAX_PICK } from "@backend/consts"
+import { range } from "@/utils"
 
 import BlackCardIcon from "@/assets/black-card-icon.svg?component"
 import WhiteCardIcon from "@/assets/white-card-icon.svg?component"
@@ -28,8 +30,9 @@ defineEmits<{
   (e: "draw", n: number): void
 }>()
 
-const possibleDraw = [0, 1, 2]
-const possiblePick = [1, 2, 3]
+const possibleDraw = range(MIN_DRAW, MAX_DRAW)
+const possiblePick = range(MIN_PICK, MAX_PICK)
+
 const actions = computed(() => {
   if (props.color !== "black") return []
 
@@ -37,9 +40,9 @@ const actions = computed(() => {
 
   if (
     props.editableActions ||
-    (typeof props.draw === "number" && props.draw > possibleDraw[0])
+    (typeof props.draw === "number" && props.draw > MIN_DRAW)
   ) {
-    const num = props.draw ?? possibleDraw[0]
+    const num = props.draw ?? MIN_DRAW
 
     a.push({
       name: "draw",
@@ -50,9 +53,9 @@ const actions = computed(() => {
 
   if (
     props.editableActions ||
-    (typeof props.pick === "number" && props.pick > possiblePick[0])
+    (typeof props.pick === "number" && props.pick > MIN_PICK)
   ) {
-    const num = props.pick ?? possiblePick[0]
+    const num = props.pick ?? MIN_PICK
 
     a.push({
       name: "pick",

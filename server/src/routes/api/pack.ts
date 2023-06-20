@@ -2,6 +2,7 @@ import { Router } from "express"
 import { BlackCard, WhiteCard } from "@prisma/client"
 
 import type { ApiCardPack } from "../../types"
+import { MIN_DRAW, MIN_PICK } from "../../consts"
 
 import db from "../../modules/db"
 
@@ -76,8 +77,11 @@ router.get("/:id/cards", async (req, res) => {
   const cards = await db.cardPack.findFirst({
     where: { id },
     select: {
-      blackCards: { select: { id: true, text: true, draw: true, pick: true } },
-      whiteCards: { select: { id: true, text: true } }
+      blackCards: {
+        select: { id: true, text: true, draw: true, pick: true },
+        orderBy: { id: "asc" }
+      },
+      whiteCards: { select: { id: true, text: true }, orderBy: { id: "asc" } }
     }
   })
 
@@ -180,7 +184,11 @@ router.post("/:id/card", async (req, res) => {
 
   if (cardDetails.color === "black") {
     card = (await db.blackCard.create({
-      data,
+      data: {
+        ...data,
+        draw: cardDetails.draw === MIN_DRAW ? undefined : cardDetails.draw,
+        pick: cardDetails.pick === MIN_PICK ? undefined : cardDetails.pick
+      },
       select: { id: true, text: true, draw: true, pick: true }
     })) as BlackCard
   } else {
