@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue"
-import { RouterLink, useRoute } from "vue-router"
+import { RouterLink, useRoute, useRouter } from "vue-router"
 import { useScroll } from "@vueuse/core"
 import Color from "color"
 
@@ -8,7 +8,7 @@ import api from "@/utils/api"
 
 import type {
   ApiCardPack,
-  ApiCardPackEditableDetails,
+  ApiCardPackRichEditableDetails,
   ApiBlackCard,
   ApiWhiteCard,
   CardColor
@@ -17,10 +17,12 @@ import type {
 import { notify } from "@/contexts/notifications"
 import { user } from "@/contexts/user"
 
+import AppModal from "@/components/AppModal.vue"
 import PackDetailsModal from "@/components/PackDetailsModal.vue"
 import CardEditModal, { EditableCard } from "@/components/CardEditModal.vue"
 import AppLoading from "@/components/AppLoading.vue"
 import AppError from "@/components/AppError.vue"
+import AppButton from "@/components/AppButton.vue"
 import AppChip from "@/components/AppChip.vue"
 import PackIcon from "@/components/PackIcon.vue"
 import PlayingCard from "@/components/PlayingCard.vue"
@@ -31,6 +33,7 @@ import BlackCardIcon from "@/assets/black-card-icon.svg?component"
 import WhiteCardIcon from "@/assets/white-card-icon.svg?component"
 
 const route = useRoute()
+const router = useRouter()
 
 const state = reactive<{
   pack: ApiCardPack | null
@@ -43,6 +46,8 @@ const state = reactive<{
   editDetailsOpen: boolean
   editCardOpen: boolean
   editedCard: EditableCard | null
+  deleteModalOpen: boolean
+  deleting: boolean
 }>({
   pack: null,
   loading: true,
@@ -53,7 +58,9 @@ const state = reactive<{
   showMiniTop: false,
   editDetailsOpen: false,
   editCardOpen: false,
-  editedCard: null
+  editedCard: null,
+  deleteModalOpen: false,
+  deleting: false
 })
 
 // TODO: add pagination
@@ -182,12 +189,14 @@ const owns = computed(() => {
   return user.value && state.pack?.owner?.id === user.value.id
 })
 
-function handleDetailsSave(details: ApiCardPackEditableDetails) {
+function handleDetailsSave(details: ApiCardPackRichEditableDetails) {
   state.editDetailsOpen = false
 
   if (!state.pack) return
 
   state.pack.name = details.name
+  state.pack.type = details.type
+  state.pack.tags = details.tags
   state.pack.color = details.color
   state.pack.icon = details.icon
 }
@@ -257,9 +266,50 @@ function editWhiteCard(card: ApiWhiteCard) {
   if (!owns.value) return
   handleEdit({ ...card, color: "white" })
 }
+
+async function handleDelete() {
+  if (state.deleting) return
+
+  state.deleting = true
+
+  try {
+    await api.delete(`/api/pack/${state.pack?.id}`)
+
+    notify({
+      type: "success",
+      text: "Successfully deleted the pack"
+    })
+
+    router.push("/my-packs")
+  } catch (err) {
+    console.error(err)
+
+    notify({
+      type: "error",
+      text: "Failed to delete the pack"
+    })
+
+    state.deleting = false
+  }
+}
 </script>
 
 <template>
+  <AppModal v-if="state.deleteModalOpen" @close="state.deleteModalOpen = false">
+    <div class="delete-modal">
+      <h1>
+        Are you sure you want
+        <br />
+        to delete this pack?
+      </h1>
+      <div>
+        <AppButton @click="state.deleteModalOpen = false">No</AppButton>
+        <AppButton @click="handleDelete">
+          {{ state.deleting ? "..." : "Yes" }}
+        </AppButton>
+      </div>
+    </div>
+  </AppModal>
   <PackDetailsModal
     v-if="state.editDetailsOpen && state.pack"
     @save="handleDetailsSave"
@@ -397,6 +447,18 @@ function editWhiteCard(card: ApiWhiteCard) {
                 ></path>
               </svg>
             </button>
+            <button
+              v-if="owns"
+              @click="state.deleteModalOpen = true"
+              class="pack__meta__action red"
+              v-tooltip="'Delete the pack'"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                <path
+                  d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -462,6 +524,19 @@ function editWhiteCard(card: ApiWhiteCard) {
 @use "@/styles/variables" as vars;
 @use "@/styles/mixins" as mixins;
 @use "@/styles/colors" as colors;
+
+.delete-modal {
+  h1 {
+    font-size: 1.4rem;
+  }
+
+  div {
+    display: flex;
+    justify-content: end;
+    gap: 8px;
+    margin-top: 12px;
+  }
+}
 
 .pack {
   --pack-color: white;
@@ -729,6 +804,14 @@ function editWhiteCard(card: ApiWhiteCard) {
 
       &:hover svg {
         fill: colors.$subtext;
+      }
+
+      &.red svg {
+        fill: colors.$danger;
+      }
+
+      &.red:hover svg {
+        fill: lighten(colors.$danger, 15%);
       }
     }
   }

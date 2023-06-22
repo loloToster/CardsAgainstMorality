@@ -10,18 +10,28 @@ export type ApiCardPackType = IdWithName
 export type ApiCardPackBundle = IdWithName
 export type ApiCardPackTag = IdWithName
 
-export interface ApiCardPackEditableDetails {
+export interface ApiCardPackEditableDetailsBase {
   name: string
   color?: string | null
   icon?: string | null
 }
 
-export interface ApiCardPack extends ApiCardPackEditableDetails {
+export interface ApiCardPackEditableDetails
+  extends ApiCardPackEditableDetailsBase {
+  type: number
+  tags: number[]
+}
+
+export interface ApiCardPackRichEditableDetails
+  extends ApiCardPackEditableDetailsBase {
+  type: ApiCardPackType
+  tags: ApiCardPackTag[]
+}
+
+export interface ApiCardPack extends ApiCardPackRichEditableDetails {
   id: string
   official: boolean
-  type: ApiCardPackType
   bundle?: ApiCardPackBundle | null
-  tags: ApiCardPackTag[]
   numOfBlacks: number
   numOfWhites: number
   likedBy: number

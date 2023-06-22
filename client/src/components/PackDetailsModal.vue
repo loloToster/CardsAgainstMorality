@@ -3,13 +3,24 @@ import { reactive, ref } from "vue"
 import { watchDebounced } from "@vueuse/core"
 import { Dropdown } from "floating-vue"
 
-import type { ApiCardPackEditableDetails, ApiCardPack } from "@backend/types"
-import api from "@/utils/api"
+import type {
+  ApiCardPackRichEditableDetails,
+  ApiCardPackEditableDetails,
+  ApiCardPack,
+  SearchCriteria,
+  ApiCardPackType,
+  ApiCardPackTag
+} from "@backend/types"
+
+import { MAX_PACK_TAGS } from "@backend/consts"
 import { CUSTOM_ICONS_BASE_URL } from "@/consts"
+
+import api from "@/utils/api"
 import { notify } from "@/contexts/notifications"
 
 import AppModal from "@/components/AppModal.vue"
 import AppButton from "@/components/AppButton.vue"
+import AppChip from "@/components/AppChip.vue"
 
 import defaultIcon from "@/assets/white-card-icon.svg?url"
 
@@ -17,11 +28,15 @@ const props = defineProps<{ pack: ApiCardPack }>()
 
 const emit = defineEmits<{
   (ev: "close"): void
-  (ev: "save", details: ApiCardPackEditableDetails): void
+  (ev: "save", details: ApiCardPackRichEditableDetails): void
 }>()
 
 const state = reactive<{
   name: string
+  types: ApiCardPackType[]
+  selectedType: number
+  tags: ApiCardPackTag[]
+  selectedTags: number[]
   color: string
   icon: string | undefined
   iconsOpen: boolean
@@ -29,12 +44,37 @@ const state = reactive<{
   icons: string[]
 }>({
   name: props.pack.name,
+  selectedType: props.pack.type.id,
+  types: [],
+  selectedTags: props.pack.tags.map(t => t.id),
+  tags: [],
   color: props.pack.color ?? "#ffffff",
   icon: props.pack.icon ?? undefined,
   iconsOpen: false,
   iconSearchQuery: "",
   icons: []
 })
+
+api.get("/api/packs/search-criteria").then(res => {
+  const criteria: SearchCriteria = res.data
+
+  state.types = criteria.types
+  state.tags = criteria.tags
+})
+
+function handleTypeClick(typ: number) {
+  state.selectedType = typ
+}
+
+function handleTagClick(tag: number) {
+  const lengthBeforeFilter = state.selectedTags.length
+  state.selectedTags = state.selectedTags.filter(t => t !== tag)
+
+  if (state.selectedTags.length < lengthBeforeFilter) return
+  if (state.selectedTags.length >= MAX_PACK_TAGS) return
+
+  state.selectedTags.push(tag)
+}
 
 const colorInput = ref<HTMLInputElement>()
 
@@ -69,11 +109,21 @@ function selectIcon(name: string) {
 async function save() {
   const details: ApiCardPackEditableDetails = {
     name: state.name,
+    type: state.selectedType,
+    tags: state.selectedTags,
     color: state.color,
     icon: state.icon
   }
 
-  emit("save", details)
+  const richType = state.types.find(tp => tp.id === state.selectedType)
+
+  // should always be true
+  if (richType)
+    emit("save", {
+      ...details,
+      tags: state.tags.filter(t => state.selectedTags.some(st => st === t.id)),
+      type: richType
+    })
 
   try {
     await api.post(`/api/pack/${props.pack.id}/details`, details)
@@ -102,8 +152,37 @@ async function save() {
           placeholder="Name"
         />
       </div>
+      <div class="details-modal__row">
+        <h2>Type</h2>
+        <div class="details-modal__row__chips">
+          <AppChip
+            v-for="typ in state.types"
+            @click="handleTypeClick(typ.id)"
+            :outlined="state.selectedType !== typ.id"
+            :key="typ.id"
+          >
+            {{ typ.name }}
+          </AppChip>
+        </div>
+      </div>
+      <div class="details-modal__row">
+        <h2>
+          Tags
+          <span>{{ state.selectedTags.length }}/{{ MAX_PACK_TAGS }}</span>
+        </h2>
+        <div class="details-modal__row__chips">
+          <AppChip
+            v-for="tag in state.tags"
+            @click="handleTagClick(tag.id)"
+            :outlined="!state.selectedTags.includes(tag.id)"
+            :key="tag.id"
+          >
+            {{ tag.name }}
+          </AppChip>
+        </div>
+      </div>
       <div class="details-modal__row details-modal__single-opt-row">
-        <span> Color: </span>
+        <h2>Color:</h2>
         <button
           @click="colorInput?.click()"
           :style="{ '--color': state.color }"
@@ -118,13 +197,13 @@ async function save() {
         </button>
       </div>
       <div class="details-modal__row details-modal__single-opt-row">
-        <span> Icon: </span>
+        <h2>Icon:</h2>
         <Dropdown
           @hide="state.iconsOpen = false"
           :shown="state.iconsOpen"
           :triggers="[]"
           :distance="4"
-          placement="bottom-start"
+          placement="top-start"
         >
           <button
             @click="state.iconsOpen = true"
@@ -163,6 +242,13 @@ async function save() {
             </div>
           </template>
         </Dropdown>
+        <button v-if="state.icon" @click="state.icon = undefined">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+            <path
+              d="m249 873-66-66 231-231-231-231 66-66 231 231 231-231 66 66-231 231 231 231-66 66-231-231-231 231Z"
+            ></path>
+          </svg>
+        </button>
       </div>
       <div class="details-modal__row">
         <AppButton @click="save" class="details-modal__save"> Save </AppButton>
@@ -187,9 +273,19 @@ async function save() {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 600px;
+  max-width: 100%;
 
   &__row {
     display: flex;
+    gap: 6px;
+    flex-direction: column;
+
+    &__chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
   }
 
   &__name {
@@ -204,7 +300,7 @@ async function save() {
 
   &__single-opt-row {
     align-items: center;
-    gap: 6px;
+    flex-direction: row;
     font-weight: bold;
     font-size: 0.9rem;
 
@@ -212,6 +308,12 @@ async function save() {
       height: 24px;
       width: 24px;
       cursor: pointer;
+
+      svg {
+        fill: currentColor;
+        width: 80%;
+        height: 80%;
+      }
     }
   }
 

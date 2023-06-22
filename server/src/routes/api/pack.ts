@@ -143,6 +143,17 @@ async function validatePackOwnage(packId: string, userId: number | undefined) {
   return targetPack && targetPack.ownerId === userId
 }
 
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params
+
+  if (!(await validatePackOwnage(id, req.user?.id)))
+    return res.status(403).send()
+
+  await db.cardPack.delete({ where: { id } })
+
+  res.send()
+})
+
 router.post("/:id/details", async (req, res) => {
   const { id } = req.params
 
@@ -161,6 +172,8 @@ router.post("/:id/details", async (req, res) => {
     where: { id },
     data: {
       name: details.name,
+      type: { connect: { id: details.type } },
+      tags: { connect: details.tags.map(t => ({ id: t })) },
       color: details.color ?? null,
       icon: details.icon ?? null
     }

@@ -18,6 +18,8 @@ function updateSvg() {
     api.get(`${CUSTOM_ICONS_BASE_URL}${props.icon}.svg`).then(res => {
       state.svg = (res.data as string).replaceAll("<path", "<path fill='black'")
     })
+  } else {
+    state.svg = defaultIcon
   }
 }
 

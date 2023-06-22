@@ -4,9 +4,14 @@ import {
   MaxLength,
   IsOptional,
   Matches,
-  ValidateIf
+  ValidateIf,
+  IsInt,
+  IsArray,
+  ArrayMaxSize
 } from "class-validator"
-import { ApiCardPackEditableDetails } from "../../types"
+
+import type { ApiCardPackEditableDetails } from "../../types"
+import { MAX_PACK_TAGS } from "../../consts"
 
 export class PackDetailsDto implements ApiCardPackEditableDetails {
   @IsString()
@@ -25,4 +30,12 @@ export class PackDetailsDto implements ApiCardPackEditableDetails {
   @MinLength(1)
   @ValidateIf((_, value) => value !== null)
   icon!: string | undefined | null
+
+  @IsInt()
+  type!: number
+
+  @IsArray()
+  @ArrayMaxSize(MAX_PACK_TAGS)
+  @IsInt({ each: true })
+  tags!: number[]
 }
