@@ -7,7 +7,7 @@ import type {
   SortType
 } from "../../types"
 import { getRandomInt } from "../../utils/random"
-import { StrategyIdentifier } from "../../consts"
+import { checkAnonymous } from "../../middleware/non-anonymous"
 
 const POS_INT_REGEX = /^\d+$/
 
@@ -41,7 +41,12 @@ router.get("/", async (req, res) => {
     parsedQuery[key] = req.query[key]?.toString()
   })
 
-  const { q, types, bundles, tags, sort, my } = parsedQuery
+  const nonAnonymous = !checkAnonymous(req)
+  const { q, author, types, bundles, tags, sort, my, liked } = parsedQuery
+
+  if (!nonAnonymous && (my || liked)) {
+    return res.json({ packs: [] })
+  }
 
   const parsedTypes = parseSearchArray(types)
   const parsedBundles = parseSearchArray(bundles)
@@ -49,18 +54,15 @@ router.get("/", async (req, res) => {
 
   const parsedSort = SORT_MAP[sort as SortType] as object | undefined
 
-  const userPack =
-    my &&
-    req.user &&
-    !req.user.strategyId.startsWith(StrategyIdentifier.Anonymous)
-
   const packs = await db.cardPack.findMany({
     where: {
-      ownerId: userPack ? req.user?.id : undefined,
+      ownerId: my && nonAnonymous ? req.user?.id : undefined,
+      official: author ? author === "official" : undefined,
       name: q && { contains: q, mode: "insensitive" },
       typeId: parsedTypes && { in: parsedTypes },
       bundleId: parsedBundles && { in: parsedBundles },
-      tags: parsedTags && { some: { id: { in: parsedTags } } }
+      tags: parsedTags && { some: { id: { in: parsedTags } } },
+      likedBy: liked ? { some: { id: req.user?.id } } : undefined
     },
     orderBy: [
       ...(parsedSort ? [parsedSort] : []),
@@ -73,6 +75,12 @@ router.get("/", async (req, res) => {
       type: true,
       bundle: true,
       tags: true,
+      owner: {
+        select: {
+          id: true,
+          name: true
+        }
+      },
       _count: {
         select: {
           blackCards: true,
@@ -99,7 +107,9 @@ router.get("/", async (req, res) => {
           tags: p.tags,
           numOfBlacks: p._count.blackCards,
           numOfWhites: p._count.whiteCards,
-          likedBy: p._count.likedBy
+          likedBy: p._count.likedBy,
+          liked: liked ? true : undefined,
+          owner: p.owner ?? undefined
         } satisfies ApiCardPack)
     )
   })

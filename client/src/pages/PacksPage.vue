@@ -42,6 +42,8 @@ function parseQueryParam(p: { toString: () => string } | undefined | null) {
 const state = reactive<{
   searchQuery: string
   searchAdditionalActive: boolean
+  official: boolean
+  custom: boolean
   types: ApiCardPackType[]
   selectedTypes: number[]
   bundles: ApiCardPackBundle[]
@@ -56,6 +58,8 @@ const state = reactive<{
 }>({
   searchQuery: route.query.q?.toString() ?? "",
   searchAdditionalActive: false,
+  official: true,
+  custom: true,
   types: [],
   selectedTypes: parseQueryParam(route.query.types),
   bundles: [],
@@ -79,6 +83,9 @@ async function fetchPacks() {
   const queryParams: Record<string, string> = {}
 
   if (state.searchQuery) queryParams.q = state.searchQuery
+
+  if (state.official !== state.custom)
+    queryParams.author = state.official ? "official" : "custom"
 
   const selectedTypes = state.selectedTypes.join(",")
   if (selectedTypes) queryParams.types = selectedTypes
@@ -160,6 +167,9 @@ function handleClear() {
   state.searchQuery = ""
   searchQueryInput.value?.focus()
 
+  state.official = true
+  state.custom = true
+
   state.selectedTypes = []
   state.selectedBundles = []
   state.selectedTags = []
@@ -173,6 +183,7 @@ onClickOutside(searchInputWrapper, () => {
 
 const selectedAdditional = computed(() => {
   return (
+    Number(state.official !== state.custom) +
     state.selectedTypes.length +
     state.selectedBundles.length +
     state.selectedTags.length
@@ -182,6 +193,22 @@ const selectedAdditional = computed(() => {
 const canClear = computed(() => {
   return state.searchQuery || selectedAdditional.value
 })
+
+function handleOfficialClick() {
+  state.official = !state.official
+
+  if (!state.official && !state.custom) {
+    state.custom = true
+  }
+}
+
+function handleCustomClick() {
+  state.custom = !state.custom
+
+  if (!state.official && !state.custom) {
+    state.official = true
+  }
+}
 
 function handleAdditionalClick(arr: number[], id: number) {
   if (arr.includes(id)) {
@@ -247,6 +274,22 @@ onClickOutside(sortSection, () => {
           </button>
         </div>
         <div v-if="state.searchAdditionalActive" class="search__additional">
+          <div class="search__additional__section">
+            <AppChip
+              @click="handleOfficialClick"
+              class="search__additional__chip"
+              :outlined="!state.official"
+            >
+              Official
+            </AppChip>
+            <AppChip
+              @click="handleCustomClick"
+              class="search__additional__chip"
+              :outlined="!state.custom"
+            >
+              Custom
+            </AppChip>
+          </div>
           <div class="search__additional__section-title">types</div>
           <div class="search__additional__section">
             <AppChip

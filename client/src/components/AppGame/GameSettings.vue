@@ -43,16 +43,20 @@ const emit = defineEmits<{
   (e: "change", data: Partial<SettingsData>): void
 }>()
 
+const PACK_GROUPS = 3
+
 const state = reactive<{
   loading: boolean
   error: boolean
   inviteOpen: boolean
   packs: ApiCardPack[]
+  fetchedPackGroups: number
 }>({
   loading: true,
   error: false,
   inviteOpen: false,
-  packs: []
+  packs: [],
+  fetchedPackGroups: 0
 })
 
 const invalidRoomName = computed(() => {
@@ -64,7 +68,7 @@ interface SettingsApiPack extends ApiCardPack {
   whites: boolean
 }
 
-const selectedApiPacks = computed(() => {
+const settingsApiPacks = computed(() => {
   const packs: SettingsApiPack[] = []
 
   for (const pack of state.packs) {
@@ -83,13 +87,13 @@ const selectedApiPacks = computed(() => {
 })
 
 const numOfWhiteCards = computed(() => {
-  return selectedApiPacks.value
+  return settingsApiPacks.value
     .filter(p => p.whites)
     .reduce((n, { numOfWhites }) => n + numOfWhites, 0)
 })
 
 const numOfBlackCards = computed(() => {
-  return selectedApiPacks.value
+  return settingsApiPacks.value
     .filter(p => p.blacks)
     .reduce((n, { numOfBlacks }) => n + numOfBlacks, 0)
 })
@@ -162,19 +166,41 @@ function onlyWhites(packId: string) {
   }
 }
 
-api
-  .get("/api/packs")
-  .then(res => {
+async function fetchPacks(query = "") {
+  try {
+    const res = await api.get("/api/packs?" + query)
     const packs: ApiCardPack[] = res.data.packs
-    state.packs = packs
-  })
-  .catch(err => {
+    state.packs = state.packs.concat(
+      packs.filter(fp => !state.packs.find(p => p.id === fp.id))
+    )
+  } catch (err) {
     console.error(err)
     state.error = true
-  })
-  .finally(() => {
+  }
+
+  state.fetchedPackGroups++
+  if (state.fetchedPackGroups === PACK_GROUPS) {
     state.loading = false
-  })
+  }
+}
+
+fetchPacks("liked=true")
+fetchPacks("author=official")
+fetchPacks("my=true") // todo: fetch leader packs
+
+const likedPacks = computed(() => {
+  return settingsApiPacks.value.filter(
+    p => p.liked && p.owner?.id !== user.value?.id
+  )
+})
+
+const myPacks = computed(() => {
+  return settingsApiPacks.value.filter(p => p.owner?.id === user.value?.id)
+})
+
+const officialPacks = computed(() => {
+  return settingsApiPacks.value.filter(p => p.official && !p.liked)
+})
 
 const canStart = computed(() => {
   return (
@@ -406,10 +432,19 @@ onClickOutside(invitePlayersContent, () => {
               </button>
             </div>
           </div>
-          <div class="settings__main__options-row">
+          <div
+            v-for="group in [
+              { name: 'Liked packs', packs: likedPacks },
+              { name: 'My packs', packs: myPacks },
+              { name: 'Official packs', packs: officialPacks }
+            ]"
+            class="settings__main__options-row"
+            :key="group.name"
+          >
+            <h4>{{ group.name }}</h4>
             <div class="settings__packs">
               <GamePack
-                v-for="pack in selectedApiPacks"
+                v-for="pack in group.packs"
                 @click="togglePack(pack.id)"
                 @only-blacks="onlyBlacks(pack.id)"
                 @only-whites="onlyWhites(pack.id)"
@@ -630,6 +665,12 @@ $main-gap: 16px;
 
     &__options-row {
       margin-bottom: 8px;
+
+      h4 {
+        letter-spacing: 0.3px;
+        margin-bottom: 4px;
+        font-size: 0.9rem;
+      }
 
       button {
         font-size: 0.7rem;

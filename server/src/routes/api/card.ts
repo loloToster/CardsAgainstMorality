@@ -6,7 +6,7 @@ import db from "../../modules/db"
 import { CARD_COLORS, MIN_DRAW, MIN_PICK } from "../../consts"
 import { validateDto } from "../../utils"
 import { sanitizeCardContent } from "../../utils/sanitize"
-import { nonAnonymous } from "../../middleware/non-anonymous"
+import { nonAnonymousMiddleware } from "../../middleware/non-anonymous"
 import { UpdateCardDto } from "../../dtos/api/update-card.dto"
 
 const router = Router()
@@ -31,7 +31,7 @@ async function validateCardOwnage(
   return targetCard?.pack.ownerId === userId
 }
 
-router.use(nonAnonymous)
+router.use(nonAnonymousMiddleware)
 
 const path = "/:clr/:cId"
 

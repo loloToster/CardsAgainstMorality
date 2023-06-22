@@ -8,7 +8,7 @@ import db from "../../modules/db"
 
 import { PackDetailsDto } from "../../dtos/api/pack-details.dto"
 import { CreateCardDto } from "../../dtos/api/create-card.dto"
-import { nonAnonymous } from "../../middleware/non-anonymous"
+import { nonAnonymousMiddleware } from "../../middleware/non-anonymous"
 import { validateDto } from "../../utils"
 import { sanitizeCardContent } from "../../utils/sanitize"
 
@@ -90,7 +90,7 @@ router.get("/:id/cards", async (req, res) => {
   res.json({ cards })
 })
 
-router.use(nonAnonymous)
+router.use(nonAnonymousMiddleware)
 
 router.put("/:id/like", async (req, res) => {
   const { id } = req.params
