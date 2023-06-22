@@ -192,7 +192,9 @@ export class Room {
     socket.on(
       "start",
       errWrapper(async settings => {
-        if (this.getLeader() !== player) return
+        const leader = this.getLeader()
+
+        if (leader !== player) return
 
         this.name = settings.name
         this.public = settings.public
@@ -200,7 +202,29 @@ export class Room {
         this.timeLimit = settings.timeLimit
         this.scoreLimit = settings.scoreLimit
         this.roundLimit = settings.roundLimit
-        this.selectedPacks = settings.packs.filter(p => p.blacks || p.whites)
+
+        const leaderId = leader.metadata?.user.id ?? -1
+
+        // todo: check if works in different scenarios
+        const validPackIds = (
+          await db.cardPack.findMany({
+            where: {
+              AND: [
+                { id: { in: settings.packs.map(p => p.id) } },
+                {
+                  OR: [{ private: false }, { ownerId: leaderId, private: true }]
+                }
+              ]
+            },
+            select: {
+              id: true
+            }
+          })
+        ).map(p => p.id)
+
+        this.selectedPacks = settings.packs.filter(p => {
+          return (p.blacks || p.whites) && validPackIds.includes(p.id)
+        })
 
         const whiteCards = await db.whiteCard.findMany({
           where: {

@@ -21,6 +21,7 @@ import { notify } from "@/contexts/notifications"
 import AppModal from "@/components/AppModal.vue"
 import AppButton from "@/components/AppButton.vue"
 import AppChip from "@/components/AppChip.vue"
+import AppSwitch from "@/components/AppSwitch.vue"
 
 import defaultIcon from "@/assets/white-card-icon.svg?url"
 
@@ -33,6 +34,7 @@ const emit = defineEmits<{
 
 const state = reactive<{
   name: string
+  private: boolean
   types: ApiCardPackType[]
   selectedType: number
   tags: ApiCardPackTag[]
@@ -44,6 +46,7 @@ const state = reactive<{
   icons: string[]
 }>({
   name: props.pack.name,
+  private: props.pack.private,
   selectedType: props.pack.type.id,
   types: [],
   selectedTags: props.pack.tags.map(t => t.id),
@@ -109,6 +112,7 @@ function selectIcon(name: string) {
 async function save() {
   const details: ApiCardPackEditableDetails = {
     name: state.name,
+    private: state.private,
     type: state.selectedType,
     tags: state.selectedTags,
     color: state.color,
@@ -151,6 +155,10 @@ async function save() {
           type="text"
           placeholder="Name"
         />
+      </div>
+      <div class="details-modal__row details-modal__single-opt-row">
+        <h2>Private:</h2>
+        <AppSwitch v-model="state.private" />
       </div>
       <div class="details-modal__row">
         <h2>Type</h2>

@@ -34,6 +34,10 @@ router.get("/:id", async (req, res) => {
     }
   })
 
+  if (foundPack?.private && req.user?.id !== foundPack.ownerId) {
+    return res.status(403).send()
+  }
+
   let liked: boolean | undefined
 
   if (req.user && foundPack) {
@@ -51,6 +55,7 @@ router.get("/:id", async (req, res) => {
     ? {
       id: foundPack.id,
       name: foundPack.name,
+      private: foundPack.private,
       official: foundPack.official,
       type: foundPack.type,
       bundle: foundPack.bundle,
@@ -172,6 +177,7 @@ router.post("/:id/details", async (req, res) => {
     where: { id },
     data: {
       name: details.name,
+      private: details.private,
       type: { connect: { id: details.type } },
       tags: { connect: details.tags.map(t => ({ id: t })) },
       color: details.color ?? null,

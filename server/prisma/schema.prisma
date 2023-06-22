@@ -36,6 +36,7 @@ model CardPack {
   likedBy       User[]          @relation("likes")
   owner         User?           @relation("owns", fields: [ownerId], references: [id])
   ownerId       Int?            @map("owner_id")
+  private       Boolean         @default(false)
 
   @@map("card_packs")
 }

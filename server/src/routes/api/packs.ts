@@ -56,6 +56,7 @@ router.get("/", async (req, res) => {
 
   const packs = await db.cardPack.findMany({
     where: {
+      private: my && nonAnonymous && req.user ? undefined : false,
       ownerId: my && nonAnonymous ? req.user?.id : undefined,
       official: author ? author === "official" : undefined,
       name: q && { contains: q, mode: "insensitive" },
@@ -99,6 +100,7 @@ router.get("/", async (req, res) => {
         ({
           id: p.id,
           name: p.name,
+          private: p.private,
           official: p.official,
           type: p.type,
           bundle: p.bundle,

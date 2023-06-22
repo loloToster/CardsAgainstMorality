@@ -7,7 +7,8 @@ import {
   ValidateIf,
   IsInt,
   IsArray,
-  ArrayMaxSize
+  ArrayMaxSize,
+  IsBoolean
 } from "class-validator"
 
 import type { ApiCardPackEditableDetails } from "../../types"
@@ -18,6 +19,9 @@ export class PackDetailsDto implements ApiCardPackEditableDetails {
   @MinLength(1)
   @MaxLength(32)
   name!: string
+
+  @IsBoolean()
+  private!: boolean
 
   @IsOptional()
   @IsString()

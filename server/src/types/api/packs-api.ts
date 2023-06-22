@@ -12,6 +12,7 @@ export type ApiCardPackTag = IdWithName
 
 export interface ApiCardPackEditableDetailsBase {
   name: string
+  private: boolean
   color?: string | null
   icon?: string | null
 }
