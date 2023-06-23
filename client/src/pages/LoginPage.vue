@@ -93,25 +93,28 @@ function onFallen(card: ApiRandomCard) {
 
 <template>
   <div class="login">
-    <div
-      v-for="card in state.fallingCards"
-      @animationend="onFallen(card)"
-      class="login__card"
-      :class="{ 'login__card--spin-left': card.rotateDirection }"
-      :style="{
-        '--pos': card.pos,
-        '--delay': card.delay,
-        '--fall-speed': card.fallSpeed,
-        '--rotate-speed': card.rotateSpeed
-      }"
-      :key="card.id"
-    >
-      <PlayingCard
-        :color="card.color"
-        :text="card.text"
-        :pack="card.pack"
-        :width="card.size"
-      />
+    <div class="login__cards">
+      <div
+        v-for="card in state.fallingCards"
+        @animationend="onFallen(card)"
+        class="login__card"
+        :class="{ 'login__card--spin-left': card.rotateDirection }"
+        :style="{
+          '--size': card.size,
+          '--pos': card.pos,
+          '--delay': card.delay,
+          '--fall-speed': card.fallSpeed,
+          '--rotate-speed': card.rotateSpeed
+        }"
+        :key="card.id"
+      >
+        <PlayingCard
+          :color="card.color"
+          :text="card.text"
+          :pack="card.pack"
+          :width="card.size"
+        />
+      </div>
     </div>
     <div class="login__container">
       <div v-if="state.captchaOpen" class="login__captcha">
@@ -226,6 +229,11 @@ $colors: (
   height: 100vh;
   overflow: hidden;
 
+  &__cards {
+    isolation: isolate;
+    z-index: -1;
+  }
+
   @keyframes fall {
     from {
       top: -30%;
@@ -260,7 +268,7 @@ $colors: (
     position: absolute;
     top: -30%;
     left: calc(var(--pos, 0) * 1%);
-    z-index: -1;
+    z-index: var(--size);
     animation: fall linear calc(var(--fall-speed, 10000) * 1ms) forwards,
       spin-right linear calc(var(--rotate-speed, 8000) * 1ms) infinite;
     animation-delay: calc(var(--delay, 0) * 1ms);

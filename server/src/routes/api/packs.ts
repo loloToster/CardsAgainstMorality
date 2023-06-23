@@ -129,16 +129,20 @@ router.get("/random-cards", async (req, res) => {
   const NUM_OF_WHITE = 10
   const NUM_OF_BLACK = 4
 
-  const totalWhiteCards = await db.whiteCard.count()
-  const totalBlackCards = await db.blackCard.count()
+  const criteria = { where: { pack: { private: false } } }
+
+  const totalWhiteCards = await db.whiteCard.count(criteria)
+  const totalBlackCards = await db.blackCard.count(criteria)
 
   const dbWhiteCards = await db.whiteCard.findMany({
+    ...criteria,
     include: { pack: true },
     take: NUM_OF_WHITE,
     skip: getRandomInt(0, totalWhiteCards - NUM_OF_WHITE)
   })
 
   const dbBlackCards = await db.blackCard.findMany({
+    ...criteria,
     include: { pack: true },
     take: NUM_OF_BLACK,
     skip: getRandomInt(0, totalBlackCards - NUM_OF_BLACK)
