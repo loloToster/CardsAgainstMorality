@@ -4,6 +4,7 @@ import { useRouter } from "vue-router"
 
 import type { ApiCardPack } from "@backend/types"
 import api from "@/utils/api"
+import { user } from "@/contexts/user"
 import { notify } from "@/contexts/notifications"
 
 import AppLoading from "@/components/AppLoading.vue"
@@ -24,7 +25,7 @@ const state = reactive<{
 })
 
 api
-  .get("/api/packs?my=true")
+  .get(`/api/packs?owner=${user.value?.id}`)
   .then(res => {
     const packs: ApiCardPack[] = res.data.packs
     state.packs = packs

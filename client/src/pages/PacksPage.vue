@@ -42,6 +42,7 @@ function parseQueryParam(p: { toString: () => string } | undefined | null) {
 const state = reactive<{
   searchQuery: string
   searchAdditionalActive: boolean
+  owner: string | null
   official: boolean
   custom: boolean
   types: ApiCardPackType[]
@@ -58,6 +59,7 @@ const state = reactive<{
 }>({
   searchQuery: route.query.q?.toString() ?? "",
   searchAdditionalActive: false,
+  owner: route.query.owner?.toString() ?? null,
   official: true,
   custom: true,
   types: [],
@@ -83,6 +85,8 @@ async function fetchPacks() {
   const queryParams: Record<string, string> = {}
 
   if (state.searchQuery) queryParams.q = state.searchQuery
+
+  if (state.owner) queryParams.owner = state.owner
 
   if (state.official !== state.custom)
     queryParams.author = state.official ? "official" : "custom"

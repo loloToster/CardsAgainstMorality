@@ -186,7 +186,7 @@ async function fetchPacks(query = "") {
 
 fetchPacks("liked=true")
 fetchPacks("author=official")
-fetchPacks("my=true") // todo: fetch leader packs
+fetchPacks(`owner=${user.value?.id}`) // todo: fetch leader packs
 
 const likedPacks = computed(() => {
   return settingsApiPacks.value.filter(

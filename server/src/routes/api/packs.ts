@@ -7,7 +7,6 @@ import type {
   SortType
 } from "../../types"
 import { getRandomInt } from "../../utils/random"
-import { checkAnonymous } from "../../middleware/non-anonymous"
 
 const POS_INT_REGEX = /^\d+$/
 
@@ -41,13 +40,9 @@ router.get("/", async (req, res) => {
     parsedQuery[key] = req.query[key]?.toString()
   })
 
-  const nonAnonymous = !checkAnonymous(req)
-  const { q, author, types, bundles, tags, sort, my, liked } = parsedQuery
+  const { q, author, owner, types, bundles, tags, sort, liked } = parsedQuery
 
-  if (!nonAnonymous && (my || liked)) {
-    return res.json({ packs: [] })
-  }
-
+  const ownerId = owner ? parseInt(owner) : undefined
   const parsedTypes = parseSearchArray(types)
   const parsedBundles = parseSearchArray(bundles)
   const parsedTags = parseSearchArray(tags)
@@ -56,14 +51,32 @@ router.get("/", async (req, res) => {
 
   const packs = await db.cardPack.findMany({
     where: {
-      private: my && nonAnonymous && req.user ? undefined : false,
-      ownerId: my && nonAnonymous ? req.user?.id : undefined,
-      official: author ? author === "official" : undefined,
-      name: q && { contains: q, mode: "insensitive" },
-      typeId: parsedTypes && { in: parsedTypes },
-      bundleId: parsedBundles && { in: parsedBundles },
-      tags: parsedTags && { some: { id: { in: parsedTags } } },
-      likedBy: liked ? { some: { id: req.user?.id } } : undefined
+      AND: [
+        {
+          OR: [
+            {
+              private: req.user && ownerId === req.user.id ? undefined : false,
+              ownerId
+            },
+            ...(req.user && !ownerId
+              ? [
+                {
+                  private: true,
+                  ownerId: req.user.id
+                }
+              ]
+              : [])
+          ]
+        },
+        {
+          official: author ? author === "official" : undefined,
+          name: q && { contains: q, mode: "insensitive" },
+          typeId: parsedTypes && { in: parsedTypes },
+          bundleId: parsedBundles && { in: parsedBundles },
+          tags: parsedTags && { some: { id: { in: parsedTags } } },
+          likedBy: liked ? { some: { id: req.user?.id ?? -1 } } : undefined
+        }
+      ]
     },
     orderBy: [
       ...(parsedSort ? [parsedSort] : []),
@@ -94,7 +107,9 @@ router.get("/", async (req, res) => {
 
   res.json({
     allOfficial: await db.cardPack.count({ where: { official: true } }),
-    allCommunity: await db.cardPack.count({ where: { official: false } }),
+    allCommunity: await db.cardPack.count({
+      where: { official: false, private: false }
+    }),
     packs: packs.map(
       p =>
         ({

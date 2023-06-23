@@ -410,16 +410,16 @@ async function handleDelete() {
             </RouterLink>
           </div>
           <div class="pack__meta__row">
-            <div
-              v-if="state.pack.official || state.pack.owner"
-              class="pack__meta__author"
-            >
-              {{
-                state.pack.official
-                  ? "Cards Against Humanity"
-                  : state.pack.owner?.name
-              }}
+            <div v-if="state.pack.official" class="pack__meta__owner">
+              Cards Against Humanity
             </div>
+            <RouterLink
+              v-else-if="state.pack.owner"
+              :to="`/packs?owner=${state.pack.owner.id}`"
+              class="pack__meta__owner pack__meta__owner--custom"
+            >
+              {{ state.pack.owner.name }}
+            </RouterLink>
             <div v-if="state.pack.likedBy" class="pack__meta__likes">
               {{ state.pack.likedBy }} likes
             </div>
@@ -782,8 +782,14 @@ async function handleDelete() {
       }
     }
 
-    &__author {
+    &__owner {
       font-weight: 700;
+      text-decoration: none;
+      color: inherit;
+
+      &--custom:hover {
+        text-decoration: underline;
+      }
     }
 
     &__row {
