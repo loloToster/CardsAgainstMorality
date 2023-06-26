@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref } from "vue"
+import { computed, reactive, ref } from "vue"
 import { watchDebounced } from "@vueuse/core"
 import { Dropdown } from "floating-vue"
 
@@ -12,7 +12,7 @@ import type {
   ApiCardPackTag
 } from "@backend/types"
 
-import { MAX_PACK_TAGS } from "@backend/consts"
+import { MAX_PACK_TAGS, MAX_PACK_NAME_LEN } from "@backend/consts"
 import { CUSTOM_ICONS_BASE_URL } from "@/consts"
 
 import api from "@/utils/api"
@@ -56,6 +56,10 @@ const state = reactive<{
   iconsOpen: false,
   iconSearchQuery: "",
   icons: []
+})
+
+const nameError = computed(() => {
+  return !state.name.trim()
 })
 
 api.get("/api/packs/search-criteria").then(res => {
@@ -149,12 +153,19 @@ async function save() {
   <AppModal @close="$emit('close')" title="Edit details">
     <div class="details-modal">
       <div class="details-modal__row">
-        <input
-          v-model="state.name"
-          class="details-modal__name"
-          type="text"
-          placeholder="Name"
-        />
+        <div class="details-modal__name">
+          <input
+            v-model="state.name"
+            class="details-modal__name__input"
+            :class="{ error: nameError }"
+            type="text"
+            placeholder="Name"
+            :maxlength="MAX_PACK_NAME_LEN"
+          />
+          <div class="details-modal__name__len">
+            {{ MAX_PACK_NAME_LEN - state.name.length }}
+          </div>
+        </div>
       </div>
       <div class="details-modal__row details-modal__single-opt-row">
         <h2>Private:</h2>
@@ -275,6 +286,10 @@ async function save() {
   &:focus {
     outline: 1px solid colors.$inp;
   }
+
+  &.error {
+    outline: 1px solid colors.$error;
+  }
 }
 
 .details-modal {
@@ -297,13 +312,26 @@ async function save() {
   }
 
   &__name {
-    @include text-input();
+    position: relative;
 
-    font-size: 1.2rem;
-    width: 100%;
-    min-width: 32ch;
-    height: 46px;
-    padding: 0 12px;
+    &__input {
+      @include text-input();
+
+      font-size: 1.2rem;
+      width: 100%;
+      min-width: 32ch;
+      height: 46px;
+      padding: 0 12px;
+    }
+
+    &__len {
+      position: absolute;
+      right: 4px;
+      top: calc(100% + 4px);
+      font-size: 0.875rem;
+      color: colors.$lightgray;
+      font-weight: bold;
+    }
   }
 
   &__single-opt-row {

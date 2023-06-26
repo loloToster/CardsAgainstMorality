@@ -12,12 +12,12 @@ import {
 } from "class-validator"
 
 import type { ApiCardPackEditableDetails } from "../../types"
-import { MAX_PACK_TAGS } from "../../consts"
+import { MAX_PACK_NAME_LEN, MAX_PACK_TAGS } from "../../consts"
 
 export class PackDetailsDto implements ApiCardPackEditableDetails {
   @IsString()
   @MinLength(1)
-  @MaxLength(32)
+  @MaxLength(MAX_PACK_NAME_LEN)
   name!: string
 
   @IsBoolean()

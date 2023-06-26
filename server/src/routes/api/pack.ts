@@ -167,6 +167,8 @@ router.post("/:id/details", async (req, res) => {
   if (!(await validatePackOwnage(id, req.user?.id)))
     return res.status(403).send()
 
+  if (!details.name.trim()) return res.status(400).send()
+
   if (details.icon !== undefined && details.icon !== null) {
     const icon = await db.icon.findUnique({ where: { name: details.icon } })
 
@@ -179,7 +181,7 @@ router.post("/:id/details", async (req, res) => {
       name: details.name,
       private: details.private,
       type: { connect: { id: details.type } },
-      tags: { connect: details.tags.map(t => ({ id: t })) },
+      tags: { set: details.tags.map(t => ({ id: t })) },
       color: details.color ?? null,
       icon: details.icon ?? null
     }
