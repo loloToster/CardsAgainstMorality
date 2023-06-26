@@ -1,5 +1,4 @@
 import { Router } from "express"
-import { BlackCard, WhiteCard } from "@prisma/client"
 
 import type { ApiCardPack } from "../../types"
 import { MIN_DRAW, MIN_PICK } from "../../consts"
@@ -201,28 +200,25 @@ router.post("/:id/card", async (req, res) => {
   const text = sanitizeCardContent(cardDetails.text)
   const data = { text, pack: { connect: { id } } }
 
-  let card: BlackCard | WhiteCard
-
-  if (cardDetails.color === "black") {
-    card = (await db.blackCard.create({
-      data: {
-        ...data,
-        draw: cardDetails.draw === MIN_DRAW ? undefined : cardDetails.draw,
-        pick: cardDetails.pick === MIN_PICK ? undefined : cardDetails.pick
-      },
-      select: { id: true, text: true, draw: true, pick: true }
-    })) as BlackCard
-  } else {
-    card = (await db.whiteCard.create({
-      data,
-      select: { id: true, text: true }
-    })) as WhiteCard
-  }
-
-  await db.cardPack.update({
-    where: { id },
-    data: { numberOfCards: { increment: 1 } }
-  })
+  const [card] = await db.$transaction([
+    cardDetails.color === "black"
+      ? db.blackCard.create({
+        data: {
+          ...data,
+          draw: cardDetails.draw === MIN_DRAW ? undefined : cardDetails.draw,
+          pick: cardDetails.pick === MIN_PICK ? undefined : cardDetails.pick
+        },
+        select: { id: true, text: true, draw: true, pick: true }
+      })
+      : db.whiteCard.create({
+        data,
+        select: { id: true, text: true }
+      }),
+    db.cardPack.update({
+      where: { id },
+      data: { numberOfCards: { increment: 1 } }
+    })
+  ])
 
   res.send({ card })
 })

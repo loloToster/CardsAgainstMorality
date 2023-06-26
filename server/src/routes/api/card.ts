@@ -96,20 +96,17 @@ router.delete(path, async (req, res) => {
 
   const isBlack = color === "black"
 
-  if (isBlack) {
-    await db.blackCard.delete({ where: { id } })
-  } else {
-    await db.whiteCard.delete({ where: { id } })
-  }
-
-  const where = isBlack
-    ? { blackCards: { some: { id } } }
-    : { whiteCards: { some: { id } } }
-
-  await db.cardPack.updateMany({
-    where,
-    data: { numberOfCards: { decrement: 1 } }
-  })
+  await db.$transaction([
+    db.cardPack.updateMany({
+      where: isBlack
+        ? { blackCards: { some: { id } } }
+        : { whiteCards: { some: { id } } },
+      data: { numberOfCards: { decrement: 1 } }
+    }),
+    isBlack
+      ? db.blackCard.delete({ where: { id } })
+      : db.whiteCard.delete({ where: { id } })
+  ])
 
   res.send()
 })
