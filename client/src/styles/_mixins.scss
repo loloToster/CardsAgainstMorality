@@ -1,3 +1,5 @@
+@use "@/styles/colors" as colors;
+
 $xxs: 600px;
 $xs: 768px;
 $sm: 992px;
@@ -32,4 +34,10 @@ $lg: 1600px;
   @media (max-width: $lg) {
     @content;
   }
+}
+
+@mixin section-border() {
+  border-style: solid;
+  border-color: colors.$darkgray;
+  border-width: 1px 0;
 }
