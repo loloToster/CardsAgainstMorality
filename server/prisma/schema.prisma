@@ -76,7 +76,7 @@ model BlackCard {
   pick   Int?
   draw   Int?
   packId String   @map("pack_id")
-  pack   CardPack @relation(fields: [packId], references: [id])
+  pack   CardPack @relation(fields: [packId], references: [id], onDelete: Cascade)
 
   @@map("black_cards")
 }
@@ -85,7 +85,7 @@ model WhiteCard {
   id     Int      @id @default(autoincrement())
   text   String
   packId String   @map("pack_id")
-  pack   CardPack @relation(fields: [packId], references: [id])
+  pack   CardPack @relation(fields: [packId], references: [id], onDelete: Cascade)
 
   @@map("white_cards")
 }
