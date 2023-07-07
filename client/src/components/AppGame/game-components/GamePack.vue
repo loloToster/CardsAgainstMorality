@@ -151,7 +151,7 @@ const light = computed(() => {
           </button>
         </div>
         <a
-          :href="`/pack/${encodeURIComponent(pack.name)}`"
+          :href="`/pack/${encodeURIComponent(pack.id)}`"
           class="details__view-cards"
           target="_blank"
           rel="noopener noreferrer"

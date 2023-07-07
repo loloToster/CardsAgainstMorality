@@ -47,6 +47,7 @@ const nonAnonymousUser = computed(() => {
       </button>
       <RouterLink class="header__logo" to="/">
         {{ TITLE }}
+        <div class="header__logo__dev">Still in developement</div>
       </RouterLink>
       <RouterLink class="header__link" to="/rooms"> Rooms </RouterLink>
       <RouterLink class="header__link" to="/packs"> Packs </RouterLink>
@@ -237,6 +238,26 @@ const nonAnonymousUser = computed(() => {
 
     @include mixins.xs {
       margin-right: unset;
+    }
+
+    position: relative;
+
+    &__dev {
+      position: absolute;
+      width: fit-content;
+      padding: 3px;
+      background-color: colors.$error;
+      font-size: 0.6em;
+      font-weight: lighter;
+      border-radius: 2px;
+      right: 0;
+      bottom: 0;
+      transform: translate(15%, 70%) rotate(-3deg);
+      transition: all 100ms;
+
+      &:hover {
+        font-size: 0.7em;
+      }
     }
   }
 

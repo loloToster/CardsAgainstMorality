@@ -434,9 +434,10 @@
     },
     {
       "name": "Saves America Pack",
+      "type": 2,
+      "bundle": 2,
       "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 20 20\" fill=\"none\"> <path d=\"M19.7181 15.439L18.2668 14.1138C17.3361 13.2523 16.7932 12.0486 16.7932 10.7786V6.63722C16.7932 4.1524 14.7769 2.14246 12.2841 2.14246H12.2509C12.1955 0.949751 11.2094 0 10.0018 0C8.79423 0 7.80822 0.949751 7.75282 2.14246H7.71958C5.22681 2.14246 3.21045 4.1524 3.21045 6.63722V10.7786C3.21045 12.0486 2.67865 13.2523 1.73694 14.1138L0.285603 15.439C-0.301581 15.9801 0.0751057 16.963 0.883869 16.963H8.2846L7.01052 15.2623C6.74463 14.9199 6.76679 14.423 7.05484 14.1027L8.08519 12.9321L6.52306 11.386C6.26824 11.132 6.17961 10.7454 6.30148 10.4141L7.498 7.12314C7.60879 6.80287 7.96332 6.64826 8.27353 6.7587C8.59482 6.86913 8.74993 7.22253 8.63914 7.53175L7.498 10.6461L9.12661 12.2474C9.47006 12.5897 9.49221 13.153 9.17092 13.5174L8.11842 14.7101L9.80243 16.952H19.0866C19.9175 16.963 20.3053 15.9801 19.7181 15.439ZM8.98258 2.14246C9.03798 1.62341 9.48114 1.2148 10.0129 1.2148C10.5447 1.2148 10.9989 1.62341 11.0433 2.14246H8.98258Z\" fill=\"black\"/> <path d=\"M10.0128 19.9999C11.1761 19.9999 12.1732 19.2379 12.4945 18.1777H7.52002C7.85239 19.2379 8.84949 19.9999 10.0128 19.9999Z\" fill=\"black\"/> </svg>",
       "color": "#3a8dde",
-      "type": 2,
       "id": 46
     },
     {
@@ -445,11 +446,6 @@
       "color": "#f8f462",
       "type": 2,
       "id": 47
-    },
-    {
-      "name": "Test Pack",
-      "type": 2,
-      "id": 49
     },
     {
       "name": "Family Edition",
@@ -605,7 +601,7 @@
       "pack": 0
     },
     {
-      "text": "Co sprowadz\u0119 z przysz\u0142o\u015bci by przekona\u0107 ludzi, \u017ce jestem pot\u0119\u017cnym czarodziejem.",
+      "text": "Co sprowadz\u0119 z przysz\u0142o\u015bci by przekona\u0107 ludzi, \u017ce jestem pot\u0119\u017cnym czarodziejem?",
       "pack": 0
     },
     {
@@ -2379,8 +2375,7 @@
     },
     {
       "text": "My plan for world domination begins with <span class='pick'>____</span>.",
-      "pack": 1,
-      "pick": 2
+      "pack": 1
     },
     {
       "text": "Next from J.K. Rowling: Harry Potter and the Chamber of <span class='pick'>____</span>.",
@@ -5364,115 +5359,6 @@
       "pack": 21
     },
     {
-      "pick": 3,
-      "draw": 2,
-      "text": "<span class='pick'>____</span> & <span class='pick'>____</span> & <span class='pick'>____</span>.",
-      "pack": 49
-    },
-    {
-      "pick": 3,
-      "draw": 2,
-      "text": "<span class='pick'>____</span> & <span class='pick'>____</span> & <span class='pick'>____</span>.",
-      "pack": 49
-    },
-    {
-      "pick": 3,
-      "draw": 2,
-      "text": "<span class='pick'>____</span> & <span class='pick'>____</span> & <span class='pick'>____</span>.",
-      "pack": 49
-    },
-    {
-      "pick": 3,
-      "draw": 2,
-      "text": "<span class='pick'>____</span> & <span class='pick'>____</span> & <span class='pick'>____</span>.",
-      "pack": 49
-    },
-    {
-      "pick": 3,
-      "draw": 2,
-      "text": "<span class='pick'>____</span> & <span class='pick'>____</span> & <span class='pick'>____</span>.",
-      "pack": 49
-    },
-    {
-      "pick": 3,
-      "draw": 2,
-      "text": "<span class='pick'>____</span> & <span class='pick'>____</span> & <span class='pick'>____</span>.",
-      "pack": 49
-    },
-    {
-      "pick": 3,
-      "draw": 2,
-      "text": "<span class='pick'>____</span> & <span class='pick'>____</span> & <span class='pick'>____</span>.",
-      "pack": 49
-    },
-    {
-      "pick": 3,
-      "draw": 2,
-      "text": "<span class='pick'>____</span> & <span class='pick'>____</span> & <span class='pick'>____</span>.",
-      "pack": 49
-    },
-    {
-      "pick": 3,
-      "draw": 2,
-      "text": "<span class='pick'>____</span> & <span class='pick'>____</span> & <span class='pick'>____</span>.",
-      "pack": 49
-    },
-    {
-      "pick": 2,
-      "text": "<span class='pick'>____</span> & <span class='pick'>____</span>.",
-      "pack": 49
-    },
-    {
-      "pick": 2,
-      "text": "<span class='pick'>____</span> & <span class='pick'>____</span>.",
-      "pack": 49
-    },
-    {
-      "pick": 2,
-      "text": "<span class='pick'>____</span> & <span class='pick'>____</span>.",
-      "pack": 49
-    },
-    {
-      "pick": 2,
-      "text": "<span class='pick'>____</span> & <span class='pick'>____</span>.",
-      "pack": 49
-    },
-    {
-      "pick": 2,
-      "text": "<span class='pick'>____</span> & <span class='pick'>____</span>.",
-      "pack": 49
-    },
-    {
-      "pick": 2,
-      "text": "<span class='pick'>____</span> & <span class='pick'>____</span>.",
-      "pack": 49
-    },
-    {
-      "pick": 2,
-      "text": "<span class='pick'>____</span> & <span class='pick'>____</span>.",
-      "pack": 49
-    },
-    {
-      "pick": 2,
-      "text": "<span class='pick'>____</span> & <span class='pick'>____</span>.",
-      "pack": 49
-    },
-    {
-      "pick": 2,
-      "text": "<span class='pick'>____</span> & <span class='pick'>____</span>.",
-      "pack": 49
-    },
-    {
-      "pick": 2,
-      "text": "<span class='pick'>____</span> & <span class='pick'>____</span>.",
-      "pack": 49
-    },
-    {
-      "pick": 2,
-      "text": "<span class='pick'>____</span> & <span class='pick'>____</span>.",
-      "pack": 49
-    },
-    {
       "text": "Papa, come quickly! There, in the garden! Do you see ____? Tell me you see it, Papa!",
       "pack": 50
     },
@@ -8248,7 +8134,7 @@
       "pack": 0
     },
     {
-      "text": "Zrobienie dobre kilku go\u015bciom w ciemnej alejce.",
+      "text": "Zrobienie dobrze kilku go\u015bciom w ciemnej alejce.",
       "pack": 0
     },
     {
@@ -29275,246 +29161,6 @@
     {
       "text": "Having to pee so bad.",
       "pack": 50
-    },
-    {
-      "text": "Test 0.",
-      "pack": 49
-    },
-    {
-      "text": "Test 1.",
-      "pack": 49
-    },
-    {
-      "text": "Test 2.",
-      "pack": 49
-    },
-    {
-      "text": "Test 3.",
-      "pack": 49
-    },
-    {
-      "text": "Test 4.",
-      "pack": 49
-    },
-    {
-      "text": "Test 5.",
-      "pack": 49
-    },
-    {
-      "text": "Test 6.",
-      "pack": 49
-    },
-    {
-      "text": "Test 7.",
-      "pack": 49
-    },
-    {
-      "text": "Test 8.",
-      "pack": 49
-    },
-    {
-      "text": "Test 9.",
-      "pack": 49
-    },
-    {
-      "text": "Test 10.",
-      "pack": 49
-    },
-    {
-      "text": "Test 11.",
-      "pack": 49
-    },
-    {
-      "text": "Test 12.",
-      "pack": 49
-    },
-    {
-      "text": "Test 13.",
-      "pack": 49
-    },
-    {
-      "text": "Test 14.",
-      "pack": 49
-    },
-    {
-      "text": "Test 15.",
-      "pack": 49
-    },
-    {
-      "text": "Test 16.",
-      "pack": 49
-    },
-    {
-      "text": "Test 17.",
-      "pack": 49
-    },
-    {
-      "text": "Test 18.",
-      "pack": 49
-    },
-    {
-      "text": "Test 19.",
-      "pack": 49
-    },
-    {
-      "text": "Test 20.",
-      "pack": 49
-    },
-    {
-      "text": "Test 21.",
-      "pack": 49
-    },
-    {
-      "text": "Test 22.",
-      "pack": 49
-    },
-    {
-      "text": "Test 23.",
-      "pack": 49
-    },
-    {
-      "text": "Test 24.",
-      "pack": 49
-    },
-    {
-      "text": "Test 25.",
-      "pack": 49
-    },
-    {
-      "text": "Test 26.",
-      "pack": 49
-    },
-    {
-      "text": "Test 27.",
-      "pack": 49
-    },
-    {
-      "text": "Test 28.",
-      "pack": 49
-    },
-    {
-      "text": "Test 29.",
-      "pack": 49
-    },
-    {
-      "text": "Test 30.",
-      "pack": 49
-    },
-    {
-      "text": "Test 31.",
-      "pack": 49
-    },
-    {
-      "text": "Test 32.",
-      "pack": 49
-    },
-    {
-      "text": "Test 33.",
-      "pack": 49
-    },
-    {
-      "text": "Test 34.",
-      "pack": 49
-    },
-    {
-      "text": "Test 35.",
-      "pack": 49
-    },
-    {
-      "text": "Test 36.",
-      "pack": 49
-    },
-    {
-      "text": "Test 37.",
-      "pack": 49
-    },
-    {
-      "text": "Test 38.",
-      "pack": 49
-    },
-    {
-      "text": "Test 39.",
-      "pack": 49
-    },
-    {
-      "text": "Test 40.",
-      "pack": 49
-    },
-    {
-      "text": "Test 41.",
-      "pack": 49
-    },
-    {
-      "text": "Test 42.",
-      "pack": 49
-    },
-    {
-      "text": "Test 43.",
-      "pack": 49
-    },
-    {
-      "text": "Test 44.",
-      "pack": 49
-    },
-    {
-      "text": "Test 45.",
-      "pack": 49
-    },
-    {
-      "text": "Test 46.",
-      "pack": 49
-    },
-    {
-      "text": "Test 47.",
-      "pack": 49
-    },
-    {
-      "text": "Test 48.",
-      "pack": 49
-    },
-    {
-      "text": "Test 49.",
-      "pack": 49
-    },
-    {
-      "text": "Test 50.",
-      "pack": 49
-    },
-    {
-      "text": "Test 51.",
-      "pack": 49
-    },
-    {
-      "text": "Test 52.",
-      "pack": 49
-    },
-    {
-      "text": "Test 53.",
-      "pack": 49
-    },
-    {
-      "text": "Test 54.",
-      "pack": 49
-    },
-    {
-      "text": "Test 55.",
-      "pack": 49
-    },
-    {
-      "text": "Test 56.",
-      "pack": 49
-    },
-    {
-      "text": "Test 57.",
-      "pack": 49
-    },
-    {
-      "text": "Test 58.",
-      "pack": 49
-    },
-    {
-      "text": "Test 59.",
-      "pack": 49
     }
   ]
 }

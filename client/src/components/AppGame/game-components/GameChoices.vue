@@ -209,6 +209,12 @@ function onTransEnd(e: TransitionEvent, idx: number) {
       cursor: pointer;
       transform: translate(20%, 20%);
 
+      user-select: none;
+      -moz-user-select: none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      -o-user-select: none;
+
       &__progress {
         position: absolute;
         background-color: colors.$green;

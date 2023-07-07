@@ -184,9 +184,17 @@ async function fetchPacks(query = "") {
   }
 }
 
+// todo: handle private & liked packs
 fetchPacks("liked=true")
 fetchPacks("author=official")
-fetchPacks(`owner=${user.value?.id}`) // todo: fetch leader packs
+if (leader.value) fetchPacks(`owner=${leader.value.userId}`)
+
+watch(
+  () => leader.value,
+  () => {
+    if (leader.value) fetchPacks(`owner=${leader.value.userId}`)
+  }
+)
 
 const likedPacks = computed(() => {
   return settingsApiPacks.value.filter(
@@ -194,8 +202,10 @@ const likedPacks = computed(() => {
   )
 })
 
-const myPacks = computed(() => {
-  return settingsApiPacks.value.filter(p => p.owner?.id === user.value?.id)
+const leaderPacks = computed(() => {
+  return settingsApiPacks.value.filter(
+    p => p.owner && p.owner.id === leader.value?.userId
+  )
 })
 
 const officialPacks = computed(() => {
@@ -435,9 +445,12 @@ onClickOutside(invitePlayersContent, () => {
           <div
             v-for="group in [
               { name: 'Liked packs', packs: likedPacks },
-              { name: 'My packs', packs: myPacks },
+              {
+                name: imLeader ? 'My packs' : 'Leader packs',
+                packs: leaderPacks
+              },
               { name: 'Official packs', packs: officialPacks }
-            ]"
+            ].filter(g => g.packs.length)"
             class="settings__main__options-row"
             :key="group.name"
           >
