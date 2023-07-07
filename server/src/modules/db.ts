@@ -11,7 +11,9 @@ import {
   ICONS_URL,
   MIN_TIME_BETWEEN_ANS_USER_RM,
   INACTIVITY_TIME,
-  StrategyIdentifier
+  StrategyIdentifier,
+  PROD,
+  SYNC_CARDS_ARGV
 } from "../consts"
 
 import logger from "./logger"
@@ -107,6 +109,8 @@ class Database extends PrismaClient {
   }
 
   async syncIcons() {
+    if (!PROD && (await db.icon.count())) return
+
     logger.info("Syncing icons")
 
     const res = await get(ICONS_URL)
@@ -129,67 +133,145 @@ class Database extends PrismaClient {
     })
   }
 
+  private filePackToDbPack(pack: (typeof cards.packs)[number]) {
+    const blackCards = cards.black.filter(c => c.pack === pack.id)
+    const whiteCards = cards.white.filter(c => c.pack === pack.id)
+
+    return {
+      id: pack.id.toString(),
+      name: pack.name,
+      official: true,
+      type: { connect: { id: pack.type } },
+      bundle:
+        pack.bundle === undefined
+          ? undefined
+          : { connect: { id: pack.bundle } },
+      tags: { connect: pack.tags?.map(t => ({ id: t })) ?? [] },
+      color: pack.color,
+      icon: pack.icon,
+      numberOfCards: blackCards.length + whiteCards.length,
+      blackCards: {
+        create: blackCards.map(c => ({
+          text: c.text,
+          draw: c.draw,
+          pick: c.pick
+        }))
+      },
+      whiteCards: { create: whiteCards.map(c => ({ text: c.text })) }
+    }
+  }
+
   async syncCards() {
-    const numOfTypes = await this.cardPackType.count()
-    const numOfBundles = await this.cardPackBundle.count()
-    const numOfTags = await this.cardPackTag.count()
-    const numOfPacks = await this.cardPack.count()
-    const numOfBlackCards = await this.blackCard.count()
-    const numOfWhiteCards = await this.whiteCard.count()
-
-    if (
-      numOfTypes === cards.types.length &&
-      numOfBundles === cards.bundles.length &&
-      numOfTags === cards.tags.length &&
-      numOfPacks === cards.packs.length &&
-      numOfBlackCards === cards.black.length &&
-      numOfWhiteCards === cards.white.length
-    )
-      return
-
-    return // todo: improve card syncing
+    if (!PROD && !process.argv.includes(SYNC_CARDS_ARGV)) return
 
     logger.info("Syncing cards")
 
-    await this.blackCard.deleteMany()
-    await this.whiteCard.deleteMany()
-    await this.cardPack.deleteMany()
-    await this.cardPackType.deleteMany()
-    await this.cardPackBundle.deleteMany()
-    await this.cardPackTag.deleteMany()
+    // SYNC TYPES
+    const existingTypeIds = (
+      await db.cardPackType.findMany({
+        select: { id: true }
+      })
+    ).map(t => t.id)
 
-    await this.cardPackType.createMany({ data: cards.types })
-    await this.cardPackBundle.createMany({ data: cards.bundles })
-    await this.cardPackTag.createMany({ data: cards.tags })
+    for (const typ of cards.types) {
+      const { id } = typ
+
+      if (existingTypeIds.includes(id)) {
+        await db.cardPackType.update({ where: { id }, data: typ })
+      } else {
+        await db.cardPackType.create({ data: typ })
+      }
+    }
+
+    await db.cardPack.updateMany({
+      where: { typeId: { notIn: cards.types.map(t => t.id) } },
+      data: { typeId: cards.types[0].id }
+    })
+
+    await this.cardPackType.deleteMany({
+      where: { id: { notIn: cards.types.map(t => t.id) } }
+    })
+
+    // SYNC BUNDLES
+    const existingBundleIds = (
+      await db.cardPackBundle.findMany({
+        select: { id: true }
+      })
+    ).map(b => b.id)
+
+    for (const bun of cards.bundles) {
+      const { id } = bun
+
+      if (existingBundleIds.includes(id)) {
+        await db.cardPackBundle.update({ where: { id }, data: bun })
+      } else {
+        await db.cardPackBundle.create({ data: bun })
+      }
+    }
+
+    await db.cardPack.updateMany({
+      where: { bundleId: { notIn: cards.bundles.map(b => b.id) } },
+      data: { bundleId: null }
+    })
+
+    await this.cardPackBundle.deleteMany({
+      where: { id: { notIn: cards.bundles.map(b => b.id) } }
+    })
+
+    // SYNC TAGS
+    await this.cardPackTag.deleteMany({
+      where: { id: { notIn: cards.tags.map(t => t.id) } }
+    })
+
+    const existingTagIds = (
+      await db.cardPackTag.findMany({
+        select: { id: true }
+      })
+    ).map(t => t.id)
+
+    for (const tag of cards.tags) {
+      const { id } = tag
+
+      if (existingTagIds.includes(id)) {
+        await db.cardPackTag.update({ where: { id }, data: tag })
+      } else {
+        await db.cardPackTag.create({ data: tag })
+      }
+    }
+
+    // DELETE
+    await db.cardPack.deleteMany({
+      where: {
+        id: { notIn: cards.packs.map(p => p.id.toString()) },
+        official: true // make sure NO USERS PACK ARE DELETED
+      }
+    })
+
+    // CREATE & UPDATE
+    const existingPackIds = (
+      await db.cardPack.findMany({
+        where: { official: true },
+        select: { id: true }
+      })
+    ).map(p => p.id)
 
     for (const pack of cards.packs) {
-      const blackCards = cards.black.filter(c => c.pack === pack.id)
-      const whiteCards = cards.white.filter(c => c.pack === pack.id)
+      const id = pack.id.toString()
+      const data = this.filePackToDbPack(pack)
 
-      await this.cardPack.create({
-        data: {
-          id: pack.id.toString(),
-          name: pack.name,
-          official: true,
-          type: { connect: { id: pack.type } },
-          bundle:
-            pack.bundle === undefined
-              ? undefined
-              : { connect: { id: pack.bundle } },
-          tags: { connect: pack.tags?.map(t => ({ id: t })) ?? [] },
-          color: pack.color,
-          icon: pack.icon,
-          numberOfCards: blackCards.length + whiteCards.length,
-          blackCards: {
-            create: blackCards.map(c => ({
-              text: c.text,
-              draw: c.draw,
-              pick: c.pick
-            }))
-          },
-          whiteCards: { create: whiteCards.map(c => ({ text: c.text })) }
-        }
-      })
+      if (existingPackIds.includes(id)) {
+        await this.cardPack.update({
+          where: { id },
+          data: {
+            blackCards: { deleteMany: {} },
+            whiteCards: { deleteMany: {} }
+          }
+        })
+
+        await this.cardPack.update({ where: { id }, data })
+      } else {
+        await this.cardPack.create({ data })
+      }
     }
   }
 

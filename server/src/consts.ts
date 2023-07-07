@@ -1,5 +1,8 @@
 import type { SettingsBoundaries } from "./types"
 
+export const PROD = process.env.NODE_ENV === "production"
+export const SYNC_CARDS_ARGV = "-c"
+
 export const CARD_COLORS = ["black", "white"] as const
 
 export const ICONS_URL = "https://cdn.jsdelivr.net/npm/@mdi/svg/meta.json"
