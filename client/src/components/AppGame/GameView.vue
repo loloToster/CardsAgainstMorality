@@ -93,6 +93,7 @@ function onCardPick(cardId: number) {
   state.showedCard = -1
 
   if (
+    !gameState.blackCard.pick ||
     gameState.pickedCards.length >= gameState.blackCard.pick ||
     gameState.stage !== GameStage.CHOOSING ||
     gameState.imTsar
@@ -289,7 +290,7 @@ function onCardsScroll(e: WheelEvent) {
             @choose="i => $emit('verdict', i)"
             :active-idx="gameState.activeChoiceIdx"
             :num-of-choices="gameState.choices.length"
-            :num-of-cards="gameState.blackCard.pick"
+            :num-of-cards="gameState.blackCard.pick ?? 1"
             :choosable="gameState.imTsar"
           />
           <div v-else class="game__submit">
