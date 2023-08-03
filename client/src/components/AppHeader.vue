@@ -65,7 +65,14 @@ const nonAnonymousUser = computed(() => {
         >
           <div class="header__profile-menu__details">
             <UserAvatar :user="user.value" />
-            <span>{{ user.value.name }}</span>
+            <div>
+              <div class="header__profile-menu__display-name">
+                {{ user.value.displayName }}
+              </div>
+              <div class="header__profile-menu__username">
+                @{{ user.value.username }}
+              </div>
+            </div>
           </div>
           <div
             v-if="nonAnonymousUser"
@@ -310,12 +317,17 @@ const nonAnonymousUser = computed(() => {
         border-radius: 50%;
       }
 
-      span {
+      div {
         overflow: hidden;
         text-overflow: ellipsis;
         font-weight: bold;
         white-space: nowrap;
       }
+    }
+
+    &__username {
+      font-size: 0.75rem;
+      color: colors.$lightgray;
     }
 
     &__btn {

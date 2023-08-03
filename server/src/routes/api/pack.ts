@@ -66,7 +66,7 @@ router.get("/:id", async (req, res) => {
       likedBy: foundPack._count.likedBy,
       liked,
       owner: foundPack.owner
-        ? { id: foundPack.owner.id, name: foundPack.owner.name }
+        ? { id: foundPack.owner.id, name: foundPack.owner.displayName }
         : undefined
     }
     : null

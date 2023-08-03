@@ -11,7 +11,8 @@ router.get("/me", (req, res) => {
 
   const user: ApiUser = {
     id: req.user.id,
-    name: req.user.name,
+    username: req.user.username,
+    displayName: req.user.displayName,
     picture: req.user.picture,
     anonymous: req.user.strategyId.startsWith(StrategyIdentifier.Anonymous)
   }

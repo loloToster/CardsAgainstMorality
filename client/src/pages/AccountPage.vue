@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { reactive } from "vue"
+import { reactive, ref } from "vue"
 import { useRouter, RouterLink } from "vue-router"
+import { AxiosError } from "axios"
 
 import api from "@/utils/api"
 import { TITLE } from "@/consts"
@@ -12,15 +13,17 @@ import AppModal from "@/components/AppModal.vue"
 import UserAvatar from "@/components/UserAvatar.vue"
 import AppButton from "@/components/AppButton.vue"
 
+// TODO: handle not loaded user
+
 const DELETE_VERIFICATION = "delete my account"
 
 const router = useRouter()
 
 const state = reactive({
   deletingPicture: false,
-  username: "",
+  username: user.value?.username || "",
   usernameError: "",
-  displayName: user.value?.name || "",
+  displayName: user.value?.displayName || "",
   saveSettingsEnabled: false,
   savingSettings: false,
   deleteAccountModalActive: false,
@@ -76,28 +79,47 @@ async function handlePictureDelete() {
   }
 }
 
+const usernameInp = ref<HTMLInputElement>()
+
+function handleUsernameInpChange() {
+  state.usernameError = ""
+  state.saveSettingsEnabled = true
+}
+
 async function handleSettingsSave() {
   if (!user.value) return
+
+  if (state.username.length < MIN_USERNAME_LEN) {
+    state.usernameError = `Must be between ${MIN_USERNAME_LEN} and ${MAX_USERNAME_LEN} in length.`
+    usernameInp.value?.focus()
+    return
+  }
 
   state.savingSettings = true
 
   try {
-    await api.patch("/api/user", {
+    const res = await api.patch("/api/user", {
       username: state.username,
       displayName: state.displayName
     })
 
     state.saveSettingsEnabled = false
-    user.value.name = state.displayName
+
+    state.username = res.data.username
+    state.displayName = res.data.displayName
+    user.value.username = res.data.username
+    user.value.displayName = res.data.displayName
 
     notify({ type: "success", text: "Successfully updated profile" })
   } catch (err) {
-    console.error(err)
-
-    notify({
-      type: "error",
-      text: "Something went wrong while updating profile"
-    })
+    if (err instanceof AxiosError && err.response?.status === 409) {
+      state.usernameError = "This username is already taken."
+    } else {
+      notify({
+        type: "error",
+        text: "Something went wrong while updating profile"
+      })
+    }
   } finally {
     state.savingSettings = false
   }
@@ -169,13 +191,17 @@ async function handleSettingsSave() {
           <div class="account__settings__row__content">
             <input
               v-model="state.username"
-              @input="state.saveSettingsEnabled = true"
+              ref="usernameInp"
+              @input="handleUsernameInpChange"
+              :class="{ error: state.usernameError }"
               :disabled="state.savingSettings"
               :minlength="MIN_USERNAME_LEN"
               :maxlength="MAX_USERNAME_LEN"
               type="text"
             />
-            <div>You may update your username</div>
+            <div :class="{ error: state.usernameError }">
+              {{ state.usernameError || "You may update your username" }}
+            </div>
           </div>
         </div>
         <div class="account__settings__row">
@@ -231,6 +257,10 @@ input {
   &:focus {
     outline: 3px solid colors.$primary;
     outline-offset: -1px;
+  }
+
+  &:focus.error {
+    outline-color: colors.$error;
   }
 }
 
@@ -315,6 +345,10 @@ input {
         div {
           margin-top: 8px;
           color: colors.$subtext;
+
+          &.error {
+            color: colors.$error;
+          }
         }
       }
     }

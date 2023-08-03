@@ -2,7 +2,7 @@
 import DefaultAvatar from "@/assets/default-avatar.png"
 import { User } from "@/types/user"
 
-defineProps<{ user?: Partial<User> | null }>()
+defineProps<{ user?: (Partial<User> & { name?: string }) | null }>()
 defineEmits(["click"])
 </script>
 
@@ -10,7 +10,9 @@ defineEmits(["click"])
   <img
     @click="$emit('click')"
     :src="user?.picture ? user.picture : DefaultAvatar"
-    :alt="`${user?.name ?? 'Anonymous'}'s avatar`"
+    :alt="`${
+      user?.displayName ?? user?.name ?? user?.username ?? 'Anonymous'
+    }'s avatar`"
   />
 </template>
 

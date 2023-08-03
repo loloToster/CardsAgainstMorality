@@ -78,10 +78,10 @@ export default () => {
 
       const strategyId = StrategyIdentifier.Anonymous
 
-      const name = uniqueNamesGenerator(uniqueNamesConfig)
+      const displayName = uniqueNamesGenerator(uniqueNamesConfig)
 
       const user = await db.user.create({
-        data: { name, strategyId, lastUsed: new Date() }
+        data: { displayName, strategyId, lastUsed: new Date() }
       })
 
       done(null, user)
@@ -101,6 +101,7 @@ export default () => {
 
         let user = await db.user.findFirst({ where: { strategyId } })
 
+        // TODO: update picture in all strategies
         if (user) {
           await db.user.update({
             where: { id: user.id },
@@ -109,7 +110,7 @@ export default () => {
         } else {
           user = await db.user.create({
             data: {
-              name: profile.displayName,
+              displayName: profile.displayName,
               strategyId,
               picture: profile._json.picture
             }
@@ -137,7 +138,7 @@ export default () => {
         if (!user) {
           user = await db.user.create({
             data: {
-              name: profile.username,
+              displayName: profile.username,
               strategyId,
               picture: profile.avatar
                 ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
@@ -167,7 +168,7 @@ export default () => {
         if (!user) {
           user = await db.user.create({
             data: {
-              name: profile.displayName,
+              displayName: profile.displayName,
               strategyId,
               picture: profile.photos?.at(0)?.value
             }

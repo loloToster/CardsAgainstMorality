@@ -8,13 +8,14 @@ datasource db {
 }
 
 model User {
-  id         Int        @id @default(autoincrement())
-  name       String
-  picture    String?
-  lastUsed   DateTime?  @map("last_used")
-  strategyId String     @map("strategy_id")
-  likedPacks CardPack[] @relation("likes")
-  packs      CardPack[] @relation("owns")
+  id          Int        @id @default(autoincrement())
+  username    String     @unique @default(cuid())
+  displayName String     @map("display_name")
+  picture     String?
+  lastUsed    DateTime?  @map("last_used")
+  strategyId  String     @map("strategy_id")
+  likedPacks  CardPack[] @relation("likes")
+  packs       CardPack[] @relation("owns")
 
   @@map("users")
 }

@@ -92,7 +92,7 @@ router.get("/", async (req, res) => {
       owner: {
         select: {
           id: true,
-          name: true
+          displayName: true
         }
       },
       _count: {
@@ -126,7 +126,9 @@ router.get("/", async (req, res) => {
           numOfWhites: p._count.whiteCards,
           likedBy: p._count.likedBy,
           liked: liked ? true : undefined,
-          owner: p.owner ?? undefined
+          owner: p.owner
+            ? { id: p.owner.id, name: p.owner.displayName }
+            : undefined
         } satisfies ApiCardPack)
     )
   })

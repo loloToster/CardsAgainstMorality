@@ -1,6 +1,7 @@
 export interface ApiUser {
   id: number
-  name: string
+  username: string
+  displayName: string
   picture: string | null
   anonymous: boolean
 }

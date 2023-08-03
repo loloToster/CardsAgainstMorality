@@ -40,10 +40,10 @@ router.get("/", async (req, res) => {
       name: room.name,
       started,
       leaderAvatar: leader?.metadata?.user.picture,
-      leaderName: leader?.metadata?.user.name || "???",
+      leaderName: leader?.metadata?.user.displayName || "???",
       players: room.game.players
         .filter(p => p !== leader)
-        .map(p => p.metadata?.user.name || "???"),
+        .map(p => p.metadata?.user.displayName || "???"),
       maxPlayers: room.playersLimit,
       packs: started
         ? allPacks.filter(p => selectedPacks.includes(p.id)).map(p => p.name)

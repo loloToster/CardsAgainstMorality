@@ -1,4 +1,5 @@
 import express from "express"
+import { Prisma } from "@prisma/client"
 import db from "../../modules/db"
 import { nonAnonymousMiddleware } from "../../middleware/non-anonymous"
 import { validateDto } from "../../utils"
@@ -9,15 +10,28 @@ const router = express.Router()
 router.use(nonAnonymousMiddleware)
 
 router.patch("/", async (req, res) => {
-  const userModifications = await validateDto(UpdateUserDto, req.body)
+  let { username, displayName } = await validateDto(UpdateUserDto, req.body)
 
-  await db.user.update({
-    where: { id: req.user?.id },
-    // todo: username
-    data: { name: userModifications.displayName }
-  })
+  displayName = displayName || username
+  username = username.toLowerCase()
 
-  res.send()
+  try {
+    await db.user.update({
+      where: { id: req.user?.id },
+      data: { username, displayName }
+    })
+  } catch (err) {
+    if (
+      err instanceof Prisma.PrismaClientKnownRequestError &&
+      err.code === "P2002"
+    ) {
+      return res.status(409).send()
+    }
+
+    throw err
+  }
+
+  res.json({ username, displayName })
 })
 
 router.delete("/", async (req, res) => {

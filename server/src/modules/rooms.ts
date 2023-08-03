@@ -315,7 +315,7 @@ export class Room {
           for: [player],
           against,
           createdAt: Date.now(),
-          createdBy: player.metadata?.user.name ?? ""
+          createdBy: player.metadata?.user.displayName ?? ""
         }
 
         clearTimeout(this.votingTimeout)
@@ -435,7 +435,7 @@ export class Room {
 
     const players = this.game.players.map(p => ({
       userId: p.metadata?.user.id ?? -1,
-      name: p.metadata?.user.name ?? "Unknown",
+      name: p.metadata?.user.displayName ?? "Unknown",
       picture: p.metadata?.user.picture ?? "",
       leader: leader === p,
       connected: p.metadata?.connected ?? false,
@@ -517,7 +517,7 @@ export class Room {
       )) as ApiWhiteCard[]
 
       prevRound = {
-        winner: winnerData.winner.metadata?.user.name ?? "Unknown",
+        winner: winnerData.winner.metadata?.user.displayName ?? "Unknown",
         blackCard: prevRoundBlack,
         winningCards,
         imWinner: false,
@@ -667,7 +667,7 @@ export class Room {
       podium: podium.map((pel, i) => ({
         id: pel.metadata?.user.id ?? -1,
         place: i + 1,
-        name: pel.metadata?.user.name || "?",
+        name: pel.metadata?.user.displayName || "?",
         picture: pel.metadata?.user.picture || "",
         points: pel.points
       }))
