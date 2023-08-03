@@ -2,7 +2,7 @@
 import DefaultAvatar from "@/assets/default-avatar.png"
 import { User } from "@/types/user"
 
-defineProps<{ user?: Partial<User> }>()
+defineProps<{ user?: Partial<User> | null }>()
 defineEmits(["click"])
 </script>
 

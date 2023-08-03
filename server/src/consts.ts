@@ -19,6 +19,9 @@ export enum StrategyIdentifier {
   Facebook = "fcb"
 }
 
+export const MIN_USERNAME_LEN = 2
+export const MAX_USERNAME_LEN = 32
+
 export const MAX_PACK_NAME_LEN = 32
 export const MAX_PACK_TAGS = 6
 

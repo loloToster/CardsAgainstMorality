@@ -4,7 +4,6 @@ import { verify as captcha } from "hcaptcha"
 import {
   adjectives,
   animals,
-  colors,
   uniqueNamesGenerator,
   Config as UniqueNamesConfig
 } from "unique-names-generator"
@@ -22,7 +21,6 @@ import { StrategyIdentifier } from "../consts"
 const uniqueNamesConfig: UniqueNamesConfig = {
   dictionaries: [
     adjectives,
-    colors,
     animals,
     [...Array(10000).keys()].map(n => ("0000" + n).slice(-4))
   ],
@@ -103,7 +101,12 @@ export default () => {
 
         let user = await db.user.findFirst({ where: { strategyId } })
 
-        if (!user) {
+        if (user) {
+          await db.user.update({
+            where: { id: user.id },
+            data: { picture: profile._json.picture }
+          })
+        } else {
           user = await db.user.create({
             data: {
               name: profile.displayName,

@@ -14,6 +14,7 @@ import HomePage from "./pages/HomePage.vue"
 import NotFoundPage from "./pages/NotFoundPage.vue"
 
 const LoginPage = () => import("./pages/LoginPage.vue")
+const AccountPage = () => import("./pages/AccountPage.vue")
 const RoomPage = () => import("./pages/RoomPage.vue")
 const RoomsPage = () => import("./pages/RoomsPage.vue")
 const PacksPage = () => import("./pages/PacksPage.vue")
@@ -30,6 +31,7 @@ const router = createRouter({
       name: "Login",
       meta: { hideHeader: true }
     },
+    { path: "/account", component: AccountPage, name: "My Account" },
     { path: "/rooms", component: RoomsPage, name: "Rooms" },
     { path: "/room/:id?", component: RoomPage, name: "Room" },
     {
