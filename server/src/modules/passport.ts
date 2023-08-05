@@ -88,6 +88,36 @@ export default () => {
     })
   )
 
+  async function handleStrategy(
+    strategyPrefix: StrategyIdentifier,
+    id: string,
+    displayName: string,
+    picture: string | undefined | null,
+    done: (err?: Error | null, user?: Express.User) => void
+  ) {
+    const strategyId = `${strategyPrefix}-${id}`
+
+    let user = await db.user.findFirst({ where: { strategyId } })
+
+    if (user) {
+      // todo: update picture only if user wants to
+      await db.user.update({
+        where: { id: user.id },
+        data: { picture }
+      })
+    } else {
+      user = await db.user.create({
+        data: {
+          displayName,
+          strategyId,
+          picture
+        }
+      })
+    }
+
+    done(null, user)
+  }
+
   passport.use(
     new GoogleStrategy(
       {
@@ -97,27 +127,13 @@ export default () => {
         scope: ["profile", "email"]
       },
       async (at, rt, profile, done) => {
-        const strategyId = `${StrategyIdentifier.Google}-${profile.id}`
-
-        let user = await db.user.findFirst({ where: { strategyId } })
-
-        // TODO: update picture in all strategies
-        if (user) {
-          await db.user.update({
-            where: { id: user.id },
-            data: { picture: profile._json.picture }
-          })
-        } else {
-          user = await db.user.create({
-            data: {
-              displayName: profile.displayName,
-              strategyId,
-              picture: profile._json.picture
-            }
-          })
-        }
-
-        done(null, user)
+        await handleStrategy(
+          StrategyIdentifier.Google,
+          profile.id,
+          profile.displayName,
+          profile._json.picture,
+          done
+        )
       }
     )
   )
@@ -131,23 +147,13 @@ export default () => {
         scope: ["identify", "email"]
       },
       async (at, rt, profile, done) => {
-        const strategyId = `${StrategyIdentifier.Discord}-${profile.id}`
-
-        let user = await db.user.findFirst({ where: { strategyId } })
-
-        if (!user) {
-          user = await db.user.create({
-            data: {
-              displayName: profile.username,
-              strategyId,
-              picture: profile.avatar
-                ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
-                : undefined
-            }
-          })
-        }
-
-        done(null, user)
+        await handleStrategy(
+          StrategyIdentifier.Discord,
+          profile.id,
+          profile.username,
+          `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`,
+          done
+        )
       }
     )
   )
@@ -161,21 +167,13 @@ export default () => {
         profileFields: ["id", "displayName", "picture.type(large)"]
       },
       async (at, rt, profile, done) => {
-        const strategyId = `${StrategyIdentifier.Facebook}-${profile.id}`
-
-        let user = await db.user.findFirst({ where: { strategyId } })
-
-        if (!user) {
-          user = await db.user.create({
-            data: {
-              displayName: profile.displayName,
-              strategyId,
-              picture: profile.photos?.at(0)?.value
-            }
-          })
-        }
-
-        done(null, user)
+        await handleStrategy(
+          StrategyIdentifier.Facebook,
+          profile.id,
+          profile.displayName,
+          profile.photos?.at(0)?.value,
+          done
+        )
       }
     )
   )
