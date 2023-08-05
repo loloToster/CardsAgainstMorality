@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, reactive } from "vue"
+import { useHead } from "@unhead/vue"
 import { RouterLink, useRoute } from "vue-router"
 import HCaptcha from "@hcaptcha/vue3-hcaptcha"
 
@@ -14,6 +15,8 @@ import PlayingCard from "@/components/PlayingCard.vue"
 import CaptchaImg from "@/assets/captcha.png"
 
 const CAPTCHA_SITEKEY = import.meta.env.VITE_CAPTCHA_SITEKEY
+
+useHead({ title: "Login" })
 
 const route = useRoute()
 

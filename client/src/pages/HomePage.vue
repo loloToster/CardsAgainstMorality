@@ -1,10 +1,23 @@
 <script setup lang="ts">
+import { useHead } from "@unhead/vue"
+
 import { TITLE } from "@/consts"
 
 import HomeLanding from "@/components/HomePage/HomeLanding.vue"
 import HomeAbout from "@/components/HomePage/HomeAbout.vue"
 import HomeVariety from "@/components/HomePage/HomeVariety.vue"
 import HomeCustom from "@/components/HomePage/HomeCustom.vue"
+
+useHead({
+  title: "Home",
+  meta: [
+    {
+      name: "description",
+      content:
+        "The best online Cards Against Humanity experience. Play Cards Against Humanity online with your friends!"
+    }
+  ]
+})
 </script>
 
 <template>

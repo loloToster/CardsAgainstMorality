@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from "vue"
+import { useHead } from "@unhead/vue"
 import { onClickOutside } from "@vueuse/core"
 
 import api from "@/utils/api"
@@ -37,6 +38,13 @@ const leader = computed(() => {
 const imLeader = computed(() => {
   return leader.value?.userId === user.value?.id
 })
+
+const defaultRoomName = computed(() => {
+  return `${leader.value?.name}'s Room`
+})
+
+// todo: move higher in component tree
+useHead({ title: () => gameSettingsState.roomName || defaultRoomName.value })
 
 const emit = defineEmits<{
   (e: "start", data: SettingsData): void
@@ -280,7 +288,7 @@ onClickOutside(invitePlayersContent, () => {
           <div class="settings__main__options-row">
             <input
               v-model="gameSettingsState.roomName"
-              :placeholder="`${leader?.name}'s Room`"
+              :placeholder="defaultRoomName"
               :disabled="!imLeader"
               class="settings__main__room-name"
               type="text"

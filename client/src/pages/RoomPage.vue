@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onBeforeMount, watch } from "vue"
+import { useHead } from "@unhead/vue"
 import { useRouter, useRoute } from "vue-router"
 
 import api from "@/utils/api"
@@ -7,6 +8,8 @@ import { user } from "@/contexts/user"
 
 import AppGame from "@/components/AppGame/AppGame.vue"
 import AppLoading from "@/components/AppLoading.vue"
+
+useHead({ title: "Room" })
 
 const router = useRouter()
 const route = useRoute()

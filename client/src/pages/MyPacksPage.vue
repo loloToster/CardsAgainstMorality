@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { reactive } from "vue"
+import { useHead } from "@unhead/vue"
 import { useRouter } from "vue-router"
 
 import type { ApiCardPack } from "@backend/types"
@@ -11,6 +12,8 @@ import AppLoading from "@/components/AppLoading.vue"
 import AppError from "@/components/AppError.vue"
 import PackList from "@/components/PackList.vue"
 import AppButton from "@/components/AppButton.vue"
+
+useHead({ title: "My Packs" })
 
 const router = useRouter()
 

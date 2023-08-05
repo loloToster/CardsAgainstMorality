@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue"
+import { useHead } from "@unhead/vue"
 import { useRouter, RouterLink } from "vue-router"
 import { AxiosError } from "axios"
 
@@ -16,6 +17,8 @@ import AppButton from "@/components/AppButton.vue"
 // TODO: handle not loaded user
 
 const DELETE_VERIFICATION = "delete my account"
+
+useHead({ title: "My Account" })
 
 const router = useRouter()
 

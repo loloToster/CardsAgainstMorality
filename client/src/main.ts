@@ -1,4 +1,5 @@
-import { createApp, nextTick } from "vue"
+import { createApp } from "vue"
+import { createHead } from "@unhead/vue"
 import { createRouter, createWebHistory } from "vue-router"
 import VWave from "v-wave"
 import { VTooltip } from "floating-vue"
@@ -21,49 +22,53 @@ const PacksPage = () => import("./pages/PacksPage.vue")
 const MyPacksPage = () => import("./pages/MyPacksPage.vue")
 const PackPage = () => import("./pages/PackPage.vue")
 
+const head = createHead()
+
+head.use({
+  hooks: {
+    "dom:beforeRenderTag": ctx => {
+      if (ctx.tag.tag !== "title" || !ctx.tag.textContent) return
+
+      ctx.tag.textContent =
+        window.location.pathname !== "/"
+          ? `${ctx.tag.textContent} - ${TITLE}`
+          : TITLE
+    }
+  }
+})
+
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: "/", component: HomePage, name: "Home" },
+    { path: "/", component: HomePage },
     {
       path: "/login",
       component: LoginPage,
-      name: "Login",
       meta: { hideHeader: true }
     },
-    { path: "/account", component: AccountPage, name: "My Account" },
-    { path: "/rooms", component: RoomsPage, name: "Rooms" },
-    { path: "/room/:id?", component: RoomPage, name: "Room" },
+    { path: "/account", component: AccountPage },
+    { path: "/rooms", component: RoomsPage },
+    { path: "/room/:id?", component: RoomPage },
     {
       path: "/packs",
-      component: PacksPage,
-      name: "Card Packs"
+      component: PacksPage
     },
     {
       path: "/my-packs",
-      component: MyPacksPage,
-      name: "My Card Packs"
+      component: MyPacksPage
     },
     {
       path: "/pack/:id",
-      component: PackPage,
-      name: "Card Pack"
+      component: PackPage
     },
-    { path: "/:pathMatch(.*)*", component: NotFoundPage, name: "Not Found" }
+    { path: "/:pathMatch(.*)*", component: NotFoundPage }
   ]
 })
-
-// https://stackoverflow.com/a/51640162/15331983
-router.afterEach(to =>
-  nextTick(() => {
-    document.title =
-      to.path === "/" || !to.name ? TITLE : `${to.name.toString()} - ${TITLE}`
-  })
-)
 
 const app = createApp(App)
 
 app.use(router)
+app.use(head)
 app.use(VWave, {})
 app.directive("tooltip", VTooltip)
 

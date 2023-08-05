@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue"
+import { useHead } from "@unhead/vue"
 import { RouterLink, useRoute, useRouter } from "vue-router"
 import { useScroll } from "@vueuse/core"
 import Color from "color"
@@ -62,6 +63,8 @@ const state = reactive<{
   deleteModalOpen: false,
   deleting: false
 })
+
+useHead({ title: () => state.pack?.name || "Card Pack" })
 
 // TODO: add pagination
 async function fetchCards(id: number) {

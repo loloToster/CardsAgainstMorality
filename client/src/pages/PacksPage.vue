@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue"
+import { useHead } from "@unhead/vue"
 import { useRouter, useRoute } from "vue-router"
 import { onClickOutside } from "@vueuse/core"
 
@@ -19,6 +20,8 @@ import AppError from "@/components/AppError.vue"
 import AppButton from "@/components/AppButton.vue"
 import AppChip from "@/components/AppChip.vue"
 import PackList from "@/components/PackList.vue"
+
+useHead({ title: "Card Packs" })
 
 const router = useRouter()
 const route = useRoute()

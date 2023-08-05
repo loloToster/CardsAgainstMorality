@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import { useHead } from "@unhead/vue"
 import { TITLE } from "@/consts"
 import PlayingCard from "@/components/PlayingCard.vue"
+
+useHead({ title: "Not Found" })
 </script>
 
 <template>

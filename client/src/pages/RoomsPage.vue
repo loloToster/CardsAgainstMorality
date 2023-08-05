@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive } from "vue"
+import { useHead } from "@unhead/vue"
 import { RouterLink } from "vue-router"
 import { Tooltip } from "floating-vue"
 
@@ -10,6 +11,8 @@ import AppLoading from "@/components/AppLoading.vue"
 import AppError from "@/components/AppError.vue"
 import UserAvatar from "@/components/UserAvatar.vue"
 import AppButton from "@/components/AppButton.vue"
+
+useHead({ title: "Rooms" })
 
 const MAX_PACKS = 6
 
