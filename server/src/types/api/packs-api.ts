@@ -1,4 +1,5 @@
 import { ApiWhiteCard } from "./game-api"
+import { ApiUser } from "./user-api"
 import { CARD_COLORS } from "../../consts"
 
 interface IdWithName {
@@ -37,10 +38,7 @@ export interface ApiCardPack extends ApiCardPackRichEditableDetails {
   numOfWhites: number
   likedBy: number
   liked?: boolean
-  owner?: {
-    id: number
-    name: string
-  }
+  owner?: ApiUser
 }
 
 export interface SearchCriteria {

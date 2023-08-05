@@ -172,7 +172,7 @@ useResizeObserver(document.body, () => {
       <div
         v-for="player in gameState.players"
         class="players__player"
-        :key="player.userId"
+        :key="player.user.id"
       >
         <div class="players__player__avatar">
           <svg
@@ -216,11 +216,11 @@ useResizeObserver(document.body, () => {
               />
             </g>
           </svg>
-          <UserAvatar :user="player" class="header__avatar" />
+          <UserAvatar :user="player.user" class="header__avatar" />
           <div class="players__player__points">{{ player.points }}</div>
         </div>
         <div class="players__player__name-wrapper">
-          <div class="players__player__name">{{ player.name }}</div>
+          <div class="players__player__name">{{ player.user.displayName }}</div>
           <div v-if="player.leader" class="players__player__leader">
             Room Leader
           </div>

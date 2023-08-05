@@ -5,10 +5,13 @@ import { MIN_DRAW, MIN_PICK } from "../../consts"
 
 import db from "../../modules/db"
 
+import { nonAnonymousMiddleware } from "../../middleware/non-anonymous"
+
+import { validateDto } from "../../utils"
 import { PackDetailsDto } from "../../dtos/api/pack-details.dto"
 import { CreateCardDto } from "../../dtos/api/create-card.dto"
-import { nonAnonymousMiddleware } from "../../middleware/non-anonymous"
-import { validateDto } from "../../utils"
+
+import { userToApiUser } from "../../utils/transformers"
 import { sanitizeCardContent } from "../../utils/sanitize"
 
 const router = Router()
@@ -65,9 +68,7 @@ router.get("/:id", async (req, res) => {
       numOfWhites: foundPack._count.whiteCards,
       likedBy: foundPack._count.likedBy,
       liked,
-      owner: foundPack.owner
-        ? { id: foundPack.owner.id, name: foundPack.owner.displayName }
-        : undefined
+      owner: foundPack.owner ? userToApiUser(foundPack.owner) : undefined
     }
     : null
 

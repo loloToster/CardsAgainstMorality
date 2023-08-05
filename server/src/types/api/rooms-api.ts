@@ -1,9 +1,10 @@
+import { ApiUser } from "./user-api"
+
 export interface ApiRoom {
   id: string
   name: string
   started: boolean
-  leaderAvatar: string | null | undefined
-  leaderName: string
+  leader: ApiUser
   // players without leader
   players: string[]
   maxPlayers: number

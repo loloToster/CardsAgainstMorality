@@ -6,6 +6,7 @@ import type {
   SearchCriteria,
   SortType
 } from "../../types"
+import { userToApiUser } from "../../utils/transformers"
 import { getRandomInt } from "../../utils/random"
 
 const POS_INT_REGEX = /^\d+$/
@@ -89,12 +90,7 @@ router.get("/", async (req, res) => {
       type: true,
       bundle: true,
       tags: true,
-      owner: {
-        select: {
-          id: true,
-          displayName: true
-        }
-      },
+      owner: true,
       _count: {
         select: {
           blackCards: true,
@@ -126,9 +122,7 @@ router.get("/", async (req, res) => {
           numOfWhites: p._count.whiteCards,
           likedBy: p._count.likedBy,
           liked: liked ? true : undefined,
-          owner: p.owner
-            ? { id: p.owner.id, name: p.owner.displayName }
-            : undefined
+          owner: p.owner ? userToApiUser(p.owner) : undefined
         } satisfies ApiCardPack)
     )
   })

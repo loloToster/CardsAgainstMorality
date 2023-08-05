@@ -1,7 +1,7 @@
+import { ApiUser } from "./user-api"
+
 export interface ApiPlayer {
-  userId: number
-  name: string
-  picture: string
+  user: ApiUser
   leader: boolean
   connected: boolean
   tsar: boolean

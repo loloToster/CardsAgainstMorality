@@ -421,7 +421,7 @@ async function handleDelete() {
               :to="`/packs?owner=${state.pack.owner.id}`"
               class="pack__meta__owner pack__meta__owner--custom"
             >
-              {{ state.pack.owner.name }}
+              {{ state.pack.owner.displayName }}
             </RouterLink>
             <div v-if="state.pack.likedBy" class="pack__meta__likes">
               {{ state.pack.likedBy }} likes

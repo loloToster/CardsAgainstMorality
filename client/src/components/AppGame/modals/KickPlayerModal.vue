@@ -17,7 +17,7 @@ defineEmits<{
 }>()
 
 const filteredPlayers = computed(() => {
-  return props.players.filter(p => p.userId !== user.value?.id)
+  return props.players.filter(p => p.user.id !== user.value?.id)
 })
 </script>
 
@@ -25,14 +25,14 @@ const filteredPlayers = computed(() => {
   <AppModal @close="$emit('close')" title="Kick a player">
     <AppButton
       v-for="player in filteredPlayers"
-      @click="$emit('kick', player.userId)"
+      @click="$emit('kick', player.user.id)"
       class="kick-modal-player"
-      :key="player.userId"
+      :key="player.user.id"
       v-wave
     >
-      <UserAvatar class="kick-modal-player__img" :user="player" />
+      <UserAvatar class="kick-modal-player__img" :user="player.user" />
       <span>
-        {{ player.name }}
+        {{ player.user.displayName }}
       </span>
     </AppButton>
   </AppModal>

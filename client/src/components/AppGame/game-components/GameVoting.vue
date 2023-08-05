@@ -56,7 +56,8 @@ const description = computed(() => {
     case "kick": {
       const playerId = props.votingData.voting.playerId
       const playerName =
-        props.players.find(p => p.userId === playerId)?.name || "Unknown"
+        props.players.find(p => p.user.id === playerId)?.user.displayName ||
+        "Unknown"
 
       return `Kick player: ${playerName}`
     }

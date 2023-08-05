@@ -47,7 +47,7 @@ fetchRooms()
 
 const rooms = computed(() => {
   return state.rooms.map(r => {
-    const name = r.name ? r.name : `${r.leaderName}'s room`
+    const name = r.name ? r.name : `${r.leader.displayName}'s room`
 
     return { ...r, name }
   })
@@ -79,9 +79,11 @@ const rooms = computed(() => {
       <div class="room__players">
         <UserAvatar
           class="room__players__leader-avatar"
-          :user="{ picture: room.leaderAvatar ?? undefined }"
+          :user="{ picture: room.leader.picture ?? undefined }"
         />
-        <span class="room__players__leader-name">{{ room.leaderName }}</span>
+        <span class="room__players__leader-name">
+          {{ room.leader.displayName }}
+        </span>
         <span v-if="room.players.length"> • {{ room.players.join(", ") }}</span>
       </div>
       <div v-if="room.packs.length" class="room__packs-header">

@@ -1,6 +1,6 @@
 import type { IncomingMessage } from "http"
 import type { Server, Socket } from "socket.io"
-import type { ApiBlackCard, ApiPlayer, ApiWhiteCard } from "./api"
+import type { ApiBlackCard, ApiPlayer, ApiUser, ApiWhiteCard } from "./api"
 import { SettingsBoundaries } from "."
 
 export interface SettingsPack {
@@ -35,10 +35,8 @@ export interface PrevRound {
 }
 
 export interface PodiumEl {
-  id: number
+  user: ApiUser
   place: number
-  name: string
-  picture: string
   points: number
 }
 

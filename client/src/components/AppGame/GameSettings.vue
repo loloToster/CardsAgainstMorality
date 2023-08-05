@@ -36,11 +36,11 @@ const leader = computed(() => {
 })
 
 const imLeader = computed(() => {
-  return leader.value?.userId === user.value?.id
+  return leader.value?.user.id === user.value?.id
 })
 
 const defaultRoomName = computed(() => {
-  return `${leader.value?.name}'s Room`
+  return `${leader.value?.user.displayName}'s Room`
 })
 
 // todo: move higher in component tree
@@ -195,12 +195,12 @@ async function fetchPacks(query = "") {
 // todo: handle private & liked packs
 fetchPacks("liked=true")
 fetchPacks("author=official")
-if (leader.value) fetchPacks(`owner=${leader.value.userId}`)
+if (leader.value) fetchPacks(`owner=${leader.value.user.id}`)
 
 watch(
   () => leader.value,
   () => {
-    if (leader.value) fetchPacks(`owner=${leader.value.userId}`)
+    if (leader.value) fetchPacks(`owner=${leader.value.user.id}`)
   }
 )
 
@@ -212,7 +212,7 @@ const likedPacks = computed(() => {
 
 const leaderPacks = computed(() => {
   return settingsApiPacks.value.filter(
-    p => p.owner && p.owner.id === leader.value?.userId
+    p => p.owner && p.owner.id === leader.value?.user.id
   )
 })
 
@@ -567,12 +567,14 @@ onClickOutside(invitePlayersContent, () => {
         </button>
         <div
           v-for="player in gameState.players"
-          :key="player.name"
+          :key="player.user.displayName"
           class="settings__player"
         >
-          <UserAvatar :user="player" />
+          <UserAvatar :user="player.user" />
           <div>
-            <div class="settings__player__name">{{ player.name }}</div>
+            <div class="settings__player__name">
+              {{ player.user.displayName }}
+            </div>
             <div v-if="player.leader" class="settings__player__leader">
               Room Leader
             </div>

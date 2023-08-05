@@ -2,6 +2,8 @@ import { Router } from "express"
 
 import db from "../../modules/db"
 import { GameState } from "../../utils/game"
+import { userToApiUser } from "../../utils/transformers"
+
 import type { Rooms } from "../../modules/rooms"
 import type { ApiRoom } from "../../types"
 
@@ -39,8 +41,7 @@ router.get("/", async (req, res) => {
       id: roomId,
       name: room.name,
       started,
-      leaderAvatar: leader?.metadata?.user.picture,
-      leaderName: leader?.metadata?.user.displayName || "???",
+      leader: userToApiUser(leader?.metadata?.user),
       players: room.game.players
         .filter(p => p !== leader)
         .map(p => p.metadata?.user.displayName || "???"),

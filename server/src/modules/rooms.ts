@@ -4,6 +4,7 @@ import logger from "./logger"
 
 import { SETTINGS_BOUNDARIES, TIME_LIMIT_OFFSET, VOTING_TIME } from "../consts"
 
+import { userToApiUser } from "../utils/transformers"
 import { randomElement, shuffle } from "../utils/random"
 import { Game, GameState, Player, Podium, WinnerData } from "../utils/game"
 
@@ -434,9 +435,7 @@ export class Room {
     const leader = this.getLeader()
 
     const players = this.game.players.map(p => ({
-      userId: p.metadata?.user.id ?? -1,
-      name: p.metadata?.user.displayName ?? "Unknown",
-      picture: p.metadata?.user.picture ?? "",
+      user: userToApiUser(p.metadata?.user),
       leader: leader === p,
       connected: p.metadata?.connected ?? false,
       tsar: p.isTsar,
@@ -665,10 +664,8 @@ export class Room {
   sendGameEnd(podium: Podium<PlayerMetadata>) {
     this.io.to(this.id).emit("end", {
       podium: podium.map((pel, i) => ({
-        id: pel.metadata?.user.id ?? -1,
+        user: userToApiUser(pel.metadata?.user),
         place: i + 1,
-        name: pel.metadata?.user.displayName || "?",
-        picture: pel.metadata?.user.picture || "",
         points: pel.points
       }))
     })

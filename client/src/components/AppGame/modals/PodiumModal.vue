@@ -14,7 +14,7 @@ const props = defineProps<{ podium: PodiumEl[] }>()
 defineEmits(["close"])
 
 onMounted(() => {
-  if (props.podium[0].id === user.value?.id) confetti.addConfetti()
+  if (props.podium[0].user.id === user.value?.id) confetti.addConfetti()
 })
 
 const top = computed(() => {
@@ -79,9 +79,9 @@ const bottom = computed(() => {
               />
             </g>
           </svg>
-          <UserAvatar :user="player" class="podium__col__img" />
+          <UserAvatar :user="player.user" class="podium__col__img" />
           <div class="podium__col__name-points">
-            <span class="podium__col__name">{{ player.name }}</span>
+            <span class="podium__col__name">{{ player.user.displayName }}</span>
             <span class="podium__col__points">({{ player.points }})</span>
           </div>
           <div class="podium__col__elevation">{{ player.place }}</div>
@@ -89,7 +89,9 @@ const bottom = computed(() => {
       </div>
       <div class="podium__table">
         <div v-for="row in bottom" class="podium__table__row" :key="row.place">
-          <div class="podium__table__name">{{ row.place }}. {{ row.name }}</div>
+          <div class="podium__table__name">
+            {{ row.place }}. {{ row.user.displayName }}
+          </div>
           <div class="podium__table__splitter"></div>
           <div class="podium__table__points">{{ row.points }}</div>
         </div>
