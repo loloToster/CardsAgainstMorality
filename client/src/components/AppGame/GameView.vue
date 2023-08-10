@@ -7,8 +7,8 @@ import { CARD_ASPECT_WIDTH, CARD_ASPECT_HEIGHT } from "@/consts"
 import type { VotingMeta } from "@backend/types"
 import { GameStage } from "@/types/game"
 
-import { playAudio } from "@/contexts/audio"
-import { gameState } from "./contexts/gamestate"
+import { useAudioStore } from "@/contexts/audio"
+import { useGameStateStore } from "./contexts/gamestate"
 import { target as pictureTarget, onPictureTake } from "./contexts/screenshot"
 
 import { moveItem } from "@/utils"
@@ -26,19 +26,22 @@ import GameMeta from "./game-components/GameMeta.vue"
 import UAreTsar from "./game-components/UAreTsar.vue"
 import GameChoices from "./game-components/GameChoices.vue"
 
-const activeChoice = computed(() => {
-  return gameState.activeChoiceIdx !== null &&
-    gameState.stage === GameStage.TSAR_VERDICT
-    ? gameState.choices[gameState.activeChoiceIdx]
-    : []
-})
-
 defineEmits<{
   (ev: "submit"): void
   (ev: "verdict", choiceIdx: number): void
   (ev: "new-voting", data: VotingMeta): void
   (ev: "vote", data: boolean): void
 }>()
+
+const audio = useAudioStore()
+const gameState = useGameStateStore()
+
+const activeChoice = computed(() => {
+  return gameState.activeChoiceIdx !== null &&
+    gameState.stage === GameStage.TSAR_VERDICT
+    ? gameState.choices[gameState.activeChoiceIdx]
+    : []
+})
 
 const state = reactive<{
   kickPlayerModalActive: boolean
@@ -176,7 +179,7 @@ const flash = ref<HTMLDivElement>()
 syncRefs(tableCards, pictureTarget)
 
 function runFlashAnimation() {
-  playAudio("camera")
+  audio.play("camera")
   flash.value?.classList.remove("flash")
   void flash.value?.offsetHeight
   flash.value?.classList.add("flash")

@@ -3,8 +3,8 @@ import { computed, onMounted } from "vue"
 
 import type { PodiumEl } from "@backend/types"
 
-import confetti from "@/contexts/confetti"
-import { user } from "@/contexts/user"
+import { useUserStore } from "@/contexts/user"
+import { useConfettiStore } from "@/contexts/confetti"
 
 import AppModal from "@/components/AppModal.vue"
 import UserAvatar from "@/components/UserAvatar.vue"
@@ -12,6 +12,9 @@ import UserAvatar from "@/components/UserAvatar.vue"
 const props = defineProps<{ podium: PodiumEl[] }>()
 
 defineEmits(["close"])
+
+const user = useUserStore()
+const confetti = useConfettiStore()
 
 onMounted(() => {
   if (props.podium[0].user.id === user.value?.id) confetti.addConfetti()

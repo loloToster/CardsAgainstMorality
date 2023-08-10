@@ -1,4 +1,5 @@
 import { createApp } from "vue"
+import { createPinia } from "pinia"
 import { createHead } from "@unhead/vue"
 import { createRouter, createWebHistory } from "vue-router"
 import VWave from "v-wave"
@@ -21,6 +22,8 @@ const RoomsPage = () => import("./pages/RoomsPage.vue")
 const PacksPage = () => import("./pages/PacksPage.vue")
 const MyPacksPage = () => import("./pages/MyPacksPage.vue")
 const PackPage = () => import("./pages/PackPage.vue")
+
+const pinia = createPinia()
 
 const head = createHead()
 
@@ -67,8 +70,9 @@ const router = createRouter({
 
 const app = createApp(App)
 
-app.use(router)
+app.use(pinia)
 app.use(head)
+app.use(router)
 app.use(VWave, {})
 app.directive("tooltip", VTooltip)
 

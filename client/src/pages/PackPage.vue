@@ -15,8 +15,8 @@ import type {
   CardColor
 } from "@backend/types"
 
-import { notify } from "@/contexts/notifications"
-import { user } from "@/contexts/user"
+import { useUserStore } from "@/contexts/user"
+import { useNotificationsStore } from "@/contexts/notifications"
 
 import AppModal from "@/components/AppModal.vue"
 import PackDetailsModal from "@/components/PackDetailsModal.vue"
@@ -35,6 +35,8 @@ import WhiteCardIcon from "@/assets/white-card-icon.svg?component"
 
 const route = useRoute()
 const router = useRouter()
+const user = useUserStore()
+const notifications = useNotificationsStore()
 
 const state = reactive<{
   pack: ApiCardPack | null
@@ -184,7 +186,10 @@ async function handleLike(liked: boolean) {
   try {
     await (liked ? api.put : api.delete)(url)
   } catch {
-    notify({ type: "error", text: `Failed to ${liked ? "like" : "dislike"}` })
+    notifications.add({
+      type: "error",
+      text: `Failed to ${liked ? "like" : "dislike"}`
+    })
   }
 }
 
@@ -279,7 +284,7 @@ async function handleDelete() {
   try {
     await api.delete(`/api/pack/${state.pack?.id}`)
 
-    notify({
+    notifications.add({
       type: "success",
       text: "Successfully deleted the pack"
     })
@@ -288,7 +293,7 @@ async function handleDelete() {
   } catch (err) {
     console.error(err)
 
-    notify({
+    notifications.add({
       type: "error",
       text: "Failed to delete the pack"
     })

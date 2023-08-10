@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { Notification, removeNotification } from "@/contexts/notifications"
+import { useNotificationsStore, Notification } from "@/contexts/notifications"
 
 const props = defineProps<{ notification: Notification }>()
 
+const notifications = useNotificationsStore()
+
 function remove() {
-  removeNotification(props.notification.id)
+  notifications.remove(props.notification.id)
 }
 </script>
 

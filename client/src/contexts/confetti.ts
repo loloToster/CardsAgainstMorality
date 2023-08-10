@@ -1,5 +1,13 @@
+import { defineStore } from "pinia"
 import JSConfetti from "js-confetti"
 
-const confetti = new JSConfetti()
-
-export default confetti
+export const useConfettiStore = defineStore("confetti", {
+  state: () => ({
+    confetti: new JSConfetti()
+  }),
+  actions: {
+    addConfetti() {
+      return this.confetti.addConfetti()
+    }
+  }
+})

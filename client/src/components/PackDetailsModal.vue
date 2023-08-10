@@ -16,7 +16,7 @@ import { MAX_PACK_TAGS, MAX_PACK_NAME_LEN } from "@backend/consts"
 import { CUSTOM_ICONS_BASE_URL } from "@/consts"
 
 import api from "@/utils/api"
-import { notify } from "@/contexts/notifications"
+import { useNotificationsStore } from "@/contexts/notifications"
 
 import AppModal from "@/components/AppModal.vue"
 import AppButton from "@/components/AppButton.vue"
@@ -31,6 +31,8 @@ const emit = defineEmits<{
   (ev: "close"): void
   (ev: "save", details: ApiCardPackRichEditableDetails): void
 }>()
+
+const notifications = useNotificationsStore()
 
 const state = reactive<{
   name: string
@@ -98,7 +100,7 @@ async function fetchIcons() {
     state.icons = res.data.icons
   } catch (err) {
     console.error(err)
-    notify({
+    notifications.add({
       type: "error",
       text: "Failed to fetch icons"
     })
@@ -136,12 +138,12 @@ async function save() {
   try {
     await api.post(`/api/pack/${props.pack.id}/details`, details)
 
-    notify({
+    notifications.add({
       type: "success",
       text: "Successfully saved the details"
     })
   } catch (err) {
-    notify({
+    notifications.add({
       type: "error",
       text: "Failed to save the details"
     })

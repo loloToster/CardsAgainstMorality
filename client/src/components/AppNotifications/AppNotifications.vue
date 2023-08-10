@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { notifications } from "@/contexts/notifications"
+import { useNotificationsStore } from "@/contexts/notifications"
 import AppNotification from "./AppNotification.vue"
+
+const notifications = useNotificationsStore()
 </script>
 
 <template>

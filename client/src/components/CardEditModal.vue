@@ -8,7 +8,7 @@ import type {
   CardColor
 } from "@backend/types"
 import api from "@/utils/api"
-import { notify } from "@/contexts/notifications"
+import { useNotificationsStore } from "@/contexts/notifications"
 
 import AppModal from "@/components/AppModal.vue"
 import PlayingCard from "@/components/PlayingCard.vue"
@@ -29,6 +29,8 @@ const emit = defineEmits<{
   (ev: "save-white", card: ApiWhiteCard): void
   (ev: "delete", cardId: number, color: CardColor): void
 }>()
+
+const notifications = useNotificationsStore()
 
 const state = reactive<{
   saving: boolean
@@ -71,7 +73,7 @@ async function createCard() {
       draw: state.card.draw ?? undefined
     })
 
-    notify({
+    notifications.add({
       type: "success",
       text: "Successfully added a card"
     })
@@ -82,7 +84,7 @@ async function createCard() {
       emit("save-white", res.data.card)
     }
   } catch (err) {
-    notify({
+    notifications.add({
       type: "error",
       text: "Failed to add a card"
     })
@@ -102,7 +104,7 @@ async function modifyCard() {
       draw: state.card.draw ?? undefined
     })
 
-    notify({
+    notifications.add({
       type: "success",
       text: "Successfully modified a card"
     })
@@ -113,7 +115,7 @@ async function modifyCard() {
       emit("save-white", { ...props.card, ...state.card, text })
     }
   } catch (err) {
-    notify({
+    notifications.add({
       type: "error",
       text: "Failed to modify a card"
     })
@@ -149,14 +151,14 @@ async function handleDelete() {
       throw new Error("No card to delete?")
     }
 
-    notify({
+    notifications.add({
       type: "success",
       text: "Successfully deleted a card"
     })
 
     emit("delete", props.card.id, props.card.color)
   } catch (err) {
-    notify({
+    notifications.add({
       type: "error",
       text: "Failed to delete a card"
     })

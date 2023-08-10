@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { onUnmounted, reactive } from "vue"
-import { notify } from "@/contexts/notifications"
+import { useNotificationsStore } from "@/contexts/notifications"
 import { copyToClipboard } from "@/utils"
 import AppButton from "./AppButton.vue"
 
 const SUCCESS_TIMEOUT = 2000
 
 const props = defineProps<{ content?: string | Blob | null }>()
+
+const notifications = useNotificationsStore()
 
 const state = reactive({ success: false })
 
@@ -23,7 +25,7 @@ async function onCopy() {
     await navigator.clipboard.write([item])
   }
 
-  notify({
+  notifications.add({
     type: "success",
     text: "Copied successfully"
   })

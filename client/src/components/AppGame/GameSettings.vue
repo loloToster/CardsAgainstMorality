@@ -7,14 +7,9 @@ import api from "@/utils/api"
 import { SETTINGS_BOUNDARIES } from "@backend/consts"
 import type { ApiCardPack, SettingsData, SettingsPack } from "@backend/types"
 
-import { user } from "@/contexts/user"
-import { gameState } from "./contexts/gamestate"
-import {
-  gameSettingsState,
-  getParsedSettings,
-  getValidParsedSettings,
-  ensureBoundary
-} from "./contexts/gamesettingsstate"
+import { useUserStore } from "@/contexts/user"
+import { useGameStateStore } from "./contexts/gamestate"
+import { useGameSettingsStore, ensureBoundary } from "./contexts/gamesettings"
 
 import AppSwitch from "@/components/AppSwitch.vue"
 import AppButton from "@/components/AppButton.vue"
@@ -31,6 +26,10 @@ import WhiteCardIcon from "@/assets/white-card-icon.svg?component"
 
 defineProps<{ roomId: string }>()
 
+const user = useUserStore()
+const gameSettings = useGameSettingsStore()
+const gameState = useGameStateStore()
+
 const leader = computed(() => {
   return gameState.players.find(p => p.leader)
 })
@@ -44,7 +43,7 @@ const defaultRoomName = computed(() => {
 })
 
 // todo: move higher in component tree
-useHead({ title: () => gameSettingsState.roomName || defaultRoomName.value })
+useHead({ title: () => gameSettings.roomName || defaultRoomName.value })
 
 const emit = defineEmits<{
   (e: "start", data: SettingsData): void
@@ -68,7 +67,7 @@ const state = reactive<{
 })
 
 const invalidRoomName = computed(() => {
-  return !SETTINGS_BOUNDARIES.name.matches.test(gameSettingsState.roomName)
+  return !SETTINGS_BOUNDARIES.name.matches.test(gameSettings.roomName)
 })
 
 interface SettingsApiPack extends ApiCardPack {
@@ -80,9 +79,7 @@ const settingsApiPacks = computed(() => {
   const packs: SettingsApiPack[] = []
 
   for (const pack of state.packs) {
-    const selectedPack = gameSettingsState.selectedPacks.find(
-      p => p.id === pack.id
-    )
+    const selectedPack = gameSettings.selectedPacks.find(p => p.id === pack.id)
 
     packs.push({
       ...pack,
@@ -108,13 +105,13 @@ const numOfBlackCards = computed(() => {
 
 function toggleAllPacks(selected: boolean) {
   if (selected) {
-    gameSettingsState.selectedPacks = state.packs.map(p => ({
+    gameSettings.selectedPacks = state.packs.map(p => ({
       id: p.id,
       blacks: true,
       whites: true
     }))
   } else {
-    gameSettingsState.selectedPacks = []
+    gameSettings.selectedPacks = []
   }
 }
 
@@ -122,7 +119,7 @@ function togglePack(packId: string) {
   const newSelectedPacks: SettingsPack[] = []
   let foundPack = false
 
-  for (const pack of gameSettingsState.selectedPacks) {
+  for (const pack of gameSettings.selectedPacks) {
     if (packId !== pack.id) {
       newSelectedPacks.push(pack)
       continue
@@ -139,19 +136,19 @@ function togglePack(packId: string) {
     })
   }
 
-  gameSettingsState.selectedPacks = newSelectedPacks
+  gameSettings.selectedPacks = newSelectedPacks
 
   return
 }
 
 function onlyBlacks(packId: string) {
-  const pack = gameSettingsState.selectedPacks.find(p => p.id === packId)
+  const pack = gameSettings.selectedPacks.find(p => p.id === packId)
 
   if (pack) {
     pack.blacks = true
     pack.whites = false
   } else {
-    gameSettingsState.selectedPacks.push({
+    gameSettings.selectedPacks.push({
       id: packId,
       blacks: true,
       whites: false
@@ -160,13 +157,13 @@ function onlyBlacks(packId: string) {
 }
 
 function onlyWhites(packId: string) {
-  const pack = gameSettingsState.selectedPacks.find(p => p.id === packId)
+  const pack = gameSettings.selectedPacks.find(p => p.id === packId)
 
   if (pack) {
     pack.blacks = false
     pack.whites = true
   } else {
-    gameSettingsState.selectedPacks.push({
+    gameSettings.selectedPacks.push({
       id: packId,
       blacks: false,
       whites: true
@@ -227,39 +224,30 @@ const canStart = computed(() => {
     numOfWhiteCards.value &&
     gameState.players.length >= (SETTINGS_BOUNDARIES.playersLimit.min ?? 1) &&
     ensureBoundary(
-      gameSettingsState.playersLimit,
+      gameSettings.playersLimit,
       SETTINGS_BOUNDARIES.playersLimit
     ) &&
-    (gameSettingsState.timeLimitEnabled
-      ? ensureBoundary(
-        gameSettingsState.timeLimit,
-        SETTINGS_BOUNDARIES.timeLimit
-      )
+    (gameSettings.timeLimitEnabled
+      ? ensureBoundary(gameSettings.timeLimit, SETTINGS_BOUNDARIES.timeLimit)
       : true) &&
-    (gameSettingsState.scoreLimitEnabled
-      ? ensureBoundary(
-        gameSettingsState.scoreLimit,
-        SETTINGS_BOUNDARIES.scoreLimit
-      )
+    (gameSettings.scoreLimitEnabled
+      ? ensureBoundary(gameSettings.scoreLimit, SETTINGS_BOUNDARIES.scoreLimit)
       : true) &&
-    (gameSettingsState.roundLimitEnabled
-      ? ensureBoundary(
-        gameSettingsState.roundLimit,
-        SETTINGS_BOUNDARIES.roundLimit
-      )
+    (gameSettings.roundLimitEnabled
+      ? ensureBoundary(gameSettings.roundLimit, SETTINGS_BOUNDARIES.roundLimit)
       : true)
   )
 })
 
 function onChange() {
-  if (imLeader.value) emit("change", getValidParsedSettings())
+  if (imLeader.value) emit("change", gameSettings.getValidParsedSettings())
 }
 
 function onStart() {
-  emit("start", getParsedSettings())
+  emit("start", gameSettings.getParsedSettings())
 }
 
-watch(gameSettingsState, onChange)
+watch(gameSettings, onChange)
 
 const windowLocation = computed(() => {
   return window.location.href
@@ -287,7 +275,7 @@ onClickOutside(invitePlayersContent, () => {
         <div class="settings__main__options">
           <div class="settings__main__options-row">
             <input
-              v-model="gameSettingsState.roomName"
+              v-model="gameSettings.roomName"
               :placeholder="defaultRoomName"
               :disabled="!imLeader"
               class="settings__main__room-name"
@@ -300,10 +288,7 @@ onClickOutside(invitePlayersContent, () => {
           <div class="settings__main__options-row">
             <div class="settings__main__option-title">
               <h3>Public room</h3>
-              <AppSwitch
-                v-model="gameSettingsState.public"
-                :disabled="!imLeader"
-              />
+              <AppSwitch v-model="gameSettings.public" :disabled="!imLeader" />
               <div
                 class="settings__main__option-title__tooltip"
                 v-tooltip.right="'test'"
@@ -332,7 +317,7 @@ onClickOutside(invitePlayersContent, () => {
             </div>
             <div class="settings__main__optional active">
               <NumericInput
-                v-model="gameSettingsState.playersLimit"
+                v-model="gameSettings.playersLimit"
                 :lowest="SETTINGS_BOUNDARIES.playersLimit.min"
                 :highest="SETTINGS_BOUNDARIES.playersLimit.max ?? Infinity"
                 :disabled="!imLeader"
@@ -342,7 +327,7 @@ onClickOutside(invitePlayersContent, () => {
           <div class="settings__main__options-row">
             <div class="settings__main__option-title">
               <AppSwitch
-                v-model="gameSettingsState.timeLimitEnabled"
+                v-model="gameSettings.timeLimitEnabled"
                 :disabled="!imLeader"
               />
               <h3>Time limit</h3>
@@ -359,10 +344,10 @@ onClickOutside(invitePlayersContent, () => {
             </div>
             <div
               class="settings__main__optional"
-              :class="{ active: gameSettingsState.timeLimitEnabled }"
+              :class="{ active: gameSettings.timeLimitEnabled }"
             >
               <NumericInput
-                v-model="gameSettingsState.timeLimit"
+                v-model="gameSettings.timeLimit"
                 :lowest="SETTINGS_BOUNDARIES.timeLimit.min"
                 :highest="SETTINGS_BOUNDARIES.timeLimit.max"
                 :disabled="!imLeader"
@@ -372,7 +357,7 @@ onClickOutside(invitePlayersContent, () => {
           <div class="settings__main__options-row">
             <div class="settings__main__option-title">
               <AppSwitch
-                v-model="gameSettingsState.scoreLimitEnabled"
+                v-model="gameSettings.scoreLimitEnabled"
                 :disabled="!imLeader"
               />
               <h3>Score limit</h3>
@@ -389,10 +374,10 @@ onClickOutside(invitePlayersContent, () => {
             </div>
             <div
               class="settings__main__optional"
-              :class="{ active: gameSettingsState.scoreLimitEnabled }"
+              :class="{ active: gameSettings.scoreLimitEnabled }"
             >
               <NumericInput
-                v-model="gameSettingsState.scoreLimit"
+                v-model="gameSettings.scoreLimit"
                 :lowest="SETTINGS_BOUNDARIES.scoreLimit.min"
                 :highest="SETTINGS_BOUNDARIES.scoreLimit.max"
                 :disabled="!imLeader"
@@ -402,7 +387,7 @@ onClickOutside(invitePlayersContent, () => {
           <div class="settings__main__options-row">
             <div class="settings__main__option-title">
               <AppSwitch
-                v-model="gameSettingsState.roundLimitEnabled"
+                v-model="gameSettings.roundLimitEnabled"
                 :disabled="!imLeader"
               />
               <h3>Round limit</h3>
@@ -419,10 +404,10 @@ onClickOutside(invitePlayersContent, () => {
             </div>
             <div
               class="settings__main__optional"
-              :class="{ active: gameSettingsState.roundLimitEnabled }"
+              :class="{ active: gameSettings.roundLimitEnabled }"
             >
               <NumericInput
-                v-model="gameSettingsState.roundLimit"
+                v-model="gameSettings.roundLimit"
                 :lowest="SETTINGS_BOUNDARIES.roundLimit.min"
                 :highest="SETTINGS_BOUNDARIES.roundLimit.max"
                 :disabled="!imLeader"

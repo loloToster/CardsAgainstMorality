@@ -3,7 +3,7 @@ import { onMounted } from "vue"
 
 import type { ApiBlackCard, ApiWhiteCard } from "@backend/types"
 
-import confetti from "@/contexts/confetti"
+import { useConfettiStore } from "@/contexts/confetti"
 
 import AppModal from "@/components/AppModal.vue"
 import PlayingCard from "@/components/PlayingCard.vue"
@@ -14,6 +14,8 @@ const props = defineProps<{
   winningCards: ApiWhiteCard[]
   imWinner: boolean
 }>()
+
+const confetti = useConfettiStore()
 
 onMounted(() => {
   if (props.imWinner) confetti.addConfetti()

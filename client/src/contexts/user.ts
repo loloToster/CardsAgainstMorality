@@ -1,10 +1,14 @@
-import { reactive } from "vue"
+import { defineStore } from "pinia"
 import type { LoggedInUser } from "@/types/user"
 
-export const user = reactive<{
+export interface UserStore {
   value: LoggedInUser
   fetching: boolean
-}>({
-  value: null,
-  fetching: true
+}
+
+export const useUserStore = defineStore("user", {
+  state: (): UserStore => ({
+    value: null,
+    fetching: true
+  })
 })

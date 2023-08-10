@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
-import { user } from "@/contexts/user"
+import { useUserStore } from "@/contexts/user"
 
 import type { ApiPlayer } from "@backend/types"
 
@@ -15,6 +15,8 @@ defineEmits<{
   (ev: "close"): void
   (ev: "kick", playerId: number): void
 }>()
+
+const user = useUserStore()
 
 const filteredPlayers = computed(() => {
   return props.players.filter(p => p.user.id !== user.value?.id)

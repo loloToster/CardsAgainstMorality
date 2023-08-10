@@ -5,19 +5,12 @@ import { useRoute } from "vue-router"
 import type { SettingsData, VotingMeta } from "@backend/types"
 import { GameStage } from "@/types/game"
 
-import {
-  setAuth as setSocketAuth,
-  socket,
-  socketState
-} from "@/contexts/socket"
-import { notify } from "@/contexts/notifications"
-import { playAudio } from "@/contexts/audio"
-import {
-  gameState,
-  resetGameState,
-  resetPlayerState
-} from "./contexts/gamestate"
-import { setByParsedSettings } from "./contexts/gamesettingsstate"
+import { useSocketStore } from "@/contexts/socket"
+import { useNotificationsStore } from "@/contexts/notifications"
+import { useAudioStore } from "@/contexts/audio"
+
+import { useGameStateStore } from "./contexts/gamestate"
+import { useGameSettingsStore } from "./contexts/gamesettings"
 
 import AppLoading from "@/components/AppLoading.vue"
 import GameView from "./GameView.vue"
@@ -25,6 +18,13 @@ import GameSettings from "./GameSettings.vue"
 import PodiumModal from "./modals/PodiumModal.vue"
 
 const route = useRoute()
+const socketState = useSocketStore()
+const { socket } = socketState
+const notifications = useNotificationsStore()
+const audio = useAudioStore()
+
+const gameState = useGameStateStore()
+const gameSettings = useGameSettingsStore()
 
 function hashChoice(ch: number[]) {
   return [...ch].sort((a, b) => a - b).join("-")
@@ -40,7 +40,7 @@ socket.on("players", data => {
     )
 
     if (gameState.stage === GameStage.TSAR_VERDICT)
-      notify({
+      notifications.add({
         type: "info",
         text: "The player that was kicked has already submitted his choice so it was removed"
       })
@@ -48,11 +48,11 @@ socket.on("players", data => {
 })
 
 socket.on("sync-settings", data => {
-  setByParsedSettings(data)
+  gameSettings.setByParsedSettings(data)
 })
 
 socket.on("new-round", data => {
-  playAudio("new-round")
+  audio.play("new-round")
 
   gameState.timeLimit = data.timeLimit
 
@@ -65,14 +65,14 @@ socket.on("new-round", data => {
   gameState.roundWinnerData = data.prevRound ?? null
 
   if (data.prevRound?.randomlyPicked) {
-    notify({
+    notifications.add({
       type: "info",
       text: "The winner was chosen randomly due to Tsar inactivity"
     })
   }
 
   if (data.roundRestart) {
-    notify({
+    notifications.add({
       type: "info",
       text: "The round was restarted due to disappearance of the Tsar"
     })
@@ -80,7 +80,7 @@ socket.on("new-round", data => {
 })
 
 socket.on("choices", data => {
-  playAudio("tsar-choice")
+  audio.play("tsar-choice")
 
   gameState.timeLimit = data.timeLimit
 
@@ -90,7 +90,7 @@ socket.on("choices", data => {
   gameState.pickedCards = []
 
   if (data.pickedCards) {
-    notify({
+    notifications.add({
       type: "warn",
       text: "The time expired and your cards were picked randomly"
     })
@@ -102,7 +102,7 @@ socket.on("choices", data => {
 })
 
 socket.on("sync", data => {
-  setByParsedSettings(data.currentSettings)
+  gameSettings.setByParsedSettings(data.currentSettings)
 
   if (!data.started) {
     gameState.stage = GameStage.NOT_STARTED
@@ -129,7 +129,7 @@ socket.on("end", ({ podium }) => {
   gameState.stage = GameStage.NOT_STARTED
   gameState.podium = podium
 
-  resetPlayerState()
+  gameState.resetPlayerState()
 })
 
 socket.on("voting", data => {
@@ -154,7 +154,9 @@ function onStart(data: SettingsData) {
 
 function onSubmit() {
   gameState.submitted = true
-  socket.emit("submit", { submition: gameState.pickedCards.map(c => c.id) })
+  socket.emit("submit", {
+    submition: gameState.pickedCards.map(c => c.id)
+  })
   gameState.pickedCards = []
 }
 
@@ -180,9 +182,10 @@ watch(
 )
 
 const roomId = route.params.id
-setSocketAuth({ roomId })
+socketState.setAuth({ roomId })
 
 onMounted(() => {
+  socketState.init()
   socket.connect()
 })
 
@@ -196,7 +199,7 @@ onUnmounted(() => {
 
   socket.disconnect()
 
-  resetGameState()
+  gameState.$reset()
 })
 </script>
 

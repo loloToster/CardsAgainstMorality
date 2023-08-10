@@ -4,8 +4,8 @@ import { onClickOutside, useResizeObserver } from "@vueuse/core"
 
 import type { VotingMeta } from "@backend/types"
 
-import { audioState, toggleAudio } from "@/contexts/audio"
-import { gameState } from "../contexts/gamestate"
+import { useAudioStore } from "@/contexts/audio"
+import { useGameStateStore } from "../contexts/gamestate"
 import { takePicture } from "../contexts/screenshot"
 
 import AppButton from "@/components/AppButton.vue"
@@ -16,6 +16,9 @@ const emit = defineEmits<{
   (e: "open-kick"): void
 }>()
 
+const audio = useAudioStore()
+const gameState = useGameStateStore()
+
 const state = reactive({
   gameMenuActive: false,
   votingMenuActive: false,
@@ -23,7 +26,7 @@ const state = reactive({
 })
 
 const audioTooltip = computed(() => {
-  return audioState.on ? "Turn off sound" : "Turn on sound"
+  return audio.on ? "Turn off sound" : "Turn on sound"
 })
 
 const votingTooltip = computed(() => {
@@ -73,7 +76,7 @@ useResizeObserver(document.body, () => {
         ref="gameMenu"
       >
         <button
-          @click="toggleAudio()"
+          @click="audio.toggle()"
           class="game-menu__btn game-menu__item"
           v-tooltip.right="{
             content: audioTooltip,
@@ -83,7 +86,7 @@ useResizeObserver(document.body, () => {
           v-wave
         >
           <svg
-            v-if="audioState.on"
+            v-if="audio.on"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 96 960 960"
           >

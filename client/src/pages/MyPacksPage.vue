@@ -5,8 +5,8 @@ import { useRouter } from "vue-router"
 
 import type { ApiCardPack } from "@backend/types"
 import api from "@/utils/api"
-import { user } from "@/contexts/user"
-import { notify } from "@/contexts/notifications"
+import { useUserStore } from "@/contexts/user"
+import { useNotificationsStore } from "@/contexts/notifications"
 
 import AppLoading from "@/components/AppLoading.vue"
 import AppError from "@/components/AppError.vue"
@@ -16,6 +16,8 @@ import AppButton from "@/components/AppButton.vue"
 useHead({ title: "My Packs" })
 
 const router = useRouter()
+const user = useUserStore()
+const notifications = useNotificationsStore()
 
 const state = reactive<{
   loading: boolean
@@ -47,7 +49,7 @@ async function createPack() {
     router.push(`/pack/${res.data.id}`)
   } catch (err) {
     console.error(err)
-    notify({
+    notifications.add({
       type: "error",
       text: "Something went wrong while creating a pack"
     })

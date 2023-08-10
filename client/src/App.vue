@@ -2,10 +2,12 @@
 import { RouterView } from "vue-router"
 
 import api from "@/utils/api"
-import { user } from "./contexts/user"
+import { useUserStore } from "@/contexts/user"
 
-import AppHeader from "./components/AppHeader.vue"
-import AppNotifications from "./components/AppNotifications/AppNotifications.vue"
+import AppHeader from "@/components/AppHeader.vue"
+import AppNotifications from "@/components/AppNotifications/AppNotifications.vue"
+
+const user = useUserStore()
 
 api
   .get("/auth/me")

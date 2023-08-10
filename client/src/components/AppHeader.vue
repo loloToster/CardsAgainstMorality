@@ -3,11 +3,13 @@ import { reactive, ref, computed } from "vue"
 import { RouterLink } from "vue-router"
 import { onClickOutside } from "@vueuse/core"
 
-import { user } from "@/contexts/user"
+import { useUserStore } from "@/contexts/user"
 import { TITLE } from "@/consts"
 
 import AppButton from "./AppButton.vue"
 import UserAvatar from "./UserAvatar.vue"
+
+const user = useUserStore()
 
 const state = reactive({ drawerOpen: false, profileMenuOpen: false })
 

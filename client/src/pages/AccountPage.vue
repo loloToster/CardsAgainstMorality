@@ -7,8 +7,8 @@ import { AxiosError } from "axios"
 import api from "@/utils/api"
 import { TITLE } from "@/consts"
 import { MIN_USERNAME_LEN, MAX_USERNAME_LEN } from "@backend/consts"
-import { user } from "@/contexts/user"
-import { notify } from "@/contexts/notifications"
+import { useUserStore } from "@/contexts/user"
+import { useNotificationsStore } from "@/contexts/notifications"
 
 import AppModal from "@/components/AppModal.vue"
 import UserAvatar from "@/components/UserAvatar.vue"
@@ -21,6 +21,8 @@ const DELETE_VERIFICATION = "delete my account"
 useHead({ title: "My Account" })
 
 const router = useRouter()
+const user = useUserStore()
+const notifications = useNotificationsStore()
 
 const state = reactive({
   deletingPicture: false,
@@ -48,11 +50,14 @@ async function handleAccountDelete() {
     await api.delete("/api/user")
     user.value = null
     router.push("/")
-    notify({ type: "success", text: "Successfully deleted your account" })
+    notifications.add({
+      type: "success",
+      text: "Successfully deleted your account"
+    })
   } catch (err) {
     console.error(err)
 
-    notify({
+    notifications.add({
       type: "error",
       text: "Something went wrong while deleteing your account"
     })
@@ -69,11 +74,14 @@ async function handlePictureDelete() {
   try {
     await api.delete("/api/user/picture")
     user.value.picture = null
-    notify({ type: "success", text: "Successfully removed profile picture" })
+    notifications.add({
+      type: "success",
+      text: "Successfully removed profile picture"
+    })
   } catch (err) {
     console.error(err)
 
-    notify({
+    notifications.add({
       type: "error",
       text: "Something went wrong while removing profile picture"
     })
@@ -113,12 +121,12 @@ async function handleSettingsSave() {
     user.value.username = res.data.username
     user.value.displayName = res.data.displayName
 
-    notify({ type: "success", text: "Successfully updated profile" })
+    notifications.add({ type: "success", text: "Successfully updated profile" })
   } catch (err) {
     if (err instanceof AxiosError && err.response?.status === 409) {
       state.usernameError = "This username is already taken."
     } else {
-      notify({
+      notifications.add({
         type: "error",
         text: "Something went wrong while updating profile"
       })

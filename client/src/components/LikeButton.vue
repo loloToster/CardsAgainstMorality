@@ -3,12 +3,13 @@ import { reactive, ref } from "vue"
 import { RouterLink, useRoute } from "vue-router"
 import { Dropdown, destroyTooltip } from "floating-vue"
 
-import { user } from "@/contexts/user"
-
-const route = useRoute()
+import { useUserStore } from "@/contexts/user"
 
 const emit = defineEmits<{ (ev: "change", liked: boolean): void }>()
 const props = defineProps<{ liked: boolean }>()
+
+const route = useRoute()
+const user = useUserStore()
 
 const state = reactive({
   liked: props.liked,
