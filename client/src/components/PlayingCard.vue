@@ -134,9 +134,9 @@ function onMouseLeave() {
       </span>
       <div class="card__bottom">
         <div class="card__pack">
-          <BlackCardIcon v-if="color === 'white'" />
-          <WhiteCardIcon v-else />
-          <span>{{ pack }}</span>
+          <BlackCardIcon v-if="color === 'white'" class="card__pack__icon" />
+          <WhiteCardIcon v-else class="card__pack__icon" />
+          <span class="card__pack__name">{{ pack }}</span>
         </div>
         <div class="card__actions">
           <div
@@ -274,11 +274,21 @@ function onMouseLeave() {
   }
 
   &__pack {
+    overflow: hidden;
     display: flex;
     align-items: center;
     gap: var(--bottom-gap);
     font-size: var(--pack-font-size);
     line-height: 1.3;
+
+    &__icon {
+      flex-shrink: 0;
+    }
+
+    &__name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
   &__actions {

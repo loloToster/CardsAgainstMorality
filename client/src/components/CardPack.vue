@@ -47,6 +47,7 @@ defineProps<{ icon?: string }>()
 
   &__name {
     font-weight: bold;
+    word-wrap: break-word;
   }
 
   &__icon {

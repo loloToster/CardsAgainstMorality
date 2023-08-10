@@ -63,6 +63,7 @@ defineEmits(["create"])
 
   &__pack {
     display: block;
+    min-width: 0;
     width: 100%;
     text-decoration: none;
     color: inherit;
