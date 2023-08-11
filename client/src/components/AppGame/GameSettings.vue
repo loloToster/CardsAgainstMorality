@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from "vue"
 import { useHead } from "@unhead/vue"
-import { onClickOutside } from "@vueuse/core"
+import { onClickOutside, useResizeObserver } from "@vueuse/core"
 
 import api from "@/utils/api"
 import { SETTINGS_BOUNDARIES } from "@backend/consts"
@@ -19,6 +19,7 @@ import AppError from "@/components/AppError.vue"
 import NumericInput from "@/components/NumericInput.vue"
 import AnimatedNumber from "@/components/AnimatedNumber.vue"
 import UserAvatar from "@/components/UserAvatar.vue"
+import UserDetails from "@/components/UserDetails.vue"
 import GamePack from "./game-components/GamePack.vue"
 
 import BlackCardIcon from "@/assets/black-card-icon.svg?component"
@@ -30,16 +31,8 @@ const user = useUserStore()
 const gameSettings = useGameSettingsStore()
 const gameState = useGameStateStore()
 
-const leader = computed(() => {
-  return gameState.players.find(p => p.leader)
-})
-
-const imLeader = computed(() => {
-  return leader.value?.user.id === user.value?.id
-})
-
 const defaultRoomName = computed(() => {
-  return `${leader.value?.user.displayName}'s Room`
+  return `${gameState.leader?.user.displayName}'s Room`
 })
 
 // todo: move higher in component tree
@@ -58,12 +51,14 @@ const state = reactive<{
   inviteOpen: boolean
   packs: ApiCardPack[]
   fetchedPackGroups: number
+  mobile: boolean
 }>({
   loading: true,
   error: false,
   inviteOpen: false,
   packs: [],
-  fetchedPackGroups: 0
+  fetchedPackGroups: 0,
+  mobile: false
 })
 
 const invalidRoomName = computed(() => {
@@ -192,12 +187,12 @@ async function fetchPacks(query = "") {
 // todo: handle private & liked packs
 fetchPacks("liked=true")
 fetchPacks("author=official")
-if (leader.value) fetchPacks(`owner=${leader.value.user.id}`)
+if (gameState.leader) fetchPacks(`owner=${gameState.leader.user.id}`)
 
 watch(
-  () => leader.value,
+  () => gameState.leader,
   () => {
-    if (leader.value) fetchPacks(`owner=${leader.value.user.id}`)
+    if (gameState.leader) fetchPacks(`owner=${gameState.leader.user.id}`)
   }
 )
 
@@ -209,7 +204,7 @@ const likedPacks = computed(() => {
 
 const leaderPacks = computed(() => {
   return settingsApiPacks.value.filter(
-    p => p.owner && p.owner.id === leader.value?.user.id
+    p => p.owner && p.owner.id === gameState.leader?.user.id
   )
 })
 
@@ -240,7 +235,7 @@ const canStart = computed(() => {
 })
 
 function onChange() {
-  if (imLeader.value) emit("change", gameSettings.getValidParsedSettings())
+  if (gameState.imLeader) emit("change", gameSettings.getValidParsedSettings())
 }
 
 function onStart() {
@@ -257,6 +252,11 @@ const invitePlayersContent = ref<HTMLDivElement>()
 
 onClickOutside(invitePlayersContent, () => {
   state.inviteOpen = false
+})
+
+const MOBILE_THRESHOLD = 992
+useResizeObserver(document.body, () => {
+  state.mobile = document.body.clientWidth <= MOBILE_THRESHOLD
 })
 </script>
 <template>
@@ -277,7 +277,7 @@ onClickOutside(invitePlayersContent, () => {
             <input
               v-model="gameSettings.roomName"
               :placeholder="defaultRoomName"
-              :disabled="!imLeader"
+              :disabled="!gameState.imLeader"
               class="settings__main__room-name"
               type="text"
             />
@@ -288,7 +288,10 @@ onClickOutside(invitePlayersContent, () => {
           <div class="settings__main__options-row">
             <div class="settings__main__option-title">
               <h3>Public room</h3>
-              <AppSwitch v-model="gameSettings.public" :disabled="!imLeader" />
+              <AppSwitch
+                v-model="gameSettings.public"
+                :disabled="!gameState.imLeader"
+              />
               <div
                 class="settings__main__option-title__tooltip"
                 v-tooltip.right="'test'"
@@ -320,7 +323,7 @@ onClickOutside(invitePlayersContent, () => {
                 v-model="gameSettings.playersLimit"
                 :lowest="SETTINGS_BOUNDARIES.playersLimit.min"
                 :highest="SETTINGS_BOUNDARIES.playersLimit.max ?? Infinity"
-                :disabled="!imLeader"
+                :disabled="!gameState.imLeader"
               />
             </div>
           </div>
@@ -328,7 +331,7 @@ onClickOutside(invitePlayersContent, () => {
             <div class="settings__main__option-title">
               <AppSwitch
                 v-model="gameSettings.timeLimitEnabled"
-                :disabled="!imLeader"
+                :disabled="!gameState.imLeader"
               />
               <h3>Time limit</h3>
               <div
@@ -350,7 +353,7 @@ onClickOutside(invitePlayersContent, () => {
                 v-model="gameSettings.timeLimit"
                 :lowest="SETTINGS_BOUNDARIES.timeLimit.min"
                 :highest="SETTINGS_BOUNDARIES.timeLimit.max"
-                :disabled="!imLeader"
+                :disabled="!gameState.imLeader"
               />
             </div>
           </div>
@@ -358,7 +361,7 @@ onClickOutside(invitePlayersContent, () => {
             <div class="settings__main__option-title">
               <AppSwitch
                 v-model="gameSettings.scoreLimitEnabled"
-                :disabled="!imLeader"
+                :disabled="!gameState.imLeader"
               />
               <h3>Score limit</h3>
               <div
@@ -380,7 +383,7 @@ onClickOutside(invitePlayersContent, () => {
                 v-model="gameSettings.scoreLimit"
                 :lowest="SETTINGS_BOUNDARIES.scoreLimit.min"
                 :highest="SETTINGS_BOUNDARIES.scoreLimit.max"
-                :disabled="!imLeader"
+                :disabled="!gameState.imLeader"
               />
             </div>
           </div>
@@ -388,7 +391,7 @@ onClickOutside(invitePlayersContent, () => {
             <div class="settings__main__option-title">
               <AppSwitch
                 v-model="gameSettings.roundLimitEnabled"
-                :disabled="!imLeader"
+                :disabled="!gameState.imLeader"
               />
               <h3>Round limit</h3>
               <div
@@ -410,7 +413,7 @@ onClickOutside(invitePlayersContent, () => {
                 v-model="gameSettings.roundLimit"
                 :lowest="SETTINGS_BOUNDARIES.roundLimit.min"
                 :highest="SETTINGS_BOUNDARIES.roundLimit.max"
-                :disabled="!imLeader"
+                :disabled="!gameState.imLeader"
               />
             </div>
           </div>
@@ -427,10 +430,10 @@ onClickOutside(invitePlayersContent, () => {
                   />
                 </svg>
               </div>
-              <button v-if="imLeader" @click="toggleAllPacks(true)">
+              <button v-if="gameState.imLeader" @click="toggleAllPacks(true)">
                 Select all
               </button>
-              <button v-if="imLeader" @click="toggleAllPacks(false)">
+              <button v-if="gameState.imLeader" @click="toggleAllPacks(false)">
                 Unselect all
               </button>
             </div>
@@ -439,7 +442,7 @@ onClickOutside(invitePlayersContent, () => {
             v-for="group in [
               { name: 'Liked packs', packs: likedPacks },
               {
-                name: imLeader ? 'My packs' : 'Leader packs',
+                name: gameState.imLeader ? 'My packs' : 'Leader packs',
                 packs: leaderPacks
               },
               { name: 'Official packs', packs: officialPacks }
@@ -457,7 +460,7 @@ onClickOutside(invitePlayersContent, () => {
                 :pack="pack"
                 :selectedBlacks="pack.blacks"
                 :selectedWhites="pack.whites"
-                :disabled="!imLeader"
+                :disabled="!gameState.imLeader"
                 :key="pack.id"
               />
             </div>
@@ -475,7 +478,7 @@ onClickOutside(invitePlayersContent, () => {
             class="settings__main__bottom__n"
           />
           <AppButton
-            v-if="imLeader"
+            v-if="gameState.imLeader"
             @click="onStart()"
             :disabled="!canStart"
             class="settings__main__bottom__right"
@@ -550,31 +553,40 @@ onClickOutside(invitePlayersContent, () => {
             <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"></path>
           </svg>
         </button>
-        <div
+        <UserDetails
           v-for="player in gameState.players"
-          :key="player.user.displayName"
-          class="settings__player"
+          :user-details="player.user"
+          :placement="state.mobile ? 'top' : undefined"
+          :key="player.user.id"
         >
-          <UserAvatar :user="player.user" />
-          <div>
-            <div class="settings__player__name">
-              {{ player.user.displayName }}
+          <div class="settings__player">
+            <UserAvatar :user="player.user" />
+            <div>
+              <div class="settings__player__name">
+                {{ player.user.displayName }}
+              </div>
+              <div v-if="player.leader" class="settings__player__leader">
+                Room Leader
+              </div>
             </div>
-            <div v-if="player.leader" class="settings__player__leader">
-              Room Leader
-            </div>
+            <svg
+              v-if="player.leader"
+              class="settings__player__leader-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 96 960 960"
+            >
+              <path
+                d="m243 960 63-266L96 515l276-24 108-251 108 252 276 23-210 179 63 266-237-141-237 141Z"
+              />
+            </svg>
           </div>
-          <svg
-            v-if="player.leader"
-            class="settings__player__leader-icon"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 96 960 960"
+          <template
+            #underdetails
+            v-if="gameState.imLeader && player.user.id !== user.value?.id"
           >
-            <path
-              d="m243 960 63-266L96 515l276-24 108-251 108 252 276 23-210 179 63 266-237-141-237 141Z"
-            />
-          </svg>
-        </div>
+            <AppButton class="settings__player__kick"> Kick </AppButton>
+          </template>
+        </UserDetails>
       </div>
     </div>
   </div>
@@ -941,6 +953,13 @@ $main-gap: 16px;
     display: flex;
     align-items: center;
     gap: 6px;
+    padding: 3px;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: colors.$darkgray;
+    }
 
     :deep(img) {
       width: 36px;
@@ -978,6 +997,10 @@ $main-gap: 16px;
       @include mixins.sm() {
         display: block;
       }
+    }
+
+    &__kick {
+      width: 100%;
     }
   }
 }

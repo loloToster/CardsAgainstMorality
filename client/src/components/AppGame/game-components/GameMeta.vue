@@ -4,18 +4,21 @@ import { onClickOutside, useResizeObserver } from "@vueuse/core"
 
 import type { VotingMeta } from "@backend/types"
 
+import { useUserStore } from "@/contexts/user"
 import { useAudioStore } from "@/contexts/audio"
 import { useGameStateStore } from "../contexts/gamestate"
 import { takePicture } from "../contexts/screenshot"
 
 import AppButton from "@/components/AppButton.vue"
 import UserAvatar from "@/components/UserAvatar.vue"
+import UserDetails from "@/components/UserDetails.vue"
 
 const emit = defineEmits<{
   (e: "new-voting", data: VotingMeta): void
   (e: "open-kick"): void
 }>()
 
+const user = useUserStore()
 const audio = useAudioStore()
 const gameState = useGameStateStore()
 
@@ -172,81 +175,91 @@ useResizeObserver(document.body, () => {
     </div>
     <div class="game-meta__sep"></div>
     <div class="players">
-      <div
+      <UserDetails
         v-for="player in gameState.players"
-        class="players__player"
+        :user-details="player.user"
+        :placement="state.mobile ? 'top' : undefined"
         :key="player.user.id"
       >
-        <div class="players__player__avatar">
-          <svg
-            v-if="player.tsar"
-            class="players__player__crown"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            version="1.1"
-            viewBox="0 0 256 256"
-            xml:space="preserve"
-          >
-            <g
-              style="
-                stroke: none;
-                stroke-width: 0;
-                stroke-dasharray: none;
-                stroke-linecap: butt;
-                stroke-linejoin: miter;
-                stroke-miterlimit: 10;
-                fill: none;
-                fill-rule: nonzero;
-                opacity: 1;
-              "
-              transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)"
+        <div class="players__player">
+          <div class="players__player__avatar">
+            <svg
+              v-if="player.tsar"
+              class="players__player__crown"
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              version="1.1"
+              viewBox="0 0 256 256"
+              xml:space="preserve"
             >
-              <path
-                d="M 78.517 77.617 H 11.483 c -0.951 0 -1.77 -0.669 -1.959 -1.601 L 0.041 29.542 c -0.159 -0.778 0.157 -1.576 0.806 -2.034 c 0.648 -0.459 1.506 -0.489 2.186 -0.079 l 25.585 15.421 l 14.591 -29.358 c 0.335 -0.674 1.021 -1.104 1.774 -1.11 c 0.709 -0.003 1.445 0.411 1.792 1.08 l 15.075 29.1 L 86.968 27.43 c 0.681 -0.41 1.537 -0.379 2.186 0.079 s 0.965 1.256 0.807 2.034 l -9.483 46.474 C 80.286 76.948 79.467 77.617 78.517 77.617 z"
+              <g
                 style="
                   stroke: none;
-                  stroke-width: 1;
+                  stroke-width: 0;
                   stroke-dasharray: none;
                   stroke-linecap: butt;
                   stroke-linejoin: miter;
                   stroke-miterlimit: 10;
-                  fill: goldenrod;
+                  fill: none;
                   fill-rule: nonzero;
                   opacity: 1;
                 "
-                transform=" matrix(1 0 0 1 0 0) "
-                stroke-linecap="round"
-              />
-            </g>
-          </svg>
-          <UserAvatar :user="player.user" class="header__avatar" />
-          <div class="players__player__points">{{ player.points }}</div>
-        </div>
-        <div class="players__player__name-wrapper">
-          <div class="players__player__name">{{ player.user.displayName }}</div>
-          <div v-if="player.leader" class="players__player__leader">
-            Room Leader
+                transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)"
+              >
+                <path
+                  d="M 78.517 77.617 H 11.483 c -0.951 0 -1.77 -0.669 -1.959 -1.601 L 0.041 29.542 c -0.159 -0.778 0.157 -1.576 0.806 -2.034 c 0.648 -0.459 1.506 -0.489 2.186 -0.079 l 25.585 15.421 l 14.591 -29.358 c 0.335 -0.674 1.021 -1.104 1.774 -1.11 c 0.709 -0.003 1.445 0.411 1.792 1.08 l 15.075 29.1 L 86.968 27.43 c 0.681 -0.41 1.537 -0.379 2.186 0.079 s 0.965 1.256 0.807 2.034 l -9.483 46.474 C 80.286 76.948 79.467 77.617 78.517 77.617 z"
+                  style="
+                    stroke: none;
+                    stroke-width: 1;
+                    stroke-dasharray: none;
+                    stroke-linecap: butt;
+                    stroke-linejoin: miter;
+                    stroke-miterlimit: 10;
+                    fill: goldenrod;
+                    fill-rule: nonzero;
+                    opacity: 1;
+                  "
+                  transform=" matrix(1 0 0 1 0 0) "
+                  stroke-linecap="round"
+                />
+              </g>
+            </svg>
+            <UserAvatar :user="player.user" class="header__avatar" />
+            <div class="players__player__points">{{ player.points }}</div>
           </div>
+          <div class="players__player__name-wrapper">
+            <div class="players__player__name">
+              {{ player.user.displayName }}
+            </div>
+            <div v-if="player.leader" class="players__player__leader">
+              Room Leader
+            </div>
+          </div>
+          <svg
+            v-if="!player.connected"
+            class="players__player__disconnected"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 96 960 960"
+          >
+            <path
+              d="M881 546q-88-81-186-129t-215-48q-27 0-52 4t-40 9l-96-96q44-16 89-23t99-7q140 0 262.5 58T960 468l-79 78ZM736 691q-32-31-58.5-50.5T610 604L506 500q91 5 158 41t127 95l-55 55Zm62 304L417 615q-54 14-94.5 41T249 715l-80-79q35-35 71-62t89-49l-94-93q-46 24-84 52.5T79 546L0 467q33-34 73-65.5t78-52.5l-90-90 51-51 736 736-50 51Zm-318-48L332 798q29-29 66.5-45.5T480 736q44 0 81.5 16.5T628 798L480 947Z"
+            />
+          </svg>
+          <svg
+            v-else-if="player.ready"
+            class="players__player__ready"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 96 960 960"
+          >
+            <path d="M382 848 122 588l90-90 170 170 366-366 90 90-456 456Z" />
+          </svg>
         </div>
-        <svg
-          v-if="!player.connected"
-          class="players__player__disconnected"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 96 960 960"
-        >
-          <path
-            d="M881 546q-88-81-186-129t-215-48q-27 0-52 4t-40 9l-96-96q44-16 89-23t99-7q140 0 262.5 58T960 468l-79 78ZM736 691q-32-31-58.5-50.5T610 604L506 500q91 5 158 41t127 95l-55 55Zm62 304L417 615q-54 14-94.5 41T249 715l-80-79q35-35 71-62t89-49l-94-93q-46 24-84 52.5T79 546L0 467q33-34 73-65.5t78-52.5l-90-90 51-51 736 736-50 51Zm-318-48L332 798q29-29 66.5-45.5T480 736q44 0 81.5 16.5T628 798L480 947Z"
-          />
-        </svg>
-        <svg
-          v-else-if="player.ready"
-          class="players__player__ready"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 96 960 960"
-        >
-          <path d="M382 848 122 588l90-90 170 170 366-366 90 90-456 456Z" />
-        </svg>
-      </div>
+        <template #underdetails v-if="player.user.id !== user.value?.id">
+          <AppButton class="players__player__kick">
+            {{ gameState.imLeader ? "Kick" : "Vote to kick" }}
+          </AppButton>
+        </template>
+      </UserDetails>
     </div>
   </div>
 </template>
@@ -303,8 +316,13 @@ useResizeObserver(document.body, () => {
     display: flex;
     align-items: center;
     padding: 8px;
-    background-color: colors.$darkgray;
+    background-color: colors.$light-surface;
     border-radius: 8px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: colors.$darkgray;
+    }
 
     &__crown {
       position: absolute;
@@ -384,6 +402,10 @@ useResizeObserver(document.body, () => {
       width: 16px;
       margin-left: 4px;
       fill: colors.$lime;
+    }
+
+    &__kick {
+      width: 100%;
     }
   }
 

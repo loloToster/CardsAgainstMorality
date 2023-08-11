@@ -1,5 +1,6 @@
 import { acceptHMRUpdate, defineStore } from "pinia"
 import { deepclone } from "@/utils"
+import { useUserStore } from "@/contexts/user"
 import { GameStage, GameState, PlayerState } from "@/types/game"
 
 const defaultPlayerState: PlayerState = {
@@ -29,6 +30,15 @@ export const useGameStateStore = defineStore("game-state", {
   actions: {
     resetPlayerState() {
       return this.$patch(deepclone(defaultPlayerState))
+    }
+  },
+  getters: {
+    leader(state) {
+      return state.players.find(p => p.leader)
+    },
+    imLeader(state) {
+      const user = useUserStore()
+      return state.players.find(p => p.leader)?.user.id === user.value?.id
     }
   }
 })
