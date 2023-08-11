@@ -5,9 +5,9 @@ import { delay, getRandomInt } from "@/utils"
 import PlayingCard from "@/components/PlayingCard.vue"
 
 const TEXTS = [
-  "Test text Test text Test text Test text.",
-  "Some custom card.",
-  "Test Test TEST."
+  "Your surely very funny custom card.",
+  "Hilarious inside joke.",
+  "Your shitty joke."
 ]
 
 const state = reactive({
@@ -91,8 +91,9 @@ const displayedText = computed(() => {
   </div>
 </template>
 <style scoped lang="scss">
-@use "@/styles/colors" as colors;
 @use "@/styles/variables" as vars;
+@use "@/styles/mixins" as mixins;
+@use "@/styles/colors" as colors;
 
 .custom {
   display: flex;
@@ -102,6 +103,11 @@ const displayedText = computed(() => {
   max-width: 90vw;
   margin: auto;
   scroll-margin-top: calc(vars.$header-height + 40px);
+
+  @include mixins.sm {
+    flex-direction: column-reverse;
+    justify-content: center;
+  }
 
   &__cards {
     isolation: isolate;
@@ -158,6 +164,10 @@ const displayedText = computed(() => {
       width: var(--size);
       height: var(--size);
 
+      @include mixins.sm {
+        display: none;
+      }
+
       &:nth-child(1) {
         --size: 60px;
         left: -81%;
@@ -189,7 +199,13 @@ const displayedText = computed(() => {
 
   &__text-wrapper {
     margin-top: 56px;
-    margin-left: min(160px, 15vw);
+    margin-left: min(200px, 20vw);
+
+    @include mixins.sm {
+      text-align: center;
+      margin: 0;
+      margin-bottom: clamp(30px, 5vh, 60px);
+    }
 
     p {
       font-size: clamp(1rem, 2.6vw, 1.3rem);
