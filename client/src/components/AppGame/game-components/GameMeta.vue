@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { reactive, computed, ref, watch } from "vue"
-import { onClickOutside, useResizeObserver } from "@vueuse/core"
+import { onClickOutside } from "@vueuse/core"
 
 import type { VotingMeta } from "@backend/types"
 
+import { useScreenStore } from "@/contexts/screen"
 import { useUserStore } from "@/contexts/user"
 import { useAudioStore } from "@/contexts/audio"
 import { useGameStateStore } from "../contexts/gamestate"
@@ -18,14 +19,14 @@ const emit = defineEmits<{
   (e: "open-kick"): void
 }>()
 
+const screen = useScreenStore()
 const user = useUserStore()
 const audio = useAudioStore()
 const gameState = useGameStateStore()
 
 const state = reactive({
   gameMenuActive: false,
-  votingMenuActive: false,
-  mobile: false
+  votingMenuActive: false
 })
 
 const audioTooltip = computed(() => {
@@ -65,9 +66,8 @@ function openKick(e: MouseEvent) {
   emit("open-kick")
 }
 
-const MOBILE_THRESHOLD = 992
-useResizeObserver(document.body, () => {
-  state.mobile = document.body.clientWidth <= MOBILE_THRESHOLD
+const showGameMenuTooltip = computed(() => {
+  return state.gameMenuActive && screen.sm && !state.votingMenuActive
 })
 </script>
 <template>
@@ -83,8 +83,8 @@ useResizeObserver(document.body, () => {
           class="game-menu__btn game-menu__item"
           v-tooltip.right="{
             content: audioTooltip,
-            shown: state.gameMenuActive && state.mobile,
-            triggers: state.gameMenuActive && state.mobile ? [] : undefined
+            shown: showGameMenuTooltip,
+            triggers: showGameMenuTooltip ? [] : undefined
           }"
           v-wave
         >
@@ -110,8 +110,8 @@ useResizeObserver(document.body, () => {
           ref="votingMenu"
           v-tooltip.right="{
             content: votingTooltip,
-            shown: state.gameMenuActive && state.mobile,
-            triggers: state.gameMenuActive && state.mobile ? [] : undefined
+            shown: showGameMenuTooltip,
+            triggers: showGameMenuTooltip ? [] : undefined
           }"
           v-wave
         >
@@ -146,8 +146,8 @@ useResizeObserver(document.body, () => {
           class="game-menu__btn game-menu__item"
           v-tooltip.right="{
             content: 'Picture of the table',
-            shown: state.gameMenuActive && state.mobile,
-            triggers: state.gameMenuActive && state.mobile ? [] : undefined
+            shown: showGameMenuTooltip,
+            triggers: showGameMenuTooltip ? [] : undefined
           }"
           v-wave
         >
@@ -178,7 +178,7 @@ useResizeObserver(document.body, () => {
       <UserDetails
         v-for="player in gameState.players"
         :user-details="player.user"
-        :placement="state.mobile ? 'top' : undefined"
+        :placement="screen.sm ? 'top' : undefined"
         :key="player.user.id"
       >
         <div class="players__player">

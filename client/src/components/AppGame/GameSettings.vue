@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from "vue"
-import { useHead } from "@unhead/vue"
-import { onClickOutside, useResizeObserver } from "@vueuse/core"
+import { onClickOutside } from "@vueuse/core"
 
 import api from "@/utils/api"
 import { SETTINGS_BOUNDARIES } from "@backend/consts"
 import type { ApiCardPack, SettingsData, SettingsPack } from "@backend/types"
 
+import { useScreenStore } from "@/contexts/screen"
 import { useUserStore } from "@/contexts/user"
 import { useGameStateStore } from "./contexts/gamestate"
 import { useGameSettingsStore, ensureBoundary } from "./contexts/gamesettings"
@@ -27,16 +27,10 @@ import WhiteCardIcon from "@/assets/white-card-icon.svg?component"
 
 defineProps<{ roomId: string }>()
 
+const screen = useScreenStore()
 const user = useUserStore()
 const gameSettings = useGameSettingsStore()
 const gameState = useGameStateStore()
-
-const defaultRoomName = computed(() => {
-  return `${gameState.leader?.user.displayName}'s Room`
-})
-
-// todo: move higher in component tree
-useHead({ title: () => gameSettings.roomName || defaultRoomName.value })
 
 const emit = defineEmits<{
   (e: "start", data: SettingsData): void
@@ -51,14 +45,12 @@ const state = reactive<{
   inviteOpen: boolean
   packs: ApiCardPack[]
   fetchedPackGroups: number
-  mobile: boolean
 }>({
   loading: true,
   error: false,
   inviteOpen: false,
   packs: [],
-  fetchedPackGroups: 0,
-  mobile: false
+  fetchedPackGroups: 0
 })
 
 const invalidRoomName = computed(() => {
@@ -253,11 +245,6 @@ const invitePlayersContent = ref<HTMLDivElement>()
 onClickOutside(invitePlayersContent, () => {
   state.inviteOpen = false
 })
-
-const MOBILE_THRESHOLD = 992
-useResizeObserver(document.body, () => {
-  state.mobile = document.body.clientWidth <= MOBILE_THRESHOLD
-})
 </script>
 <template>
   <div class="settings">
@@ -276,7 +263,7 @@ useResizeObserver(document.body, () => {
           <div class="settings__main__options-row">
             <input
               v-model="gameSettings.roomName"
-              :placeholder="defaultRoomName"
+              :placeholder="gameSettings.defaultRoomName"
               :disabled="!gameState.imLeader"
               class="settings__main__room-name"
               type="text"
@@ -556,7 +543,7 @@ useResizeObserver(document.body, () => {
         <UserDetails
           v-for="player in gameState.players"
           :user-details="player.user"
-          :placement="state.mobile ? 'top' : undefined"
+          :placement="screen.sm ? 'top' : undefined"
           :key="player.user.id"
         >
           <div class="settings__player">
@@ -821,6 +808,7 @@ $main-gap: 16px;
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
+    padding-bottom: 0.3rem;
 
     @include mixins.sm() {
       justify-content: center;

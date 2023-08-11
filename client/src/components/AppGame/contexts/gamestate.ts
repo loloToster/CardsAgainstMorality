@@ -36,9 +36,9 @@ export const useGameStateStore = defineStore("game-state", {
     leader(state) {
       return state.players.find(p => p.leader)
     },
-    imLeader(state) {
+    imLeader(): boolean {
       const user = useUserStore()
-      return state.players.find(p => p.leader)?.user.id === user.value?.id
+      return this.leader?.user.id === user.value?.id
     }
   }
 })

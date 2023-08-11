@@ -1,4 +1,5 @@
 import { acceptHMRUpdate, defineStore } from "pinia"
+import { useGameStateStore } from "./gamestate"
 import type {
   SettingsBoundary,
   SettingsBoundaryName,
@@ -108,6 +109,15 @@ export const useGameSettingsStore = defineStore("game-settings", {
       })
 
       return validSettings
+    }
+  },
+  getters: {
+    defaultRoomName() {
+      const gameState = useGameStateStore()
+      return `${gameState.leader?.user.displayName}'s Room`
+    },
+    actualRoomName(state): string {
+      return state.roomName || this.defaultRoomName
     }
   }
 })

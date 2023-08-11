@@ -342,6 +342,7 @@ function onCardsScroll(e: WheelEvent) {
 $main-gap: 20px;
 
 .game {
+  isolation: isolate;
   position: relative;
   width: 90vw;
   max-width: 1100px;

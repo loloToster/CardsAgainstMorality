@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, watch } from "vue"
+import { useHead } from "@unhead/vue"
 import { useRoute } from "vue-router"
 
 import type { SettingsData, VotingMeta } from "@backend/types"
@@ -25,6 +26,8 @@ const audio = useAudioStore()
 
 const gameState = useGameStateStore()
 const gameSettings = useGameSettingsStore()
+
+useHead({ title: () => gameSettings.actualRoomName })
 
 function hashChoice(ch: number[]) {
   return [...ch].sort((a, b) => a - b).join("-")

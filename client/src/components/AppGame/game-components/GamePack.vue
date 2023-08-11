@@ -79,42 +79,42 @@ const light = computed(() => {
     :shown="state.detailsOpen"
     :triggers="[]"
     :distance="4"
+    class="pack-wrapper"
+    :style="{ '--pack-color': packColor }"
   >
-    <div class="pack-wrapper" :style="{ '--pack-color': packColor }">
-      <AppChip
-        @click="handleClick"
-        :color="packColor"
-        :class="{ selected, disabled }"
-        :outlined="!selected"
-        class="pack"
-      >
-        <PackIcon
-          :icon="pack.icon"
-          class="pack__icon"
-          :class="{
-            'pack__icon--colored-icon': pack.icon && pack.color,
-            'pack__icon--only-colored': pack.color && !pack.icon
-          }"
-        />
-        {{ pack.name }}
-      </AppChip>
-      <button
-        v-if="!state.detailsOpen"
-        @click="handleDetailsOpen"
-        class="pack-wrapper__more"
-      >
-        ...
-      </button>
-      <div
-        v-if="selectedBlacks !== selectedWhites"
-        class="pack-wrapper__partial-select"
+    <AppChip
+      @click="handleClick"
+      :color="packColor"
+      :class="{ selected, disabled }"
+      :outlined="!selected"
+      class="pack"
+    >
+      <PackIcon
+        :icon="pack.icon"
+        class="pack__icon"
         :class="{
-          'pack-wrapper__partial-select--black': selectedBlacks,
-          'pack-wrapper__partial-select--white': selectedWhites
+          'pack__icon--colored-icon': pack.icon && pack.color,
+          'pack__icon--only-colored': pack.color && !pack.icon
         }"
-      >
-        <div></div>
-      </div>
+      />
+      {{ pack.name }}
+    </AppChip>
+    <button
+      v-if="!state.detailsOpen"
+      @click="handleDetailsOpen"
+      class="pack-wrapper__more"
+    >
+      ...
+    </button>
+    <div
+      v-if="selectedBlacks !== selectedWhites"
+      class="pack-wrapper__partial-select"
+      :class="{
+        'pack-wrapper__partial-select--black': selectedBlacks,
+        'pack-wrapper__partial-select--white': selectedWhites
+      }"
+    >
+      <div></div>
     </div>
 
     <template #popper>
@@ -168,6 +168,7 @@ const light = computed(() => {
 
 .pack-wrapper {
   position: relative;
+  max-width: 100%;
 
   &__more {
     display: none;
@@ -220,6 +221,8 @@ const light = computed(() => {
 .pack {
   transition: all 100ms;
   cursor: default;
+  max-width: 100%;
+  overflow: hidden;
 
   &.disabled {
     cursor: not-allowed;

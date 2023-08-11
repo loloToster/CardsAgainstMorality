@@ -135,7 +135,7 @@ function handleJoin(e: MouseEvent | KeyboardEvent) {
   flex-direction: column;
   justify-content: end;
   position: relative;
-  height: 45vh;
+  height: min(45vh, 600px);
   overflow: hidden;
 
   &__cards {
@@ -151,7 +151,7 @@ function handleJoin(e: MouseEvent | KeyboardEvent) {
   &__card {
     position: absolute;
     bottom: 0;
-    --w: 28vh;
+    --w: min(28vh, 300px);
     transition: all 100ms ease-in-out;
 
     &--black {
