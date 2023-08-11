@@ -54,8 +54,8 @@ const nonAnonymousUser = computed(() => {
       <RouterLink class="header__link" to="/rooms"> Rooms </RouterLink>
       <RouterLink class="header__link" to="/packs"> Packs </RouterLink>
       <div
-        @click="state.profileMenuOpen = !state.profileMenuOpen"
         v-if="user.value"
+        @click="state.profileMenuOpen = !state.profileMenuOpen"
         class="header__profile"
         ref="target"
       >
@@ -119,6 +119,11 @@ const nonAnonymousUser = computed(() => {
           </a>
         </div>
       </div>
+      <div
+        v-else-if="user.everLoggedIn && user.fetching"
+        class="header__loading-profile"
+        v-tooltip.bottom="'Loading profile'"
+      ></div>
       <RouterLink v-else to="/login">
         <AppButton class="header__login"> Login </AppButton>
       </RouterLink>
@@ -274,12 +279,32 @@ const nonAnonymousUser = computed(() => {
     @include colors.app-button(colors.$primary);
   }
 
+  &__loading-profile,
   &__avatar {
     min-width: 24px;
     width: 5vw;
     max-width: 42px;
     aspect-ratio: 1;
     border-radius: 50%;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  &__loading-profile {
+    border: solid colors.$primary 6px;
+    border-top-color: transparent;
+    animation: spin 2s infinite linear;
+  }
+
+  &__avatar {
     cursor: pointer;
   }
 

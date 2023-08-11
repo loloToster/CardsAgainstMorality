@@ -19,7 +19,7 @@ useResizeObserver(document.body, () => {
 api
   .get("/auth/me")
   .then(res => {
-    user.value = res.data
+    user.login(res.data)
   })
   .finally(() => {
     user.fetching = false

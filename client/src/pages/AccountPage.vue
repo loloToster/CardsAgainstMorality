@@ -13,8 +13,7 @@ import { useNotificationsStore } from "@/contexts/notifications"
 import AppModal from "@/components/AppModal.vue"
 import UserAvatar from "@/components/UserAvatar.vue"
 import AppButton from "@/components/AppButton.vue"
-
-// TODO: handle not loaded user
+import AppLoading from "@/components/AppLoading.vue"
 
 const DELETE_VERIFICATION = "delete my account"
 
@@ -170,7 +169,7 @@ async function handleSettingsSave() {
       </AppButton>
     </div>
   </AppModal>
-  <div class="account">
+  <div v-if="user.value" class="account">
     <h1>My account</h1>
     <section>
       <h2>Profile Picture</h2>
@@ -253,6 +252,7 @@ async function handleSettingsSave() {
       </AppButton>
     </section>
   </div>
+  <AppLoading v-else> Loading account </AppLoading>
 </template>
 
 <style scoped lang="scss">
