@@ -17,6 +17,7 @@ import UserDetails from "@/components/UserDetails.vue"
 const emit = defineEmits<{
   (e: "new-voting", data: VotingMeta): void
   (e: "open-kick"): void
+  (e: "kick", playerId: number): void
 }>()
 
 const screen = useScreenStore()
@@ -69,6 +70,14 @@ function openKick(e: MouseEvent) {
 const showGameMenuTooltip = computed(() => {
   return state.gameMenuActive && screen.sm && !state.votingMenuActive
 })
+
+function handlePlayerKick(playerId: number) {
+  if (gameState.imLeader) {
+    emit("kick", playerId)
+  } else {
+    emit("new-voting", { type: "kick", playerId })
+  }
+}
 </script>
 <template>
   <div class="game-meta">
@@ -255,7 +264,11 @@ const showGameMenuTooltip = computed(() => {
           </svg>
         </div>
         <template #underdetails v-if="player.user.id !== user.value?.id">
-          <AppButton class="players__player__kick">
+          <AppButton
+            @click="handlePlayerKick(player.user.id)"
+            :disabled="Boolean(gameState.voting && !gameState.imLeader)"
+            class="players__player__kick"
+          >
             {{ gameState.imLeader ? "Kick" : "Vote to kick" }}
           </AppButton>
         </template>

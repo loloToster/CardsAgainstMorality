@@ -109,6 +109,10 @@ export interface Vote {
   vote: boolean
 }
 
+export interface KickData {
+  playerId: number
+}
+
 export interface ClientToServerSocketEvents {
   "sync-settings": (data: Partial<SettingsData>) => void
   start: (data: SettingsData) => void
@@ -116,6 +120,7 @@ export interface ClientToServerSocketEvents {
   verdict: (data: Verdict) => void
   "vote-start": (data: VotingMeta) => void
   vote: (data: Vote) => void
+  kick: (data: KickData) => void
 }
 
 export type SocketServer = Server<

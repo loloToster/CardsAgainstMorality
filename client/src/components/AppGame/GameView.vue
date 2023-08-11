@@ -31,6 +31,7 @@ defineEmits<{
   (ev: "verdict", choiceIdx: number): void
   (ev: "new-voting", data: VotingMeta): void
   (ev: "vote", data: boolean): void
+  (ev: "kick", playerId: number): void
 }>()
 
 const audio = useAudioStore()
@@ -314,6 +315,7 @@ function onCardsScroll(e: WheelEvent) {
       <GameMeta
         @new-voting="d => $emit('new-voting', d)"
         @open-kick="state.kickPlayerModalActive = true"
+        @kick="pId => $emit('kick', pId)"
       />
     </div>
     <div @wheel="onCardsScroll" class="game__hand" ref="hand">

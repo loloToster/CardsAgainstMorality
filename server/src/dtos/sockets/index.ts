@@ -8,6 +8,7 @@ import { SubmitionDto } from "./submition.dto"
 import { VerdictDto } from "./verdict.dto"
 import { VoteStartDto } from "./vote-start.dto"
 import { VoteDto } from "./vote.dto"
+import { KickDto } from "./kick.dto"
 
 type SocketValidators = {
   [K in keyof ClientToServerSocketEvents]?: ClassType<object>
@@ -19,7 +20,8 @@ const validators: Record<string, ClassType<object> | undefined> = {
   submit: SubmitionDto,
   verdict: VerdictDto,
   "vote-start": VoteStartDto,
-  vote: VoteDto
+  vote: VoteDto,
+  kick: KickDto
 } satisfies SocketValidators
 
 export async function validate(ev: string, obj: object | null | undefined) {

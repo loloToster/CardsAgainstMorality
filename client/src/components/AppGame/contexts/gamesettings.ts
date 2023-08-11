@@ -114,7 +114,9 @@ export const useGameSettingsStore = defineStore("game-settings", {
   getters: {
     defaultRoomName() {
       const gameState = useGameStateStore()
-      return `${gameState.leader?.user.displayName}'s Room`
+      return gameState.leader
+        ? `${gameState.leader.user.displayName}'s Room`
+        : "Room"
     },
     actualRoomName(state): string {
       return state.roomName || this.defaultRoomName

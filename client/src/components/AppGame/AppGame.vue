@@ -177,6 +177,10 @@ function onVote(data: boolean) {
   socket.emit("vote", { vote: data })
 }
 
+function onKick(playerId: number) {
+  socket.emit("kick", { playerId })
+}
+
 watch(
   () => socketState.connected,
   val => {
@@ -224,12 +228,14 @@ onUnmounted(() => {
     @verdict="onVerdict"
     @new-voting="onNewVoting"
     @vote="onVote"
+    @kick="onKick"
   />
   <GameSettings
     v-else
     :room-id="roomId.toString()"
     @change="onSettingsChange"
     @start="onStart"
+    @kick="onKick"
   />
 </template>
 

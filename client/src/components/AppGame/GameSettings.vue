@@ -35,6 +35,7 @@ const gameState = useGameStateStore()
 const emit = defineEmits<{
   (e: "start", data: SettingsData): void
   (e: "change", data: Partial<SettingsData>): void
+  (e: "kick", playerId: number): void
 }>()
 
 const PACK_GROUPS = 3
@@ -571,7 +572,12 @@ onClickOutside(invitePlayersContent, () => {
             #underdetails
             v-if="gameState.imLeader && player.user.id !== user.value?.id"
           >
-            <AppButton class="settings__player__kick"> Kick </AppButton>
+            <AppButton
+              @click="$emit('kick', player.user.id)"
+              class="settings__player__kick"
+            >
+              Kick
+            </AppButton>
           </template>
         </UserDetails>
       </div>

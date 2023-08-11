@@ -368,6 +368,18 @@ export class Room {
     )
 
     socket.on(
+      "kick",
+      errWrapper(async data => {
+        const leader = this.getLeader()
+
+        if (leader !== player || data.playerId === leader.metadata?.user.id)
+          return
+
+        await this.kickPlayer(data.playerId)
+      })
+    )
+
+    socket.on(
       "disconnect",
       errWrapper(async () => {
         logger.info(
@@ -671,6 +683,25 @@ export class Room {
     })
   }
 
+  async kickPlayer(playerId: number) {
+    const kickedPlayer = this.game.players.find(
+      p => p.metadata?.user.id === playerId
+    )
+
+    if (!kickedPlayer) return
+
+    const playerWasTsar = kickedPlayer.isTsar
+    this.kickedPlayers.push(playerId)
+    this.game.removePlayer(kickedPlayer)
+    kickedPlayer.metadata?.socket.disconnect()
+
+    if (playerWasTsar) {
+      await this.sendNewRound(undefined, true)
+    } else {
+      this.sendPlayers(kickedPlayer)
+    }
+  }
+
   async onVotingTimeout() {
     if (this.currentVoting) await this.resolveVoting()
   }
@@ -690,23 +721,7 @@ export class Room {
         }
 
         case "kick": {
-          const kickedPlayerId = this.currentVoting.meta.playerId
-          const kickedPlayer = this.game.players.find(
-            p => p.metadata?.user.id === kickedPlayerId
-          )
-
-          if (!kickedPlayer) break
-
-          const playerWasTsar = kickedPlayer.isTsar
-          this.kickedPlayers.push(kickedPlayerId)
-          this.game.removePlayer(kickedPlayer)
-          kickedPlayer.metadata?.socket.disconnect()
-
-          if (playerWasTsar) {
-            await this.sendNewRound(undefined, true)
-          } else {
-            this.sendPlayers(kickedPlayer)
-          }
+          await this.kickPlayer(this.currentVoting.meta.playerId)
           break
         }
 
