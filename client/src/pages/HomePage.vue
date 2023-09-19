@@ -5,6 +5,7 @@ import { TITLE } from "@/consts"
 
 import HomeLanding from "@/components/HomePage/HomeLanding.vue"
 import HomeAbout from "@/components/HomePage/HomeAbout.vue"
+import HomeFlexibility from "@/components/HomePage/HomeFlexibility.vue"
 import HomeVariety from "@/components/HomePage/HomeVariety.vue"
 import HomeCustom from "@/components/HomePage/HomeCustom.vue"
 
@@ -35,6 +36,7 @@ useHead({
     </p>
     <HomeLanding />
     <HomeAbout />
+    <HomeFlexibility />
     <HomeVariety />
     <HomeCustom />
   </div>
