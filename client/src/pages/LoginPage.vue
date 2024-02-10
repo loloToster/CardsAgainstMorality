@@ -14,11 +14,43 @@ import PlayingCard from "@/components/PlayingCard.vue"
 
 import CaptchaImg from "@/assets/captcha.png"
 
-const CAPTCHA_SITEKEY = import.meta.env.VITE_CAPTCHA_SITEKEY
-
 useHead({ title: "Login" })
 
 const route = useRoute()
+
+interface AnimatedCard extends ApiRandomCard {
+  size: number
+  pos: number
+  delay: number
+  fallSpeed: number
+  rotateSpeed: number
+  rotateDirection: boolean
+}
+
+const state = reactive<{
+  fallingCards: AnimatedCard[]
+  captchaOpen: boolean
+  waitingForCaptchaSitekey: boolean
+  loadingCaptchaSitekey: boolean
+  captchaSitekey: string | null
+}>({
+  fallingCards: [],
+  captchaOpen: false,
+  waitingForCaptchaSitekey: false,
+  loadingCaptchaSitekey: true,
+  captchaSitekey: null
+})
+
+const fetchCaptchaSitekey = async () => {
+  try {
+    const res = await api.get("/auth/captchakey")
+    state.captchaSitekey = res.data.key
+  } finally {
+    state.loadingCaptchaSitekey = false
+  }
+}
+
+fetchCaptchaSitekey()
 
 function loginWith(strategy: string, query: Record<string, string> = {}) {
   const returnTo = route.query.returnTo
@@ -38,26 +70,12 @@ function onVerify(token: string) {
 }
 
 function onLoginAnonymously() {
-  if (CAPTCHA_SITEKEY) {
+  if (state.captchaSitekey) {
     state.captchaOpen = true
   } else {
     loginWith("anonymous")
   }
 }
-
-interface AnimatedCard extends ApiRandomCard {
-  size: number
-  pos: number
-  delay: number
-  fallSpeed: number
-  rotateSpeed: number
-  rotateDirection: boolean
-}
-
-const state = reactive<{ fallingCards: AnimatedCard[]; captchaOpen: boolean }>({
-  fallingCards: [],
-  captchaOpen: false
-})
 
 function addCards(newCards: ApiRandomCard[]) {
   const animatedCards: AnimatedCard[] = newCards.map(c => ({
@@ -125,7 +143,7 @@ function onFallen(card: ApiRandomCard) {
         <h1>Create an anonymous account</h1>
         <HCaptcha
           class="login__captcha__btn"
-          :sitekey="CAPTCHA_SITEKEY"
+          :sitekey="state.captchaSitekey"
           theme="dark"
           @verify="onVerify"
         />
@@ -136,9 +154,16 @@ function onFallen(card: ApiRandomCard) {
         </RouterLink>
         <AppButton
           @click="onLoginAnonymously"
+          :disabled="state.loadingCaptchaSitekey"
           color="#080808"
           hColor="black"
           class="login__btn login__btn--anonymous login__anonymous-btn"
+          :class="{ 'login__btn--loading': state.loadingCaptchaSitekey }"
+          :title="
+            state.loadingCaptchaSitekey
+              ? 'Fetching Captcha Key. Please wait...'
+              : ''
+          "
         >
           <svg viewBox="0 0 24 24">
             <path
@@ -387,6 +412,10 @@ $colors: (
       flex-grow: 1;
       text-align: center;
       font-size: 0.9rem;
+    }
+
+    &--loading {
+      cursor: wait !important;
     }
   }
 

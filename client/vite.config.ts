@@ -1,11 +1,5 @@
 import { resolve } from "path"
-import {
-  ProxyOptions,
-  defineConfig,
-  loadEnv,
-  UserConfigFn,
-  UserConfig
-} from "vite"
+import { ProxyOptions, defineConfig, UserConfigFn, UserConfig } from "vite"
 
 import vue from "@vitejs/plugin-vue"
 import svgLoader from "vite-svg-loader"
@@ -15,12 +9,7 @@ const devServer: ProxyOptions = {
   secure: false
 }
 
-const configFn: UserConfigFn = ({ mode }) => {
-  process.env = {
-    ...process.env,
-    ...loadEnv(mode, resolve(__dirname, ".."))
-  }
-
+const configFn: UserConfigFn = () => {
   return defineConfig({
     resolve: {
       alias: {

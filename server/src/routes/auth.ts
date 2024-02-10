@@ -6,6 +6,16 @@ import { StrategyIdentifier } from "../consts"
 
 const router = Router()
 
+router.get("/captchakey", (req, res) => {
+  const { VITE_CAPTCHA_SITEKEY } = process.env
+
+  if (VITE_CAPTCHA_SITEKEY) {
+    res.json({ key: VITE_CAPTCHA_SITEKEY })
+  } else {
+    res.status(404).send()
+  }
+})
+
 router.get("/me", (req, res) => {
   if (!req.user) return res.status(404).send()
 
