@@ -12,7 +12,7 @@ import type {
   ApiCardPackTag
 } from "@backend/types"
 
-import { MAX_PACK_TAGS, MAX_PACK_NAME_LEN } from "@backend/consts"
+import { MAX_PACK_TAGS, MAX_PACK_NAME_LEN, PackPrivacy } from "@backend/consts"
 import { CUSTOM_ICONS_BASE_URL } from "@/consts"
 
 import api from "@/utils/api"
@@ -21,7 +21,6 @@ import { useNotificationsStore } from "@/contexts/notifications"
 import AppModal from "@/components/AppModal.vue"
 import AppButton from "@/components/AppButton.vue"
 import AppChip from "@/components/AppChip.vue"
-import AppSwitch from "@/components/AppSwitch.vue"
 
 import defaultIcon from "@/assets/white-card-icon.svg?url"
 
@@ -36,7 +35,7 @@ const notifications = useNotificationsStore()
 
 const state = reactive<{
   name: string
-  private: boolean
+  privacy: string | number // might be string because of input
   types: ApiCardPackType[]
   selectedType: number
   tags: ApiCardPackTag[]
@@ -48,7 +47,7 @@ const state = reactive<{
   icons: string[]
 }>({
   name: props.pack.name,
-  private: props.pack.private,
+  privacy: props.pack.privacy,
   selectedType: props.pack.type.id,
   types: [],
   selectedTags: props.pack.tags.map(t => t.id),
@@ -62,6 +61,10 @@ const state = reactive<{
 
 const nameError = computed(() => {
   return !state.name.trim()
+})
+
+const privacyAsNum = computed(() => {
+  return parseInt(state.privacy.toString())
 })
 
 api.get("/api/packs/search-criteria").then(res => {
@@ -118,7 +121,7 @@ function selectIcon(name: string) {
 async function save() {
   const details: ApiCardPackEditableDetails = {
     name: state.name,
-    private: state.private,
+    privacy: parseInt(state.privacy.toString()),
     type: state.selectedType,
     tags: state.selectedTags,
     color: state.color,
@@ -169,9 +172,64 @@ async function save() {
           </div>
         </div>
       </div>
-      <div class="details-modal__row details-modal__single-opt-row">
-        <h2>Private:</h2>
-        <AppSwitch v-model="state.private" />
+      <div class="details-modal__row">
+        <h2>Privacy</h2>
+        <div class="details-modal__privacy">
+          <div
+            class="details-modal__privacy__slider"
+            :class="`details-modal__privacy__slider--${state.privacy}`"
+          >
+            <div></div>
+            <div></div>
+            <div></div>
+            <input
+              v-model="state.privacy"
+              type="range"
+              :min="PackPrivacy.Public"
+              :max="PackPrivacy.Private"
+            />
+          </div>
+          <div class="details-modal__privacy__names">
+            <button
+              @click="state.privacy = PackPrivacy.Public"
+              :class="{ active: privacyAsNum === PackPrivacy.Public }"
+            >
+              Public
+            </button>
+            <div>
+              <button
+                @click="state.privacy = PackPrivacy.OnlyRoom"
+                :class="{ active: privacyAsNum === PackPrivacy.OnlyRoom }"
+              >
+                Only room
+              </button>
+            </div>
+            <button
+              @click="state.privacy = PackPrivacy.Private"
+              :class="{ active: privacyAsNum === PackPrivacy.Private }"
+            >
+              Private
+            </button>
+          </div>
+          <div class="details-modal__privacy__desc">
+            <span v-if="privacyAsNum === PackPrivacy.Public">
+              Everyone can search up and use this pack
+            </span>
+            <span v-if="privacyAsNum === PackPrivacy.OnlyRoom">
+              Only people in the same room as you can use this pack
+            </span>
+            <span v-if="privacyAsNum === PackPrivacy.Private">
+              Only you can use this pack as a room leader
+            </span>
+            <span
+              v-if="privacyAsNum !== PackPrivacy.Public"
+              v-tooltip.bottom="`todo`"
+              class="details-modal__privacy__warning"
+            >
+              ⚠
+            </span>
+          </div>
+        </div>
       </div>
       <div class="details-modal__row">
         <h2>Type</h2>
@@ -279,6 +337,7 @@ async function save() {
 </template>
 
 <style scoped lang="scss">
+@use "sass:math" as math;
 @use "@/styles/colors" as colors;
 
 @mixin text-input {
@@ -333,6 +392,102 @@ async function save() {
       font-size: 0.875rem;
       color: colors.$lightgray;
       font-weight: bold;
+    }
+  }
+
+  &__privacy {
+    &__slider {
+      $height: 9px;
+      $thumb-size: 20px;
+      $dot-size: 5px;
+      $padding: math.div($height - $dot-size, 2);
+
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      height: $height;
+      padding: 0 $padding;
+      margin-top: 3px;
+      margin-bottom: 5px;
+      border-radius: 100vh;
+      transition: background-color 200ms;
+
+      &--0 {
+        --pos: 0;
+        background-color: colors.$lime;
+      }
+
+      &--1 {
+        --pos: calc(50% - #{math.div($thumb-size, 2)});
+        background-color: colors.$warn;
+      }
+
+      &--2 {
+        --pos: calc(100% - #{$thumb-size});
+        background-color: colors.$danger;
+      }
+
+      &:after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: var(--pos);
+        transform: translateY(-50%);
+        width: $thumb-size;
+        height: $thumb-size;
+        border-radius: 50%;
+        background-color: colors.$lightgray;
+        outline: colors.$light-surface 2.5px solid;
+        transition: left 200ms;
+        pointer-events: none;
+      }
+
+      div {
+        height: $dot-size;
+        width: $dot-size;
+        background-color: colors.$light-surface;
+        border-radius: 50%;
+      }
+
+      input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+      }
+    }
+
+    &__names {
+      width: 100%;
+      display: flex;
+      margin-bottom: 6px;
+
+      & > *:nth-child(2) {
+        flex-grow: 1;
+        text-align: center;
+      }
+
+      button {
+        cursor: pointer;
+        color: darken(colors.$subtext, 30%);
+
+        &.active {
+          color: colors.$subtext;
+        }
+      }
+    }
+
+    &__desc {
+      line-height: 1.3;
+      text-align: center;
+    }
+
+    &__warning {
+      cursor: default;
     }
   }
 

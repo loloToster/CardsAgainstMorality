@@ -6,6 +6,8 @@ import { onClickOutside } from "@vueuse/core"
 
 import api from "@/utils/api"
 
+import { useUserStore } from "@/contexts/user"
+
 import type {
   ApiCardPack,
   ApiCardPackType,
@@ -14,6 +16,8 @@ import type {
   SearchCriteria,
   SortType
 } from "@backend/types"
+
+import { PackPrivacy } from "@backend/consts"
 
 import AppLoading from "@/components/AppLoading.vue"
 import AppError from "@/components/AppError.vue"
@@ -25,6 +29,8 @@ useHead({ title: "Card Packs" })
 
 const router = useRouter()
 const route = useRoute()
+
+const user = useUserStore()
 
 const SORT_TYPES: Record<SortType, string> = {
   likes: "Likes",
@@ -119,7 +125,15 @@ async function fetchPacks() {
       signal: packController.signal
     })
 
-    state.packs = res.data.packs
+    let packs = res.data.packs as ApiCardPack[]
+
+    packs = packs.filter(
+      p =>
+        p.privacy === PackPrivacy.Public ||
+        (!p.official && p.owner && p.owner.id === user.value?.id)
+    )
+
+    state.packs = packs
   } catch (err) {
     console.error(err)
     state.error = true

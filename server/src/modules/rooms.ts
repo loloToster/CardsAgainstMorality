@@ -2,7 +2,12 @@ import { nanoid } from "nanoid"
 import db from "./db"
 import logger from "./logger"
 
-import { SETTINGS_BOUNDARIES, TIME_LIMIT_OFFSET, VOTING_TIME } from "../consts"
+import {
+  PackPrivacy,
+  SETTINGS_BOUNDARIES,
+  TIME_LIMIT_OFFSET,
+  VOTING_TIME
+} from "../consts"
 
 import { userToApiUser } from "../utils/transformers"
 import { randomElement, shuffle } from "../utils/random"
@@ -205,15 +210,24 @@ export class Room {
         this.roundLimit = settings.roundLimit
 
         const leaderId = leader.metadata?.user.id ?? -1
+        const playerIds = this.game.players
+          .map(p => p.metadata?.user.id)
+          .filter(i => i !== undefined) as number[]
 
-        // todo: check if works in different scenarios
         const validPackIds = (
           await db.cardPack.findMany({
             where: {
               AND: [
                 { id: { in: settings.packs.map(p => p.id) } },
                 {
-                  OR: [{ private: false }, { ownerId: leaderId, private: true }]
+                  OR: [
+                    { privacy: PackPrivacy.Public },
+                    {
+                      ownerId: { in: playerIds },
+                      privacy: PackPrivacy.OnlyRoom
+                    },
+                    { ownerId: leaderId, privacy: PackPrivacy.Private }
+                  ]
                 }
               ]
             },

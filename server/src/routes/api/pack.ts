@@ -1,7 +1,7 @@
 import { Router } from "express"
 
 import type { ApiCardPack } from "../../types"
-import { MIN_DRAW, MIN_PICK } from "../../consts"
+import { MIN_DRAW, MIN_PICK, PackPrivacy } from "../../consts"
 
 import db from "../../modules/db"
 
@@ -36,7 +36,14 @@ router.get("/:id", async (req, res) => {
     }
   })
 
-  if (foundPack?.private && req.user?.id !== foundPack.ownerId) {
+  if (!foundPack) {
+    return res.status(404).send()
+  }
+
+  if (
+    foundPack.privacy !== PackPrivacy.Public &&
+    req.user?.id !== foundPack.ownerId
+  ) {
     return res.status(403).send()
   }
 
@@ -57,7 +64,7 @@ router.get("/:id", async (req, res) => {
     ? {
       id: foundPack.id,
       name: foundPack.name,
-      private: foundPack.private,
+      privacy: foundPack.privacy,
       official: foundPack.official,
       type: foundPack.type,
       bundle: foundPack.bundle,
@@ -80,7 +87,17 @@ router.get("/:id/cards", async (req, res) => {
   const { id } = req.params
 
   const cards = await db.cardPack.findFirst({
-    where: { id },
+    where: {
+      AND: [
+        { id },
+        {
+          OR: [
+            { privacy: PackPrivacy.Public },
+            { privacy: { gt: PackPrivacy.Public }, ownerId: req.user?.id ?? -1 }
+          ]
+        }
+      ]
+    },
     select: {
       blackCards: {
         select: { id: true, text: true, draw: true, pick: true },
@@ -179,7 +196,7 @@ router.post("/:id/details", async (req, res) => {
     where: { id },
     data: {
       name: details.name,
-      private: details.private,
+      privacy: details.privacy,
       type: { connect: { id: details.type } },
       tags: { set: details.tags.map(t => ({ id: t })) },
       color: details.color ?? null,

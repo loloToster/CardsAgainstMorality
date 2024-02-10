@@ -3,7 +3,8 @@ import { computed, reactive, ref, watch } from "vue"
 import { onClickOutside } from "@vueuse/core"
 
 import api from "@/utils/api"
-import { SETTINGS_BOUNDARIES } from "@backend/consts"
+import { splitArray } from "@/utils"
+import { SETTINGS_BOUNDARIES, PackPrivacy } from "@backend/consts"
 import type { ApiCardPack, SettingsData, SettingsPack } from "@backend/types"
 
 import { useScreenStore } from "@/contexts/screen"
@@ -91,18 +92,6 @@ const numOfBlackCards = computed(() => {
     .reduce((n, { numOfBlacks }) => n + numOfBlacks, 0)
 })
 
-function toggleAllPacks(selected: boolean) {
-  if (selected) {
-    gameSettings.selectedPacks = state.packs.map(p => ({
-      id: p.id,
-      blacks: true,
-      whites: true
-    }))
-  } else {
-    gameSettings.selectedPacks = []
-  }
-}
-
 function togglePack(packId: string) {
   const newSelectedPacks: SettingsPack[] = []
   let foundPack = false
@@ -177,32 +166,66 @@ async function fetchPacks(query = "") {
   }
 }
 
-// todo: handle private & liked packs
 fetchPacks("liked=true")
 fetchPacks("author=official")
-if (gameState.leader) fetchPacks(`owner=${gameState.leader.user.id}`)
+
+const fetchUserPacks = () => {
+  const playerUserIds = gameState.players.map(p => p.user.id)
+  fetchPacks(`owner=${playerUserIds.join(",")}`)
+}
+
+fetchUserPacks()
+watch(() => gameState.players, fetchUserPacks)
 
 watch(
-  () => gameState.leader,
-  () => {
-    if (gameState.leader) fetchPacks(`owner=${gameState.leader.user.id}`)
+  () => gameSettings.selectedPacks,
+  newSelectedPacks => {
+    const fetchedPacksIds = state.packs.map(p => p.id)
+    const unfetchedPacks = newSelectedPacks.filter(
+      p => !fetchedPacksIds.includes(p.id)
+    )
+
+    fetchPacks(`ids=${unfetchedPacks.map(p => p.id).join(",")}`)
   }
 )
 
-const likedPacks = computed(() => {
-  return settingsApiPacks.value.filter(
-    p => p.liked && p.owner?.id !== user.value?.id
+const packsList = computed(() => {
+  const [myPacks, withoutMyPacks] = splitArray(
+    settingsApiPacks.value,
+    p => p.owner && p.owner.id === user.value?.id
   )
-})
 
-const leaderPacks = computed(() => {
-  return settingsApiPacks.value.filter(
-    p => p.owner && p.owner.id === gameState.leader?.user.id
+  const [likedPacks, withoutLikedPacks] = splitArray(
+    withoutMyPacks,
+    p => p.liked && p.privacy === PackPrivacy.Public
   )
-})
 
-const officialPacks = computed(() => {
-  return settingsApiPacks.value.filter(p => p.official && !p.liked)
+  const [roomPacks, withoutRoomPacks] = splitArray(
+    withoutLikedPacks,
+    p =>
+      (p.privacy <= PackPrivacy.OnlyRoom || p.blacks || p.whites) &&
+      !p.official &&
+      p.owner &&
+      gameState.players.map(p => p.user.id).includes(p.owner.id)
+  )
+
+  const [officialPacks, withoutOfficialPacks] = splitArray(
+    withoutRoomPacks,
+    p => p.official
+  )
+
+  const [otherSelectedPacks] = splitArray(
+    withoutOfficialPacks,
+    p => p.blacks || p.whites
+  )
+
+  return [
+    { name: "My Packs", packs: myPacks },
+    { name: "Liked Packs", packs: likedPacks },
+    { name: "Room Packs", packs: roomPacks },
+    { name: "Official Packs", packs: officialPacks },
+    { name: "Other Packs", packs: otherSelectedPacks }
+  ].filter(g => g.packs.length)
 })
 
 const canStart = computed(() => {
@@ -418,23 +441,16 @@ onClickOutside(invitePlayersContent, () => {
                   />
                 </svg>
               </div>
-              <button v-if="gameState.imLeader" @click="toggleAllPacks(true)">
-                Select all
-              </button>
-              <button v-if="gameState.imLeader" @click="toggleAllPacks(false)">
+              <button
+                v-if="gameState.imLeader && gameSettings.selectedPacks.length"
+                @click="gameSettings.selectedPacks = []"
+              >
                 Unselect all
               </button>
             </div>
           </div>
           <div
-            v-for="group in [
-              { name: 'Liked packs', packs: likedPacks },
-              {
-                name: gameState.imLeader ? 'My packs' : 'Leader packs',
-                packs: leaderPacks
-              },
-              { name: 'Official packs', packs: officialPacks }
-            ].filter(g => g.packs.length)"
+            v-for="group in packsList"
             class="settings__main__options-row"
             :key="group.name"
           >

@@ -1,3 +1,18 @@
+export function splitArray<T>(arr: T[], predicate: (value: T) => unknown): [T[], T[]]{
+  const trueArr: T[] = []
+  const falseArr: T[] = []
+
+  for (const item of arr) {
+    if (predicate(item)) {
+      trueArr.push(item)
+    } else {
+      falseArr.push(item)
+    }
+  }
+
+  return [trueArr, falseArr]
+}
+
 export function moveItem<T>(
   source: T[],
   target: T[],

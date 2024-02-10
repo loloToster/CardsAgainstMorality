@@ -15,6 +15,8 @@ import type {
   CardColor
 } from "@backend/types"
 
+import { PackPrivacy } from "@backend/consts"
+
 import { useUserStore } from "@/contexts/user"
 import { useNotificationsStore } from "@/contexts/notifications"
 
@@ -203,7 +205,7 @@ function handleDetailsSave(details: ApiCardPackRichEditableDetails) {
   if (!state.pack) return
 
   state.pack.name = details.name
-  state.pack.private = details.private
+  state.pack.privacy = details.privacy
   state.pack.type = details.type
   state.pack.tags = details.tags
   state.pack.color = details.color
@@ -388,7 +390,7 @@ async function handleDelete() {
           </h1>
           <div class="pack__meta__tags">
             <AppChip
-              v-if="state.pack.private"
+              v-if="state.pack.privacy !== PackPrivacy.Public"
               class="pack__meta__tag pack__meta__tag--private"
               v-tooltip="'Only you can view this pack'"
             >

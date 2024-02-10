@@ -8,11 +8,11 @@ import {
   IsInt,
   IsArray,
   ArrayMaxSize,
-  IsBoolean
+  IsIn
 } from "class-validator"
 
 import type { ApiCardPackEditableDetails } from "../../types"
-import { MAX_PACK_NAME_LEN, MAX_PACK_TAGS } from "../../consts"
+import { MAX_PACK_NAME_LEN, MAX_PACK_TAGS, PackPrivacy } from "../../consts"
 
 export class PackDetailsDto implements ApiCardPackEditableDetails {
   @IsString()
@@ -20,8 +20,8 @@ export class PackDetailsDto implements ApiCardPackEditableDetails {
   @MaxLength(MAX_PACK_NAME_LEN)
   name!: string
 
-  @IsBoolean()
-  private!: boolean
+  @IsIn([PackPrivacy.Public, PackPrivacy.OnlyRoom, PackPrivacy.Private])
+  privacy!: number
 
   @IsOptional()
   @IsString()

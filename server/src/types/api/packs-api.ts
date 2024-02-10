@@ -1,6 +1,6 @@
 import { ApiWhiteCard } from "./game-api"
 import { ApiUser } from "./user-api"
-import { CARD_COLORS } from "../../consts"
+import { CARD_COLORS, PackPrivacy } from "../../consts"
 
 interface IdWithName {
   id: number
@@ -13,7 +13,7 @@ export type ApiCardPackTag = IdWithName
 
 export interface ApiCardPackEditableDetailsBase {
   name: string
-  private: boolean
+  privacy: PackPrivacy
   color?: string | null
   icon?: string | null
 }

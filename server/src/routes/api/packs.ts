@@ -41,9 +41,10 @@ router.get("/", async (req, res) => {
     parsedQuery[key] = req.query[key]?.toString()
   })
 
-  const { q, author, owner, types, bundles, tags, sort, liked } = parsedQuery
+  const { ids, q, author, owner, types, bundles, tags, sort, liked } =
+    parsedQuery
 
-  const ownerId = owner ? parseInt(owner) : undefined
+  const parsedOwners = parseSearchArray(owner)
   const parsedTypes = parseSearchArray(types)
   const parsedBundles = parseSearchArray(bundles)
   const parsedTags = parseSearchArray(tags)
@@ -52,32 +53,14 @@ router.get("/", async (req, res) => {
 
   const packs = await db.cardPack.findMany({
     where: {
-      AND: [
-        {
-          OR: [
-            {
-              private: req.user && ownerId === req.user.id ? undefined : false,
-              ownerId
-            },
-            ...(req.user && !ownerId
-              ? [
-                {
-                  private: true,
-                  ownerId: req.user.id
-                }
-              ]
-              : [])
-          ]
-        },
-        {
-          official: author ? author === "official" : undefined,
-          name: q && { contains: q, mode: "insensitive" },
-          typeId: parsedTypes && { in: parsedTypes },
-          bundleId: parsedBundles && { in: parsedBundles },
-          tags: parsedTags && { some: { id: { in: parsedTags } } },
-          likedBy: liked ? { some: { id: req.user?.id ?? -1 } } : undefined
-        }
-      ]
+      id: ids && { in: ids.split(",") },
+      name: q && { contains: q, mode: "insensitive" },
+      official: author ? author === "official" : undefined,
+      ownerId: parsedOwners && { in: parsedOwners },
+      typeId: parsedTypes && { in: parsedTypes },
+      bundleId: parsedBundles && { in: parsedBundles },
+      tags: parsedTags && { some: { id: { in: parsedTags } } },
+      likedBy: liked ? { some: { id: req.user?.id ?? -1 } } : undefined
     },
     orderBy: [
       ...(parsedSort ? [parsedSort] : []),
@@ -104,14 +87,14 @@ router.get("/", async (req, res) => {
   res.json({
     allOfficial: await db.cardPack.count({ where: { official: true } }),
     allCommunity: await db.cardPack.count({
-      where: { official: false, private: false }
+      where: { official: false }
     }),
     packs: packs.map(
       p =>
         ({
           id: p.id,
           name: p.name,
-          private: p.private,
+          privacy: p.privacy,
           official: p.official,
           type: p.type,
           bundle: p.bundle,
@@ -140,7 +123,7 @@ router.get("/random-cards", async (req, res) => {
   const NUM_OF_WHITE = 10
   const NUM_OF_BLACK = 4
 
-  const criteria = { where: { pack: { private: false } } }
+  const criteria = { where: { pack: { official: true } } }
 
   const totalWhiteCards = await db.whiteCard.count(criteria)
   const totalBlackCards = await db.blackCard.count(criteria)

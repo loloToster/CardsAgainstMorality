@@ -25,6 +25,12 @@ export const MAX_USERNAME_LEN = 32
 export const MAX_PACK_NAME_LEN = 32
 export const MAX_PACK_TAGS = 6
 
+export enum PackPrivacy {
+  Public,
+  OnlyRoom,
+  Private
+}
+
 export const MIN_PICK = 1
 export const MAX_PICK = 3
 export const MIN_DRAW = 0
