@@ -223,7 +223,11 @@ async function save() {
             </span>
             <span
               v-if="privacyAsNum !== PackPrivacy.Public"
-              v-tooltip.bottom="`todo`"
+              v-tooltip.bottom="{
+                content:
+                  'The metadata of the pack<br> like name and icon might still<br> be available publicly',
+                html: true
+              }"
               class="details-modal__privacy__warning"
             >
               ⚠
@@ -515,6 +519,7 @@ async function save() {
     background-color: var(--color);
     border: 1px solid colors.$inp;
     border-radius: 50%;
+    overflow: hidden;
 
     input {
       position: absolute;

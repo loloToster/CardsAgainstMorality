@@ -19,6 +19,9 @@ export enum StrategyIdentifier {
   Facebook = "fcb"
 }
 
+export const ROOM_ID_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+export const ROOM_ID_LENGTH = 8
+
 export const MIN_USERNAME_LEN = 2
 export const MAX_USERNAME_LEN = 32
 
@@ -68,4 +71,4 @@ export const SETTINGS_BOUNDARIES: SettingsBoundaries = {
   }
 }
 
-export const VOTING_TIME = 2 * 60 * 1000
+export const VOTING_TIME = 60 * 1000

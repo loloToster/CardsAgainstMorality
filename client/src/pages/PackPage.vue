@@ -50,6 +50,7 @@ const state = reactive<{
   showMiniTop: boolean
   editDetailsOpen: boolean
   editCardOpen: boolean
+  lastCardColor: CardColor
   editedCard: EditableCard | null
   deleteModalOpen: boolean
   deleting: boolean
@@ -63,6 +64,7 @@ const state = reactive<{
   showMiniTop: false,
   editDetailsOpen: false,
   editCardOpen: false,
+  lastCardColor: "black",
   editedCard: null,
   deleteModalOpen: false,
   deleting: false
@@ -219,6 +221,8 @@ function handleCreateCard() {
 
 function handleBlackCardSave(card: ApiBlackCard) {
   state.editCardOpen = false
+  state.lastCardColor = "black"
+
   if (!state.pack) return
 
   const modified = state.fetchedBlackCards.findIndex(c => c.id === card.id)
@@ -233,6 +237,8 @@ function handleBlackCardSave(card: ApiBlackCard) {
 
 function handleWhiteCardSave(card: ApiWhiteCard) {
   state.editCardOpen = false
+  state.lastCardColor = "white"
+
   if (!state.pack) return
 
   const modified = state.fetchedWhiteCards.findIndex(c => c.id === card.id)
@@ -333,6 +339,7 @@ async function handleDelete() {
     @save-white="handleWhiteCardSave"
     @delete="handleCardDelete"
     @close="state.editCardOpen = false"
+    :color="state.lastCardColor"
     :card="state.editedCard"
     :pack="state.pack"
   />

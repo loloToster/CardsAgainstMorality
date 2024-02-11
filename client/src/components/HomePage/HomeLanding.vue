@@ -3,6 +3,7 @@ import { reactive, ref, nextTick } from "vue"
 import { useRouter } from "vue-router"
 
 import { TITLE } from "@/consts"
+import { ROOM_ID_ALPHABET, ROOM_ID_LENGTH } from "@backend/consts"
 
 import PlayingCard from "@/components/PlayingCard.vue"
 import AppButton from "@/components/AppButton.vue"
@@ -24,21 +25,46 @@ function handleJoinOpen() {
 
 const joinInput = ref<HTMLInputElement>()
 
-function handleJoin(e: MouseEvent | KeyboardEvent) {
-  if (e.type === "keypress" && (e as KeyboardEvent).key !== "Enter") return
+function getRoomIdFromUrl(url: string) {
+  let roomId = url.split("?")[0]
+  roomId =
+    roomId
+      .split("/")
+      .filter(s => s)
+      .at(-1) ?? roomId
+
+  return roomId
+}
+
+function handleJoin(e?: MouseEvent | KeyboardEvent) {
+  if (e?.type === "keypress" && (e as KeyboardEvent).key !== "Enter") return
 
   let roomId = state.joinModalCode
 
   if (roomId.includes("/")) {
-    roomId = roomId.split("?")[0]
-    roomId =
-      roomId
-        .split("/")
-        .filter(s => s)
-        .at(-1) ?? roomId
+    roomId = getRoomIdFromUrl(roomId)
   }
 
   router.push(`/room/${roomId}`)
+}
+
+function handleJoinPaste() {
+  // set timeout for vue state to update
+  setTimeout(() => {
+    let roomId = state.joinModalCode
+
+    if (roomId.includes("/")) {
+      roomId = getRoomIdFromUrl(roomId)
+    }
+
+    if (
+      roomId.length !== ROOM_ID_LENGTH ||
+      roomId.split("").some(c => !ROOM_ID_ALPHABET.includes(c))
+    )
+      return
+
+    handleJoin()
+  })
 }
 </script>
 
@@ -52,6 +78,7 @@ function handleJoin(e: MouseEvent | KeyboardEvent) {
       <input
         v-model="state.joinModalCode"
         @keypress="handleJoin"
+        @paste="handleJoinPaste"
         ref="joinInput"
         placeholder="Insert Code or Link here"
         type="text"

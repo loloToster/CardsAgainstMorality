@@ -305,7 +305,11 @@ onClickOutside(invitePlayersContent, () => {
               />
               <div
                 class="settings__main__option-title__tooltip"
-                v-tooltip.right="'test'"
+                v-tooltip.right="{
+                  content:
+                    'Determines whether the room<br> should be publicly available<br> on Rooms page',
+                  html: true
+                }"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                   <path
@@ -320,7 +324,10 @@ onClickOutside(invitePlayersContent, () => {
               <h3>Player limit</h3>
               <div
                 class="settings__main__option-title__tooltip"
-                v-tooltip.right="'test'"
+                v-tooltip.right="{
+                  content: 'Max number of players<br> that can join the room',
+                  html: true
+                }"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                   <path
@@ -347,7 +354,11 @@ onClickOutside(invitePlayersContent, () => {
               <h3>Time limit</h3>
               <div
                 class="settings__main__option-title__tooltip"
-                v-tooltip.right="'test'"
+                v-tooltip.right="{
+                  content:
+                    'Limits the time for choosing<br> the cards and time for tsar to<br> choose the winner',
+                  html: true
+                }"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                   <path
@@ -377,7 +388,11 @@ onClickOutside(invitePlayersContent, () => {
               <h3>Score limit</h3>
               <div
                 class="settings__main__option-title__tooltip"
-                v-tooltip.right="'test'"
+                v-tooltip.right="{
+                  content:
+                    'The game ends when someone<br> reaches the defined score',
+                  html: true
+                }"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                   <path
@@ -407,7 +422,11 @@ onClickOutside(invitePlayersContent, () => {
               <h3>Round limit</h3>
               <div
                 class="settings__main__option-title__tooltip"
-                v-tooltip.right="'test'"
+                v-tooltip.right="{
+                  content:
+                    'The game ends when the number<br> of rounds reaches the round limit',
+                  html: true
+                }"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                   <path
@@ -433,7 +452,11 @@ onClickOutside(invitePlayersContent, () => {
               <h3>Card sets</h3>
               <div
                 class="settings__main__option-title__tooltip"
-                v-tooltip.bottom="'test'"
+                v-tooltip.right="{
+                  content:
+                    'Select card sets that<br> will be added to the game',
+                  html: true
+                }"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                   <path
@@ -931,6 +954,7 @@ $main-gap: 16px;
     @include mixins.sm() {
       padding-top: 12px;
       flex-direction: row;
+      align-items: center;
       border-radius: 0;
       border-top: 1px colors.$lightgray solid;
     }

@@ -20,6 +20,7 @@ export type EditableCard =
 
 const props = defineProps<{
   pack: ApiCardPack
+  color?: CardColor
   card?: EditableCard | null
 }>()
 
@@ -44,7 +45,7 @@ const state = reactive<{
   saving: false,
   card: {
     text: props.card?.text ?? "",
-    color: props.card?.color ?? "black",
+    color: props.card?.color ?? props.color ?? "black",
     pick: props.card?.pick ?? null,
     draw: props.card?.draw ?? null
   }

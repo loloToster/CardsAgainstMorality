@@ -117,11 +117,15 @@ function handlePlayerKick(playerId: number) {
           :disabled="Boolean(gameState.voting)"
           class="game-menu__btn game-menu__item"
           ref="votingMenu"
-          v-tooltip.right="{
-            content: votingTooltip,
-            shown: showGameMenuTooltip,
-            triggers: showGameMenuTooltip ? [] : undefined
-          }"
+          v-tooltip.right="
+            state.votingMenuActive
+              ? undefined
+              : {
+                  content: votingTooltip,
+                  shown: showGameMenuTooltip,
+                  triggers: showGameMenuTooltip ? [] : undefined
+                }
+          "
           v-wave
         >
           <div v-if="state.votingMenuActive" class="game-menu__voting">

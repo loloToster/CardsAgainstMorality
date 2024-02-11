@@ -8,7 +8,7 @@ const defaultPlayerState: PlayerState = {
   cards: new Array(10).fill(null).map((_, i) => ({
     id: i,
     text: i.toString(),
-    pack: "testpack"
+    pack: "? pack"
   })),
   submitted: false,
   pickedCards: [],
@@ -22,7 +22,7 @@ export const useGameStateStore = defineStore("game-state", {
     players: [],
     voting: null,
     timeLimit: null,
-    blackCard: { id: -1, text: "test", pack: "test pack", pick: 1, draw: 0 },
+    blackCard: { id: -1, text: "?", pack: "? pack", pick: 1, draw: 0 },
     roundWinnerData: null,
     podium: null,
     ...defaultPlayerState

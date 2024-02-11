@@ -1,9 +1,11 @@
-import { nanoid } from "nanoid"
+import { customAlphabet } from "nanoid"
 import db from "./db"
 import logger from "./logger"
 
 import {
   PackPrivacy,
+  ROOM_ID_ALPHABET,
+  ROOM_ID_LENGTH,
   SETTINGS_BOUNDARIES,
   TIME_LIMIT_OFFSET,
   VOTING_TIME
@@ -783,6 +785,7 @@ export class Room {
 }
 
 export class Rooms {
+  roomIdGenerator = customAlphabet(ROOM_ID_ALPHABET, ROOM_ID_LENGTH)
   rooms: Map<string, Room | undefined>
 
   constructor(public io: SocketServer) {
@@ -821,7 +824,9 @@ export class Rooms {
   createRoom(creatorId: number) {
     let roomId = ""
 
-    while (this.rooms.has(roomId) || !roomId) roomId = nanoid(16)
+    do {
+      roomId = this.roomIdGenerator()
+    } while (this.rooms.has(roomId))
 
     logger.info(`Creating room with id: '${roomId}'`)
 
