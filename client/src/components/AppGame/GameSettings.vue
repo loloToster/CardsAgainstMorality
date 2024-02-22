@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from "vue"
 import { onClickOutside } from "@vueuse/core"
+import QrCode from "qrcode.vue"
 
 import api from "@/utils/api"
 import { splitArray } from "@/utils"
@@ -12,6 +13,7 @@ import { useUserStore } from "@/contexts/user"
 import { useGameStateStore } from "./contexts/gamestate"
 import { useGameSettingsStore, ensureBoundary } from "./contexts/gamesettings"
 
+import AppModal from "@/components/AppModal.vue"
 import AppSwitch from "@/components/AppSwitch.vue"
 import AppButton from "@/components/AppButton.vue"
 import CopyButton from "@/components/CopyButton.vue"
@@ -45,12 +47,14 @@ const state = reactive<{
   loading: boolean
   error: boolean
   inviteOpen: boolean
+  qrOpen: boolean
   packs: ApiCardPack[]
   fetchedPackGroups: number
 }>({
   loading: true,
   error: false,
   inviteOpen: false,
+  qrOpen: false,
   packs: [],
   fetchedPackGroups: 0
 })
@@ -272,6 +276,19 @@ onClickOutside(invitePlayersContent, () => {
 </script>
 <template>
   <div class="settings">
+    <AppModal
+      v-if="state.qrOpen"
+      @close="state.qrOpen = false"
+      title="Scan to join"
+      transparent
+    >
+      <QrCode
+        class="settings__qr"
+        :margin="1"
+        :size="512"
+        :value="windowLocation"
+      />
+    </AppModal>
     <div class="settings__left">
       <div v-if="state.error" class="settings__panel">
         <AppError> Something went wrong </AppError>
@@ -561,6 +578,16 @@ onClickOutside(invitePlayersContent, () => {
             >
               Link
             </CopyButton>
+            <AppButton
+              @click=";(state.qrOpen = true) && (state.inviteOpen = false)"
+              class="settings__invite__btn settings__invite__btn--qr"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                <path
+                  d="M120-520v-320h320v320H120Zm80-80h160v-160H200v160Zm-80 480v-320h320v320H120Zm80-80h160v-160H200v160Zm320-320v-320h320v320H520Zm80-80h160v-160H600v160Zm160 480v-80h80v80h-80ZM520-360v-80h80v80h-80Zm80 80v-80h80v80h-80Zm-80 80v-80h80v80h-80Zm80 80v-80h80v80h-80Zm80-80v-80h80v80h-80Zm0-160v-80h80v80h-80Zm80 80v-80h80v80h-80Z"
+                />
+              </svg>
+            </AppButton>
           </div>
         </div>
       </div>
@@ -637,6 +664,16 @@ $main-gap: 16px;
   height: 80vh;
   margin: auto;
   margin-top: 5vh;
+
+  &__qr {
+    $size: 70vmin;
+    $max-size: 20rem;
+
+    width: $size !important;
+    height: $size !important;
+    max-width: $max-size;
+    max-height: $max-size;
+  }
 
   &__loader {
     --outline: #{colors.$light-surface};
@@ -940,6 +977,17 @@ $main-gap: 16px;
 
       &--link {
         @include colors.app-button(colors.$blue);
+      }
+
+      &--qr {
+        @include colors.app-button(white);
+
+        padding: 0;
+
+        svg {
+          height: 22px;
+          width: 22px;
+        }
       }
     }
   }
