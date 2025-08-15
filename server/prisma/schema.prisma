@@ -16,6 +16,8 @@ model User {
   strategyId  String     @map("strategy_id")
   likedPacks  CardPack[] @relation("likes")
   packs       CardPack[] @relation("owns")
+  createdAt   DateTime?  @default(now()) @map("created_at")
+  updatedAt   DateTime?  @updatedAt @map("updated_at")
 
   @@map("users")
 }
@@ -38,6 +40,8 @@ model CardPack {
   owner         User?           @relation("owns", fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId       Int?            @map("owner_id")
   privacy       Int             @default(0)
+  createdAt     DateTime?       @default(now()) @map("created_at")
+  updatedAt     DateTime?       @updatedAt @map("updated_at")
 
   @@map("card_packs")
 }
