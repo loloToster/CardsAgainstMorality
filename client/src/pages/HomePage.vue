@@ -8,6 +8,7 @@ import HomeAbout from "@/components/HomePage/HomeAbout.vue"
 import HomeFlexibility from "@/components/HomePage/HomeFlexibility.vue"
 import HomeVariety from "@/components/HomePage/HomeVariety.vue"
 import HomeCustom from "@/components/HomePage/HomeCustom.vue"
+import HomeFooter from "@/components/HomePage/HomeFooter.vue"
 
 useHead({
   title: "Home",
@@ -39,6 +40,7 @@ useHead({
     <HomeFlexibility />
     <HomeVariety />
     <HomeCustom />
+    <HomeFooter />
   </div>
 </template>
 

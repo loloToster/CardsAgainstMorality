@@ -130,7 +130,13 @@ function handleJoinPaste() {
       <a href="#about">
         <AppButton class="landing__stripe__btn">About</AppButton>
       </a>
-      <AppButton class="landing__stripe__btn">Lorem</AppButton>
+      <a
+        href="https://github.com/loloToster/CardsAgainstMorality/issues"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <AppButton class="landing__stripe__btn">Report Bugs</AppButton>
+      </a>
     </div>
   </div>
 </template>

@@ -69,7 +69,11 @@ function onTransEnd(e: TransitionEvent, idx: number) {
         v-if="choosable && activeIdx === choice - 1"
         @transitionend="e => onTransEnd(e, choice - 1)"
         class="choices__choice__choose"
-        v-tooltip.top="'Hold to choose'"
+        v-tooltip.top="{
+          content: 'Hold to choose',
+          showTriggers: ['hover', 'click', 'focus'],
+          hideTriggers: ['hover', 'focus']
+        }"
       >
         <div class="choices__choice__choose__progress"></div>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
@@ -143,6 +147,12 @@ function onTransEnd(e: TransitionEvent, idx: number) {
     }
 
     &__card {
+      user-select: none;
+      -moz-user-select: none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      -o-user-select: none;
+
       position: absolute;
       top: 0;
       display: flex;

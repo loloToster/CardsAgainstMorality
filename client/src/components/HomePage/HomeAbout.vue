@@ -3,7 +3,6 @@ import { TITLE } from "@/consts"
 </script>
 <template>
   <div class="about" id="about">
-    <!-- TODO: more detailed instruction and more about -->
     <h2>About</h2>
     <p>
       To play simply <RouterLink to="/room">Create a Room</RouterLink>, login
@@ -29,7 +28,13 @@ import { TITLE } from "@/consts"
       </li>
     </ul>
     <p>
-      <a class="about__instruction" href=""> More detailed instruction </a>
+      <a
+        class="about__instruction"
+        target="_blank"
+        href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+      >
+        More detailed instruction
+      </a>
     </p>
     <p>
       {{ TITLE }} is an online
@@ -39,7 +44,13 @@ import { TITLE } from "@/consts"
         rel="noopener noreferrer"
         >Cards Against Humanity</a
       >
-      clone. Smth smth smth....
+      clone designed for those moments when you want to laugh at things you
+      probably shouldn't. This is the part where a normal website would explain
+      its history, vision, and deep philosophical meaning... but let's be
+      honest, no one actually reads the About page. If you've made it this far,
+      congratulations, you're officially in the 0.1% of visitors who did. I'm
+      just typing words now so the page doesn't look empty. Btw, this text was
+      written by ChatGPT.
     </p>
     <div class="about__scroll">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
@@ -73,6 +84,7 @@ import { TITLE } from "@/consts"
   p,
   ul {
     font-size: 1.175rem;
+    line-height: 1.2;
   }
 
   a {

@@ -49,7 +49,6 @@ const nonAnonymousUser = computed(() => {
       </button>
       <RouterLink class="header__logo" to="/">
         {{ TITLE }}
-        <div class="header__logo__dev">Still in developement</div>
       </RouterLink>
       <RouterLink class="header__link" to="/rooms"> Rooms </RouterLink>
       <RouterLink class="header__link" to="/packs"> Packs </RouterLink>
