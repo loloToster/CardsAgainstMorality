@@ -14,6 +14,7 @@ import logger from "./modules/logger"
 import { Rooms } from "./modules/rooms"
 
 import { loadRoutes } from "./utils/loadRoutes"
+import { logActivity } from "./middleware/log-activity"
 
 import type { User as PrismaUser } from "@prisma/client"
 
@@ -68,9 +69,19 @@ app.use(express.urlencoded({ extended: false }))
 loadRoutes(app, __dirname + "/routes")
 
 const staticPath = path.normalize(__dirname + "/../../client/dist")
+
+app.use((req, res, next) => {
+  if (req.path === "/") {
+    logActivity(req).catch(logger.error)
+  }
+
+  next()
+})
+
 app.use(express.static(staticPath))
 
 app.use((req, res) => {
+  logActivity(req).catch(logger.error)
   res.sendFile(staticPath + "/index.html")
 })
 

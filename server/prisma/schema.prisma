@@ -94,3 +94,18 @@ model WhiteCard {
 
   @@map("white_cards")
 }
+
+model Activity {
+  id          Int      @id @default(autoincrement())
+  path        String
+  referer     String?
+  countryCode String?  @map("country_code")
+  regionName  String?  @map("region_name")
+  city        String?
+  mobile      Boolean?
+  os          String?
+  browser     String?
+  device      String?
+
+  createdAt DateTime? @default(now()) @map("created_at")
+}
