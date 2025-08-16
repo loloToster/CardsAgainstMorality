@@ -80,8 +80,6 @@ class Database extends PrismaClient {
   async bumpAnonymousUser(user: User, currentlyUsing?: boolean) {
     if (user.strategyId !== StrategyIdentifier.Anonymous) return
 
-    logger.info(`bumping user with id: '${user.id}'`)
-
     const lastUsed = currentlyUsing ? null : new Date()
 
     try {
