@@ -36,6 +36,14 @@ const nonAnonymousUser = computed(() => {
       </RouterLink>
       <RouterLink to="/rooms" class="drawer__btn" v-wave> Rooms </RouterLink>
       <RouterLink to="/packs" class="drawer__btn" v-wave> Packs </RouterLink>
+      <a
+        href="https://buymeacoffee.com/lolotoster"
+        class="drawer__btn"
+        target="_blank"
+        v-wave
+      >
+        Support
+      </a>
     </div>
   </div>
   <header class="header">
@@ -52,6 +60,14 @@ const nonAnonymousUser = computed(() => {
       </RouterLink>
       <RouterLink class="header__link" to="/rooms"> Rooms </RouterLink>
       <RouterLink class="header__link" to="/packs"> Packs </RouterLink>
+      <a
+        href="https://buymeacoffee.com/lolotoster"
+        class="header__link"
+        target="_blank"
+        v-wave
+      >
+        Support
+      </a>
       <div
         v-if="user.value"
         @click="state.profileMenuOpen = !state.profileMenuOpen"

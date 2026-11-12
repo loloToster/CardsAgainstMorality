@@ -1,8 +1,11 @@
 import { Router } from "express"
+import cors from "cors"
 import db from "../../modules/db"
 import type { Rooms } from "../../modules/rooms"
 
 const router = Router()
+
+router.use(cors())
 
 router.get("/", async (req, res) => {
   const rooms: Rooms = req.app.get("rooms")
